@@ -1,0 +1,399 @@
+<template>
+  <div style="height: 100%;" class="subject-detail">
+    <div class="top-back-btn" v-touch:tap="back"></div>
+    <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
+      <div>
+        <img v-if="!hasVaildChapterCicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
+             alt="" style="height: 12rem; width: 100%; display: block">
+
+        <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
+          <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem">
+            <img :src="ppt" alt="" style="height: 100%; width: 100%">
+          </swiper-item>
+        </swiper>
+
+        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc" :is-show.sync="hasVaildChapterCicked"></web-audio>
+
+        <!--没有获取到课程内容时显示-->
+        <div v-show="0">没有内容</div>
+
+        <!--简介和目录-->
+        <div v-show="1" style="height: 100%; background-color: #fff">
+          <sticky>
+            <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
+              <tab-item class="vux-center" :selected="currTabItem === 's'">简介</tab-item>
+              <tab-item class="vux-center" :selected="currTabItem === 'c'">目录</tab-item>
+            </tab>
+          </sticky>
+
+          <specific v-show='currTabIndex === 0' :subject="currSubject"></specific>
+          <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
+                   :selected-chapter.sync="selectedChapter">
+          </content>
+
+          <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
+          <!--<swiper-item>-->
+          <!--<specific :subject="currSubject"></specific>-->
+          <!--</swiper-item>-->
+
+          <!--<swiper-item>-->
+          <!--<content :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"-->
+          <!--:selected-chapter.sync="selectedChapter">-->
+          <!--</content>-->
+          <!--</swiper-item>-->
+
+          <!--</swiper>-->
+          <!--<div style="height: 1000px;background: #00b0f0"></div>-->
+        </div>
+      </div>
+    </scroller>
+
+    <!--底部的btn-->
+    <div class="bottom-area"  v-show="currStatus !== 'N'" v-el:bottom-btn>
+       <div v-if="currStatus === 'L'" class="btn-box">
+        <ict-button class="right">加载中..</ict-button>
+      </div>
+
+      <div v-if="currStatus === 'W'" class="btn-box">
+        <ict-button class="right" v-touch:tap="join">参加课程</ict-button>
+      </div>
+    </div>
+  </div>
+</template>
+<style lang="less">
+  .subject-detail {
+    .top-back-btn {
+      position: absolute;
+      height: 2rem;
+      width: 2rem;
+      top: 0.3rem;
+      left: 1rem;
+      z-index: 20;
+    }
+    .top-back-btn:before {
+      position: absolute;
+      display: inline-block;
+      font-family: 'myicon';
+      content: '\e91b';
+      font-size: 1.6rem !important;
+      line-height: 2rem;
+      width: 2rem;
+      color: #999;
+    }
+    .vux-tab-item {
+      font-size: 0.85rem;
+    }
+    .bottom-area {
+      position: fixed;
+      /*background: red;*/
+      width: 100%;
+      height: 2.1rem;
+      bottom: 0;
+      /*font-size: 0;*/
+      z-index: 101;
+
+      .btn-box {
+        display: flex;
+
+        .ict-btn {
+          border-radius: 0 !important;
+        }
+
+        .left {
+          background: #f0eff5;
+          color: #00b0f0;
+          font-size: 34/40rem;
+          flex: 24;
+          /*flex-grow: 1;*/
+        }
+
+        .right {
+          /*border-left: 1px solid #898989;*/
+          font-size: 34/40rem;
+          color: #fff;
+          background-color: #00b0f0;
+          flex: 51;
+          /*flex-grow: 2;*/
+        }
+      }
+    }
+  }
+
+</style>
+
+<script>
+  import WebAudio from '../../components/webAudio.vue'
+  import Specific from '../../components/IctCouserSpecificFree.vue'
+  import Content from '../../components/IctCourseContentFree.vue'
+  import IctButton from '../../components/IctButton.vue'
+  import Swiper from 'vux/swiper'
+  import SwiperItem from 'vux/swiper-item'
+  import {Tab, TabItem} from 'vux/tab'
+  import Confirm from 'vux/confirm'
+  import Scroller from 'vux/scroller'
+  import Sticky from 'vux/sticky'
+  import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
+  import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+
+  export default {
+    vuex: {
+      getters: {
+        freeSubjectArr: courseDetailGetters.freeDetailArr,
+        freeRecordsArr: courseRecordsGetters.freeRecords,
+        isUserLogin: userGetters.isLogin
+      },
+      actions: {
+        loadfreeSubject: courseDetailActions.loadFreeSubject,
+        loadfreeRecord: courseRecordActions.loadOneSubjectFreeRecord,
+
+        joinSubject: courseRecordActions.joinSubject,
+        updateSubject: courseRecordActions.updateSubjectRecord,
+
+        showAlert: globalActions.showAlert,
+        showConfirm: globalActions.showConfirm
+      }
+    },
+
+    /**
+     *
+     */
+    data () {
+      return {
+        scrollerHeight: '480px',
+
+        isLoadedFail: false, //数据是否加载完毕
+        subjectId: '', //课程Id
+        hasVaildChapterCicked: false,
+
+        currSubject: null, // 当前课程
+        currStatus: 'L', //当前课程状态 {N：在读 | W : 没有进度} 默认L: 加载中
+        recentLessonId: 0,
+
+        currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
+        currTabIndex: 0,
+
+        selectedLesson: null, //当前选中的lesson
+        selectedChapter: null, //当前选中的chapter
+        currAudioSrc: null, //当前音频地址
+        currPpts: [], //当前ppt地址集合
+
+        isSelectdLessonLimited: false //当前选中lesson是否受限
+      }
+    },
+
+    /**
+     * 路由函数
+     */
+    route: {
+      /**
+       * 初始化页面数据
+       * 加载课程信息, 加载进度
+       * @param type
+       * @param subjectId
+       * @returns {{type: string}}
+       */
+      data ({to: {params: {subjectId}}}) {
+        this.resetView()
+
+        let tasks = [this.loadfreeSubject(subjectId)]
+        if (this.isUserLogin) {
+          tasks.push(this.loadfreeRecord(subjectId))
+        }
+
+        return Promise.all(tasks).then(
+            () => {
+            return {subjectId: subjectId, isLoadedFail: false}
+          },
+            () => {
+            return {isLoaded: false, isLoadedFail: true}
+          }
+        )
+      },
+
+      /**
+       * 页面隐藏时
+       */
+      deactivate () {
+        this.pause()
+      }
+    },
+
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+    },
+
+    watch: {
+      'currTabIndex': function () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+//              top: 0
+          })
+        })
+      },
+
+      /**
+       * 设置课程id时, 获取课程信息, 获取进度信息
+       */
+      'subjectId': function (newSubjectId, oldSubjectId) {
+        //设置课程信息
+        this.currSubject = this.freeSubjectArr.find(subject => subject.subjectId === newSubjectId)
+
+        this.$nextTick(() => {
+            this.$refs.scroller.reset({
+              top: 0
+          })
+        })
+
+        //获取进度信息
+        let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+        this.setSubjectRecordStatus(currSubjectRecord)
+      },
+
+      /**
+       *进度改变
+       */
+      'freeRecordsArr': function (newRecords, oldRecords) {
+        if (this.subjectId !== '') {
+          //获取进度信息
+          let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === this.subjectId)
+          this.setSubjectRecordStatus(currSubjectRecord)
+        }
+      }
+    },
+
+    /**
+     * 设置监听事件
+     */
+    events: {
+      /**
+       * 选中某个chapter, 设置音频,ppt ,跳转逻辑
+       */
+      'chapterSelected': function (chapter) {
+        //显示ppt,音频
+        this.hasVaildChapterCicked = true
+        this.currAudioSrc = chapter.audio
+        this.currPpts = chapter.ppts
+
+        //登录并且在读状态下, 更新课程进度
+        if (this.isUserLogin && this.currStatus === 'N') {
+          this.updateRecord()
+        }
+      }
+    },
+
+    methods: {
+      back () {
+        window.history.back()
+      },
+
+      /**
+       * 重置页面
+       */
+      resetView () {
+        this.hasVaildChapterCicked = false
+        this.pause()
+      },
+
+      /**
+       * 设置课程状态
+       */
+      setSubjectRecordStatus (currSubjectRecord) {
+        //设置课程状态
+        if (currSubjectRecord) {
+          this.currStatus = currSubjectRecord.status
+          this.recentLessonId = currSubjectRecord.currentLessonId
+        } else {
+          this.currStatus = 'W'
+        }
+      },
+
+      /**
+       * 暂停课程
+       */
+      pause () {
+        this.$broadcast('pause')
+      },
+
+      /**
+       * 与服务器同步课程进度
+       */
+      syncRecord () {
+        this.loadfreeRecord(this.subjectId)
+      },
+
+      /**
+       * 激活
+       */
+      updateRecord () {
+        const me = this
+        me.updateSubject({prevLessonId: me.recentLessonId, lessonId: me.selectedLesson.lessonId}).then(
+          function () {
+            me.syncRecord()
+          },
+          function () {
+            me.showAlert('激活失败,请重试')
+          }
+        )
+      },
+
+      /**
+       * 参加课程
+       */
+      join () {
+        const me = this
+
+        if (this.isUserLogin) {
+          me.joinSubject(me.subjectId).then(
+            function () {
+              me.syncRecord()
+            },
+            function () {
+              me.showAlert('参加课程失败,请重试')
+            }
+          )
+        } else {
+          this.showLogin()
+        }
+      },
+
+      /**
+       * 提示登录
+       **/
+      showLogin () {
+        const me = this
+
+        const activeHandler = function () {
+          me.$route.router.go('/entry')
+        }
+
+        const cancelHandler = function () {
+        }
+
+        const msg = '<p>您尚未登录,无法同步你的学习进度,请登录之后参加课程</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        me.showConfirm({
+          title: '',
+          msg: msg,
+          confirmText: '立即登录',
+          cancelText: '暂不登录',
+          confirmHandler: activeHandler,
+          cancelHandler: cancelHandler
+        })
+      }
+    },
+
+    components: {
+      WebAudio,
+      Swiper,
+      SwiperItem,
+      Tab,
+      TabItem,
+      Confirm,
+      Scroller,
+      Sticky,
+      Specific,
+      Content,
+      IctButton
+    }
+  }
+</script>
