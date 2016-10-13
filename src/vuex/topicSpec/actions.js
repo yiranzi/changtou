@@ -9,9 +9,9 @@ export const loadSpecTopic = ({ dispatch }, stpId) => {
       getWithinAuth({
         url: getUrl('spec_topic').replace(':stpId', stpId)
       }).then(
-        function (response) {
-          dispatch('LOAD_SPEC_TOPIC', response)
-          resolve(response)
+        function (SpecTopic) {
+          dispatch('LOAD_SPEC_TOPIC', SpecTopic)
+          resolve(SpecTopic)
         },
         function (err) {
           reject(err)

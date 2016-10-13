@@ -158,6 +158,18 @@ export function configRouter (router) {
     //打包课专题
     '/spec/topic/:stpId': {
       component: require('../views/topic/specTopic.vue')
+    },
+
+    /**
+     * 院生访谈
+     */
+    //访谈列表
+    '/interview/interview-list': {
+      component: require('../views/interview/InterviewList.vue')
+    },
+    //访谈内容
+    '/interview/interview-record/:interviewId': {
+      component: require('../views/interview/InterviewRecord.vue')
     }
   })
 

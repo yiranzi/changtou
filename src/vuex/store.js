@@ -14,6 +14,7 @@ import mine from './mine/store'
 import systemMessageList from './systemMessageList/store'
 import specTopic from './topicSpec/store'
 import commonTopic from './topicCommon/store'
+import interview from './interview/store'
 
   Vue.use(Vuex)
 export default new Vuex.Store({
@@ -27,7 +28,8 @@ export default new Vuex.Store({
     courselist, //课程列表
     myCourses, //我的课程
     systemMessageList, //系统消息
-    specTopic,
-    commonTopic
+    specTopic, //打包课专题
+    commonTopic, //通用专题
+    interview //院生访谈
   }
 })

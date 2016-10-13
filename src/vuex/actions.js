@@ -12,6 +12,7 @@ import * as mineActions from './mine/actions'
 import * as systemMessageListActions from './systemMessageList/actions'
 import * as specTopicActions from './topicSpec/actions'
 import * as commonTopicActions from './topicCommon/actions'
+import * as interviewActions from './interview/actions'
 
 export {
   userActions,
@@ -23,6 +24,7 @@ export {
   myCoursesActions,
   mineActions,
   systemMessageListActions, //系统消息提醒
-  specTopicActions,
-  commonTopicActions
+  specTopicActions, //打包课专题
+  commonTopicActions, //通用专题
+  interviewActions //院生访谈
 }

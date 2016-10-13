@@ -50,7 +50,7 @@ export const updateNofiSwitch = ({ dispatch }, status) => {
 /**
  * 意见反馈内容
  */
-export const upLoadContent = ({ dispatch }, content) => {
+export const uploadContent = ({ dispatch }, content) => {
   return new Promise(
     (resolve, reject) => {
       postWithinAuth({
