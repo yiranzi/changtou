@@ -224,7 +224,6 @@
       },
       //分享朋友
       shareToFriend () {
-        console.log('shareToFriend')
         const me = this
         window.Wechat.share({
             message: {
@@ -253,7 +252,6 @@
 
       //分享到朋友圈
       shareToFriendCircle () {
-        console.log('shareToFriendCircle')
         const me = this
         window.Wechat.share({
           message: {
