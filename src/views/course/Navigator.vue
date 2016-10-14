@@ -4,9 +4,9 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
-          <div class="interview">
-            <span class="interview-left">理财揭秘</span>
-            <span class="interview-left" v-touch:tap="toInterviewList">院生访谈</span>
+          <div class="financial-interview">
+            <span>理财揭秘</span>
+            <span v-touch:tap="goToInterviewList">院生访谈</span>
           </div>
           <div class="expenselist-area">
             <p class="area-label">
@@ -132,7 +132,7 @@
         this.$route.router.go('/totalList/F')
       },
       //跳转到院生访谈列表页面
-      toInterviewList () {
+      goToInterviewList () {
         this.$route.router.go('/interview/interview-list')
       }
     },
@@ -191,8 +191,8 @@
         -webkit-transform: rotate(45deg);
       }
     }
-    /*新增院生访谈的样式*/
-    .interview{
+    /*新增理财揭秘，院生访谈的样式*/
+    .financial-interview{
       width: 100%;
       line-height: 4rem;
       display: flex;

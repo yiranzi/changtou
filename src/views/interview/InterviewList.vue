@@ -2,11 +2,15 @@
     <div class="interview-list">
       <ict-titlebar v-el:titlebar>院生故事</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y :bounce="true" v-ref:scroller :height="scrollerHeight">
-        <div>
-          <div class="content" v-for="list in interviewList" v-touch:tap="toInterviewRecord(list.interviewId)">
-            <img class="pic" v-bind:src="list.pic" />
-            <div class="reading">{{list.readCount}}人读过</div>
+        <div v-show="isLoadSuccess">
+          <div class="content" v-for="item in interviewList" v-touch:tap="goToInterviewRecord(item.interviewId)">
+            <img class="pic" v-bind:src="item.pic" />
+            <div class="reading">{{item.readCount}}人读过</div>
           </div>
+        </div>
+        <div class="load-fail" v-show="!isLoadSuccess">
+          <div>信息加载失败</div>
+          <button v-touch:tap="loadInterviewList">请重新加载</button>
         </div>
       </scroller>
     </div>
@@ -36,6 +40,13 @@
         color: #fff;
       }
     }
+    .load-fail{
+      width: 100%;
+      height: 623px;
+      background-color: #ffffff;
+      text-align: center;
+      padding-top: 40%;
+    }
   }
 </style>
 <script>
@@ -52,40 +63,44 @@
         interviewList: interviewGetters.interviewList
       }
     },
-    route: {
-      data (transition) {
-        this.loadInterviewList().then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)//获取信息错误
-          }
-        )
-      }
-    },
     data () {
       return {
-        scrollerHeight: '590px'
+        scrollerHeight: '590px',
+        isLoadSuccess: false
       }
     },
     watch: {
       'interviewList': function () {
-        const me = this
-        const {titlebar} = this.$els
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
+          this.$nextTick(() => {
+            this.$refs.scroller.reset({
 //              top: 0
           })
         })
-        }, 1500)
       }
     },
+    route: {
+      data () {
+        return this.loadInterviewList().then(
+          function () {
+            return {
+              isLoadSuccess: true
+            }
+          },
+          function (err) {
+            console.log('err', err)//获取信息错误
+            return {
+              isLoadSuccess: false
+            }
+          }
+        )
+      }
+    },
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+    },
     methods: {
-      toInterviewRecord (interviewId) {
-        this.$route.router.go('/interview/interview-record/' + interviewId)
+      goToInterviewRecord (interviewId) {
+        this.$route.router.go(`/interview/interview-record/${interviewId}`)
       }
     },
     components: {

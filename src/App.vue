@@ -67,6 +67,8 @@
       //加载课程进度
       this.loadFreeRecords()
       this.loadExpenseRecords()
+
+      this.$route.router.go('/main')
     },
 
     computed: {
