@@ -68,7 +68,6 @@
       this.loadFreeRecords()
       this.loadExpenseRecords()
 
-      this.$route.router.go('/main')
     },
 
     computed: {

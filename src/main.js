@@ -19,8 +19,6 @@ configRouter(appRouter)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
-appRouter.start(App, 'app')
-
 // start run app
 if (process.env.NODE_ENV === 'development') {
   // on develop environment
