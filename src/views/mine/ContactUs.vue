@@ -5,7 +5,7 @@
       </div>
 
       <div class="app-logo">
-        <img src="/static/image/mine/LOGO.png">
+        <img src='../../assets/styles/image/LOGO.png'>
       </div>
       <div class="item">
         <span>微信号</span>

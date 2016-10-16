@@ -13,9 +13,9 @@ export const loadCommonTopic = ({ dispatch }, ctpId) => {
       getWithinAuth({
         url: getUrl('common_topic').replace(':ctpId', ctpId)
       }).then(
-        function (response) {
-          dispatch('LOAD_COMMON_TOPIC', response)
-          resolve(response)
+        function (commonTopic) {
+          dispatch('LOAD_COMMON_TOPIC', commonTopic)
+          resolve(commonTopic)
         },
         function (err) {
           reject(err)
@@ -34,9 +34,9 @@ export const booleanMeetingTicket = ({ dispatch }) => {
       getWithinAuth({
         url: getUrl('boolean_meeting_ticket')
       }).then(
-        function (response) {
-          dispatch('LOAD_ISBUY_TICKET', response)
-          resolve(response)
+        function (isBuyTicket) {
+          dispatch('LOAD_ISBUY_TICKET', isBuyTicket)
+          resolve(isBuyTicket)
         },
         function (err) {
           reject(err)
