@@ -3,9 +3,9 @@
  */
 //获取通用专题信息
 export const commonTopic = (state) => {
-  return state.commonTopic.commonTopicInfo
+  return state.topicCommon.commonTopicInfo
 }
 //获取是否购买年会门票
 export const isBuyTicket = (state) => {
-  return state.commonTopic.isbuy
+  return state.topicCommon.isbuy
 }
