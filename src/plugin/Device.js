@@ -22,10 +22,10 @@ const isIosBrower = () => {
 */
 
 const platformMap = {
-  android: 'android',
-  ios: 'ios',
-  browser: 'browser',
-  web: 'web'
+  ANDROID: 'android',
+  IOS: 'ios',
+  BROWSER: 'browser',
+  WEB: 'web'
   //unKnown: 'unKnown'
 }
 
@@ -37,7 +37,7 @@ const getPlatform = function () {
   if (window.cordova && window.device) {
     return window.device.platform
   } else {
-    return platformMap.web
+    return platformMap.WEB
   }
 }
 
@@ -47,7 +47,7 @@ const getPlatform = function () {
  */
 const getUUID = () => {
   if (window.cordova && window.device &&
-      (window.device.platform === platformMap.android || window.device.platform === platformMap.ios)) {
+      (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
     return window.device.uuid
   } else {
     return 'unKnown'
@@ -72,7 +72,7 @@ const getDeveiceVersion = () => {
  */
 const getManufacturer = () => {
   if (window.cordova && window.device &&
-      (window.device.platform === platformMap.android || window.device.platform === platformMap.ios)) {
+      (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
     return window.device.manufacturer
   } else {
     return 'unKnown'
@@ -84,7 +84,7 @@ const getManufacturer = () => {
  */
 const getIsVirtual = function () {
   if (window.cordova && window.device &&
-    (window.device.platform === platformMap.android || window.device.platform === platformMap.ios)) {
+    (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
     return window.device.isVirtual
   } else {
     return false

@@ -37,7 +37,7 @@ const getIsWx = () => {
 /**
  *
  */
-export const Agent = {
+const Agent = {
   get isWx () {
     return getIsWx()
   },
@@ -45,4 +45,11 @@ export const Agent = {
   get userAgent () {
     return window.navigator.userAgent
   }
+}
+
+/**
+ *
+ */
+export {
+  Agent
 }
