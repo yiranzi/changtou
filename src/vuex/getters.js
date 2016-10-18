@@ -27,6 +27,6 @@ export {
   systemMessageListGetters, //系统消息提醒
   specTopicGetters, //打包课专题
   commonTopicGetters, //通用课专题
-  interviewGetters //院生访谈
+  interviewGetters, //院生访谈
   //dailyQuestionGetters //每日一题
 }
