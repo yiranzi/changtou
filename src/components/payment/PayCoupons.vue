@@ -15,7 +15,7 @@
 
  */
 <template>
-    <div class="order-coupons">
+    <div class="order-coupons" v-if="isShow">
       <p class="coupons-label">长投卡/优惠券（不可叠加使用）</p>
       <label v-for="coupon in coupons" for="coupons_{{$index}}" class="coupon-item">
         <span>{{coupon.name}}</span>
@@ -27,10 +27,7 @@
 <script>
 export default {
   props: {
-    required: {
-      type: Boolean,
-      default: true
-    },
+    isShow: Boolean,
     coupons: {
       type: Array,
       required: true

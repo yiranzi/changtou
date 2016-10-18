@@ -2,9 +2,9 @@
  * Created by jun on 2016/9/28.
  * 微信 应用 支付
  */
-import {postWithinAuth} from '../../frame/ajax'
-
-let beginPay = false
+ import { postWithinAuth } from '../../frame/ajax'
+ import {getUrl} from '../../frame/apiConfig'
+ let beginPay = false
 
 /**
  * 预支付 下订单
@@ -14,7 +14,7 @@ let beginPay = false
 const prepay = (prepayData) => {
   return new Promise(
     (resolve, reject) => {
-      postWithoutAuth(
+      postWithinAuth(
         {
           url: getUrl('principal_login'),
           data: {
@@ -24,7 +24,8 @@ const prepay = (prepayData) => {
       ).then(
         prepayResponse => {
           resolve(prepayResponse)
-        },
+        }
+      ).catch(
         err => {
           console.warn(err)
           reject(err)
@@ -51,7 +52,7 @@ const showPayComponent = (prepayResponse) => {
       }
       window.Wechat.isInstalled(
         function (installed) {
-          if(installed){
+          if (installed) {
             //alert('微信 已安装')
             beginPay = true
             window.Wechat.sendPaymentRequest(
@@ -63,27 +64,21 @@ const showPayComponent = (prepayResponse) => {
               },
               function (reason) {
                 beginPay = false
-                if(reason === '用户点击取消并返回'){
+                if (reason === '用户点击取消并返回') {
                   //alert('购买取消')
-                  reject({
-                    reason: reason,
-                    type: 'cancel'
-                  })
-                }else{
+                  console.warn(err)
+                  reject(err)
+                } else {
                   //alert('购买失败')
-                  reject({
-                    reason: reason,
-                    type: 'fail'
-                  })
+                  console.warn(err)
+                  reject(err)
                 }
               }
             )
-          }else{
+          } else {
             //alert('微信 未安装')
-            reject({
-              reason: '微信未安装',
-              type: 'fail'
-            })
+            console.warn(err)
+            reject(err)
           }
         },
         () => {}
@@ -94,18 +89,17 @@ const showPayComponent = (prepayResponse) => {
 
 /**
  * 微信支付
- * @param prepayData
+ * @param trade
  * @returns {Promise.<T>|*}
  */
-const pay = (prepayData) => {
-  //var dealData = Util.clone(prepayData)
-  //todo 克隆prepayData, 不修改原始数据
-  //delete dealData.openId
-  var promise = Promise.resolve(dealData)
+const weChatAppPay = (trade) => {
+  var deal = Object.assign(trade)
+  delete deal.openId
+  var promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }
 
 export {
-  pay,
+  weChatAppPay,
   beginPay
 }

@@ -556,7 +556,7 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        this.$route.router.go('/pay/subject')
+        this.$route.router.go('/pay/S/' + this.subjectId)
       },
 
       /**
@@ -591,7 +591,7 @@
        * 购买
        */
       buy () {
-        this.$route.router.go('/pay/subject')
+        this.$route.router.go('/pay/S/' + this.subjectId)
       }
     },
 

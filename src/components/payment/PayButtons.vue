@@ -30,7 +30,7 @@
       </div>
       <ict-button class="right"
                   :class="{'right-exception' : (state === 'exception')}"
-                  v-touch:tap="rightOptions.callback">立即购买</ict-button>
+                  v-touch:tap="rightOptions.callback">{{rightText}}</ict-button>
     </div>
 </template>
 <script>
@@ -54,8 +54,10 @@ export default {
   },
   computed: {
     leftText () {
-      console.log(this.state)
       return this.state === 'exception' ? this.leftOptions.text : ('实付金额<span class="price">￥' + this.leftOptions.price + '</span>')
+    },
+    rightText () {
+      return this.state === 'exception' ? this.rightOptions.text : '确认订单'
     }
   },
   components: {

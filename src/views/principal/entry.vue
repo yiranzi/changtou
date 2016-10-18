@@ -57,8 +57,8 @@
 
     data () {
       return {
-        plainPassword: 'hj123456',
-        identity: '月小兔'
+        plainPassword: 'hujunlove',
+        identity: '茗小铭'
       }
     },
 

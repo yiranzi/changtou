@@ -135,8 +135,8 @@ export function configRouter (router) {
     /**
      * 支付模块
      */
-    '/pay/subject': {
-      component: require('../views/pay/SubjectOrder.vue')
+    '/pay/:type/:id': {
+      component: require('../views/pay/Order.vue')
     },
 
     //我的课程
