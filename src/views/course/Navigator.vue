@@ -8,6 +8,9 @@
             <span>理财揭秘</span>
             <span v-touch:tap="goToInterviewList">院生访谈</span>
           </div>
+          <div class="daily-question" v-touch:tap="goToDailyQuestion">
+            每日一题 积攒你的财商
+          </div>
           <div class="expenselist-area">
             <p class="area-label">
               <span class="color-span"> </span>
@@ -48,18 +51,20 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
-  import {navigatorGetters} from '../../vuex/getters'
-  import {navigatorActions} from '../../vuex/actions'
+  import {navigatorGetters, dailyQuestionGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList
+        expenseList: navigatorGetters.expenseCourseList,
+        dailyQuestion: dailyQuestionGetters.dailyQuestion
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData
+        loadData: navigatorActions.loadNavigatorData,
+        loadDailyQuestion: dailyQuestionActions.loadDailyQuestion
       }
     },
 
@@ -68,7 +73,18 @@
         scrollerHeight: '0px'
       }
     },
-
+    route: {
+      data (transition) {
+        this.loadDailyQuestion().then(
+          function () {
+            transition.next()
+          },
+          function (err) {
+            console.log('err', err)
+          }
+        )
+      }
+    },
     ready () {
       const me = this
       this.loadData().then(
@@ -134,6 +150,14 @@
       //跳转到院生访谈列表页面
       goToInterviewList () {
         this.$route.router.go('/interview/interview-list')
+      },
+      //跳转到每日一题
+      goToDailyQuestion () {
+        if (this.dailyQuestion.selectedOption) {
+          this.$route.router.go('daily/quiz/solve')
+        } else {
+          this.$route.router.go('daily/quiz')
+        }
       }
     },
 
@@ -206,6 +230,13 @@
         width: 50%;
         text-align: center;
       }
+    }
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 1.25rem;
+      background-color: #fff;
     }
     .expenselist-area{
       text-align: center;
