@@ -3,11 +3,10 @@
  */
 
 import 'whatwg-fetch'
-
-const caheItem = 'sessionProps'
+const cacheItem = 'sessionProps'
 
 let server = 'http://121.40.131.112:3000'
-let sessionProps = window.JSON.parse(window.sessionStorage.getItem(caheItem)) //全局的超级属性, 仅在本次会话内有效
+let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) //全局的超级属性, 仅在本次会话内有效
 
 /**
  * 初始化 设置服务器地址(若需要)
@@ -22,25 +21,25 @@ const init = function (serverUrl) {
  * @param eventProps
  */
 const track = function (eventProps) {
-  if (!eventProps instanceof Object) {
+  if (!(eventProps instanceof Object)) {
     console.warn('发送到统计数据', eventProps, '不是一个合法的对象, 忽略')
     return
   }
 
   var trackData = Object.assign({}, {userId: '00'}, sessionProps, eventProps)
 
-  fetch(server + '/event', {
+  window.fetch(server + '/event', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(trackData)
-  }).then(function(response) {
+  }).then(function (response) {
     return response.json()
-  }).then(function(json) {
+  }).then(function (json) {
     //console.log('parsed json', json)
-  }).catch(function(ex) {
+  }).catch(function (ex) {
     console.warn('ictdata parsing failed', ex)
   })
 }
@@ -50,23 +49,23 @@ const track = function (eventProps) {
  * @param userProps
  */
 const updateUser = function (userProps) {
-  if (!userProps instanceof Object) {
-    console.warn('发送到统计数据', userProps, '不是一个合法的对象, 忽略');
-    return;
+  if (!(userProps instanceof Object)) {
+    console.warn('发送到统计数据', userProps, '不是一个合法的对象, 忽略')
+    return
   }
 
-  fetch(server + '/user/' + userProps['userId'] || '00', {
+  window.fetch(server + '/user/' + userProps['userId'] || '00', {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(userProps)
-  }).then(function(response) {
+  }).then(function (response) {
     return response.json()
-  }).then(function(json) {
+  }).then(function (json) {
     //console.log('成功', json)
-  }).catch(function(ex) {
+  }).catch(function (ex) {
     console.warn('ictdata parsing failed', ex)
   })
 }
@@ -76,20 +75,20 @@ const updateUser = function (userProps) {
  * @param props
  */
 const register = function (props) {
-  if (!props instanceof Object) {
-    console.warn('设置统计数据register', props, '不是一个合法的对象, 忽略');
+  if (!(props instanceof Object)) {
+    console.warn('设置统计数据register', props, '不是一个合法的对象, 忽略')
     return
   }
 
-  Object.assign(sessionProps, props);
+  Object.assign(sessionProps, props)
   //记录到sessionStorage,本次会话有效(窗口不关闭)
-  window.sessionStorage.setItem(caheItem, window.JSON.stringify(sessionProps))
+  window.sessionStorage.setItem(cacheItem, window.JSON.stringify(sessionProps))
 }
 
 /**
  *
  */
-export default {
+export const ictData = {
   init,
   track,
   updateUser,
