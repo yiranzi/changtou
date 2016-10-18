@@ -92,6 +92,11 @@
         <splash src="www/resources/splash/ios/Default-Landscape-736h.png" width="2208" height="1242"/>
         <splash src="www/resources/splash/ios/1334_750.png" width="1334" height="1334"/>
     </platform>
+    <platform name="browser">
+        <preference name="SplashScreen" value="/static/resources/splash/ios/Default-667h.png" />
+        <preference name="SplashScreenWidth" value="375" /> <!-- defaults to "170" -->
+        <preference name="SplashScreenHeight" value="627" /> <!-- defaults to "200" -->
+    </platform>
 
     <chcp>
         <!--<local-development enabled="true" />-->

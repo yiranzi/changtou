@@ -1,136 +1,123 @@
 /**
- * Created by jun on 2016/9/27.
+ * Created by zl on 2016/10/27.
  */
 
-const platformMap = {
-  ANDROID: 'android',
-  IOS: 'ios',
-  WEB: 'web'
-}
-
-/**
- * 获取平台名字
- * @returns {*}
- */
-const getPlatformName = () => {
-  if (window.cordova) {
-    return window.cordova.platformId
-  } else {
-    return 'web'
-  }
-}
-
-/**
- * 获取平台系统版本
- * @returns {*}
- */
-const getPlatformVersion = () => {
-  if (window.cordova) {
-    return window.cordova.platformVersion
-  } else {
-    return ''
-  }
-}
-
-/**
- * 获取设备的uuid
- */
-const getUUID = () => {
-  return (window.device && window.device.uuid) || null
-}
-
-/**
+/*
+/!**
  * 获取设备型号（别名）
  * @returns {*|null|string}
- */
+ *!/
 const getModel = () => {
   return (window.device && window.device.model) || null
 }
 
-/**
- * 获取设备的厂商
- * @returns {*|string|null}
- */
-const getManufacturer = () => {
-  return (window.device && window.device.manufacturer) || null
+/!**
+ * 是否ios内核浏览器
+ *!/
+const isIosBrower = () => {
+  var u = navigator.userAgent
+  //var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 //android终端
+  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
+}
+*/
+
+const platformMap = {
+  ANDROID: 'android',
+  IOS: 'ios',
+  BROWSER: 'browser',
+  WEB: 'web'
+  //unKnown: 'unKnown'
 }
 
 /**
- * 当前设备是否微信浏览器
+ * 获取平台
+ * @returns {*}
  */
-const isWx = () => {
-  var ua = navigator.userAgent.toLowerCase()
-  if (ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === 'micromessenger') {
-    return true
+const getPlatform = function () {
+  if (window.cordova && window.device) {
+    return window.device.platform
+  } else {
+    return platformMap.WEB
+  }
+}
+
+/**
+ * 获取UUID, 设备唯一标识
+ * @returns {*}
+ */
+const getUUID = () => {
+  if (window.cordova && window.device &&
+      (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
+    return window.device.uuid
+  } else {
+    return 'unKnown'
+  }
+}
+
+/**
+ * 设备系统的版本号 (2.2|6.0.0.6000 .ect)
+ * @returns {*}
+ */
+const getDeveiceVersion = () => {
+  if (window.cordova && window.device) {
+    return window.device.version
+  } else {
+    return 'unKnown'
+  }
+}
+
+/**
+ * 设备制造商 ( .ect)
+ * @returns {*}
+ */
+const getManufacturer = () => {
+  if (window.cordova && window.device &&
+      (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
+    return window.device.manufacturer
+  } else {
+    return 'unKnown'
+  }
+}
+
+/**
+ * 是否是虚拟机
+ */
+const getIsVirtual = function () {
+  if (window.cordova && window.device &&
+    (window.device.platform === platformMap.ANDROID || window.device.platform === platformMap.IOS)) {
+    return window.device.isVirtual
   } else {
     return false
   }
 }
 
 /**
- * 是否ios内核浏览器
+ *
  */
-const isIosBrower = () => {
-  var u = navigator.userAgent
-  //var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 //android终端
-  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
-}
-
-export const Device = {
-  platformMap,
-
-  /**
-   * 平台名字
-   * @returns {*}
-     */
-  get platformName () {
-    return getPlatformName()
+const Device = {
+  get platform () {
+    return getPlatform()
   },
 
-  /**
-   * 系统版本
-   * @returns {*}
-     */
-  get platformVersion () {
-    return getPlatformVersion()
-  },
-
-  /**
-   * 设备uuid
-   * @constructor
-     */
   get UUID () {
     return getUUID()
   },
 
-  /**
-   * 设备型号
-   * @returns {*|null|string}
-     */
-  get model () {
-    return getModel()
+  get deviceVersion () {
+    return getDeveiceVersion()
   },
 
-  /**
-   * 设备的厂商
-    * @returns {*|string|null}
-     */
   get manufacturer () {
     return getManufacturer()
   },
 
-  /**
-   * 是否微信浏览器
-   */
-  get isWx () {
-    return isWx()
-  },
-
-  /**
-   * 是否ios内核浏览器
-   * @returns {ios终端}
-     */
-  get isIosBrower () {
-    return isIosBrower()
+  get isVirtual () {
+    return getIsVirtual()
   }
+
+}
+
+export {
+  Device,
+  platformMap
 }
