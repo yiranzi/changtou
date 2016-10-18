@@ -121,6 +121,7 @@
       },
       goToDailyQuestionAnswer (selectedOption) {
         let questionid = this.dailyQuestion.id
+        this.dailyQuestion.selectedOption = selectedOption.toString()
         this.submitAnswer(questionid, selectedOption).then(
           function () {
 

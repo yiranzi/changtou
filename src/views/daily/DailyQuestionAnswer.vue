@@ -122,27 +122,11 @@
   }
 </style>
 <script>
-  import {dailyQuestionActions} from '../../vuex/actions'
   import {dailyQuestionGetters} from '../../vuex/getters'
   export default {
     vuex: {
-      actions: {
-        loadDailyQuestion: dailyQuestionActions.loadDailyQuestion
-      },
       getters: {
         dailyQuestion: dailyQuestionGetters.dailyQuestion
-      }
-    },
-    route: {
-      data (transition) {
-        this.loadDailyQuestion().then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
       }
     },
     computed: {

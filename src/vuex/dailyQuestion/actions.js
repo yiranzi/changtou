@@ -1,16 +1,18 @@
 /**
  * Created by dongdong on 2016/10/14.
  */
-import {getWithinAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, getWithoutAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-
+import store from '../../vuex/store'
+let user = store.state.user
 /**
  * 获取每日一题
  */
 export const loadDailyQuestion = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth({
+      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
+      ajax({
         url: getUrl('load_daily_question')
       }).then(
         function (dailyQuestion) {
