@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-  import QRCode from '../../plugin/qrCode'
+  import QRCode from '../../plugin/qrcode'
 export default {
   props: {
     isShow: Boolean,

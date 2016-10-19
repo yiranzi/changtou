@@ -19,9 +19,8 @@ const WeChatQRCodePay = (prepayData) => {
           data: prepayData
         }
       ).then(
-        codeUrl => {
-          // todo 显示二维码弹窗
-          resolve()
+        res => {
+          resolve(res.codeURL)
         }
       ).catch(
         err => {
