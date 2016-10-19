@@ -4,6 +4,10 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
+          <div class="financial-interview">
+            <span>理财揭秘</span>
+            <span v-touch:tap="goToInterviewList">院生访谈</span>
+          </div>
           <div class="expenselist-area">
             <p class="area-label">
               <span class="color-span"> </span>
@@ -126,6 +130,10 @@
       },
       onFreeListTap () {
         this.$route.router.go('/totalList/F')
+      },
+      //跳转到院生访谈列表页面
+      goToInterviewList () {
+        this.$route.router.go('/interview/interview-list')
       }
     },
 
@@ -181,6 +189,22 @@
         border-top: 1px solid #aaa;
         border-right: 1px solid #aaa;
         -webkit-transform: rotate(45deg);
+      }
+    }
+    /*新增理财揭秘，院生访谈的样式*/
+    .financial-interview{
+      width: 100%;
+      line-height: 4rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      border-bottom: 0.5rem #f0eff5 solid;
+
+      span{
+        width: 50%;
+        text-align: center;
       }
     }
     .expenselist-area{

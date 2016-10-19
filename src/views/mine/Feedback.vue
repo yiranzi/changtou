@@ -75,13 +75,13 @@
       //点击提交按钮
       doSave () {
         const me = this
-        this.upLoadContent(this.content).then(
+        this.uploadContent(this.content).then(
           function (rep) {
             me.content = ''
             me.$route.router.go('/setting')
           },
           function () {
-            me.showAlert('暂停失败,请重试')
+            me.showAlert('暂时失败,请重试')
           }
         )
       },
