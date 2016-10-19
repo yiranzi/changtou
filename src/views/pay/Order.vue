@@ -16,6 +16,15 @@
     </scroller>
     <pay-button :state="state" :left-options="leftOptions" :right-options="rightOptions"></pay-button>
     <pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>
+    <code-panel :is-show="qrCode.isShow" :url="qrCode.url" @code-pressed="showCodeConfirm"></code-panel>
+    <confirm :show.sync="isConfirmShow"
+             title=" "
+             :confirm-text="confirmText"
+             :cancel-text="cancelText"
+             @on-confirm="goSuccess"
+             @on-cancel="onCodeCancel">
+      <p style="text-align:center;">{{{confirmMsg}}}</p>
+    </confirm>
   </div>
 </template>
 
@@ -29,13 +38,15 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
-  import { payChannel, dealType, getOrder, pay } from '../../util/pay/daelHelper'
+  import CodePanel from '../../components/payment/CodePanel.vue'
+  import Confirm from 'vux/confirm'
+  import { payChannel, goodsType, dealType, getOrder, pay } from '../../util/pay/daelHelper'
 
   export default{
     data () {
       return {
-        type: this.$route.params.type,
-        id: this.$route.params.id,
+        type: this.$route.params.type.split('-')[0],
+        id: this.$route.params.type.split('-')[1],
         scrollerHeight: '0px',
         state: '',
         leftOptions: {
@@ -58,7 +69,15 @@
           wechat: '微信支付',
           ali: '支付宝支付'
         },
-        trade: {}//交易订单
+        trade: {}, //交易订单
+        qrCode: {
+          isShow: false,
+          url: ''
+        },
+        isConfirmShow: false,
+        confirmText: '已支付',
+        cancelText: '未支付',
+        confirmMsg: null
       }
     },
     ready () {
@@ -74,7 +93,9 @@
       PayToubi,
       PayButton,
       PaySubject,
-      PayActionSheet
+      PayActionSheet,
+      CodePanel,
+      Confirm
     },
     route: {
       data () {
@@ -113,7 +134,7 @@
        * 是否显示课程列表
        */
       isSubjectShow () {
-        if (this.type === dealType.SUBJECT || this.type === dealType.COMMON_TOPIC) {
+        if (this.type === goodsType.SUBJECT || this.type === goodsType.COMMON_TOPIC) {
           return true
         } else {
           return false
@@ -147,12 +168,11 @@
         } else {
           this.trade.deal.items[0].coupon = this.couponList[val]
         }
-
-        if (this.type === dealType.POSTPONE) {
+        if (this.type === goodsType.POSTPONE) {
           this.trade.deal.items[0].dealType = 3
         }
 
-        if (this.type === dealType.SUBJECT) {
+        if (this.type === goodsType.SUBJECT) {
           this.trade.deal.items[0].price = total
         }
 
@@ -182,15 +202,54 @@
          * @param channel
          */
       payByChannel (channel) {
+//        window.alert('payByChannel')
         pay(this.trade, channel).then(
-          () => {
-            this.$route.router.go('/pay/success/' + this.type)
-          }
-        ).catch(
+          result => {
+            if (result.type === dealType.WX_CODE) {
+              this.showCodePanel(result.url)
+            } else if (result.type === dealType.ALI_BROWSER) {
+
+            } else {
+              this.goSuccess()
+            }
+          },
           err => {
             window.alert(err.reason)
           }
         )
+      },
+      /**
+       * 显示二维码
+       *
+       */
+      showCodePanel (url) {
+        this.qrCode = {
+          url: url,
+          isShow: true
+        }
+      },
+      /**
+       * 二维码支付后 提示框
+       */
+      showCodeConfirm () {
+        this.qrCode = {
+          url: '',
+          isShow: false
+        }
+        this.confirmMsg = '是否已完成扫码支付'
+        this.isConfirmShow = true
+      },
+      /**
+       * 二维码取消支付
+       */
+      onCodeCancel () {
+        this.isConfirmShow = false
+      },
+      /**
+       * 支付成功
+       */
+      goSuccess () {
+        this.$route.router.go('/pay/success/' + this.type)
       }
     }
   }

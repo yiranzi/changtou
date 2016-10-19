@@ -591,7 +591,8 @@
        * 购买
        */
       buy () {
-        this.$route.router.go('/pay/S/' + this.subjectId)
+        this.$route.router.go({name: 'pay', params: {type: 'S-' + this.subjectId}})
+//        this.$route.router.go('/pay/S/' + this.subjectId)
       }
     },
 

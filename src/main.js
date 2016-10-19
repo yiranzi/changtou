@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
 import {configRouter} from './frame/routeConfig'
+import {Device, platformMap} from './plugin/device'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
@@ -20,7 +21,7 @@ configRouter(appRouter)
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
 // start run app
-if (process.env.NODE_ENV === 'development') {
+if ((process.env.NODE_ENV === 'development') || (Device.platform === platformMap.WEB)) {
   // on develop environment
   appRouter.start(App, 'app')
 } else {
@@ -61,4 +62,3 @@ if (process.env.NODE_ENV === 'development') {
   }
   app.initialize()
 }
-
