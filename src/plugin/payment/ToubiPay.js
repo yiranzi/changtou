@@ -2,11 +2,12 @@
  * Created by jun on 2016/9/28.
  * 投币支付
  */
-import {postWithinAuth} from '../../frame/ajax'
-import {getUrl} from '../../frame/apiConfig'
+import { postWithinAuth } from '../../frame/ajax'
+import { getUrl } from '../../frame/apiConfig'
+import { errorType } from '../../util/pay/daelHelper'
 
-const toubiPay = (trade) => {
-  return  new Promise (
+const ToubiPay = (trade) => {
+  return new Promise(
     (resolve, reject) => {
     postWithinAuth(
       {
@@ -15,17 +16,20 @@ const toubiPay = (trade) => {
       }
     ).then(
       response => {
-        resolve(response)
+        resolve()
       }
     ).catch(
       err => {
         console.warn(err)
-        reject(err)
+        reject({
+          type: errorType.FAIL,
+          reason: err
+        })
       }
     )
   })
 }
 
 export {
-  toubiPay
+  ToubiPay
 }

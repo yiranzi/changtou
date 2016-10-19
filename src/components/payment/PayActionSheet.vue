@@ -1,3 +1,25 @@
+/**
+* @example
+<pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>
+* data() {
+*   return {
+*   isActionSheetShow: false,
+*   menus: {
+*     wechat: '微信支付',
+*     ali: '支付宝支付'
+*   }
+* }
+* }
+* methods: {
+*  /**
+*  * 选择 支付方式
+*  */
+*   payWaySelected (payWay) {
+*     console.log( payWay)
+*   }
+* }
+**/
+
 <template>
   <div class="pay-actionsheet">
     <div class="pay_actionsheet_mask" :class="{'pay_actionsheet_fade_toggle': show}" :style="{display: show ? 'block' : 'none'}" v-touch:tap="show=false"></div>
@@ -47,8 +69,8 @@
         this.show = false
       },
       onConfirmTap () {
-        console.log('选择支付方式', this.payWay)
         this.show = false
+        this.$emit('pay-way-selected', JSON.parse(JSON.stringify(this.payWay)))
       },
       fixIos (zIndex) {
         if (this.$tabbar && /iphone/i.test(navigator.userAgent)) {
@@ -70,9 +92,7 @@
         }
       },
       value (newVal) {
-        console.log(newVal)
         this.payWay = newVal
-        this.$emit('on-change', JSON.parse(JSON.stringify(newVal)))
       }
     },
     beforeDestroy () {

@@ -2,8 +2,9 @@
  * Created by jun on 2016/9/28.
  * 微信 浏览器 支付
  */
-import {postWithinAuth} from '../../frame/ajax'
-import {getUrl} from '../../frame/apiConfig'
+import { postWithinAuth } from '../../frame/ajax'
+import { getUrl } from '../../frame/apiConfig'
+import { WX_APPID } from '../../frame/serverConfig'
 
 /**
  * 预支付 下订单
@@ -43,25 +44,25 @@ const showPayComponent = (prepayResponse) => {
   return new Promise(
     (resolve, reject) => {
       let params = {
-        "appId": ServerConfig.config.WX_APPID,
-        "timeStamp": prepayResponse.timeStamp.toString(),
-        "nonceStr" : prepayResponse.nonceStr,
-        "package" : "prepay_id=" + prepayResponse.prepayId.toString(),
-        "signType" : "MD5",
-        "paySign" : prepayResponse.paySign
+        appId: WX_APPID, // todo wx_appid
+        timeStamp: prepayResponse.timeStamp.toString(),
+        nonceStr: prepayResponse.nonceStr,
+        package: 'prepay_id=' + prepayResponse.prepayId.toString(),
+        signType: 'MD5',
+        paySign: prepayResponse.paySign
       }
       window.WeixinJSBridge.invoke(
         'getBrandWCPayRequest',
         params,
-        function(res){
+        function (res) {
           //console.log(res)
-          if(res.err_msg === "get_brand_wcpay_request:ok" ){
+          if (res.err_msg === 'get_brand_wcpay_request:ok') {
             //微信支付成功
             resolve()
-          }else if(res.err_msg === 'get_brand_wcpay_request:fail'){
+          } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
             //支付失败
             reject()
-          }else if(res.err_msg === 'get_brand_wcpay_request:cancel'){
+          } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
             //取消微信支付
             reject()
           }
@@ -76,11 +77,11 @@ const showPayComponent = (prepayResponse) => {
  * @param trade
  * @returns {Promise.<T>|*}
  */
-const weChatBrowserPay = (trade) => {
+const WeChatBrowserPay = (trade) => {
   var promise = Promise.resolve(trade)
   return promise.then(prepay).then(showPayComponent)
 }
 
 export {
-  weChatBrowserPay
+  WeChatBrowserPay
 }

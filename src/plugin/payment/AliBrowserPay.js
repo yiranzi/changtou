@@ -2,15 +2,15 @@
  * Created by jun on 2016/9/28.
  * 支付宝 网页支付
  */
-import {postWithinAuth} from '../../frame/ajax'
-import {getUrl} from '../../frame/apiConfig'
+import { postWithinAuth } from '../../frame/ajax'
+import { getUrl } from '../../frame/apiConfig'
 
-const aliBrowserPay = (trade) => {
+const AliBrowserPay = (trade) => {
   //添加支付返回提示
-  trade.return_url =  location.origin + location.pathname.replace('index.html', 'lib/alipay/AliPayReturn.html');
-  trade.show_url =  location.href;
+  trade.return_url = window.location.origin + window.location.pathname.replace('index.html', 'lib/alipay/AliPayReturn.html')
+  trade.show_url = window.location.href
 
-  return  new Promise (
+  return new Promise(
     (resolve, reject) => {
       postWithinAuth(
         {
@@ -19,13 +19,11 @@ const aliBrowserPay = (trade) => {
         }
       ).then(
         aliPayView => {
+          var html = aliPayView.message
+          window.alipay_html = html
 
-          var html = aliPayView.message;
-          window.alipay_html = html;
-
-          localStorage.setItem('ali-web-pay',html)
-          location.href = location.origin + location.pathname.replace('index.html', 'lib/alipay/AliPay.html');
-
+          window.localStorage.setItem('ali-web-pay', html)
+          window.location.href = window.location.origin + window.location.pathname.replace('index.html', 'lib/alipay/AliPay.html')
         }
       ).catch(
         err => {
@@ -37,5 +35,5 @@ const aliBrowserPay = (trade) => {
 }
 
 export {
-  aliBrowserPay
+  AliBrowserPay
 }

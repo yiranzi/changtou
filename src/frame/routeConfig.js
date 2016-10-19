@@ -62,7 +62,9 @@ export function configRouter (router) {
     'subject/detail/P/:subjectId/:position': { //课程详情页
       component: require('../views/course/CourseDetailExpense.vue')
     },
-
+    '/mycourse': {    //我的课程
+      component: require('../views/course/MyCourse.vue')
+    },
     /**
      * 登录模块
      */
@@ -138,10 +140,9 @@ export function configRouter (router) {
     '/pay/:type/:id': {
       component: require('../views/pay/Order.vue')
     },
-
-    //我的课程
-    '/mycourse': {
-      component: require('../views/course/MyCourse.vue')
+    // 支付成功
+    'pay/success/:type': {
+      component: require('../views/pay/Success.vue')
     },
 
     /**

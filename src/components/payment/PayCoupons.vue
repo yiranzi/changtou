@@ -39,7 +39,7 @@ export default {
   },
   watch: {
     value (newVal) {
-      this.$emit('on-change', JSON.parse(JSON.stringify(newVal)))
+      this.$emit('pay-coupons-change', JSON.parse(JSON.stringify(newVal)))
     }
   }
 }

@@ -22,7 +22,7 @@ const isIosBrower = () => {
 */
 
 const platformMap = {
-  ANDROID: 'android',
+  ANDROID: 'Android',
   IOS: 'ios',
   BROWSER: 'browser',
   WEB: 'web'

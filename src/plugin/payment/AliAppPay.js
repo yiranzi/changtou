@@ -3,7 +3,8 @@
  * 支付宝 应用 支付
  */
 import { postWithinAuth } from '../../frame/ajax'
-import {getUrl} from '../../frame/apiConfig'
+import { getUrl } from '../../frame/apiConfig'
+import { errorType } from '../../util/pay/daelHelper'
 // 支付中
 let beginPay = false
 //错误码
@@ -21,30 +22,29 @@ let failCode = {
 const prepay = (prepayData) => {
   return new Promise(
     (resolve, reject) => {
+      //window.alert('prepay')
       postWithinAuth(
         {
           url: getUrl('ali_app_prepay'),
-          data: {
-            prepayData
-          }
+          data: prepayData
         }
       ).then(
         prepayResponse => {
           if (typeof (prepayResponse.message) === 'string') {
             resolve(JSON.parse(prepayResponse.message))
-          }
-          else{
-            //console.warn('获取tradeNo信息；后台返回格式有误');
-            //reject({
-            //  reason: '获取订单号失败,后台返回格式有误',
-            //  type: Dict.payRejectType.FAIL
-            //});
+          } else {
+            reject({
+              reason: '获取订单号失败,后台返回格式有误',
+              type: errorType.FAIL
+            })
           }
         }
       ).catch(
         err => {
-          console.warn(err)
-          reject(err)
+          reject({
+            reason: err,
+            type: errorType.FAIL
+          })
         }
       )
     }
@@ -59,6 +59,7 @@ const prepay = (prepayData) => {
 const showPayComponent = (prepayResponse) => {
   return new Promise(
     (resolve, reject) => {
+      //window.alert('showPayComponent')
       let params = {
         tradeNo: prepayResponse.out_trade_no,
         subject: prepayResponse.subject,
@@ -66,24 +67,27 @@ const showPayComponent = (prepayResponse) => {
         price: prepayResponse.total_fee,
         notifyUrl: prepayResponse.notify_url
       }
+      beginPay = true
       window.alipay.pay(
         params,
         results => {
+          beginPay = false
           resolve(results)
         },
         err => {
+          beginPay = false
           if (err.resultStatus === failCode.CANCEL_BY_USER) {
             //取消
-            //reject({
-            //  reason: errorResults.memo,
-            //  type: Dict.payRejectType.CANCEL
-            //});
+            reject({
+              reason: err.memo,
+              type: errorType.CANCEL
+            })
           } else {
             //失败
-            //reject({
-            //  reason: errorResults.memo,
-            //  type: Dict.payRejectType.FAIL
-            //});
+            reject({
+              reason: err.memo,
+              type: errorType.FAIL
+            })
           }
         }
       )
@@ -97,6 +101,7 @@ const showPayComponent = (prepayResponse) => {
  * @returns {Promise.<T>|*}
  */
 const AliAppPay = (trade) => {
+  //window.alert('AliAppPay')
   var deal = Object.assign(trade)
   delete deal.openId
   var promise = Promise.resolve(deal)

@@ -10,12 +10,12 @@
     <ict-titlebar v-el:titlebar >确认订单</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <pay-subject :course-list="courseList"></pay-subject>
-      <pay-coupons :is-show="isCouponsShow()" :coupons="couponList" @on-change="change"></pay-coupons>
+      <pay-coupons :is-show="isCouponsShow()" :coupons="couponList" @pay-coupons-change="couponsChange"></pay-coupons>
       <pay-total>{{total}}</pay-total>
       <pay-toubi :value="deduction"></pay-toubi>
     </scroller>
     <pay-button :state="state" :left-options="leftOptions" :right-options="rightOptions"></pay-button>
-    <pay-action-sheet :show.sync="isActionSheetShow" :menus="menus"></pay-action-sheet>
+    <pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>
   </div>
 </template>
 
@@ -29,7 +29,7 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
-  import { getOrder, payStart } from '../../util/pay/daelHelper'
+  import { payChannel, dealType, getOrder, pay } from '../../util/pay/daelHelper'
 
   export default{
     data () {
@@ -84,6 +84,7 @@
             me.courseList = order.courseList
             me.couponList = order.couponList
             me.price = order.price
+            me.currentBalance = order.currentBalance
             me.trade = order.trade
           }
         )
@@ -112,7 +113,7 @@
        * 是否显示课程列表
        */
       isSubjectShow () {
-        if (this.type === 'S' || this.type === 'CT') {
+        if (this.type === dealType.SUBJECT || this.type === dealType.COMMON_TOPIC) {
           return true
         } else {
           return false
@@ -130,13 +131,14 @@
        * 更换优惠
        * @param val
          */
-      change (val) {
-        let total = this.price - this.couponList[val].userBene ? (this.price - this.couponList[val].userBene) : 0
-        let sum = total - this.deduction
-
+      couponsChange (val) {
         //页面数据 更新
+
+        let total = this.price - this.couponList[val].userBene ? (this.price - this.couponList[val].userBene) : 0
         this.total = total
         this.deduction = this.currentBalance >= this.total ? this.total : this.currentBalance >= 0 ? this.currentBalance : 0
+
+        let sum = total - this.deduction
         this.leftOptions.price = sum
 
         //交易数据 更新
@@ -146,11 +148,11 @@
           this.trade.deal.items[0].coupon = this.couponList[val]
         }
 
-        if (this.type === 'P') {
+        if (this.type === dealType.POSTPONE) {
           this.trade.deal.items[0].dealType = 3
         }
 
-        if (this.type === 'S') {
+        if (this.type === dealType.SUBJECT) {
           this.trade.deal.items[0].price = total
         }
 
@@ -158,18 +160,37 @@
       },
 
       /**
+       * 选择 支付方式
+       */
+      payWaySelected (payWay) {
+        this.payByChannel(payWay)
+      },
+
+      /**
        * 点击按钮的回调
        */
       callback () {
-        if(this.trade.sum > 0){
+        if (this.trade.sum > 0) {
           this.isActionSheetShow = true
-        }else{
-          payStart(trade, 'toubi')
+        } else {
+          this.payByChannel(payChannel.TOUBI)
         }
       },
 
-      click (key) {
-        console.log('click', key)
+        /**
+         * 支付
+         * @param channel
+         */
+      payByChannel (channel) {
+        pay(this.trade, channel).then(
+          () => {
+            this.$route.router.go('/pay/success/' + this.type)
+          }
+        ).catch(
+          err => {
+            window.alert(err.reason)
+          }
+        )
       }
     }
   }
