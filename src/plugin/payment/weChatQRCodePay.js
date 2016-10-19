@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-
+import { errorType } from '../../util/pay/daelHelper'
 /**
  * 预支付 下订单
  * @param prepayData
@@ -25,7 +25,10 @@ const WeChatQRCodePay = (prepayData) => {
       ).catch(
         err => {
           console.warn(err)
-          reject(err)
+          reject({
+            type: errorType.FAIL,
+            reason: err
+          })
         }
       )
     }

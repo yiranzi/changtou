@@ -28,7 +28,10 @@ const prepay = (prepayData) => {
       ).catch(
         err => {
           console.warn(err)
-          reject(err)
+          reject({
+            type: errorType.FAIL,
+            reason: err.message
+          })
         }
       )
     }

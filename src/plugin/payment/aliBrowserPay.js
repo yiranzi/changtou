@@ -4,6 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
+import { errorType } from '../../util/pay/daelHelper'
 
 const AliBrowserPay = (trade) => {
   //添加支付返回提示
@@ -28,7 +29,10 @@ const AliBrowserPay = (trade) => {
       ).catch(
         err => {
           console.warn(err)
-          reject(err)
+          reject({
+            type: errorType.FAIL,
+            reason: err.message
+          })
         }
       )
     })
