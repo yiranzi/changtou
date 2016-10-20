@@ -78,7 +78,13 @@ const apiUrl = {
    * 院生访谈
    */
   'load_interview_list': '/homepage/interview/interview-list', //获取访谈列表
-  'load_interview_record': '/homepage/interview/interview-record/:interviewId' //获取访谈列表
+  'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
+
+  /**
+   * 每日一题
+   */
+  'load_daily_question': '/homepage/daily-question/lastest-question', //获取每日一题
+  'submit_answer': '/homepage/daily-question/submit-answer' //用户提交答案
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

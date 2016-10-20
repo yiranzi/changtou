@@ -170,6 +170,18 @@ export function configRouter (router) {
     //访谈内容
     '/interview/interview-record/:interviewId': {
       component: require('../views/interview/InterviewRecord.vue')
+    },
+
+    /**
+     * 每日一题
+     */
+    //获取每日一题
+    'daily/quiz': {
+      component: require('../views/daily/DailyQuestion.vue')
+    },
+    //用户提交答案
+    'daily/answer': {
+      component: require('../views/daily/DailyQuestionAnswer.vue')
     }
   })
 
