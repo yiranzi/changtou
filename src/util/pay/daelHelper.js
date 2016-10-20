@@ -275,8 +275,10 @@ const pay = (trade, channel) => {
   return new Promise(
     (resolve, reject) => {
       if (channel === payChannel.ALI) {
+        //window.alert('ALI')
         switch (Device.platform) {
           case platformMap.ANDROID:
+            //window.alert('ANDROID')
             AliAppPay(trade).then(
               () => {
                 resolve()
@@ -288,6 +290,7 @@ const pay = (trade, channel) => {
             )
             break
           case platformMap.IOS:
+            //window.alert('IOS')
             AliAppPay(trade).then(
               () => {
                 resolve()
@@ -299,13 +302,14 @@ const pay = (trade, channel) => {
             )
             break
           case platformMap.WEB:
+            //window.alert('WEB')
             AliBrowserPay(trade).then(
               () => {
                 resolve()
               }
             ).catch(
-              () => {
-                reject()
+              err => {
+                reject(err)
               }
             )
             break
@@ -375,8 +379,8 @@ const pay = (trade, channel) => {
             resolve()
           }
         ).catch(
-          () => {
-            reject()
+          err => {
+            reject(err)
           }
         )
       }

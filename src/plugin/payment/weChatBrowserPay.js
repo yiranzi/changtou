@@ -77,7 +77,7 @@ const showPayComponent = (prepayResponse) => {
 }
 
 /**
- * 微信支付
+ * 微信 browser 支付
  * @param trade
  * @returns {Promise.<T>|*}
  */

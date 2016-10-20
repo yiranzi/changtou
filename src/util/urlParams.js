@@ -24,12 +24,7 @@ const getParamsObjectFromUrl = (url) => {
  * @returns {*}
  */
 const getParamFromUrl = (param, url) => {
-  let paramsStr = url ? url.split('?')[1].split('#')[0] : window.location.search.substr(1)
-  let paramsArr = paramsStr.split('&')
-  let params = {}
-  for (var i = 0, length = paramsArr.length; i < length; i++) {
-    params[paramsArr[i].split('=')[0]] = paramsArr[i].split('=')[1]
-  }
+  let params = getParamsObjectFromUrl(url)
   return params[param] || null
 }
 

@@ -98,15 +98,15 @@ const showPayComponent = (prepayResponse) => {
 }
 
 /**
- * 微信支付
+ * 微信 APP 支付
  * @param trade
  * @returns {Promise.<T>|*}
  */
 const WeChatAppPay = (trade) => {
   //window.alert('WeChatAppPay')
-  var deal = Object.assign(trade)
+  let deal = Object.assign(trade)
   delete deal.openId
-  var promise = Promise.resolve(deal)
+  let promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }
 

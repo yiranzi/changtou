@@ -96,15 +96,15 @@ const showPayComponent = (prepayResponse) => {
 }
 
 /**
- * 微信支付
+ * 支付宝 app 支付
  * @param trade
  * @returns {Promise.<T>|*}
  */
 const AliAppPay = (trade) => {
   //window.alert('AliAppPay')
-  var deal = Object.assign(trade)
+  let deal = Object.assign(trade)
   delete deal.openId
-  var promise = Promise.resolve(deal)
+  let promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }
 

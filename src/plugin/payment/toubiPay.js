@@ -6,6 +6,12 @@ import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import { errorType } from '../../util/pay/daelHelper'
 
+/**
+ * 投币支付
+ * @param trade
+ * @returns {Promise}
+ * @constructor
+ */
 const ToubiPay = (trade) => {
   return new Promise(
     (resolve, reject) => {

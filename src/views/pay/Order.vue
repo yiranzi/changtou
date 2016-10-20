@@ -99,17 +99,8 @@
     },
     route: {
       data () {
-        var me = this
-        getOrder(this.type, this.id).then(
-          order => {
-            me.courseList = order.courseList
-            me.couponList = order.couponList
-            me.price = order.price
-            me.currentBalance = order.currentBalance
-            me.trade = order.trade
-          }
-        )
-        // todo 是否购买过
+        this.getOrderData()
+        this.checkAliBrowserPayState()
       }
     },
     methods: {
@@ -129,7 +120,31 @@
         })
         }, 150)
       },
-
+      /**
+       * 获取订单信息
+       */
+      getOrderData () {
+        var me = this
+        getOrder(this.type, this.id).then(
+          order => {
+            me.courseList = order.courseList
+            me.couponList = order.couponList
+            me.price = order.price
+            me.currentBalance = order.currentBalance
+            me.trade = order.trade
+          }
+        )
+      },
+      /**
+       * 检查是否为支付宝网页支付状态
+       * 成功 跳转到成功提示页
+       */
+      checkAliBrowserPayState () {
+        if (window.localStorage.getItem('ali-browser-pay-state') === 'success') {
+          window.localStorage.removeItem('ali-browser-pay-state')
+          this.goSuccess()
+        }
+      },
       /**
        * 是否显示课程列表
        */

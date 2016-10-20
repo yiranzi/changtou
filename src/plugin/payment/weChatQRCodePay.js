@@ -6,7 +6,7 @@ import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import { errorType } from '../../util/pay/daelHelper'
 /**
- * 预支付 下订单
+ * 微信 扫码支付
  * @param prepayData
  * @returns {Promise}
  */
