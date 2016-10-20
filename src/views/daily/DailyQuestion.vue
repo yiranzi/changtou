@@ -11,7 +11,7 @@
         </div>
         <div class="desc">{{option.content}}</div>
       </div>
-      <alert :show.sync="isAlert" title="很抱歉" @on-show="onShow" @on-hide="onHide" button-text="我知道了">您提交答案失败,请登录重试!</alert>
+      <alert :show.sync="isAlert" title="很抱歉" @on-show="onShow" @on-hide="onHide" button-text="我知道了">您提交答案失败,请重试!</alert>
     </div>
 </template>
 <style lang="less">
@@ -90,7 +90,7 @@
 <script>
   import Alert from 'vux/alert'
   import {dailyQuestionActions, globalActions} from '../../vuex/actions'
-  import {dailyQuestionGetters} from '../../vuex/getters'
+  import {dailyQuestionGetters, userGetters} from '../../vuex/getters'
   export default {
     vuex: {
       actions: {
@@ -99,7 +99,8 @@
         showAlert: globalActions.showAlert
       },
       getters: {
-        dailyQuestion: dailyQuestionGetters.question
+        dailyQuestion: dailyQuestionGetters.question,
+        isLogin: userGetters.isLogin //是否登录
       }
     },
     data () {
@@ -130,15 +131,19 @@
       goToDailyQuestionAnswer (selectedOption) {
         let questionid = this.dailyQuestion.id
         this.dailyQuestion.selectedOption = selectedOption.toString()
-        const me = this
-        me.submitAnswer(questionid, selectedOption).then(
-          function () {
-            me.$route.router.replace('answer')
-          },
-          function () {
-            me.isAlert = true //出现提示弹框
-          }
-        )
+        if (this.isLogin) {
+          const me = this
+          me.submitAnswer(questionid, selectedOption).then(
+            function () {
+              me.$route.router.replace('answer')
+            },
+            function () {
+              me.isAlert = true //出现提示弹框
+            }
+          )
+        } else {
+          this.$route.router.replace('answer')
+        }
       },
       /**
        * 弹框的显示和隐藏
