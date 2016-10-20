@@ -14,7 +14,8 @@
 </template>
 
 <script>
-  import {Device} from '../plugin/Device'
+  import {Device, platformMap} from '../plugin/device'
+
   export default {
     props: {
       title: String,
@@ -47,7 +48,7 @@
        */
       setTitlebarHeight () {
         let titlebar = this.$els.titlebar
-        let height = Device.platformName === Device.platformMap.IOS ? (44 + 20) : 44
+        let height = Device.platform === platformMap.IOS ? (44 + 20) : 44
         titlebar.style.height = height + 'px'
         titlebar.style.lineHeight = height + 'px'
       },
