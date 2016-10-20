@@ -3,7 +3,7 @@
  *  订单 优惠选择
 
   @example
-  <pay-coupons :coupons="coupons" @on-change="change"></pay-coupons>
+  <!--<pay-coupons :coupons="coupons" @on-change="change"></pay-coupons>-->
   coupons: [
     {
       name: '长投卡'

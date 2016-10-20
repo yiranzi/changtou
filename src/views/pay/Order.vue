@@ -1,8 +1,8 @@
 /**
 * 支付 订单页
-*     this.$route.router.go('/pay-:type-:id')
-*     type: 'S' 课程 | 'CT' 通用专题 |'ST' 打包课专题 |'P' 延期
-*     id: subjectId | ctpId | stpId | subjectId
+     this.$route.router.go('/pay-:type-:id')
+     type: 'S' 课程 | 'CT' 通用专题 |'ST' 打包课专题 |'P' 延期
+     id: subjectId | ctpId | stpId | subjectId
 **/
 
 <template>
@@ -10,13 +10,22 @@
     <ict-titlebar v-el:titlebar >确认订单</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <pay-subject :course-list="courseList"></pay-subject>
-      <pay-coupons :is-show="isCouponsShow()" :coupons="couponList" @pay-coupons-change="couponsChange"></pay-coupons>
+      <pay-coupons :is-show="isCouponsShow()"
+                   :coupons="couponList"
+                   @pay-coupons-change="onCouponChange"></pay-coupons>
       <pay-total>{{total}}</pay-total>
       <pay-toubi :value="deduction"></pay-toubi>
     </scroller>
-    <pay-button :state="state" :left-options="leftOptions" :right-options="rightOptions"></pay-button>
-    <pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>
-    <code-panel :is-show="qrCode.isShow" :url="qrCode.url" @code-pressed="showCodeConfirm"></code-panel>
+    <pay-button :state="state"
+                :left-options="leftOptions"
+                :right-options="rightOptions"></pay-button>
+    <pay-action-sheet :show.sync="isActionSheetShow"
+                      :menus="menus"
+                      @pay-way-selected="payByChannel"></pay-action-sheet>
+    <code-panel :is-show="qrCode.isShow"
+                :url="qrCode.url"
+                @code-pressed="showCodeConfirm"></code-panel>
+    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
     <confirm :show.sync="isConfirmShow"
              title=" "
              :confirm-text="confirmText"
@@ -39,50 +48,52 @@
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
   import CodePanel from '../../components/payment/CodePanel.vue'
+  import Alert from 'vux/alert'
   import Confirm from 'vux/confirm'
   import { payChannel, goodsType, dealType, getOrder, pay } from '../../util/pay/daelHelper'
 
   export default{
     data () {
       return {
-        type: this.$route.params.type.split('-')[0],
-        id: this.$route.params.type.split('-')[1],
+        type: this.$route.params.type.split('-')[0], // 商品类型
+        id: this.$route.params.type.split('-')[1], // 商品Id
         scrollerHeight: '0px',
-        state: '',
-        leftOptions: {
+        state: '', // 确认订单按钮 状态
+        leftOptions: { // 确认订单按钮 左边
           price: 0, // 实付
           text: '您已经购买过' // 不可购买提示
         },
-        rightOptions: {
+        rightOptions: { // 确认订单按钮 右边
           text: '回首页',
           callback: this.callback
         },
-        courseList: [],
-        couponList: [],
+        courseList: [], // 课程列表
+        couponList: [], // 优惠列表
         title: '', // 专题标题 或 课程专题
         price: 0, // 价格
         total: 0, // 共计
         deduction: 0, // 投币抵扣
         currentBalance: 0, // 投币余额
-        isActionSheetShow: false,
-        menus: {
+        isActionSheetShow: false, // 支付方式 actionsheet 显示
+        menus: {  //  支付方式 actionsheet 显示的内容
           wechat: '微信支付',
           ali: '支付宝支付'
         },
-        trade: {}, //交易订单
-        qrCode: {
+        trade: {}, // 交易订单 发往后台
+        qrCode: { // 微信 二维码
           isShow: false,
-          url: ''
+          url: '' // 付款二维码
         },
-        isConfirmShow: false,
-        confirmText: '已支付',
-        cancelText: '未支付',
-        confirmMsg: null
+        isAlert: false, // alert 显示
+        alertMsg: null, // alert message
+        isConfirmShow: false, // 扫码提示框
+        confirmText: '已支付', // 扫码提示框
+        cancelText: '未支付', // 扫码提示框
+        confirmMsg: null // 扫码提示框 message
       }
     },
     ready () {
-      const me = this
-      me.setScrollerHeight()
+      this.setScrollerHeight()
     },
     components: {
       Scroller,
@@ -95,7 +106,8 @@
       PaySubject,
       PayActionSheet,
       CodePanel,
-      Confirm
+      Confirm,
+      Alert
     },
     route: {
       data () {
@@ -145,21 +157,12 @@
           this.goSuccess()
         }
       },
-      /**
-       * 是否显示课程列表
-       */
-      isSubjectShow () {
-        if (this.type === goodsType.SUBJECT || this.type === goodsType.COMMON_TOPIC) {
-          return true
-        } else {
-          return false
-        }
-      },
 
       /**
        * 是否显示优惠列表
        */
       isCouponsShow () {
+        //todo 有的不能显示优惠列表
         return true
       },
 
@@ -167,7 +170,7 @@
        * 更换优惠
        * @param val
          */
-      couponsChange (val) {
+      onCouponChange (val) {
         //页面数据 更新
 
         let total = this.price - this.couponList[val].userBene ? (this.price - this.couponList[val].userBene) : 0
@@ -195,13 +198,6 @@
       },
 
       /**
-       * 选择 支付方式
-       */
-      payWaySelected (payWay) {
-        this.payByChannel(payWay)
-      },
-
-      /**
        * 点击按钮的回调
        */
       callback () {
@@ -221,15 +217,16 @@
         pay(this.trade, channel).then(
           result => {
             if (result.type === dealType.WX_CODE) {
+              // 扫码支付
               this.showCodePanel(result.url)
-            } else if (result.type === dealType.ALI_BROWSER) {
-
             } else {
+              // 其他支付 （不包括支付宝网页支付）
               this.goSuccess()
             }
           },
           err => {
-            window.alert(err.reason)
+            this.alertMsg = err.reason
+            this.isAlert = true
           }
         )
       },

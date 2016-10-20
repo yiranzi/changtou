@@ -7,6 +7,7 @@ import { getUrl } from '../../frame/apiConfig'
 import { errorType } from '../../util/pay/daelHelper'
 // 支付中
 let beginPay = false
+
 //错误码
 let failCode = {
   CANCEL_BY_USER: '6001',
@@ -42,7 +43,7 @@ const prepay = (prepayData) => {
       ).catch(
         err => {
           reject({
-            reason: err,
+            reason: err.message,
             type: errorType.FAIL
           })
         }

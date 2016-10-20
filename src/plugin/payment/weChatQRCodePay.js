@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType } from '../../util/pay/daelHelper'
+import { errorType, dealType } from '../../util/pay/daelHelper'
 /**
  * 微信 扫码支付
  * @param prepayData
@@ -20,14 +20,17 @@ const WeChatQRCodePay = (prepayData) => {
         }
       ).then(
         res => {
-          resolve(res.codeURL)
+          resolve({
+            type: dealType.WX_CODE,
+            url: res.codeURL
+          })
         }
       ).catch(
         err => {
           console.warn(err)
           reject({
             type: errorType.FAIL,
-            reason: err
+            reason: err.message
           })
         }
       )

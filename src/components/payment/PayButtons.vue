@@ -1,10 +1,11 @@
 /**
  * Created by jun on 2016/9/29.
+  订单 下方 确认支付按钮
 
   @example
-  <pay-button :state="normal"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="normal"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     price: 100
   },
@@ -12,15 +13,15 @@
     callback: this.callback
   },
 
-  <pay-button :state="exception"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="exception"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     text: '您已经购买过长投2016年会，XXXXXXXXX'
   },
   rightOptions: {
     callback: this.callback
-  },
+  }
 
  */
 <template>

@@ -1,28 +1,32 @@
 /**
-* @example
-<pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>
-* data() {
-*   return {
-*   isActionSheetShow: false,
-*   menus: {
-*     wechat: '微信支付',
-*     ali: '支付宝支付'
-*   }
-* }
-* }
-* methods: {
-*  /**
-*  * 选择 支付方式
-*  */
-*   payWaySelected (payWay) {
-*     console.log( payWay)
-*   }
-* }
+* Created by jun on 2016/10/18.
+  订单 支付方式选择actionsheet
+
+   @example
+   <!--<pay-action-sheet :show.sync="isActionSheetShow" :menus="menus" @pay-way-selected="payWaySelected"></pay-action-sheet>-->
+   data() {
+     return {
+     isActionSheetShow: false,
+     menus: {
+       wechat: '微信支付',
+       ali: '支付宝支付'
+     }
+   }
+   }
+   methods: {
+     payWaySelected (payWay) {
+       console.log( payWay)
+     }
+   }
+
 **/
 
 <template>
   <div class="pay-actionsheet">
-    <div class="pay_actionsheet_mask" :class="{'pay_actionsheet_fade_toggle': show}" :style="{display: show ? 'block' : 'none'}" v-touch:tap="show=false"></div>
+    <div class="pay_actionsheet_mask"
+         :class="{'pay_actionsheet_fade_toggle': show}"
+         :style="{display: show ? 'block' : 'none'}"
+         v-touch:tap="show=false"></div>
     <div class="pay_actionsheet" :class="{'pay_actionsheet_toggle': show}">
       <div class="pay_actionsheet_title"><span class="close-icon" v-touch:tap="onCloseTap"></span>支付详情</div>
       <div class="pay_actionsheet_menu">
@@ -65,18 +69,30 @@
       }
     },
     methods: {
+      /**
+       * 点击 关闭按钮
+       */
       onCloseTap () {
         this.show = false
       },
+      /**
+       * 点击确认支付
+       */
       onConfirmTap () {
         this.show = false
         this.$emit('pay-way-selected', JSON.parse(JSON.stringify(this.payWay)))
       },
+      /**
+       * iOS兼容处理
+       */
       fixIos (zIndex) {
         if (this.$tabbar && /iphone/i.test(navigator.userAgent)) {
           this.$tabbar.style.zIndex = zIndex
         }
       },
+      /**
+       * 获取支付方式图片
+       */
       getCellSrc (key) {
         return './static/image/pay/' + key + '.png'
       }
@@ -88,7 +104,7 @@
         } else {
           setTimeout(() => {
             this.fixIos(100)
-        }, 200)
+          }, 200)
         }
       },
       value (newVal) {

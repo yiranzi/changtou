@@ -15,7 +15,7 @@
 const prepay = (prepayData) => {
   return new Promise(
     (resolve, reject) => {
-      window.alert('prepay')
+      //window.alert('prepay')
       postWithinAuth(
         {
           url: getUrl('weChat_app_prepay'),
@@ -62,7 +62,7 @@ const showPayComponent = (prepayResponse) => {
             window.Wechat.sendPaymentRequest(
               params,
               function () {
-                //alert('购买成功')
+                //window.alert('购买成功')
                 beginPay = false
                 resolve()
               },

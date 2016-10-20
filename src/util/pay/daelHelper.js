@@ -1,5 +1,7 @@
 /**
  * Created by jun on 2016/9/30.
+    支付模块 数据操作
+
  */
 import { AliAppPay } from '../../plugin/payment/aliAppPay'
 import { AliBrowserPay } from '../../plugin/payment/aliBrowserPay'
@@ -17,7 +19,7 @@ import store from '../../vuex/store'
 const user = store.state.user
 
 /**
- * 页面信息
+ * 订单页面信息
  * @type {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
  */
 let order = {
@@ -49,11 +51,19 @@ const goodsType = {
   POSTPONE: 'P'       // 延期
 }
 
+/**
+ * 错误类型
+ * @type {{CANCEL: string, FAIL: string}}
+ */
 const errorType = {
   CANCEL: 'cancel',
   FAIL: 'fail'
 }
 
+/**
+ * 交易类型
+ * @type {{WX_CODE: string, ALI_BROWSER: string}}
+ */
 const dealType = {
   WX_CODE: 'wx_code',
   ALI_BROWSER: 'ali_browser'
@@ -74,7 +84,7 @@ const resumeOrder = () => {
 
 /**
  * 获取 订单
- * @param type 订单类型
+ * @param type 商品类型
  * @param id 产品Id
  */
 const getOrder = (type, id) => {
@@ -105,7 +115,6 @@ const getSubjectOrder = (id) => {
   return new Promise(
     (resolve, reject) => {
       let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-
       ajax(
         {
           url: getUrl('subject_order').replace('{subjectId}', subjectId)
@@ -113,7 +122,7 @@ const getSubjectOrder = (id) => {
       ).then(
         subjectOrder => {
           subjectOrder.subjectId = subjectId
-          arrangeOrderFromSubject(subjectOrder)
+          getOrderFromSubject(subjectOrder)
           resolve(order)
         }
       ).catch(
@@ -136,7 +145,6 @@ const getCommonTopicOrder = (id) => {
   return new Promise(
     (resolve, reject) => {
       let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-
       ajax(
         {
           url: getUrl('common_topic_order').replace('{ctpId}', id)
@@ -165,7 +173,6 @@ const getSpecTopicOrder = (id) => {
   return new Promise(
     (resolve, reject) => {
       let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-
       ajax(
         {
           url: getUrl('spec_topic_order').replace('{stpId}', id)
@@ -195,11 +202,11 @@ const getPostponeOrder = (id) => {
 }
 
 /**
- * 组织 订单页所需数据
+ * 获取 课程订单所需数据
  * @param subjectOrder
  * @returns {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
  */
-const arrangeOrderFromSubject = (subjectOrder) => {
+const getOrderFromSubject = (subjectOrder) => {
   resumeOrder()
   order.courseList.push({
     pic: subjectOrder.pic,
@@ -208,7 +215,7 @@ const arrangeOrderFromSubject = (subjectOrder) => {
     subtitle: subjectOrder.subtitle,
     title: subjectOrder.title
   })
-  order.couponList = arrangeCouponList(subjectOrder.card, subjectOrder.price, subjectOrder.coupons)
+  order.couponList = getCouponList(subjectOrder.card, subjectOrder.price, subjectOrder.coupons)
   order.price = subjectOrder.price
   order.currentBalance = subjectOrder.currentBalance
   order.trade = {
@@ -242,7 +249,7 @@ const arrangeOrderFromSubject = (subjectOrder) => {
  * @param coupons
  * @returns {Array}
  */
-const arrangeCouponList = (card, price, coupons) => {
+const getCouponList = (card, price, coupons) => {
   let couponList = []
   if (card) {
     couponList.push({
@@ -274,44 +281,21 @@ const arrangeCouponList = (card, price, coupons) => {
 const pay = (trade, channel) => {
   return new Promise(
     (resolve, reject) => {
+      let pay
       if (channel === payChannel.ALI) {
         //window.alert('ALI')
         switch (Device.platform) {
           case platformMap.ANDROID:
             //window.alert('ANDROID')
-            AliAppPay(trade).then(
-              () => {
-                resolve()
-              }
-            ).catch(
-              err => {
-                reject(err)
-              }
-            )
+            pay = AliAppPay
             break
           case platformMap.IOS:
             //window.alert('IOS')
-            AliAppPay(trade).then(
-              () => {
-                resolve()
-              }
-            ).catch(
-              err => {
-                reject(err)
-              }
-            )
+            pay = AliAppPay
             break
           case platformMap.WEB:
             //window.alert('WEB')
-            AliBrowserPay(trade).then(
-              () => {
-                resolve()
-              }
-            ).catch(
-              err => {
-                reject(err)
-              }
-            )
+            pay = AliBrowserPay
             break
         }
       } else if (channel === payChannel.WECHAT) {
@@ -319,71 +303,38 @@ const pay = (trade, channel) => {
         switch (Device.platform) {
           case platformMap.ANDROID:
             //window.alert('ANDROID')
-            WeChatAppPay(trade).then(
-              () => {
-                resolve()
-              }
-            ).catch(
-              err => {
-                reject(err)
-              }
-            )
+            pay = WeChatAppPay
             break
           case platformMap.IOS:
             //window.alert('IOS')
-            WeChatAppPay(trade).then(
-              () => {
-                resolve()
-              }
-            ).catch(
-              err => {
-                reject(err)
-              }
-            )
+            pay = WeChatAppPay
             break
           case platformMap.WEB:
             //window.alert('WEB')
             if (Agent.isWx) {
               //window.alert('isWx')
               if (getParamFromUrl('subscriber')) {
-                WeChatQRCodePay(trade).then(
-                  url => {
-                    resolve({
-                      type: dealType.WX_CODE,
-                      url: url
-                    })
-                  }
-                ).catch(
-                  err => {
-                    reject(err)
-                  }
-                )
+                pay = WeChatQRCodePay
               } else {
-                WeChatBrowserPay(trade).then(
-                  () => {
-                    resolve()
-                  }
-                ).catch(
-                  err => {
-                    reject(err)
-                  }
-                )
+                pay = WeChatBrowserPay
               }
             }
             break
         }
       } else if (channel === payChannel.TOUBI) {
         //window.alert('TOUBI')
-        ToubiPay(trade).then(
-          () => {
-            resolve()
-          }
-        ).catch(
-          err => {
-            reject(err)
-          }
-        )
+        pay = ToubiPay
       }
+
+      pay(trade).then(
+        res => {
+          resolve(res)
+        }
+      ).catch(
+        err => {
+          reject(err)
+        }
+      )
     }
   )
 }

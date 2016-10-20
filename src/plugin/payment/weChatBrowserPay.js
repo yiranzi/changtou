@@ -48,7 +48,7 @@ const showPayComponent = (prepayResponse) => {
   return new Promise(
     (resolve, reject) => {
       let params = {
-        appId: WX_APPID, // todo wx_appid
+        appId: WX_APPID,
         timeStamp: prepayResponse.timeStamp.toString(),
         nonceStr: prepayResponse.nonceStr,
         package: 'prepay_id=' + prepayResponse.prepayId.toString(),
@@ -65,10 +65,16 @@ const showPayComponent = (prepayResponse) => {
             resolve()
           } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
             //支付失败
-            reject()
+            reject({
+              type: errorType.FAIL,
+              reason: res.err_desc || '支付失败'
+            })
           } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
             //取消微信支付
-            reject()
+            reject({
+              type: errorType.CANCEL,
+              reason: res.err_desc || '用户取消微信支付'
+            })
           }
         }
       )

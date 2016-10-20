@@ -21,7 +21,7 @@ const ToubiPay = (trade) => {
         data: trade.deal
       }
     ).then(
-      response => {
+      () => {
         resolve()
       }
     ).catch(
@@ -29,7 +29,7 @@ const ToubiPay = (trade) => {
         console.warn(err)
         reject({
           type: errorType.FAIL,
-          reason: err
+          reason: err.message
         })
       }
     )

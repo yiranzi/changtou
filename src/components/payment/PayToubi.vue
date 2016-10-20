@@ -1,8 +1,9 @@
 /**
 * Created by jun on 2016/9/29.
+  订单 投币
 
-@example
-<pay-toubi :value="100"></pay-toubi>
+  @example
+  <!--<pay-toubi :value="100"></pay-toubi>-->
 
 */
 <template>
