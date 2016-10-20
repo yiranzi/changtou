@@ -180,7 +180,7 @@ export function configRouter (router) {
       component: require('../views/daily/DailyQuestion.vue')
     },
     //用户提交答案
-    'daily/quiz/solve': {
+    'daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
     }
   })
