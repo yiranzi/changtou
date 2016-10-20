@@ -316,7 +316,14 @@ const pay = (trade, channel) => {
               if (getParamFromUrl('subscriber')) {
                 pay = WeChatQRCodePay
               } else {
-                pay = WeChatBrowserPay
+                if (trade.openId) {
+                  pay = WeChatBrowserPay
+                } else {
+                  reject({
+                    type: errorType.FAIL,
+                    reason: '用户信息获取失败，请重新登录后重试'
+                  })
+                }
               }
             }
             break
