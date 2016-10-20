@@ -137,10 +137,6 @@ export function configRouter (router) {
     /**
      * 支付模块
      */
-    '/:type': {
-      name: 'pay',
-      component: require('../views/pay/Order.vue')
-    },
     // 支付成功
     'pay/success/:type': {
       component: require('../views/pay/Success.vue')

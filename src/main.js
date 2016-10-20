@@ -18,6 +18,17 @@ const appRouter = new VueRouter({
 
 configRouter(appRouter)
 
+/**
+ *
+ * @type {boolean}
+ */
+if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
+  let path = window.location.hash.substr(2)
+  appRouter.on(path, {
+    component: require('./views/pay/Order.vue')
+  })
+}
+
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
 // start run app

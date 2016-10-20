@@ -556,7 +556,11 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        this.$route.router.go('/pay/S/' + this.subjectId)
+        let path = '/pay-P-' + this.subjectId
+        this.$route.router.on(path, {
+          component: require('../pay/Order.vue')
+        })
+        this.$route.router.go(path)
       },
 
       /**
@@ -591,8 +595,11 @@
        * 购买
        */
       buy () {
-        this.$route.router.go({name: 'pay', params: {type: 'S-' + this.subjectId}})
-//        this.$route.router.go('/pay/S/' + this.subjectId)
+        let path = '/pay-S-' + this.subjectId
+        this.$route.router.on(path, {
+          component: require('../pay/Order.vue')
+        })
+        this.$route.router.go(path)
       }
     },
 

@@ -55,8 +55,8 @@
   export default{
     data () {
       return {
-        type: this.$route.params.type.split('-')[0], // 商品类型
-        id: this.$route.params.type.split('-')[1], // 商品Id
+        type: null, // 商品类型
+        id: null, // 商品Id
         scrollerHeight: '0px',
         state: '', // 确认订单按钮 状态
         leftOptions: { // 确认订单按钮 左边
@@ -110,7 +110,10 @@
       Alert
     },
     route: {
-      data () {
+      data ({to: {path}}) {
+        let pathArr = path.split('-')
+        this.type = pathArr[1]
+        this.id = pathArr[2]
         this.getOrderData()
         this.checkAliBrowserPayState()
       }
