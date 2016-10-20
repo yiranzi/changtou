@@ -17,10 +17,8 @@ const prepay = (prepayData) => {
     (resolve, reject) => {
       postWithinAuth(
         {
-          url: getUrl('weChat_web_prepay'),
-          data: {
-            prepayData
-          }
+          url: getUrl('weChat_browser_prepay'),
+          data: prepayData
         }
       ).then(
         prepayResponse => {
@@ -31,7 +29,7 @@ const prepay = (prepayData) => {
           console.warn(err)
           reject({
             type: errorType.FAIL,
-            reason: err
+            reason: err.message
           })
         }
       )
