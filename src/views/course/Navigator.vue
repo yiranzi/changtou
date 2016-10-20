@@ -60,7 +60,7 @@
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
         expenseList: navigatorGetters.expenseCourseList,
-        dailyQuestion: dailyQuestionGetters.dailyQuestion
+        dailyQuestion: dailyQuestionGetters.question
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
@@ -154,7 +154,7 @@
       //跳转到每日一题
       goToDailyQuestion () {
         if (this.dailyQuestion.selectedOption) {
-          this.$route.router.go('daily/quiz/solve')
+          this.$route.router.go('daily/answer')
         } else {
           this.$route.router.go('daily/quiz')
         }

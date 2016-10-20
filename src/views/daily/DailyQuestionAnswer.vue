@@ -126,32 +126,28 @@
   export default {
     vuex: {
       getters: {
-        dailyQuestion: dailyQuestionGetters.dailyQuestion
+        dailyQuestion: dailyQuestionGetters.question
       }
     },
     computed: {
       percentage () {
-        let options = this.dailyQuestion.options
+        const options = this.dailyQuestion.options
         for (let i = 0; i < options.length; i++) {
-          if (options[i].id === parseInt(this.dailyQuestion.selectedOption)) {
+          if ((options[i].id + '') === this.dailyQuestion.selectedOption) {
             return options[i].selectedRate
           }
         }
       },
       rightAnswer () {
-        let options = this.dailyQuestion.options
+        const options = this.dailyQuestion.options
         for (let i = 0; i < options.length; i++) {
-          if (options[i].id === parseInt(this.dailyQuestion.correctOption)) {
+          if ((options[i].id + '') === this.dailyQuestion.correctOption) {
             return options[i].content
           }
         }
       },
       result () {
-        if (this.dailyQuestion.selectedOption === this.dailyQuestion.correctOption) {
-          return true
-        } else {
-          return false
-        }
+        return this.dailyQuestion.selectedOption === this.dailyQuestion.correctOption
       }
     },
     methods: {

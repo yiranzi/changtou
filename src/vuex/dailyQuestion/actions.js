@@ -4,14 +4,14 @@
 import {getWithinAuth, getWithoutAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import store from '../../vuex/store'
-let user = store.state.user
+const user = store.state.user
 /**
  * 获取每日一题
  */
 export const loadDailyQuestion = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
-      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
+      const ajax = user.isLogin ? getWithinAuth : getWithoutAuth
       ajax({
         url: getUrl('load_daily_question')
       }).then(

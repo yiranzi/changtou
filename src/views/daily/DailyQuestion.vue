@@ -7,10 +7,11 @@
       </div>
       <div class="content" v-for="option in dailyQuestion.options" v-touch:tap="goToDailyQuestionAnswer(option.id)">
         <div class="sequence">
-          <span>{{optionLetters($index)}}</span>
+          <span>{{getOptionLetters($index)}}</span>
         </div>
         <div class="desc">{{option.content}}</div>
       </div>
+      <alert :show.sync="isAlert" title="很抱歉" @on-show="onShow" @on-hide="onHide" button-text="我知道了">您提交答案失败,请登录重试!</alert>
     </div>
 </template>
 <style lang="less">
@@ -40,7 +41,7 @@
         width: 100%;
       }
       .question-title{
-        width: 335/375;
+        width: 100%;
         font-size: 0.65rem;
         color: #fff;
         background-color: #000;
@@ -87,16 +88,23 @@
   }
 </style>
 <script>
-  import {dailyQuestionActions} from '../../vuex/actions'
+  import Alert from 'vux/alert'
+  import {dailyQuestionActions, globalActions} from '../../vuex/actions'
   import {dailyQuestionGetters} from '../../vuex/getters'
   export default {
     vuex: {
       actions: {
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        submitAnswer: dailyQuestionActions.submitAnswer
+        submitAnswer: dailyQuestionActions.submitAnswer,
+        showAlert: globalActions.showAlert
       },
       getters: {
-        dailyQuestion: dailyQuestionGetters.dailyQuestion
+        dailyQuestion: dailyQuestionGetters.question
+      }
+    },
+    data () {
+      return {
+        isAlert: false
       }
     },
     route: {
@@ -115,25 +123,36 @@
       back () {
         window.history.back()
       },
-      optionLetters (index) {
-        let arr = ['A', 'B', 'C', 'D', 'E', 'F']
+      getOptionLetters (index) {
+        const arr = ['A', 'B', 'C', 'D', 'E', 'F']
         return arr[index]
       },
       goToDailyQuestionAnswer (selectedOption) {
         let questionid = this.dailyQuestion.id
         this.dailyQuestion.selectedOption = selectedOption.toString()
-        this.submitAnswer(questionid, selectedOption).then(
+        const me = this
+        me.submitAnswer(questionid, selectedOption).then(
           function () {
-
+            me.$route.router.replace('answer')
           },
-          function (err) {
-            console.log('err', err)
+          function () {
+            me.isAlert = true //出现提示弹框
           }
         )
-        this.$route.router.go('quiz/solve')
+      },
+      /**
+       * 弹框的显示和隐藏
+       */
+      onShow () {
+        console.log('onShow')
+      },
+      //点击提示框按钮确认跳转到反馈页
+      onHide () {
+        this.$route.router.replace('answer')
       }
     },
     components: {
+      Alert
     }
   }
 </script>
