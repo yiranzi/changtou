@@ -219,7 +219,7 @@
 //        window.alert('payByChannel')
         pay(this.trade, channel).then(
           result => {
-            if (result.type === dealType.WX_CODE) {
+            if (result && result.type === dealType.WX_CODE) {
               // 扫码支付
               this.showCodePanel(result.url)
             } else {
