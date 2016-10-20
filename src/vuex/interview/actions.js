@@ -29,14 +29,17 @@ export const loadInterviewRecord = ({ dispatch }, interviewId) => {
       getWithoutAuth({
         url: getUrl('load_interview_record').replace(':interviewId', interviewId)
       }).then(
-        function (interviewRecord) {
-          let paragraphArr = interviewRecord.paragraph
-          for (let i = 0; i < paragraphArr.length; i++) {
-            let subParagraphArr = paragraphArr[i].content.split('_#')
-            paragraphArr[i].subParagraphArr = subParagraphArr
-            delete paragraphArr[i]['content']
-          }
-          dispatch('INTERVIEW_LOAD_INTERVIEW_RECORD', interviewRecord)
+        function (interviewRecordServer) {
+          let paragraphArr = interviewRecordServer.paragraph
+          const interviewRecord = paragraphArr.map(function (paragrap, index) {
+            const subParagraphArr = paragrap.content.split('_#')
+            let retObj = paragrap
+            retObj.subParagraphArr = subParagraphArr
+            delete retObj['content']
+            return retObj
+          })
+          interviewRecordServer.paragraph = interviewRecord
+          dispatch('INTERVIEW_LOAD_INTERVIEW_RECORD', interviewRecordServer)
           resolve()
         },
         function (err) {

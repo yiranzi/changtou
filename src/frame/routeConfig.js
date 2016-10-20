@@ -149,15 +149,30 @@ export function configRouter (router) {
      */
     //通用专题
     '/common/topic/:ctpId': {
-      component: require('../views/topic/commonTopic.vue')
+      component: require('../views/topic/CommonTopic.vue')
     },
     //通用专题确认订单页面
     '/common/topic/order/:ctpId': {
-      component: require('../views/topic/commonTopicOrder.vue')
+      component: require('../views/topic/CommonTopicOrder.vue')
     },
     //打包课专题
     '/spec/topic/:stpId': {
-      component: require('../views/topic/specTopic.vue')
+      component: require('../views/topic/SpecTopic.vue')
+    },
+    /**
+     * 新手测试
+     */
+    //新手测试起始页
+    '/newertest/start': {
+      component: require('../views/newertest/NewertestStart.vue')
+    },
+    //答题页
+    '/newertest/question': {
+      component: require('../views/newertest/NewertestQuestion.vue')
+    },
+    //结果页
+    '/newertest/ending': {
+      component: require('../views/newertest/NewertestEnd.vue')
     },
 
     /**
@@ -170,6 +185,18 @@ export function configRouter (router) {
     //访谈内容
     '/interview/interview-record/:interviewId': {
       component: require('../views/interview/InterviewRecord.vue')
+    },
+
+    /**
+     * 每日一题
+     */
+    //获取每日一题
+    'daily/quiz': {
+      component: require('../views/daily/DailyQuestion.vue')
+    },
+    //用户提交答案
+    'daily/quiz/solve': {
+      component: require('../views/daily/DailyQuestionAnswer.vue')
     }
   })
 

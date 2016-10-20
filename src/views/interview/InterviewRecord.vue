@@ -3,11 +3,11 @@
     <ict-titlebar :right-options="rightOptions" v-el:titlebar>
       院生故事
       <div slot="right" v-touch:tap="showActionSharePanel">
-        <img class="share-pic" src="/static/image/interview/share.png">
+        <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
-      <div class="content">
+      <div v-show="isLoadSuccess" class="content">
         <div class="title">{{interviewRecord.title}}</div>
         <div class="introduce">
           <span class="xiao-tou">小投说</span>
@@ -24,8 +24,12 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
       </div>
+      <div class="load-fail" v-show="!isLoadSuccess">
+        <div>信息加载失败</div>
+        <button v-touch:tap="loadInterviewRecord">请重新加载</button>
+      </div>
     </scroller>
-    <actionsheet :show.sync="share" :menus="weixin" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
+    <actionsheet :show.sync="isShowAction" :menus="channelConfig" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
   </div>
 </template>
 <style lang="less">
@@ -98,6 +102,13 @@
         margin-bottom: 2.5rem;
       }
     }
+    .load-fail{
+      width: 100%;
+      height: 623px;
+      background-color: #ffffff;
+      text-align: center;
+      padding-top: 40%;
+    }
     .weui_actionsheet_cell{
       height: 9rem;
       background-color: #DCDCDC;
@@ -114,26 +125,34 @@
       height: 4.45rem;
       margin: 2rem 5.17rem;
       position: relative;
+      font-size: 0.6rem;
 
-      .wechat{
-        width: 2rem;
-        height: 2rem;
-        background-color: #fff;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-        margin: 0 7px;
-
+      .share-picture-left{
+        width: 4.2rem;
+        height: 4.3rem;
+        margin: 0 0.35rem;
+        .wechat{
+          width: 2rem;
+          height: 2rem;
+          background-color: #fff;
+          border-radius: 0.5rem;
+          padding: 0.75rem;
+        }
       }
-      .timeline{
-        width: 2rem;
-        height: 2rem;
-        background-color: #fff;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-        margin: 0 7px;
+      .share-picture-right{
+        width: 4.2rem;
+        height: 4.3rem;
         position: absolute;
         top: 0;
         left: 4rem;
+        margin: 0 7px;
+        .timeline{
+          width: 2rem;
+          height: 2rem;
+          background-color: #fff;
+          border-radius: 0.5rem;
+          padding: 0.75rem;
+        }
       }
       img {
         width: 2rem;
@@ -141,9 +160,8 @@
         display: block;
       }
       .pic-bottom{
-        width: 4rem;
-        margin: 0 0.5rem;
-        font-size: 0.65rem;
+        text-align: center;
+        margin-left: -0.7rem;
       }
     }
     @media all and (max-width: 320px){
@@ -152,12 +170,6 @@
         height: 4.45rem;
         margin: 2rem 4.17rem;
         position: relative;
-        .pic-bottom{
-          width: 4rem;
-          margin: 0 0.6rem;
-          font-size: 0.6rem;
-          color: #898989;
-        }
       }
     }
   }
@@ -178,41 +190,64 @@
         interviewRecord: interviewGetters.interviewRecord
       }
     },
-    route: {
-      data (transition) {
-        const interviewId = transition.to.params.interviewId
-        this.loadInterviewRecord(interviewId).then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
-      }
-    },
     data () {
       return {
         scrollerHeight: '590px',
         rightOptions: {
           disabled: false
         },
-        share: false,
-        weixin: { //分享浮层内容
+        isLoadSuccess: false,
+        isShowAction: false,
+        channelConfig: { //分享浮层内容
           menu1: '<div class="share-picture">' +
-                    '<div class="wechat"><img src="/static/image/interview/wechat.png"></div>' +
-                    '<div class="timeline"><img src="/static/image/interview/timeline.png"></div>' +
-                    '<span class="pic-bottom">微信好友</span>' +
-                    '<span class="pic-bottom">微信朋友圈</span>' +
+                    '<div class="share-picture-left">' +
+                      '<div class="wechat"><img src="./static/image/interview/wechat.png"></div>' +
+                      '<div class="pic-bottom">微信好友</div>' +
+                    '</div>' +
+                    '<div class="share-picture-right">' +
+                      '<div class="timeline"><img src="./static/image/interview/timeline.png"></div>' +
+                      '<div class="pic-bottom">微信朋友圈</div>' +
+                    '</div>' +
                   '</div>'
         }
+      }
+    },
+    watch: {
+      'interviewRecord': function () {
+        const me = this
+        const {titlebar} = this.$els
+        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+//              top: 0
+          })
+        })
+        }, 1500)
+      }
+    },
+    route: {
+      data ({to: {params: {interviewId}}}) {
+        return this.loadInterviewRecord(interviewId).then(
+          function () {
+            return {
+              isLoadSuccess: true
+            }
+          },
+          function (err) {
+            console.log('err', err)
+            return {
+              isLoadSuccess: false
+            }
+          }
+        )
       }
     },
     methods: {
       showActionSharePanel () {
         const me = this
         setTimeout(() => {
-          me.share = true
+          me.isShowAction = true
         }, 150)
       },
       onActionTap (event) {
@@ -277,23 +312,8 @@
         }
       )
     }
-
     },
 
-    watch: {
-      'interviewRecord': function () {
-        const me = this
-        const {titlebar} = this.$els
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-//              top: 0
-          })
-        })
-        }, 1500)
-      }
-    },
     components: {
       IctTitlebar,
       Scroller,

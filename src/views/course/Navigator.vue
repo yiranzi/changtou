@@ -4,9 +4,12 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
-          <div class="interview">
-            <span class="interview-left">理财揭秘</span>
-            <span class="interview-left" v-touch:tap="toInterviewList">院生访谈</span>
+          <div class="financial-interview">
+            <span v-touch:tap="goToNewertestStart">理财揭秘</span>
+            <span v-touch:tap="goToInterviewList">院生访谈</span>
+          </div>
+          <div class="daily-question" v-touch:tap="goToDailyQuestion">
+            每日一题 积攒你的财商
           </div>
           <div class="expenselist-area">
             <p class="area-label">
@@ -48,18 +51,20 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
-  import {navigatorGetters} from '../../vuex/getters'
-  import {navigatorActions} from '../../vuex/actions'
+  import {navigatorGetters, dailyQuestionGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList
+        expenseList: navigatorGetters.expenseCourseList,
+        dailyQuestion: dailyQuestionGetters.question
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData
+        loadData: navigatorActions.loadNavigatorData,
+        loadDailyQuestion: dailyQuestionActions.loadDailyQuestion
       }
     },
 
@@ -68,7 +73,18 @@
         scrollerHeight: '0px'
       }
     },
-
+    route: {
+      data (transition) {
+        this.loadDailyQuestion().then(
+          function () {
+            transition.next()
+          },
+          function (err) {
+            console.log('err', err)
+          }
+        )
+      }
+    },
     ready () {
       const me = this
       this.loadData().then(
@@ -131,9 +147,21 @@
       onFreeListTap () {
         this.$route.router.go('/totalList/F')
       },
+      //跳转到理财揭秘起始页
+      goToNewertestStart () {
+        this.$route.router.go('/newertest/start')
+      },
       //跳转到院生访谈列表页面
-      toInterviewList () {
+      goToInterviewList () {
         this.$route.router.go('/interview/interview-list')
+      },
+      //跳转到每日一题
+      goToDailyQuestion () {
+        if (this.dailyQuestion.selectedOption) {
+          this.$route.router.go('daily/answer')
+        } else {
+          this.$route.router.go('daily/quiz')
+        }
       }
     },
 
@@ -191,8 +219,8 @@
         -webkit-transform: rotate(45deg);
       }
     }
-    /*新增院生访谈的样式*/
-    .interview{
+    /*新增理财揭秘，院生访谈的样式*/
+    .financial-interview{
       width: 100%;
       line-height: 4rem;
       display: flex;
@@ -206,6 +234,13 @@
         width: 50%;
         text-align: center;
       }
+    }
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 1.25rem;
+      background-color: #fff;
     }
     .expenselist-area{
       text-align: center;
