@@ -3,7 +3,10 @@
       <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
-          <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class"></swiper>
           <div class="financial-interview">
             <span>理财揭秘</span>
             <span v-touch:tap="goToInterviewList">院生访谈</span>
@@ -311,6 +314,16 @@
           font-size: 0.7rem;
           color: #000;
         }
+      }
+    }
+    .dots-class{
+      .vux-icon-dot {
+        background-color: #fff!important;
+        opacity: 0.5;
+      }
+      .vux-icon-dot.active{
+        background-color: #fff!important;
+        opacity: 1;
       }
     }
   }
