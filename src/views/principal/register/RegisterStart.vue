@@ -41,8 +41,8 @@
     },
     data () {
       return {
-        phone: '18516560361',
-        plainPassword: 'hj123456',
+        phone: '',
+        plainPassword: '',
         buttonDisable: true
       }
     },

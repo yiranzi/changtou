@@ -132,7 +132,7 @@
         const pathArr = path.split('-')
         var me = this
         me.type = pathArr[1]
-        me.id = pathArr[2]
+        me.id = parseInt(pathArr[2])
         me.checkAliBrowserPayState()
         return Promise.all([getOrder(me.type, me.id)]).then(
             ([order]) => {
@@ -416,7 +416,7 @@
         this.btn.leftOptions.price = sum
         this.trade.sum = sum
 
-        if (coupon.couponNo === 1) {
+        if (coupon.couponNo === 1) { // 长投卡
           this.trade.deal.cardUsed = true
         } else {
           this.trade.deal.cardUsed = false
@@ -426,7 +426,7 @@
           case goodsType.SUBJECT:
             // 课程
             this.trade.deal.items[0].price = total
-            if (coupon.couponNo) {
+            if (coupon.couponNo && coupon.couponNo !== 1) { // 优惠券
               this.trade.deal.items[0].coupon = coupon
             }
             break
@@ -434,14 +434,14 @@
           case goodsType.COMMON_TOPIC:
             // 图片专题
             this.trade.deal.items[0].price = total
-            if (coupon.couponNo) {
+            if (coupon.couponNo && coupon.couponNo !== 1) { // 优惠券
               this.trade.deal.items[0].coupon = coupon
             }
             break
 
           case goodsType.SPEC_TOPIC:
             // 打包课专题
-            if (!coupon.couponNo) {
+            if (coupon.couponNo === 1) { // 长投卡
               let items = this.trade.deal.items
               let tempSum = 0
               for (let i = 0, length = items.length; i < length; i++) {
@@ -457,7 +457,7 @@
 
           case goodsType.POSTPONE:
             // 延期
-            if (!coupon.couponNo) {
+            if (coupon.couponNo === 1) { // 长投卡
               this.trade.deal.items[0].price = total
             }
             break

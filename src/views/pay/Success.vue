@@ -15,14 +15,13 @@
         <p class="message-content" v-for="item in message.content">{{{item}}}</p>
       </div>
       <div v-if="isBtnShow">
-        <ict-button type="default" v-touch:tap="onConfirm">{{message.btnText}}</ict-button>
+        <ict-button type="default" v-touch:tap="onConfirm">{{{message.btnText}}}</ict-button>
       </div>
     </div>
 </template>
 <script>
 import IctTitlebar from '../../components/IctTitlebar.vue'
 import IctButton from '../../components/IctButton.vue'
-import { goodsType } from '../../util/pay/daelHelper'
 
   let messages = {
     'S': {
@@ -63,11 +62,14 @@ export default {
     }
   },
   route: {
-    data () {
-      return messages[this.type]
+    data ({to: {params: { type }}}) {
+      this.setMessage(type)
     }
   },
   methods: {
+    setMessage (type) {
+      this.message = messages[type]
+    },
     onConfirm () {
       this.$route.router.go('/main')
     }

@@ -60,8 +60,8 @@
       return {
         isAlert: false,
         alertMsg: '',
-        plainPassword: 'hujunlove',
-        identity: '茗小铭'
+        plainPassword: '',
+        identity: ''
       }
     },
 
