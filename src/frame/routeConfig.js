@@ -149,10 +149,6 @@ export function configRouter (router) {
     '/common/topic/:ctpId': {
       component: require('../views/topic/CommonTopic.vue')
     },
-    //通用专题确认订单页面
-    '/common/topic/order/:ctpId': {
-      component: require('../views/topic/CommonTopicOrder.vue')
-    },
     //打包课专题
     '/spec/topic/:stpId': {
       component: require('../views/topic/SpecTopic.vue')

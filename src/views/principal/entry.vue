@@ -59,20 +59,10 @@
     data () {
       return {
         isAlert: false,
-        alertMsg: null,
+        alertMsg: '',
         plainPassword: 'hujunlove',
         identity: '茗小铭'
       }
-    },
-
-    components: {
-      IctTitlebar,
-      IctButton,
-      Flexbox,
-      FlexboxItem,
-      Group,
-      XInput,
-      Alert
     },
 
     methods: {
@@ -93,6 +83,16 @@
         this.alertMsg = err
         this.isAlert = true
       }
+    },
+
+    components: {
+      IctTitlebar,
+      IctButton,
+      Flexbox,
+      FlexboxItem,
+      Group,
+      XInput,
+      Alert
     }
   }
 </script>

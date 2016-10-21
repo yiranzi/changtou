@@ -93,8 +93,9 @@ const apiUrl = {
   'weChat_browser_prepay': '/payment/wx/jsapi/order', // 微信 浏览器 支付
   'weChat_code_prepay': '/payment/wx/native/order', // 微信 二维码 支付
   'ali_app_prepay': '/payment/alipay/app/order', //支付宝 app 支付
-  'ali_browser_prepay': '/payment/alipay/H5/order' //支付宝 app 支付
-
+  'ali_browser_prepay': '/payment/alipay/H5/order', //支付宝 app 支付
+  //投币余额
+  'toubi_balance': '/deal/coin/current-balance'
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

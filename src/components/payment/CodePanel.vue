@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div class="qr-code"  v-show="isShow">
+  <div class="qr-code"  v-show="show">
     <div class="qr-code-mask" v-touch:tap="onCodePressed"></div>
     <div class="qr-code-content" id="qr-code-content" v-touch:pressup="onCodePressed"></div>
   </div>
@@ -12,7 +12,7 @@
   import QRCode from '../../plugin/qrcode'
 export default {
   props: {
-    isShow: Boolean,
+    show: Boolean,
     url: String
   },
   watch: {

@@ -35,7 +35,7 @@
         </div>
       </scroller>
       <div class="bottom-area" v-el:bottom-btn >
-        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}">
+        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
           <span class="disPrice">￥{{ priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
@@ -218,6 +218,8 @@
 
     route: {
       data ({to: {params: {stpId}}}) {
+        this.stpId = stpId
+
         let taskArr = []
         taskArr.push(this.loadSpecTopic(stpId))
 
@@ -239,6 +241,7 @@
 
     data () {
       return {
+        stpId: '',
         scrollerHeight: '590px',
         isBuySubject: false,
         isLoadedFail: false //数据是否加载完毕
@@ -293,6 +296,14 @@
           }
         }
         return ret
+      },
+      toBuy () {
+        //跳转到订单页面
+        let path = '/pay-ST-' + this.$route.params.stpId
+        this.$route.router.on(path, {
+          component: require('../pay/Order.vue')
+        })
+        this.$route.router.go(path)
       }
     },
     components: {

@@ -9,30 +9,22 @@
   <div>
     <ict-titlebar v-el:titlebar >确认订单</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <pay-title :price="price" :show="titleShow">{{title}}</pay-title>
       <pay-subject :course-list="courseList"></pay-subject>
-      <pay-coupons :is-show="isCouponsShow()"
-                   :coupons="couponList"
-                   @pay-coupons-change="onCouponChange"></pay-coupons>
+      <pay-pic :pic="pic" :show="picShow"></pay-pic>
+      <pay-postpone :postpone-list="postponeList" @postpone-change="onPostponeChange"></pay-postpone>
+      <pay-coupons :coupons="couponList" @pay-coupons-change="onCouponChange"></pay-coupons>
       <pay-total>{{total}}</pay-total>
       <pay-toubi :value="deduction"></pay-toubi>
     </scroller>
-    <pay-button :state="state"
-                :left-options="leftOptions"
-                :right-options="rightOptions"></pay-button>
-    <pay-action-sheet :show.sync="isActionSheetShow"
-                      :menus="menus"
-                      @pay-way-selected="payByChannel"></pay-action-sheet>
-    <code-panel :is-show="qrCode.isShow"
-                :url="qrCode.url"
-                @code-pressed="showCodeConfirm"></code-panel>
-    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
-    <confirm :show.sync="isConfirmShow"
-             title=" "
-             :confirm-text="confirmText"
-             :cancel-text="cancelText"
-             @on-confirm="goSuccess"
-             @on-cancel="onCodeCancel">
-      <p style="text-align:center;">{{{confirmMsg}}}</p>
+    <pay-button :state="btn.state" :left-options="btn.leftOptions" :right-options="btn.rightOptions"></pay-button>
+    <pay-action-sheet :show.sync="actionSheet.show" :menus="actionSheet.menus" @pay-way-selected="payByChannel"></pay-action-sheet>
+    <code-panel :show="qrCode.show" :url="qrCode.url" @code-pressed="onCodePressed"></code-panel>
+    <alert :show.sync="alert.show" button-text="知道了" class="ict-alert">{{alert.msg}}</alert>
+    <confirm :show.sync="confirm.show" title=" "
+             :confirm-text="confirm.finish.text" :cancel-text="confirm.cancel.text"
+             @on-confirm="confirm.finish.callback" @on-cancel="confirm.cancel.callback">
+      <p style="text-align:center;">{{confirm.msg}}</p>
     </confirm>
   </div>
 </template>
@@ -41,7 +33,10 @@
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import IctButton from '../../components/IctButton.vue'
+  import PayTitle from '../../components/payment/PayTitle.vue'
+  import PayPostpone from '../../components/payment/Postpone.vue'
   import PayCoupons from '../../components/payment/PayCoupons.vue'
+  import PayPic from '../../components/payment/PayPic.vue'
   import PayTotal from '../../components/payment/PayTotal.vue'
   import PayToubi from '../../components/payment/PayToubi.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
@@ -55,68 +50,108 @@
   export default{
     data () {
       return {
+        // 页面滚动
+        scrollerHeight: '0px',
+        // 商品信息
         type: null, // 商品类型
         id: null, // 商品Id
-        scrollerHeight: '0px',
-        state: '', // 确认订单按钮 状态
-        leftOptions: { // 确认订单按钮 左边
-          price: 0, // 实付
-          text: '您已经购买过' // 不可购买提示
-        },
-        rightOptions: { // 确认订单按钮 右边
-          text: '回首页',
-          callback: this.callback
-        },
+        // 组件是否显示
+        picShow: false,
+        titleShow: false,
+        // 选择的信息
+        currPostponeIndex: 0,
+        currCouponIndex: 0,
+        // 订单信息
         courseList: [], // 课程列表
         couponList: [], // 优惠列表
-        title: '', // 专题标题 或 课程专题
-        price: 0, // 价格
-        total: 0, // 共计
-        deduction: 0, // 投币抵扣
         currentBalance: 0, // 投币余额
-        isActionSheetShow: false, // 支付方式 actionsheet 显示
-        menus: {  //  支付方式 actionsheet 显示的内容
-          wechat: '微信支付',
-          ali: '支付宝支付'
-        },
+        deduction: 0, // 投币抵扣
+        pic: '', //专题 图片
+        postponeList: [], //延期列表
+        price: 0, // 价格
+        title: '', // 标题
+        total: 0, // 共计
         trade: {}, // 交易订单 发往后台
-        qrCode: { // 微信 二维码
-          isShow: false,
-          url: '' // 付款二维码
+        // 确认按钮
+        btn: {
+          state: '', // 确认订单按钮 状态
+          leftOptions: { // 确认订单按钮 左边
+            price: 0, // 实付
+            text: '您已经购买过' + this.title // 不可购买提示
+          },
+          rightOptions: { // 确认订单按钮 右边
+            callback: this.onConfirmOrder,
+            text: '回首页'
+          }
         },
-        isAlert: false, // alert 显示
-        alertMsg: null, // alert message
-        isConfirmShow: false, // 扫码提示框
-        confirmText: '已支付', // 扫码提示框
-        cancelText: '未支付', // 扫码提示框
-        confirmMsg: null // 扫码提示框 message
+        // 选择支付方式
+        actionSheet: {
+          show: false,
+          menus: {
+            wechat: '微信支付',
+            ali: '支付宝支付'
+          }
+        },
+        // 微信 二维码
+        qrCode: {
+          show: false,
+          url: ''
+        },
+        // 警告 提示框
+        alert: {
+          show: false,
+          msg: null
+        },
+        // 扫码提示框
+        confirm: {
+          show: false,
+          finish: {
+            text: '',
+            callback: null
+          },
+          cancel: {
+            text: '',
+            callback: null
+          },
+          msg: ''
+        }
+      }
+    },
+    watch: {
+      price (newPrice) {
+        this.calculate()
+      },
+      currPostponeIndex (postponeIndex) {
+      },
+      currCouponIndex (newIndex) {
+        this.calculate()
+      }
+    },
+    route: {
+      data ({to: {path}}) {
+        const pathArr = path.split('-')
+        var me = this
+        me.type = pathArr[1]
+        me.id = pathArr[2]
+        me.checkAliBrowserPayState()
+        return Promise.all([getOrder(me.type, me.id)]).then(
+            ([order]) => {
+            console.log('order', order)
+              return order
+            }
+        ).catch(
+          err => {
+            console.warn(err)
+          }
+        )
+      },
+      deactivate () {
+        this.resumeView()
       }
     },
     ready () {
       this.setScrollerHeight()
-    },
-    components: {
-      Scroller,
-      IctTitlebar,
-      IctButton,
-      PayCoupons,
-      PayTotal,
-      PayToubi,
-      PayButton,
-      PaySubject,
-      PayActionSheet,
-      CodePanel,
-      Confirm,
-      Alert
-    },
-    route: {
-      data ({to: {path}}) {
-        let pathArr = path.split('-')
-        this.type = pathArr[1]
-        this.id = pathArr[2]
-        this.getOrderData()
-        this.checkAliBrowserPayState()
-      }
+      this.refreshView()
     },
     methods: {
       /**
@@ -135,21 +170,81 @@
         })
         }, 150)
       },
+
       /**
-       * 获取订单信息
+       * 刷新页面组件
        */
-      getOrderData () {
-        var me = this
-        getOrder(this.type, this.id).then(
-          order => {
-            me.courseList = order.courseList
-            me.couponList = order.couponList
-            me.price = order.price
-            me.currentBalance = order.currentBalance
-            me.trade = order.trade
+      refreshView () {
+          if (this.type === goodsType.SPEC_TOPIC) {
+            // 打包课专题 显示title
+            this.titleShow = true
           }
-        )
+
+          if (this.type === goodsType.COMMON_TOPIC) {
+            // 图片专题 显示title 和 宣传图
+            this.titleShow = true
+            this.picShow = true
+          }
       },
+
+      resumeView () {
+        this.type = null
+        this.id = null
+        this.picShow = false
+        this.titleShow = false
+        this.currPostponeIndex = 0
+        this.currCouponIndex = 0
+        this.courseList = []
+        this.couponList = []
+        this.currentBalance = 0
+        this.deduction = 0
+        this.pic = ''
+        this.postponeList = []
+        this.price = 0
+        this.title = ''
+        this.total = 0
+        this.trade = {}
+
+        this.btn = {
+          state: '',
+          leftOptions: {
+            price: 0,
+            text: '您已经购买过' + this.title
+          },
+          rightOptions: {
+            callback: this.onConfirmOrder,
+            text: '回首页'
+          }
+        }
+        this.actionSheet = {
+          show: false,
+          menus: {
+            wechat: '微信支付',
+            ali: '支付宝支付'
+          }
+        }
+        this.qrCode = {
+          show: false,
+          url: ''
+        }
+        this.alert = {
+          show: false,
+          msg: null
+        }
+        this.confirm = {
+          show: false,
+          finish: {
+            text: '',
+            callback: null
+          },
+          cancel: {
+            text: '',
+            callback: null
+          },
+          msg: ''
+        }
+      },
+
       /**
        * 检查是否为支付宝网页支付状态
        * 成功 跳转到成功提示页
@@ -157,55 +252,35 @@
       checkAliBrowserPayState () {
         if (window.localStorage.getItem('ali-browser-pay-state') === 'success') {
           window.localStorage.removeItem('ali-browser-pay-state')
-          this.goSuccess()
+          this.gotoPaySuccess()
         }
       },
 
       /**
-       * 是否显示优惠列表
-       */
-      isCouponsShow () {
-        //todo 有的不能显示优惠列表
-        return true
-      },
-
-      /**
-       * 更换优惠
-       * @param val
+       * 点击 切换优惠信息
+       * @param couponIndex
          */
-      onCouponChange (val) {
-        //页面数据 更新
-
-        let total = this.price - this.couponList[val].userBene ? (this.price - this.couponList[val].userBene) : 0
-        this.total = total
-        this.deduction = this.currentBalance >= this.total ? this.total : this.currentBalance >= 0 ? this.currentBalance : 0
-
-        let sum = total - this.deduction
-        this.leftOptions.price = sum
-
-        //交易数据 更新
-        if (!this.couponList[val].couponNo) {
-          this.trade.deal.cardUsed = true
-        } else {
-          this.trade.deal.items[0].coupon = this.couponList[val]
-        }
-        if (this.type === goodsType.POSTPONE) {
-          this.trade.deal.items[0].dealType = 3
-        }
-
-        if (this.type === goodsType.SUBJECT) {
-          this.trade.deal.items[0].price = total
-        }
-
-        this.trade.sum = sum
+      onCouponChange (couponIndex) {
+        this.currCouponIndex = couponIndex
       },
 
       /**
-       * 点击按钮的回调
+       * 点击 更换延期类型
+       * @param PostponeIndex
        */
-      callback () {
+      onPostponeChange (PostponeIndex) {
+        let postpone = this.postponeList[PostponeIndex]
+        this.price = postpone.price
+        this.trade.deal.items[0].misc = postpone.misc
+        this.currPostponeIndex = PostponeIndex
+      },
+
+      /**
+       * 点击确认订单
+       */
+      onConfirmOrder () {
         if (this.trade.sum > 0) {
-          this.isActionSheetShow = true
+          this.actionSheet.show = true
         } else {
           this.payByChannel(payChannel.TOUBI)
         }
@@ -216,23 +291,26 @@
          * @param channel
          */
       payByChannel (channel) {
-//        window.alert('payByChannel')
+        var me = this
         pay(this.trade, channel).then(
           result => {
             if (result && result.type === dealType.WX_CODE) {
               // 扫码支付
-              this.showCodePanel(result.url)
+              me.showCodePanel(result.url)
             } else {
               // 其他支付 （不包括支付宝网页支付）
-              this.goSuccess()
+              me.gotoPaySuccess()
             }
           },
           err => {
-            this.alertMsg = err.reason
-            this.isAlert = true
+            me.alert = {
+              show: true,
+              msg: err.reason
+            }
           }
         )
       },
+
       /**
        * 显示二维码
        *
@@ -243,29 +321,168 @@
           isShow: true
         }
       },
+
+      /**
+       * 长按二维码后
+       */
+      onCodePressed () {
+        this.resumeCodePanel()
+        this.showCodeConfirm()
+      },
+
       /**
        * 二维码支付后 提示框
        */
       showCodeConfirm () {
+        this.confirm = {
+          show: true,
+            finish: {
+            text: '已支付',
+              callback: this.gotoPaySuccess
+          },
+          cancel: {
+            text: '未支付',
+              callback: this.resumeConfirm
+          },
+          msg: '是否已完成扫码支付'
+        }
+      },
+
+      /**
+       * 清除二维码信息
+       */
+      resumeCodePanel () {
         this.qrCode = {
           url: '',
           isShow: false
         }
-        this.confirmMsg = '是否已完成扫码支付'
-        this.isConfirmShow = true
       },
+
       /**
-       * 二维码取消支付
+       * 清除提示框信息
        */
-      onCodeCancel () {
-        this.isConfirmShow = false
+      resumeConfirm () {
+        this.confirm = {
+          show: false,
+          finish: {
+            text: '',
+            callback: null
+          },
+          cancel: {
+            text: '',
+            callback: null
+          },
+          msg: ''
+        }
       },
+
       /**
        * 支付成功
        */
-      goSuccess () {
+      gotoPaySuccess () {
         this.$route.router.go('/pay/success/' + this.type)
+      },
+
+      /**
+       * 计算页面 数据
+       */
+      calculate () {
+        if (!this.type || !this.id) {
+          // 清空数据时 不执行
+          return
+        }
+        let coupon = {
+          couponNo: '',
+          name: '',
+          userBene: 0,
+          holderBene: 0
+        }
+        if (this.couponList.length > 0) {
+          if (this.type === goodsType.POSTPONE) {
+            if (this.currPostponeIndex === 1) {
+              coupon = this.couponList[this.currCouponIndex]
+            }
+          } else {
+            coupon = this.couponList[this.currCouponIndex]
+          }
+        }
+
+        const total = this.price - coupon.userBene
+        const deduction = this.currentBalance >= total ? total : this.currentBalance >= 0 ? this.currentBalance : 0
+        const sum = total - deduction
+
+        this.total = total
+        this.deduction = deduction
+        this.btn.leftOptions.price = sum
+        this.trade.sum = sum
+
+        if (coupon.couponNo === 1) {
+          this.trade.deal.cardUsed = true
+        } else {
+          this.trade.deal.cardUsed = false
+        }
+
+        switch (this.type) {
+          case goodsType.SUBJECT:
+            // 课程
+            this.trade.deal.items[0].price = total
+            if (coupon.couponNo) {
+              this.trade.deal.items[0].coupon = coupon
+            }
+            break
+
+          case goodsType.COMMON_TOPIC:
+            // 图片专题
+            this.trade.deal.items[0].price = total
+            if (coupon.couponNo) {
+              this.trade.deal.items[0].coupon = coupon
+            }
+            break
+
+          case goodsType.SPEC_TOPIC:
+            // 打包课专题
+            if (!coupon.couponNo) {
+              let items = this.trade.deal.items
+              let tempSum = 0
+              for (let i = 0, length = items.length; i < length; i++) {
+                if (i !== items.length - 1) {
+                  items[i].price = Math.ceil(items[i].price * 0.7)
+                  tempSum += items[i].price
+                } else {
+                  items[i].price = sum - tempSum
+                }
+              }
+            }
+            break
+
+          case goodsType.POSTPONE:
+            // 延期
+            if (!coupon.couponNo) {
+              this.trade.deal.items[0].price = total
+            }
+            break
+          default:
+            break
+        }
+        console.log(this.type, '订单信息', JSON.stringify(this.trade))
       }
+    },
+    components: {
+      Scroller,
+      IctTitlebar,
+      IctButton,
+      PayTitle,
+      PayPostpone,
+      PayCoupons,
+      PayPic,
+      PayTotal,
+      PayToubi,
+      PayButton,
+      PaySubject,
+      PayActionSheet,
+      CodePanel,
+      Confirm,
+      Alert
     }
   }
 </script>

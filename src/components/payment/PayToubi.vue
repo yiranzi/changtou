@@ -31,6 +31,7 @@
   .pay-toubi{
     height: 88/40rem;
     line-height: 88/40rem;
+    margin-top: 0.5rem;
     padding: 0 36/40rem 0 24/40rem;
     text-align: left;
     font-size: 30/40rem;

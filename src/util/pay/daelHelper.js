@@ -12,32 +12,28 @@ import { WeChatQRCodePay } from '../../plugin/payment/weChatQRCodePay'
 import { Device, platformMap } from '../../plugin/device'
 import { Agent } from '../../plugin/agent'
 import { getParamFromUrl } from '../../util/urlParams'
-import { getWithoutAuth, getWithinAuth } from '../../frame/ajax'
+import { getWithoutAuth, getWithinAuth, postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import store from '../../vuex/store'
 
 const user = store.state.user
 
 /**
- * 订单页面信息
- * @type {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
+ * 交易类型
+ * @type {{WX_CODE: string, ALI_BROWSER: string}}
  */
-let order = {
-  courseList: [],
-  couponList: [],
-  price: 0, //原价
-  currentBalance: 0, // 投币余额
-  trade: null  // 交易信息
+const dealType = {
+  WX_CODE: 'wx_code',
+  ALI_BROWSER: 'ali_browser'
 }
 
 /**
- * 支付渠道
- * @type {{ALI: string, WECHAT: string, TOUBI: string}}
+ * 错误类型
+ * @type {{CANCEL: string, FAIL: string}}
  */
-const payChannel = {
-  ALI: 'ali',
-  WECHAT: 'wechat',
-  TOUBI: 'toubi'
+const errorType = {
+  CANCEL: 'cancel',
+  FAIL: 'fail'
 }
 
 /**
@@ -52,34 +48,13 @@ const goodsType = {
 }
 
 /**
- * 错误类型
- * @type {{CANCEL: string, FAIL: string}}
+ * 支付渠道
+ * @type {{ALI: string, WECHAT: string, TOUBI: string}}
  */
-const errorType = {
-  CANCEL: 'cancel',
-  FAIL: 'fail'
-}
-
-/**
- * 交易类型
- * @type {{WX_CODE: string, ALI_BROWSER: string}}
- */
-const dealType = {
-  WX_CODE: 'wx_code',
-  ALI_BROWSER: 'ali_browser'
-}
-
-/**
- * 重置 订单页数据
- */
-const resumeOrder = () => {
-  order = {
-    courseList: [],
-    couponList: [],
-    price: 0,
-    currentBalance: 0,
-    trade: null
-  }
+const payChannel = {
+  ALI: 'ali',
+  WECHAT: 'wechat',
+  TOUBI: 'toubi'
 }
 
 /**
@@ -90,16 +65,16 @@ const resumeOrder = () => {
 const getOrder = (type, id) => {
   switch (type) {
     case goodsType.SUBJECT:
-      return getSubjectOrder(id)
+      return getSubjectOrder(type, id)
 
     case goodsType.COMMON_TOPIC:
-      return getCommonTopicOrder(id)
+      return getCommonTopicOrder(type, id)
 
     case goodsType.SPEC_TOPIC:
-      return getSpecTopicOrder(id)
+      return getSpecTopicOrder(type, id)
 
     case goodsType.POSTPONE:
-      return getPostponeOrder(id)
+      return getPostponeOrder(type, id)
 
     default:
       break
@@ -110,7 +85,7 @@ const getOrder = (type, id) => {
  * 获取 课程订单
  * @returns {Promise}
  */
-const getSubjectOrder = (id) => {
+const getSubjectOrder = (type, id) => {
   let subjectId = parseInt(id)
   return new Promise(
     (resolve, reject) => {
@@ -121,9 +96,7 @@ const getSubjectOrder = (id) => {
         }
       ).then(
         subjectOrder => {
-          subjectOrder.subjectId = subjectId
-          getOrderFromSubject(subjectOrder)
-          resolve(order)
+          resolve(arrangeOrderFromServer(type, id, subjectOrder))
         }
       ).catch(
         err => {
@@ -141,7 +114,7 @@ const getSubjectOrder = (id) => {
  * 获取 通用专题订单
  * @returns {Promise}
  */
-const getCommonTopicOrder = (id) => {
+const getCommonTopicOrder = (type, id) => {
   return new Promise(
     (resolve, reject) => {
       let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
@@ -150,8 +123,8 @@ const getCommonTopicOrder = (id) => {
           url: getUrl('common_topic_order').replace('{ctpId}', id)
         }
       ).then(
-        order => {
-          resolve(order)
+        topicOrder => {
+          resolve(arrangeOrderFromServer(type, id, topicOrder))
         }
       ).catch(
         err => {
@@ -169,7 +142,7 @@ const getCommonTopicOrder = (id) => {
  * 获取 打包课专题订单
  * @returns {Promise}
  */
-const getSpecTopicOrder = (id) => {
+const getSpecTopicOrder = (type, id) => {
   return new Promise(
     (resolve, reject) => {
       let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
@@ -178,8 +151,66 @@ const getSpecTopicOrder = (id) => {
           url: getUrl('spec_topic_order').replace('{stpId}', id)
         }
       ).then(
-        order => {
-          resolve(order)
+        topicOrder => {
+          resolve(arrangeOrderFromServer(type, id, topicOrder))
+        }
+      ).catch(
+        err => {
+          reject({
+            type: errorType.FAIL,
+            reason: err
+          })
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 下载 课程信息
+ * @param id
+ * @returns {Promise}
+ */
+const loadSubjectProgress = (id) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithinAuth(
+        {
+          url: getUrl('expense_records'),
+          data: {
+            subjectId: id.toString()
+          }
+        }
+      ).then(
+        subject => {
+          resolve(subject[0].lessonSet.postponeType)
+        }
+      ).catch(
+        err => {
+          reject({
+            type: errorType.FAIL,
+            reason: err
+          })
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 下载 投币余额
+ * @returns {Promise}
+ */
+const loadCurrentBalance = () => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('toubi_balance')
+        }
+      ).then(
+        currentBalance => {
+          resolve(currentBalance)
         }
       ).catch(
         err => {
@@ -197,49 +228,200 @@ const getSpecTopicOrder = (id) => {
  * 获取 延期订单
  * @returns {Promise}
  */
-const getPostponeOrder = (id) => {
-
+const getPostponeOrder = (type, id) => {
+  let subjectId = parseInt(id)
+  return new Promise(
+    (resolve, reject) => {
+      if (user.isLogin) {
+        Promise.all([loadSubjectProgress(subjectId), loadCurrentBalance()]).then(
+          ([is90DayAvailable, currentBalance]) => {
+            resolve(arrangePostponeOrder(is90DayAvailable, currentBalance, subjectId))
+          }
+        ).catch(
+          err => {
+            reject(err)
+          }
+        )
+      } else {
+        reject({
+          type: errorType.FAIL,
+          reason: '账号过期，请重新登录'
+        })
+      }
+    }
+  )
 }
 
-/**
- * 获取 课程订单所需数据
- * @param subjectOrder
- * @returns {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
- */
-const getOrderFromSubject = (subjectOrder) => {
-  resumeOrder()
-  order.courseList.push({
-    pic: subjectOrder.pic,
-    price: subjectOrder.price,
-    subjectId: subjectOrder.subjectId,
-    subtitle: subjectOrder.subtitle,
-    title: subjectOrder.title
-  })
-  order.couponList = getCouponList(subjectOrder.card, subjectOrder.price, subjectOrder.coupons)
-  order.price = subjectOrder.price
-  order.currentBalance = subjectOrder.currentBalance
-  order.trade = {
-    body: subjectOrder.title,
+const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
+  let postponeList = [
+    {
+      name: '延长90天',
+      price: 1,
+      info: '只可使用一次',
+      disabled: false,
+      misc: '90'
+    },
+    {
+      name: '延长30天',
+      price: 50,
+      info: '',
+      disabled: false,
+      misc: '30'
+    }
+  ]
+
+  let price = 0
+  let couponList = []
+  if (is90DayAvailable === 'Y') {
+    // 延期过
+    postponeList[0].disabled = true
+    price = 50
+    console.log(user.card)
+    if (user.card) {
+      // 有长投卡
+      couponList = [{
+        couponNo: 1,
+        name: '长投卡(7折)',
+        userBene: Math.ceil(postponeList[1].price * 0.7),
+        holderBene: 0
+      }]
+    }
+  } else {
+    price = 1
+  }
+  let trade = {
+    body: '课程延期',
     deal: {
       cardUsed: false,
       channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
       items: [
         {
           coupon: null,
-          dealType: 1,
-          itemId: subjectOrder.subjectId,
+          dealType: 2,
+          itemId: subjectId,
           mchantType: 1,
-          misc: '',
-          price: subjectOrder.price
+          misc: '90',
+          price: 1
         }
       ],
       stpId: null
     },
     openId: user.openId,
-    //openId: 'oeTjys44hEc6-rSo5oH2c_ASSep8',
-    sum: subjectOrder.price
+    sum: 1
   }
-  return order
+  return {
+    courseList: [],
+    couponList,
+    currentBalance,
+    pic: '',
+    postponeList,
+    price,
+    title: '',
+    trade
+  }
+}
+
+/**
+ * 整理订单页面需要的数据
+ * @param type
+ * @param id
+ * @param orderFromServer
+ * @returns {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
+ */
+const arrangeOrderFromServer = (type, id, orderFromServer) => {
+  let courseList = []
+  let dealItems = []
+  let price
+  switch (type) {
+    case goodsType.SUBJECT:
+      // 课程
+      courseList.push({
+        pic: orderFromServer.pic,
+        price: orderFromServer.price,
+        subjectId: id,
+        subtitle: orderFromServer.subtitle,
+        title: orderFromServer.title
+      })
+      dealItems = [
+        {
+          coupon: null,
+          dealType: 1,
+          itemId: id,
+          mchantType: 1,
+          misc: '',
+          price: orderFromServer.price
+        }
+      ]
+      price = orderFromServer.price
+          break
+
+    case goodsType.SPEC_TOPIC:
+      // 打包课 专题
+      courseList = orderFromServer.courseItems
+      dealItems = orderFromServer.courseItems.map(item => {
+        return {
+          coupon: null,
+          dealType: 1,
+          itemId: item.subjectId,
+          mchantType: 1,
+          misc: '',
+          price: item.price
+        }
+      })
+      price = orderFromServer.courseItems.reduce(
+        (prev, curr) => {
+          return {price: prev.price + curr.price}
+        }, {price: 0}
+      ).price
+          break
+
+    case goodsType.COMMON_TOPIC:
+      // 图片 专题
+      dealItems = [
+        {
+          coupon: null,
+          dealType: 1,
+          itemId: id,
+          mchantType: orderFromServer.mchantType,
+          misc: '',
+          price: orderFromServer.price
+        }
+      ]
+      price = orderFromServer.price
+          break
+
+    default:
+          break
+
+  }
+
+  let couponList = getCouponList(orderFromServer.card, price, orderFromServer.coupons)
+  let currentBalance = orderFromServer.currentBalance
+  let pic = orderFromServer.pic
+  let title = orderFromServer.title ? orderFromServer.title : orderFromServer.stpTitle
+  let trade = {
+    body: title,
+    deal: {
+      cardUsed: false,
+      channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
+      items: dealItems,
+      stpId: (type === goodsType.SPEC_TOPIC) ? id : null
+    },
+    openId: user.openId,
+    //openId: 'oeTjys44hEc6-rSo5oH2c_ASSep8',
+    sum: price
+  }
+
+  return {
+    courseList,
+    couponList,
+    currentBalance,
+    pic,
+    price,
+    postponeList: [],
+    title,
+    trade
+  }
 }
 
 /**
@@ -253,7 +435,7 @@ const getCouponList = (card, price, coupons) => {
   let couponList = []
   if (card) {
     couponList.push({
-      couponNo: null,
+      couponNo: 1,
       name: '长投卡(7折)',
       userBene: Math.floor(price * 0.3),
       holderBene: 0
@@ -325,6 +507,11 @@ const pay = (trade, channel) => {
                   })
                 }
               }
+            } else {
+              reject({
+                type: errorType.FAIL,
+                reason: '请在微信浏览器中打开'
+              })
             }
             break
         }
