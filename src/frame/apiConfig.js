@@ -81,6 +81,12 @@ const apiUrl = {
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
 
   /**
+   * 每日一题
+   */
+  'load_daily_question': '/homepage/daily-question/lastest-question', //获取每日一题
+  'submit_answer': '/homepage/daily-question/submit-answer', //用户提交答案
+
+  /**
    * 支付模块
    */
   //获取订单
