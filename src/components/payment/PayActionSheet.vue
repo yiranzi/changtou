@@ -102,8 +102,9 @@
         if (val) {
           this.fixIos(-1)
         } else {
+          var me = this
           setTimeout(() => {
-            this.fixIos(100)
+            me.fixIos(100)
           }, 200)
         }
       },

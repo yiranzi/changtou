@@ -67,7 +67,6 @@
 
     methods: {
       doLogin () {
-//        window.history.go(-1)
         this.login(this.identity, this.plainPassword).then(
           () => this.$route.router.go('/setting'),
           err => this.showAlert(err.message)

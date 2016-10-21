@@ -49,9 +49,6 @@ import XInput from 'vux/x-input'
 import {userActions, globalActions} from '../../../vuex/actions'
 export default {
   vuex: {
-    getters: {
-
-    },
     actions: {
       resetPasswordStart: userActions.resetPasswordStart,
       resetPassword: userActions.resetPassword,
@@ -71,7 +68,6 @@ export default {
   computed: {
     isDisabled () {
       return !(/^\d{6}$/.test(this.validationCode))
-//      return false
     }
   },
   methods: {
@@ -103,7 +99,6 @@ export default {
      * 点击下一步
      */
     sendIdentity () {
-//      this.$route.router.go('/reset/password/end/18516560361')
       this.resetPassword(this.phone, this.validationCode).then(
         () => this.$route.router.go('/reset/password/end/' + this.phone),
         err => this.showAlert(err)

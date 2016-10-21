@@ -22,7 +22,7 @@
 <script>
 import IctTitlebar from '../../components/IctTitlebar.vue'
 import IctButton from '../../components/IctButton.vue'
-//import { dealType } from '../../util/pay/daelHelper'
+import { goodsType } from '../../util/pay/daelHelper'
 
   let messages = {
     'S': {
@@ -55,14 +55,6 @@ import IctButton from '../../components/IctButton.vue'
   }
 
 export default {
-  vuex: {
-    getters: {
-
-    },
-    actions: {
-
-    }
-  },
   data () {
     return {
       type: this.$route.params.type,
@@ -72,16 +64,10 @@ export default {
   },
   route: {
     data () {
-      this.setMessage()
+      return messages[this.type]
     }
   },
-  computed: {
-
-  },
   methods: {
-    setMessage () {
-      this.message = messages[this.type]
-    },
     onConfirm () {
       this.$route.router.go('/main')
     }

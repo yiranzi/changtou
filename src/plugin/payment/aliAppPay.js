@@ -9,11 +9,11 @@ import { errorType } from '../../util/pay/daelHelper'
 let beginPay = false
 
 //错误码
-let failCode = {
+const failCode = {
   CANCEL_BY_USER: '6001',
   NETWORK_ERROR: '6002',
   PAY_FAIL: '4000'
-  }
+}
 
 /**
  * 预支付 下订单

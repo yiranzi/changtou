@@ -58,9 +58,6 @@
         avatar: userGetters.avatar,
         userName: userGetters.userName,
         strategy: userGetters.strategy
-      },
-      actions: {
-
       }
     },
     computed: {

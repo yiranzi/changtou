@@ -51,9 +51,6 @@
 
   export default {
     vuex: {
-      getters: {
-
-      },
       actions: {
         registerStart: userActions.registerStart,
         registerEnd: userActions.registerEnd,
@@ -68,7 +65,6 @@
       XInput,
       IctButton
     },
-
     data () {
       return {
         phone: this.$route.params.phone,
@@ -86,7 +82,6 @@
     computed: {
       isDisabled () {
         return !(/^\d{6}$/.test(this.validationCode))
-//        return false
       }
     },
 
@@ -119,7 +114,6 @@
        * 点击提交
        */
       doRegister () {
-//        window.history.go(-2)
         this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
           () => window.history.go(-2),
           (err) => this.showAlert(err)
