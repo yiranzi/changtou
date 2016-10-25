@@ -5,7 +5,7 @@
         <div>
           <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
           <div class="financial-interview">
-            <span>理财揭秘</span>
+            <span v-touch:tap="goToNewertestStart">理财揭秘</span>
             <span v-touch:tap="goToInterviewList">院生访谈</span>
           </div>
           <div class="daily-question" v-touch:tap="goToDailyQuestion">
@@ -51,20 +51,18 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
-  import {navigatorGetters, dailyQuestionGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions} from '../../vuex/actions'
+  import {navigatorGetters} from '../../vuex/getters'
+  import {navigatorActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList,
-        dailyQuestion: dailyQuestionGetters.question
+        expenseList: navigatorGetters.expenseCourseList
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData,
-        loadDailyQuestion: dailyQuestionActions.loadDailyQuestion
+        loadData: navigatorActions.loadNavigatorData
       }
     },
 
@@ -73,18 +71,7 @@
         scrollerHeight: '0px'
       }
     },
-    route: {
-      data (transition) {
-        this.loadDailyQuestion().then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
-      }
-    },
+
     ready () {
       const me = this
       this.loadData().then(
@@ -148,16 +135,8 @@
         this.$route.router.go('/totalList/F')
       },
       //跳转到院生访谈列表页面
-      goToInterviewList () {
+      toInterviewList () {
         this.$route.router.go('/interview/interview-list')
-      },
-      //跳转到每日一题
-      goToDailyQuestion () {
-        if (this.dailyQuestion.selectedOption) {
-          this.$route.router.go('daily/answer')
-        } else {
-          this.$route.router.go('daily/quiz')
-        }
       }
     },
 
@@ -215,8 +194,8 @@
         -webkit-transform: rotate(45deg);
       }
     }
-    /*新增理财揭秘，院生访谈的样式*/
-    .financial-interview{
+    /*新增院生访谈的样式*/
+    .interview{
       width: 100%;
       line-height: 4rem;
       display: flex;
@@ -230,13 +209,6 @@
         width: 50%;
         text-align: center;
       }
-    }
-    /*每日一题*/
-    .daily-question{
-      width: 325/375;
-      height: 3rem;
-      padding: 1.5rem 1.25rem;
-      background-color: #fff;
     }
     .expenselist-area{
       text-align: center;
