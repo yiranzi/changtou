@@ -15,7 +15,7 @@ const user = store.state.user
  */
 const WeChatQRCodePay = (prepayData) => {
   let  deal = Object.assign({}, prepayData)
-  deal.openId = user.open()
+  deal.openId = user.openId
   return new Promise(
     (resolve, reject) => {
       if (!deal.openId) {
