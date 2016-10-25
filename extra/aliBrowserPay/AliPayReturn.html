@@ -29,9 +29,9 @@
     var status = GetQueryString('trade_status');
 
     if(status === 'TRADE_FINISHED' || status === 'TRADE_SUCCESS'){
-      window.localStorage.setItem('ali-browser-pay-state', 'success') // 缓存支付成功标识 供订单页调用
-      location.href =  window.localStorage.getItem('ali-browser-pay-return-url')
-      window.localStorage.removeItem('ali-browser-pay-return-url')
+      window.sessionStorage.setItem('ali-browser-pay-state', 'success') // 缓存支付成功标识 供订单页调用
+      location.href =  window.sessionStorage.getItem('ali-browser-pay-return-url')
+      window.sessionStorage.removeItem('ali-browser-pay-return-url')
     }
 
     </script>

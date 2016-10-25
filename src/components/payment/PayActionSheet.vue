@@ -80,7 +80,7 @@
        */
       onConfirmTap () {
         this.show = false
-        this.$emit('pay-way-selected', JSON.parse(JSON.stringify(this.payWay)))
+        this.$emit('pay-way-selected', this.payWay)
       },
       /**
        * iOS兼容处理

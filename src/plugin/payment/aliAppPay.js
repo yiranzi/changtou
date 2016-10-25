@@ -26,7 +26,7 @@ const prepay = (prepayData) => {
       //window.alert('prepay')
       postWithinAuth(
         {
-          url: getUrl('ali_app_prepay'),
+          url: getUrl('pay_ali_app'),
           data: prepayData
         }
       ).then(
@@ -61,7 +61,7 @@ const showPayComponent = (prepayResponse) => {
   return new Promise(
     (resolve, reject) => {
       //window.alert('showPayComponent')
-      let params = {
+      const params = {
         tradeNo: prepayResponse.out_trade_no,
         subject: prepayResponse.subject,
         body: prepayResponse.body,
@@ -103,7 +103,7 @@ const showPayComponent = (prepayResponse) => {
  */
 const AliAppPay = (trade) => {
   //window.alert('AliAppPay')
-  let deal = Object.assign(trade)
+  let deal = Object.assign({}, trade)
   delete deal.openId
   let promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)

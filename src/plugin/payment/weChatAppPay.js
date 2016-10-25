@@ -18,7 +18,7 @@ const prepay = (prepayData) => {
       //window.alert('prepay')
       postWithinAuth(
         {
-          url: getUrl('weChat_app_prepay'),
+          url: getUrl('pay_weChat_app'),
           data: prepayData
         }
       ).then(
@@ -27,12 +27,41 @@ const prepay = (prepayData) => {
         }
       ).catch(
         err => {
-          console.warn(err)
           reject({
             type: errorType.FAIL,
             reason: err.message
           })
         }
+      )
+    }
+  )
+}
+
+/**
+ * 检测 是否安装微信
+ * @param prepayResponse
+ * @returns {Promise}
+ */
+const checkInstall = (prepayResponse) => {
+  return new Promise(
+    (resolve, reject) => {
+      window.Wechat.isInstalled(
+        function (installed) {
+          if (installed) {
+            //window.alert('微信 已安装')
+            resolve(prepayResponse)
+          } else {
+            //window.alert('微信 未安装')
+            reject({
+              type: errorType.FAIL,
+              reason: '未安装微信客户端'
+            })
+          }
+        },
+        err => reject({
+          type: errorType.FAIL,
+          reason: err
+        })
       )
     }
   )
@@ -54,44 +83,30 @@ const showPayComponent = (prepayResponse) => {
         timestamp: prepayResponse.timeStamp.toString(),   // timestamp
         sign: prepayResponse.paySign                      // signed string
       }
-      window.Wechat.isInstalled(
-        function (installed) {
-          if (installed) {
-            //window.alert('微信 已安装')
-            beginPay = true
-            window.Wechat.sendPaymentRequest(
-              params,
-              function () {
-                //window.alert('购买成功')
-                beginPay = false
-                resolve()
-              },
-              function (reason) {
-                beginPay = false
-                if (reason === '用户点击取消并返回') {
-                //window.alert('购买取消')
-                  reject({
-                    type: errorType.CANCEL,
-                    reason: reason
-                  })
-                } else {
-                //window.alert('购买失败')
-                  reject({
-                    type: errorType.FAIL,
-                    reason: reason
-                  })
-                }
-              }
-            )
+      beginPay = true
+      window.Wechat.sendPaymentRequest(
+        params,
+        function () {
+          //window.alert('购买成功')
+          beginPay = false
+          resolve()
+        },
+        function (reason) {
+          beginPay = false
+          if (reason === '用户点击取消并返回') {
+            //window.alert('购买取消')
+            reject({
+              type: errorType.CANCEL,
+              reason: reason
+            })
           } else {
-            //window.alert('微信 未安装')
+            //window.alert('购买失败')
             reject({
               type: errorType.FAIL,
-              reason: '未安装微信客户端'
+              reason: reason
             })
           }
-        },
-        () => {}
+        }
       )
     }
   )
@@ -104,10 +119,10 @@ const showPayComponent = (prepayResponse) => {
  */
 const WeChatAppPay = (trade) => {
   //window.alert('WeChatAppPay')
-  let deal = Object.assign(trade)
+  let deal = Object.assign({}, trade)
   delete deal.openId
   let promise = Promise.resolve(deal)
-  return promise.then(prepay).then(showPayComponent)
+  return promise.then(prepay).then(checkInstall).then(showPayComponent)
 }
 
 export {

@@ -17,7 +17,7 @@ const ToubiPay = (trade) => {
     (resolve, reject) => {
     postWithinAuth(
       {
-        url: getUrl('toubi_pay'),
+        url: getUrl('pay_toubi'),
         data: trade.deal
       }
     ).then(
@@ -26,7 +26,6 @@ const ToubiPay = (trade) => {
       }
     ).catch(
       err => {
-        console.warn(err)
         reject({
           type: errorType.FAIL,
           reason: err.message

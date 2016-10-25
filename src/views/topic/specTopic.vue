@@ -299,7 +299,7 @@
       },
       toBuy () {
         //跳转到订单页面
-        let path = '/pay-ST-' + this.$route.params.stpId
+        const path = '/pay-ST-' + this.$route.params.stpId
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })

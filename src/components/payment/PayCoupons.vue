@@ -38,9 +38,7 @@ export default {
   },
   computed: {
     show () {
-      if (this.coupons && this.coupons.length > 0) {
-        return true
-      }
+      return (this.coupons && this.coupons.length > 0)
     }
   },
   watch: {
@@ -117,7 +115,7 @@ export default {
     }
     .coupon-item-check{
       position: absolute;
-      left: -999em;
+      left: -1rem;
         &:checked {
           & + .coupon-item-checked {
             border: 0;

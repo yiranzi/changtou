@@ -136,7 +136,6 @@
         me.checkAliBrowserPayState()
         return Promise.all([getOrder(me.type, me.id)]).then(
             ([order]) => {
-            console.log('order', order)
               return order
             }
         ).catch(
@@ -250,8 +249,8 @@
        * 成功 跳转到成功提示页
        */
       checkAliBrowserPayState () {
-        if (window.localStorage.getItem('ali-browser-pay-state') === 'success') {
-          window.localStorage.removeItem('ali-browser-pay-state')
+        if (window.sessionStorage.getItem('ali-browser-pay-state') === 'success') {
+          window.sessionStorage.removeItem('ali-browser-pay-state')
           this.gotoPaySuccess()
         }
       },
@@ -291,8 +290,13 @@
          * @param channel
          */
       payByChannel (channel) {
-        var me = this
-        pay(this.trade, channel).then(
+        let me = this
+        pay(
+          { trade: me.trade,
+            channel: channel,
+            isSubscriber: me.$route.query.subscriber
+          }
+        ).then(
           result => {
             if (result && result.type === dealType.WX_CODE) {
               // 扫码支付
@@ -464,7 +468,7 @@
           default:
             break
         }
-        console.log(this.type, '订单信息', JSON.stringify(this.trade))
+//        console.log(this.type, '订单信息', JSON.stringify(this.trade))
       }
     },
     components: {

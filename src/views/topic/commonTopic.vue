@@ -122,7 +122,7 @@
       },
       toBuy () {
         //跳转到订单页面
-        let path = '/pay-CT-' + this.ctpId
+        const path = '/pay-CT-' + this.ctpId
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })

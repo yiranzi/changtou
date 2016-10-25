@@ -18,7 +18,7 @@ export default {
   watch: {
     url (newUrl) {
       if (newUrl) {
-        this.paintCode()
+        this.prepareCode()
       }
     }
   },
@@ -30,16 +30,22 @@ export default {
       this.$emit('code-pressed')
     },
     /**
-     * 渲染二维码
+     * 准备二维码
      */
-    paintCode () {
+    prepareCode () {
       let content = document.getElementById('qr-code-content')
       if (content.childNodes.length > 0) {
         content.removeChild(content.childNodes[1])
         content.removeChild(content.childNodes[0])
       }
-      new QRCode(document.getElementById('qr-code-content'), {
-        text: this.url,
+      this.paintCode({element: content, url: this.url})
+    },
+    /**
+     * 渲染二维码
+     */
+    paintCode ({element, url}) {
+      new QRCode(element, {
+        text: url,
         width: 500 / 2,
         height: 500 / 2,
         colorDark: '#000000',

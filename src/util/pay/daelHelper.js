@@ -11,7 +11,6 @@ import { WeChatBrowserPay } from '../../plugin/payment/weChatBrowserPay'
 import { WeChatQRCodePay } from '../../plugin/payment/weChatQRCodePay'
 import { Device, platformMap } from '../../plugin/device'
 import { Agent } from '../../plugin/agent'
-import { getParamFromUrl } from '../../util/urlParams'
 import { getWithoutAuth, getWithinAuth, postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import store from '../../vuex/store'
@@ -63,96 +62,48 @@ const payChannel = {
  * @param id 产品Id
  */
 const getOrder = (type, id) => {
-  switch (type) {
-    case goodsType.SUBJECT:
-      return getSubjectOrder(type, id)
-
-    case goodsType.COMMON_TOPIC:
-      return getCommonTopicOrder(type, id)
-
-    case goodsType.SPEC_TOPIC:
-      return getSpecTopicOrder(type, id)
-
-    case goodsType.POSTPONE:
-      return getPostponeOrder(type, id)
-
-    default:
-      break
+  if (type === goodsType.POSTPONE) {
+    return getPostponeOrder(type, id)
+  } else {
+    return getCommonOrder(type, id)
   }
 }
 
 /**
- * 获取 课程订单
- * @returns {Promise}
+ * 订单的get类型
  */
-const getSubjectOrder = (type, id) => {
-  let subjectId = parseInt(id)
-  return new Promise(
-    (resolve, reject) => {
-      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-      ajax(
-        {
-          url: getUrl('subject_order').replace('{subjectId}', subjectId)
-        }
-      ).then(
-        subjectOrder => {
-          resolve(arrangeOrderFromServer(type, id, subjectOrder))
-        }
-      ).catch(
-        err => {
-          reject({
-            type: errorType.FAIL,
-            reason: err
-          })
-        }
-      )
-    }
-  )
+const orderGet = user.isLogin ? getWithinAuth : getWithoutAuth
+
+/**
+ * 订单的url
+ * @type {{S: string, CT: string, ST: string}}
+ */
+const orderUrl = {
+  'S': 'order_subject',
+  'CT': 'order_common_topic',
+  'ST': 'order_spec_topic'
 }
 
 /**
- * 获取 通用专题订单
+ * 获取 课程/专题 订单
  * @returns {Promise}
  */
-const getCommonTopicOrder = (type, id) => {
+const getCommonOrder = (type, id) => {
   return new Promise(
     (resolve, reject) => {
-      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-      ajax(
+      orderGet(
         {
-          url: getUrl('common_topic_order').replace('{ctpId}', id)
+          url: getUrl(orderUrl[type]).replace(':id', id)
         }
       ).then(
-        topicOrder => {
-          resolve(arrangeOrderFromServer(type, id, topicOrder))
-        }
-      ).catch(
-        err => {
-          reject({
-            type: errorType.FAIL,
-            reason: err
-          })
-        }
-      )
-    }
-  )
-}
-
-/**
- * 获取 打包课专题订单
- * @returns {Promise}
- */
-const getSpecTopicOrder = (type, id) => {
-  return new Promise(
-    (resolve, reject) => {
-      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-      ajax(
-        {
-          url: getUrl('spec_topic_order').replace('{stpId}', id)
-        }
-      ).then(
-        topicOrder => {
-          resolve(arrangeOrderFromServer(type, id, topicOrder))
+        order => {
+          resolve(
+            arrangeOrderFromServer({
+              type: type,
+              id: parseInt(id),
+              order: order
+              })
+          )
         }
       ).catch(
         err => {
@@ -252,8 +203,15 @@ const getPostponeOrder = (type, id) => {
   )
 }
 
+/**
+ * 整理 延期订单
+ * @param is90DayAvailable
+ * @param currentBalance
+ * @param subjectId
+ * @returns {{courseList: Array, couponList: Array, currentBalance: *, pic: string, postponeList: *[], price: number, title: string, trade: {body: string, deal: {cardUsed: boolean, channel: string, items: *[], stpId: null}, openId: *, sum: number}}}
+ */
 const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
-  let postponeList = [
+  const postponeList = [
     {
       name: '延长90天',
       price: 1,
@@ -276,7 +234,7 @@ const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
     // 延期过
     postponeList[0].disabled = true
     price = 50
-    console.log(user.card)
+
     if (user.card) {
       // 有长投卡
       couponList = [{
@@ -325,22 +283,22 @@ const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
  * 整理订单页面需要的数据
  * @param type
  * @param id
- * @param orderFromServer
+ * @param order
  * @returns {{courseList: Array, couponList: Array, total: number, deduction: number, currentBalance: number, sum: number}}
  */
-const arrangeOrderFromServer = (type, id, orderFromServer) => {
+const arrangeOrderFromServer = ({type, id, order}) => {
   let courseList = []
   let dealItems = []
   let price
   switch (type) {
     case goodsType.SUBJECT:
-      // 课程
+     //console.log('课程')
       courseList.push({
-        pic: orderFromServer.pic,
-        price: orderFromServer.price,
+        pic: order.pic,
+        price: order.price,
         subjectId: id,
-        subtitle: orderFromServer.subtitle,
-        title: orderFromServer.title
+        subtitle: order.subtitle,
+        title: order.title
       })
       dealItems = [
         {
@@ -349,16 +307,16 @@ const arrangeOrderFromServer = (type, id, orderFromServer) => {
           itemId: id,
           mchantType: 1,
           misc: '',
-          price: orderFromServer.price
+          price: order.price
         }
       ]
-      price = orderFromServer.price
+      price = order.price
           break
 
     case goodsType.SPEC_TOPIC:
-      // 打包课 专题
-      courseList = orderFromServer.courseItems
-      dealItems = orderFromServer.courseItems.map(item => {
+      //console.log('打包课 专题')
+      courseList = order.courseItems
+      dealItems = order.courseItems.map(item => {
         return {
           coupon: null,
           dealType: 1,
@@ -368,26 +326,31 @@ const arrangeOrderFromServer = (type, id, orderFromServer) => {
           price: item.price
         }
       })
-      price = orderFromServer.courseItems.reduce(
+      let priceArr = order.courseItems.map(
+        item => {
+          return item.price
+        }
+      )
+      price = priceArr.reduce(
         (prev, curr) => {
-          return {price: prev.price + curr.price}
-        }, {price: 0}
-      ).price
+          return prev + curr
+        }, 0
+      )
           break
 
     case goodsType.COMMON_TOPIC:
-      // 图片 专题
+     //console.log('图片 专题')
       dealItems = [
         {
           coupon: null,
           dealType: 1,
           itemId: id,
-          mchantType: orderFromServer.mchantType,
+          mchantType: order.mchantType,
           misc: '',
-          price: orderFromServer.price
+          price: order.price
         }
       ]
-      price = orderFromServer.price
+      price = order.price
           break
 
     default:
@@ -395,11 +358,11 @@ const arrangeOrderFromServer = (type, id, orderFromServer) => {
 
   }
 
-  let couponList = getCouponList(orderFromServer.card, price, orderFromServer.coupons)
-  let currentBalance = orderFromServer.currentBalance
-  let pic = orderFromServer.pic
-  let title = orderFromServer.title ? orderFromServer.title : orderFromServer.stpTitle
-  let trade = {
+  const couponList = getCouponList(order.card, price, order.coupons)
+  const currentBalance = order.currentBalance
+  const pic = order.pic
+  const title = order.title ? order.title : order.stpTitle
+  const trade = {
     body: title,
     deal: {
       cardUsed: false,
@@ -460,7 +423,7 @@ const getCouponList = (card, price, coupons) => {
  * @param channel
  * @returns {Promise}
  */
-const pay = (trade, channel) => {
+const pay = ({trade, channel, isSubscriber}) => {
   return new Promise(
     (resolve, reject) => {
       let pay
@@ -495,7 +458,7 @@ const pay = (trade, channel) => {
             //window.alert('WEB')
             if (Agent.isWx) {
               //window.alert('isWx')
-              if (getParamFromUrl('subscriber')) {
+              if (isSubscriber) {
                 pay = WeChatQRCodePay
               } else {
                 if (trade.openId) {

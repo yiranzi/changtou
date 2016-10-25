@@ -121,7 +121,7 @@ export default {
     }
     .cell_check{
       position: absolute;
-      left: -999em;
+      left: -1rem;
       &:checked {
         & + .cell_checked {
           border: 0;

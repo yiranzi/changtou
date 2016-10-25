@@ -22,8 +22,7 @@ export const loadUserCourses = ({ dispatch }) => {
           dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {
-          reject()
-          console.warn(err)
+          reject(err)
         }
       )
     })
@@ -47,8 +46,7 @@ export const loadDefaultCourses = ({ dispatch }) => {
           dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {
-          reject()
-          console.warn(err)
+          reject(err)
         }
       )
     })

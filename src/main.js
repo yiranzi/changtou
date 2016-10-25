@@ -32,7 +32,7 @@ if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
 // start run app
-if ((process.env.NODE_ENV === 'development') || (Device.platform === platformMap.WEB)) {
+if ((Device.platform === platformMap.WEB)) {
   // on develop environment
   appRouter.start(App, 'app')
 } else {

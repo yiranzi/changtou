@@ -8,7 +8,7 @@
  * @param state
  * @returns {string}
  */
-export const information = (state) => {
+export const recommend = (state) => {
   return state.myCourses.information
 }
 
@@ -17,6 +17,20 @@ export const information = (state) => {
  * @param state
  * @returns {string}
  */
-export const myCourses = (state) => {
+export const myCourseList = (state) => {
   return state.myCourses.myCourses
+}
+
+/**
+ * 课程状态类型
+ * @returns {{N: string, E: string, Y: string, I: string, P: string}}
+ */
+export const graduatedType = () => {
+  return {
+    N: '在读中',
+    E: '课程过期',
+    Y: '已毕业',
+    I: '未激活',
+    P: '暂停'
+  }
 }

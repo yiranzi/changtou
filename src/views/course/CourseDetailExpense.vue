@@ -556,7 +556,7 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        let path = '/pay-P-' + this.subjectId
+        const path = '/pay-P-' + this.subjectId
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })
@@ -595,7 +595,7 @@
        * 购买
        */
       buy () {
-        let path = '/pay-S-' + this.subjectId
+        const path = '/pay-S-' + this.subjectId
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })

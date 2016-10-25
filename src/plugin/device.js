@@ -1,25 +1,23 @@
 /**
  * Created by zl on 2016/10/27.
  */
-
 /*
- /!**
- * 获取设备型号（别名）
- * @returns {*|null|string}
- *!/
- const getModel = () => {
- return (window.device && window.device.model) || null
- }
+/!**
+* 获取设备型号（别名）
+* @returns {*|null|string}
+*!/
+const getModel = () => {
+  return (window.device && window.device.model) || null
+}
 
- /!**
- * 是否ios内核浏览器
- *!/
- const isIosBrower = () => {
- var u = navigator.userAgent
- //var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 //android终端
- return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
- }
- */
+/!**
+* 是否ios内核浏览器
+*!/
+const isIosBrower = () => {
+  var u = navigator.userAgent
+  //var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 //android终端
+  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
+}*/
 
 const platformMap = {
   ANDROID: 'Android',

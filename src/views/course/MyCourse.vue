@@ -17,9 +17,9 @@
             <span class="right-round"></span>
             <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
-          <div class="information" v-el:information v-if="information">{{{information}}}</div>
+          <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="gotoCourseDetail($index)" :src=myCourses[$index].pic>
+            <img class="course-list-img" v-touch:tap="gotoCourseDetail($index)" :src=myCourseList[$index].pic>
             <div class="course-list-info" v-touch:tap="gotoCourseDetail($index)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
@@ -27,6 +27,7 @@
             </div>
           </div>
           <div style="height: 4.8rem; background-color: transparent"></div>
+          <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
         </div>
       </scroller>
     </div>
@@ -35,14 +36,16 @@
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
+  import Alert from 'vux/alert'
   import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
 
 export default {
   vuex: {
     getters: {
-      information: myCoursesGetters.information, //推荐信息
-      myCourses: myCoursesGetters.myCourses, //我的课程列表
+      graduatedType: myCoursesGetters.graduatedType, //课程状态类型
+      recommend: myCoursesGetters.recommend, //推荐信息
+      myCourseList: myCoursesGetters.myCourseList, //我的课程列表
       isLogin: userGetters.isLogin, //是否登录
       hasCard: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
@@ -55,11 +58,17 @@ export default {
       loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
     }
   },
+  data () {
+    return {
+      isAlert: false,
+      alertMsg: ''
+    }
+  },
   computed: {
     validity () {
-      let createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
-      let newYear = createTime.getFullYear() + 1
-      let expireTimeValue = new Date(createTime.setFullYear(newYear))
+      const createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
+      const newYear = createTime.getFullYear() + 1
+      const expireTimeValue = new Date(createTime.setFullYear(newYear))
       return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
     },
     accumulatedTime () {
@@ -73,21 +82,14 @@ export default {
       return accumulatedTime
     },
     courseList () {
-      let graduatedType = {
-        N: '在读中',
-        E: '课程过期',
-        Y: '已毕业',
-        I: '未激活',
-        P: '暂停'
-      }
       let courseList = []
-      this.myCourses.map(
+      this.myCourseList.map(
         course => {
           if (course.type === 'P') {
           this.expenseRecords.map(
             record => {
               if (course.subjectId === record.subjectId) {
-                course.status = graduatedType[record.status]
+                course.status = this.graduatedType[record.status]
                 courseList.push(course)
               }
               return course
@@ -124,12 +126,11 @@ export default {
           setTimeout(
             () => {
               me.resetScroller()
-              me.addLoginTapEvent()
             },
             300
           )
         },
-        () => {}
+        err => this.showAlert(err.message)
       )
     }
   },
@@ -146,8 +147,8 @@ export default {
      * @param index
        */
     gotoCourseDetail (index) {
-      let myCourses = this.myCourses
-      let path = `/subject/detail/${myCourses[index].type}/${myCourses[index].subjectId}/0`
+      const myCourseList = this.myCourseList
+      const path = `/subject/detail/${myCourseList[index].type}/${myCourseList[index].subjectId}/0`
       this.$route.router.go(path)
     },
 
@@ -159,34 +160,39 @@ export default {
     },
 
     resetScroller () {
-      let me = this
+      const me = this
       me.$nextTick(() => {
         me.$refs.scroller.reset({
           top: 0
         })
       })
     },
-
     /**
-     * 添加 登录 点击事件
-     */
-    addLoginTapEvent () {
-      let {information} = this.$els
-      if (information) {
-        information.addEventListener('touchstart', ({target}) => {
-          if (target.tagName === 'SPAN') {
-            if (!this.isLogin) {
-              this.$route.router.go('/entry')
-            }
-          }
-        })
+     * 点击登录
+     * @param e
+       */
+    onRecommendTap (e) {
+      if (e.target.nodeName === 'SPAN') {
+        if (!this.isLogin) {
+          this.$route.router.go('/entry')
+        }
       }
+    },
+    /**
+     * 显示提示框
+     * @param err
+       */
+    showAlert (err) {
+      this.alertMsg = err
+      this.isAlert = true
     }
+
   },
   components: {
     IctTitlebar,
     IctButton,
-    Scroller
+    Scroller,
+    Alert
   }
 }
 </script>
@@ -258,7 +264,7 @@ export default {
         }
       }
     }
-    .information{
+    .recommend{
       background: #f0eff5;
       margin: 0.75rem;
       height: 5rem;

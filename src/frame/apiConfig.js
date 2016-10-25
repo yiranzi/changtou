@@ -90,16 +90,16 @@ const apiUrl = {
    * 支付模块
    */
   //获取订单
-  'subject_order': '/deal/expense/course/{subjectId}', // 课程 订单
-  'common_topic_order': '/deal/expense/common-topic/{ctpId}', // 通用专题 订单
-  'spec_topic_order': '/deal/expense/course/package/{stpId}', // 打包课专题 订单
+  'order_subject': '/deal/expense/course/:id', // 课程 订单
+  'order_common_topic': '/deal/expense/common-topic/:id', // 通用专题 订单
+  'order_spec_topic': '/deal/expense/course/package/:id', // 打包课专题 订单
   //支付
-  'toubi_pay': '/deal/request', // 投币 支付
-  'weChat_app_prepay': '/payment/wx/app/order', // 微信 app 支付
-  'weChat_browser_prepay': '/payment/wx/jsapi/order', // 微信 浏览器 支付
-  'weChat_code_prepay': '/payment/wx/native/order', // 微信 二维码 支付
-  'ali_app_prepay': '/payment/alipay/app/order', //支付宝 app 支付
-  'ali_browser_prepay': '/payment/alipay/H5/order', //支付宝 app 支付
+  'pay_toubi': '/deal/request', // 投币 支付
+  'pay_weChat_app': '/payment/wx/app/order', // 微信 app 支付
+  'pay_weChat_browser': '/payment/wx/jsapi/order', // 微信 浏览器 支付
+  'pay_weChat_code': '/payment/wx/native/order', // 微信 二维码 支付
+  'pay_ali_app': '/payment/alipay/app/order', //支付宝 app 支付
+  'pay_ali_browser': '/payment/alipay/H5/order', //支付宝 app 支付
   //投币余额
   'toubi_balance': '/deal/coin/current-balance'
 }

@@ -15,7 +15,7 @@ const WeChatQRCodePay = (prepayData) => {
     (resolve, reject) => {
       postWithinAuth(
         {
-          url: getUrl('weChat_code_prepay'),
+          url: getUrl('pay_weChat_code'),
           data: prepayData
         }
       ).then(
@@ -27,7 +27,6 @@ const WeChatQRCodePay = (prepayData) => {
         }
       ).catch(
         err => {
-          console.warn(err)
           reject({
             type: errorType.FAIL,
             reason: err.message
