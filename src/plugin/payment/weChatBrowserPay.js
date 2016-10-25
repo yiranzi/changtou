@@ -4,9 +4,11 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType } from '../../util/pay/daelHelper'
+import { errorType } from '../../util/pay/dealHelper'
 import { WX_APPID } from '../../frame/serverConfig'
+import store from '../../vuex/store'
 
+const user = store.state.user
 /**
  * 预支付 下订单
  * @param prepayData
@@ -15,6 +17,12 @@ import { WX_APPID } from '../../frame/serverConfig'
 const prepay = (prepayData) => {
   return new Promise(
     (resolve, reject) => {
+      if (!prepayData.openId) {
+        reject({
+          type: errorType.FAIL,
+          reason: '用户信息获取失败，请重新登录后重试'
+        })
+      }
       postWithinAuth(
         {
           url: getUrl('pay_weChat_browser'),
@@ -85,7 +93,9 @@ const showPayComponent = (prepayResponse) => {
  * @returns {Promise.<T>|*}
  */
 const WeChatBrowserPay = (trade) => {
-  var promise = Promise.resolve(trade)
+  let  deal = Object.assign({}, trade)
+  deal.openId = user.open()
+  var promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }
 
