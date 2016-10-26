@@ -385,15 +385,17 @@
       /**
        * 选择题被点击
        **/
-      'homeworkChoiceTap': function (choiceQuestionArr) {
-        console.log('点击选择题', choiceQuestionArr)
+      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
+        // todo 选择题点击
+        console.log('点击选择题', choiceQuestionArr, lessonId)
       },
 
       /**
-       * 文案题被点击
+       * 问答题被点击
        * */
-      'homeworkEssayTap': function (essayQuestion) {
-        console.log('点击问答题', essayQuestion)
+      'homeworkEssayTap': function ({essayQuestion, lessonId}) {
+        // todo 问答题点击
+        console.log('点击问答题', essayQuestion, lessonId)
       }
     },
 
