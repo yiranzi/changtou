@@ -93,7 +93,7 @@ const showPayComponent = (prepayResponse) => {
  * @returns {Promise.<T>|*}
  */
 const WeChatBrowserPay = (trade) => {
-  let  deal = Object.assign({}, trade)
+  let deal = Object.assign({}, trade)
   deal.openId = user.openId
   var promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)

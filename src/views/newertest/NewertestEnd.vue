@@ -210,11 +210,14 @@
     },
     watch: {
       'testReport': function () {
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
 //              top: 0
-        })
-      })
+            })
+          })
+        }, 1500)
       },
       'remindLogin': function (newVal) {
         this.remindLogin = newVal
