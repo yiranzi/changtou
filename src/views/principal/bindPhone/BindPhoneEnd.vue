@@ -48,7 +48,7 @@
   import {userActions, globalActions} from '../../../vuex/actions'
   export default {
     vuex: {
-      action: {
+      actions: {
         bindPhone: userActions.bindPhone,
         bindPhoneEnd: userActions.bindPhoneEnd,
         showAlert: globalActions.showAlert
@@ -74,26 +74,25 @@
        * 点击获取验证码
        */
       getValidationCode () {
-        var me = this
-        console.log('Phone', this.phone)
-        console.log('bindPhone', this.bindPhone)
-        this.bindPhone(this.phone).then(
-          res => {
-            me.timer = setInterval(
-              () => {
-                if (me.leftTime > 0) {
-                  me.leftTime--
-                  me.validationBtnText = me.leftTime + 's后重发'
-                  me.isValidationBtnDisable = true
-                } else {
-                  me.leftTime = 120
-                  me.validationBtnText = '获取验证码'
-                  me.isValidationBtnDisable = false
-                  clearInterval(me.timer)
-                }
-              }, 1000)
+        const me = this
+        me.bindPhone(me.phone).then(
+          function () {
+            me.timer = setInterval(function () {
+              if (me.leftTime > 0) {
+                me.leftTime--
+                me.validationBtnText = me.leftTime + 's后重发'
+                me.isValidationBtnDisable = true
+              } else {
+                me.leftTime = 120
+                me.validationBtnText = '获取验证码'
+                me.isValidationBtnDisable = false
+                clearInterval(me.timer)
+              }
+            }, 1000)
           },
-          err => me.showAlert(err)
+          function (err) {
+            me.showAlert(err)
+          }
         )
       },
 
@@ -101,8 +100,8 @@
        * 点击提交
        */
       sendIdentity () {
-        var me = this
-        this.bindPhoneEnd(this.phone, this.validationCode).then(
+        const me = this
+        me.bindPhoneEnd(me.phone, me.validationCode).then(
           function () {
             me.$route.router.go('/setting')
           },

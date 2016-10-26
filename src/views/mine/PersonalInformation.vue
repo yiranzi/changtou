@@ -90,7 +90,20 @@ export default {
     },
     actions: {
       logout: userActions.logout,
+      syncUser: userActions.syncUser, //同步用户信息
       resetRecords: courseRecordActions.resetRecords
+    }
+  },
+  route: {
+    data (transition) {
+      this.syncUser().then(
+        function () {
+          transition.next()
+        },
+        function (err) {
+          console.log('err', err)
+        }
+      )
     }
   },
   computed: {

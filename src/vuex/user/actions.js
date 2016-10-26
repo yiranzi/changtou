@@ -1,7 +1,7 @@
 /**
  * Created by jun on 2016/8/23.
  */
-import {postWithoutAuth, getWithinAuth} from '../../frame/ajax'
+import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache} from '../../util/cache'
 
@@ -52,15 +52,22 @@ export const logout = ({ dispatch }) => {
  * @param dispatch
  */
 export const syncUser = ({ dispatch }) => {
-  getWithinAuth(
-    {
-      url: getUrl('sync_user')
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('sync_user')
+        }
+      ).then(
+        user => {
+          dispatch('UPDATE_USER', user)
+          resolve()
+        },
+        err => {
+          reject(err)
+        }
+      )
     }
-  ).then(
-    user => {
-      dispatch('UPDATE_USER', user)
-    },
-    err => console.warn(err)
   )
 }
 
@@ -252,7 +259,7 @@ export const bindPhone = ({ dispatch }, phone) => {
 export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
   return new Promise(
     (resolve, reject) => {
-      postWithoutAuth(
+      postWithinAuth(
         {
           url: getUrl('bind_phone_post_code'),
           data: {

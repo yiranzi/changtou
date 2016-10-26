@@ -53,16 +53,7 @@
        * 点击下一步
        */
       sendPhone () {
-        var me = this
-        this.bindPhone(this.phone).then(
-          function () {
-            me.$route.router.go('/bind/phone/end/' + me.phone)
-          },
-          function (err) {
-            console.log('err', err)
-            me.showAlert(err)
-          }
-        )
+        this.$route.router.go('/bind/phone/end/' + this.phone)
       }
     },
     components: {
