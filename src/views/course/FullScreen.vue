@@ -4,16 +4,18 @@
  */
 <template>
     <div :style="viewStyle" class="full-screen">
-      <div class="chapter-title">{{chapter.title}}<span class="close-icon"></span></div>
+      <div class="chapter-title" v-show="isFloatShow">{{chapterTitle}}
+        <span class="close-icon" v-touch:tap="onCloseIconTap"></span></div>
       <swiper :show-dots="false" :auto="false"
               :loop="false" :show-desc-mask="false"
               :aspect-ratio="aspectRatio" :style="style"
-              v-el:ppts direction="vertical">
+              v-touch:tap="onPptTap">
         <swiper-item v-for="ppt in currPpts" class="black" :style="style">
           <img :src="ppt" alt="" style="height: 100%; width: 100%">
         </swiper-item>
       </swiper>
-      <web-audio :src.sync="currAudioSrc" v-el:audio :width="width"></web-audio>
+      <web-audio :src.sync="currAudioSrc" v-el:audio
+                 :width="width" v-show="isFloatShow"></web-audio>
     </div>
 </template>
 <script>
@@ -22,6 +24,7 @@
   import SwiperItem from 'vux/swiper-item'
   import { courseDetailGetters } from '../../vuex/getters'
   import { platformMap, getPlatform } from '../../plugin/device'
+
 export default {
   vuex: {
     getters: {
@@ -34,9 +37,10 @@ export default {
       height: '',
       lessonId: '', //当前lesson id
       chapterIndex: '', //当前chapter index
-      chapter: '',
+      chapterTitle: '', //当前chapter title
       currAudioSrc: '', //当前音频地址
-      currPpts: [] //当前ppt地址集合
+      currPpts: [], //当前ppt地址集合
+      isFloatShow: false //是否显示浮层
     }
   },
   computed: {
@@ -45,12 +49,12 @@ export default {
         this.calculateSize()
       }
 
-//      return `width:${this.width}px;height:${this.height}px;
-//        transform-origin: 0 0 0;-webkit-transform-origin: 0 0 0;
-//        transform: rotate(90deg) translate3d(0,-${this.height}px,0);
-//        -moz-transform: rotate(90deg) translate3d(0,-${this.height}px,0);
-//        -webkit-transform: rotate(90deg) translate3d(0,-${this.height}px,0);
-//        -ms-transform: rotate(90deg) translate3d(0,-${this.height}px,0);`
+      return `width:${this.width}px;height:${this.height}px;
+        transform-origin: 0 0 0;-webkit-transform-origin: 0 0 0;
+        transform: rotate(90deg) translate3d(0,-${this.height}px,0);
+        -moz-transform: rotate(90deg) translate3d(0,-${this.height}px,0);
+        -webkit-transform: rotate(90deg) translate3d(0,-${this.height}px,0);
+        -ms-transform: rotate(90deg) translate3d(0,-${this.height}px,0);`
     },
     style () {
       if (!this.width || !this.height) {
@@ -66,7 +70,17 @@ export default {
     }
   },
   watch: {
-
+    isFloatShow (newVal) {
+      if (newVal) {
+        const me = this
+        setTimeout(
+          function () {
+            me.isFloatShow = false
+          },
+          3000
+        )
+      }
+    }
   },
   route: {
     data ({to: {params: {subjectId, lessonId, chapterIndex}}}) {
@@ -76,19 +90,21 @@ export default {
             return item.subjectId === subjectId
           }
       )
+
       const subjectArr = me.expenseSubjectArr[subjectIndex]
       const lessonIndex = subjectArr.lessonList.findIndex(
           item => {
             return item.lessonId === parseInt(lessonId)
           }
       )
+
       const lessonArr = subjectArr.lessonList[lessonIndex]
       const chapter = lessonArr.lessonDetailsList[chapterIndex]
 
       return {
         lessonId,
         chapterIndex,
-        chapter: chapter,
+        chapterTitle: lessonArr.title,
         currAudioSrc: chapter.audio,
         currPpts: chapter.ppts
       }
@@ -96,6 +112,7 @@ export default {
   },
   ready () {
     this.calculateSize()
+    this.isFloatShow = true
   },
   methods: {
     /**
@@ -106,6 +123,20 @@ export default {
       const html = document.getElementsByTagName('html')[0]
       this.width = (isWeb ? html.offsetHeight : window.screen.height)
       this.height = (isWeb ? html.offsetWidth : window.screen.width)
+    },
+
+    /**
+     * 点击ppt
+     */
+    onPptTap () {
+      this.isFloatShow = true
+    },
+
+    /**
+     * 点击关闭
+     */
+    onCloseIconTap () {
+      window.history.back()
     }
   },
   components: {
@@ -117,15 +148,20 @@ export default {
 </script>
 <style lang="less">
   .full-screen{
+    position: relative;
     .chapter-title{
       position: absolute;
       z-index: 10;
+      width: 100%;
       height: 3.2rem;
-      padding: 1rem 0.75rem 0;
+      top: 0;
+      left: 0;
+      padding: 0 1rem;
+      box-sizing: border-box;
+      line-height: 3.2rem;
       background: #000;
       opacity: 0.7;
       font-size: 0.8rem;
-      line-height: 2.2rem;
       color: #fff;
       .close-icon{
         position: absolute;
@@ -137,6 +173,15 @@ export default {
           font-size: 0.7rem !important;
         }
       }
+    }
+    .audio-box{
+      position: absolute;
+      z-index: 10;
+      left: 0;
+      bottom: 0;
+      background: #000;
+      opacity: 0.7;
+      color: #fff;
     }
   }
 </style>

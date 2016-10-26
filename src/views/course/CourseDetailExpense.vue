@@ -614,8 +614,8 @@
         /**
          * 跳转到横屏
          */
-      gotoFullScreen (subjectid, lessonId, index) {
-          this.$route.router.go(`/full/screen/' + subjectid + '/' + lessonId + '/' + index`)
+      gotoFullScreen (subjectId, lessonId, index) {
+          this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
       }
     },
 
