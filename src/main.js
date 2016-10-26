@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
 import {configRouter} from './frame/routeConfig'
+import {Device, platformMap} from './plugin/device'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
@@ -17,10 +18,21 @@ const appRouter = new VueRouter({
 
 configRouter(appRouter)
 
+/**
+ *
+ * @type {boolean}
+ */
+if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
+  let path = window.location.hash.substr(2)
+  appRouter.on(path, {
+    component: require('./views/pay/Order.vue')
+  })
+}
+
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
 // start run app
-if (process.env.NODE_ENV === 'development') {
+if ((Device.platform === platformMap.WEB)) {
   // on develop environment
   appRouter.start(App, 'app')
 } else {
@@ -61,4 +73,3 @@ if (process.env.NODE_ENV === 'development') {
   }
   app.initialize()
 }
-

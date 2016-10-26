@@ -122,7 +122,11 @@
       },
       toBuy () {
         //跳转到订单页面
-        this.$route.router.go('/common/topic/order/' + this.ctpId)
+        const path = '/pay-CT-' + this.ctpId
+        this.$route.router.on(path, {
+          component: require('../pay/Order.vue')
+        })
+        this.$route.router.go(path)
       }
     },
     components: {

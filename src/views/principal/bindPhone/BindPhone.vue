@@ -53,7 +53,6 @@
        * 点击下一步
        */
       sendPhone () {
-//        console.log(this.phone)
         var me = this
         this.bindPhone(this.phone).then(
           function () {

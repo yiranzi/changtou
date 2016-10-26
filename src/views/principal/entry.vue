@@ -32,6 +32,7 @@
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
+    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
   </div>
 </template>
 <style>
@@ -44,7 +45,7 @@
   import XInput from 'vux/x-input'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
-
+  import Alert from 'vux/alert'
   export default{
     vuex: {
       getters: {
@@ -57,8 +58,29 @@
 
     data () {
       return {
-        plainPassword: 'hj123456',
-        identity: '月小兔'
+        isAlert: false,
+        alertMsg: '',
+        plainPassword: '',
+        identity: ''
+      }
+    },
+
+    methods: {
+      doLogin () {
+        this.login(this.identity, this.plainPassword).then(
+          () => this.$route.router.go('/setting'),
+          err => this.showAlert(err.message)
+        )
+      },
+      doRegister () {
+        this.$route.router.go('/register/start')
+      },
+      doResetPassword () {
+        this.$route.router.go('/reset/password/start')
+      },
+      showAlert (err) {
+        this.alertMsg = err
+        this.isAlert = true
       }
     },
 
@@ -68,23 +90,8 @@
       Flexbox,
       FlexboxItem,
       Group,
-      XInput
-    },
-
-    methods: {
-      doLogin () {
-//        window.history.go(-1)
-        this.login(this.identity, this.plainPassword).then(
-          () => this.$route.router.go('/setting'),
-          err => this.showAlert(err)
-        )
-      },
-      doRegister () {
-        this.$route.router.go('/register/start')
-      },
-      doResetPassword () {
-        this.$route.router.go('/reset/password/start')
-      }
+      XInput,
+      Alert
     }
   }
 </script>

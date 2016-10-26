@@ -3,8 +3,8 @@
  * Created by jun on 2016/9/29.
  *  订单 合计
 
-@example
-<pay-total>100</pay-total>
+  @example
+  <!--<pay-total>100</pay-total>-->
 
  */
 <template>

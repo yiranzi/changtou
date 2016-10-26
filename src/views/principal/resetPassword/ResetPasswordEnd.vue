@@ -43,9 +43,6 @@ import XInput from 'vux/x-input'
 import {userActions, globalActions} from '../../../vuex/actions'
 export default {
   vuex: {
-    getters: {
-
-    },
     actions: {
       resetPasswordEnd: userActions.resetPasswordEnd,
       showAlert: globalActions.showAlert
@@ -61,7 +58,6 @@ export default {
   computed: {
     isDisabled () {
       return !((/^(?![0-9]+$)(?![a-zA-Z]+$)(?!_+$)[A-Za-z0-9_]{6,16}$/.test(this.plainPassword)))
-//      return false
     }
   },
   methods: {
@@ -69,7 +65,6 @@ export default {
      * 点击完成重置密码
      */
     doResetPassword () {
-//      window.history.go(-3)
       if (this.conformedPlainPassword === this.plainPassword) {
         this.resetPasswordEnd(this.phone, this.plainPassword).then(
           () => window.history.go(-3),

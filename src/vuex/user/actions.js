@@ -33,7 +33,6 @@ export const login = ({ dispatch }, identity, plainPassword) => {
         resolve()
       },
       err => {
-        console.warn(err)
         reject(err)
       }
     )
@@ -108,7 +107,6 @@ export const registerStart = ({ dispatch }, phone, plainPassword) => {
       ).then(
         () => resolve(),
         err => {
-          console.warn(err)
           reject(err.message)
         }
       )
@@ -140,7 +138,6 @@ export const registerEnd = ({ dispatch }, phone, plainPassword, validationCode) 
         resolve()
       },
       err => {
-        console.warn(err)
         reject(err.message)
       }
     )
@@ -165,11 +162,10 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
       }
     ).then(
       res => {
-        return resolve()
+        resolve()
       },
       err => {
-        console.warn(err)
-        return reject(err.message)
+        reject(err.message)
       }
     )
   })
@@ -198,7 +194,6 @@ export const resetPassword = ({ dispatch }, phone, validationCode) => {
         resolve()
       },
       (err) => {
-        console.warn(err)
         reject(err.message)
       }
     )
@@ -221,7 +216,6 @@ export const resetPasswordEnd = ({ dispatch }, phone, newPlainPassword) => {
         resolve()
       },
       err => {
-        console.warn(err)
         reject(err.message)
       }
     )
@@ -246,7 +240,6 @@ export const bindPhone = ({ dispatch }, phone) => {
           resolve()
         },
         err => {
-          console.warn(err)
           reject(err.message)
         }
       )
@@ -272,7 +265,6 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
           resolve()
         },
         err => {
-          console.warn(err)
           reject(err.message)
         }
       )

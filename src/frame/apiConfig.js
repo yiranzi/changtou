@@ -89,7 +89,24 @@ const apiUrl = {
    * 每日一题
    */
   'load_daily_question': '/homepage/daily-question/lastest-question', //获取每日一题
-  'submit_answer': '/homepage/daily-question/submit-answer' //用户提交答案
+  'submit_answer': '/homepage/daily-question/submit-answer', //用户提交答案
+
+  /**
+   * 支付模块
+   */
+  //获取订单
+  'order_subject': '/deal/expense/course/:id', // 课程 订单
+  'order_common_topic': '/deal/expense/common-topic/:id', // 通用专题 订单
+  'order_spec_topic': '/deal/expense/course/package/:id', // 打包课专题 订单
+  //支付
+  'pay_toubi': '/deal/request', // 投币 支付
+  'pay_weChat_app': '/payment/wx/app/order', // 微信 app 支付
+  'pay_weChat_browser': '/payment/wx/jsapi/order', // 微信 浏览器 支付
+  'pay_weChat_code': '/payment/wx/native/order', // 微信 二维码 支付
+  'pay_ali_app': '/payment/alipay/app/order', //支付宝 app 支付
+  'pay_ali_browser': '/payment/alipay/H5/order', //支付宝 app 支付
+  //投币余额
+  'toubi_balance': '/deal/coin/current-balance'
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

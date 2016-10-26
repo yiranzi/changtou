@@ -34,9 +34,6 @@ import XInput from 'vux/x-input'
 import {userActions, globalActions} from '../../../vuex/actions'
 export default {
   vuex: {
-    getters: {
-
-    },
     actions: {
       resetPasswordStart: userActions.resetPasswordStart,
       showAlert: globalActions.showAlert
@@ -50,7 +47,6 @@ export default {
   computed: {
     isDisabled () {
       return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
-//      return false
     }
   },
   methods: {
@@ -58,7 +54,6 @@ export default {
      * 点击下一步
      */
     sendPhone () {
-//      this.$route.router.go('/reset/password/18516560361')
       this.resetPasswordStart(this.phone).then(
         () => this.$route.router.go('/reset/password/' + this.phone),
         (err) => this.showAlert(err)
