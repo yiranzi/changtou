@@ -15,24 +15,19 @@
             <span class="left-round"></span>
             长投VIP卡 有效日期至{{validity}}
             <span class="right-round"></span>
-            <span class="help-icon"
-                  v-touch:tap="onHelpIconTap"></span>
+            <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
-          <div class="information"
-               v-el:information
-               v-if="information">{{{information}}}</div>
+          <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img"
-                 v-touch:tap="gotoCourseDetail($index)"
-                 v-bind:src=myCourses[$index].pic>
-            <div class="course-list-info"
-                 v-touch:tap="gotoCourseDetail($index)">
+            <img class="course-list-img" v-touch:tap="gotoCourseDetail($index)" :src=myCourseList[$index].pic>
+            <div class="course-list-info" v-touch:tap="gotoCourseDetail($index)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state">{{course.status}}</p>
             </div>
           </div>
           <div style="height: 4.8rem; background-color: transparent"></div>
+          <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
         </div>
       </scroller>
     </div>
@@ -41,14 +36,16 @@
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
+  import Alert from 'vux/alert'
   import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
 
 export default {
   vuex: {
     getters: {
-      information: myCoursesGetters.information, //推荐信息
-      myCourses: myCoursesGetters.myCourses, //我的课程列表
+      graduatedType: myCoursesGetters.graduatedType, //课程状态类型
+      recommend: myCoursesGetters.recommend, //推荐信息
+      myCourseList: myCoursesGetters.myCourseList, //我的课程列表
       isLogin: userGetters.isLogin, //是否登录
       hasCard: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
@@ -63,86 +60,58 @@ export default {
   },
   data () {
     return {
-
-    }
-  },
-  ready () {
-
-  },
-  route: {
-    data () {
-      this.loadMyCourses()
+      isAlert: false,
+      alertMsg: ''
     }
   },
   computed: {
     validity () {
-      let createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
-      let newYear = createTime.getFullYear() + 1
-      let expireTimeValue = new Date(createTime.setFullYear(newYear))
+      const createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
+      const newYear = createTime.getFullYear() + 1
+      const expireTimeValue = new Date(createTime.setFullYear(newYear))
       return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
     },
     accumulatedTime () {
       let accumulatedTime = 0
       this.expenseRecords.map(
         record => {
-          accumulatedTime = accumulatedTime + record.accumulatedTime
-          return record.accumulatedTime
-        }
-      )
+        accumulatedTime = accumulatedTime + record.accumulatedTime
+      return record.accumulatedTime
+    }
+    )
       return accumulatedTime
     },
     courseList () {
-      let graduatedType = {
-        N: '在读中',
-        E: '课程过期',
-        Y: '已毕业',
-        I: '未激活',
-        P: '暂停'
-      }
       let courseList = []
-      this.myCourses.map(
+      this.myCourseList.map(
         course => {
           if (course.type === 'P') {
-            this.expenseRecords.map(
-              record => {
-                if (course.subjectId === record.subjectId) {
-                  course.status = graduatedType[record.status]
-                  courseList.push(course)
-                }
-                return course
+          this.expenseRecords.map(
+            record => {
+              if (course.subjectId === record.subjectId) {
+                course.status = this.graduatedType[record.status]
+                courseList.push(course)
               }
-            )
-          } else {
-            this.freeRecords.map(
-              record => {
-                if (course.subjectId === record.subjectId) {
-                  course.status = '已学习到' + record.sequence + '/' + record.count + '课'
-                  courseList.push(course)
-                }
+              return course
+            }
+          )
+        } else {
+          this.freeRecords.map(
+            record => {
+              if (course.subjectId === record.subjectId) {
+                course.status = '已学习到' + record.sequence + '/' + record.count + '课'
+                courseList.push(course)
               }
-            )
-          }
+            }
+          )
         }
-      )
-      return courseList
+      }
+    )
+    return courseList
     }
   },
-  methods: {
-    onDraftsTap () {
-      console.log('进入草稿箱')
-    },
-
-    gotoCourseDetail (index) {
-      let myCourses = this.myCourses
-      let path = `/subject/detail/${myCourses[index].type}/${myCourses[index].subjectId}/0`
-      this.$route.router.go(path)
-    },
-
-    onHelpIconTap () {
-      console.log('弹出提示框')
-    },
-
-    loadMyCourses () {
+  route: {
+    data () {
       let promiseArray = []
       let me = this
 
@@ -152,46 +121,78 @@ export default {
         promiseArray = [this.loadDefaultCourses()]
       }
 
-      Promise.all(promiseArray).then(
+      return Promise.all(promiseArray).then(
         () => {
           setTimeout(
             () => {
               me.resetScroller()
-              me.addLoginTapEvent()
             },
             300
           )
         },
-        () => {}
+        err => this.showAlert(err.message)
       )
+    }
+  },
+  methods: {
+    /**
+     * 点击 草稿箱
+     */
+    onDraftsTap () {
+      console.log('进入草稿箱')
+    },
+
+    /**
+     * 进入课程详情
+     * @param index
+       */
+    gotoCourseDetail (index) {
+      const myCourseList = this.myCourseList
+      const path = `/subject/detail/${myCourseList[index].type}/${myCourseList[index].subjectId}/0`
+      this.$route.router.go(path)
+    },
+
+    /**
+     * 点击长投卡帮助
+     */
+    onCardHelpIconTap () {
+      console.log('弹出提示框')
     },
 
     resetScroller () {
-      let me = this
+      const me = this
       me.$nextTick(() => {
         me.$refs.scroller.reset({
           top: 0
         })
       })
     },
-
-    addLoginTapEvent () {
-      let {information} = this.$els
-      if (information) {
-        information.addEventListener('touchstart', ({target}) => {
-          if (target.tagName === 'SPAN') {
-            if (!this.isLogin) {
-              this.$route.router.go('/entry')
-            }
-          }
-        })
+    /**
+     * 点击登录
+     * @param e
+       */
+    onRecommendTap (e) {
+      if (e.target.nodeName === 'SPAN') {
+        if (!this.isLogin) {
+          this.$route.router.go('/entry')
+        }
       }
+    },
+    /**
+     * 显示提示框
+     * @param err
+       */
+    showAlert (err) {
+      this.alertMsg = err
+      this.isAlert = true
     }
+
   },
   components: {
     IctTitlebar,
     IctButton,
-    Scroller
+    Scroller,
+    Alert
   }
 }
 </script>
@@ -263,7 +264,7 @@ export default {
         }
       }
     }
-    .information{
+    .recommend{
       background: #f0eff5;
       margin: 0.75rem;
       height: 5rem;

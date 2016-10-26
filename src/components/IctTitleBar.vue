@@ -14,8 +14,7 @@
 </template>
 
 <script>
-  import {Device, platformMap} from '../plugin/device'
-
+  import { Device, platformMap } from '../plugin/device'
   export default {
     props: {
       title: String,

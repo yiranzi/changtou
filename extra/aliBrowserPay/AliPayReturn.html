@@ -1,0 +1,40 @@
+<!--支付宝 支付后 跳转的页面-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跳转中</title>
+</head>
+<body>
+    <!--<div style="position:absolute;top: 50%;left:50%">-->
+        <!--<img src="resources/image/refreshLoad/hourglass.svg" style="position:relative;bottom:100px;right:60px">-->
+    <!--</div>-->
+
+    <script>
+//      window.alert('AliBrowserPay')
+    /**
+     * 从url中获取参数列表
+     * @param paramName 参数名称
+     */
+    function GetQueryString(paramName,url) {
+      var paramsStr = url ? url.split('?')[1].split('#')[0] : window.location.search.substr(1)
+      var paramsArr = paramsStr.split('&')
+      var params = {}
+      for (var i = 0, length = paramsArr.length; i < length; i++) {
+        params[paramsArr[i].split('=')[0]] = paramsArr[i].split('=')[1]
+      }
+      return params[paramName] || null
+    }
+
+    var status = GetQueryString('trade_status');
+
+    if(status === 'TRADE_FINISHED' || status === 'TRADE_SUCCESS'){
+      window.sessionStorage.setItem('ali-browser-pay-state', 'success') // 缓存支付成功标识 供订单页调用
+      location.href =  window.sessionStorage.getItem('ali-browser-pay-return-url')
+      window.sessionStorage.removeItem('ali-browser-pay-return-url')
+    }
+
+    </script>
+
+</body>
+</html>

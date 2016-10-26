@@ -1,10 +1,11 @@
 /**
  * Created by jun on 2016/9/29.
+  订单 下方 确认支付按钮
 
   @example
-  <pay-button :state="normal"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="normal"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     price: 100
   },
@@ -12,15 +13,15 @@
     callback: this.callback
   },
 
-  <pay-button :state="exception"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="exception"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     text: '您已经购买过长投2016年会，XXXXXXXXX'
   },
   rightOptions: {
     callback: this.callback
-  },
+  }
 
  */
 <template>
@@ -30,7 +31,7 @@
       </div>
       <ict-button class="right"
                   :class="{'right-exception' : (state === 'exception')}"
-                  v-touch:tap="rightOptions.callback">立即购买</ict-button>
+                  v-touch:tap="rightOptions.callback">{{rightText}}</ict-button>
     </div>
 </template>
 <script>
@@ -54,8 +55,10 @@ export default {
   },
   computed: {
     leftText () {
-      console.log(this.state)
       return this.state === 'exception' ? this.leftOptions.text : ('实付金额<span class="price">￥' + this.leftOptions.price + '</span>')
+    },
+    rightText () {
+      return this.state === 'exception' ? this.rightOptions.text : '确认订单'
     }
   },
   components: {

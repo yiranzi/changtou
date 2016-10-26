@@ -1,1 +1,156 @@
-{}
+{
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-media": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-media"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-file": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-compat"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-file-transfer": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file-transfer"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cn.jpush.phonegap.JPushPlugin": {
+        "source": {
+            "type": "registry",
+            "id": "jpush-phonegap-plugin"
+        },
+        "is_top_level": true,
+        "variables": {
+            "API_KEY": "7cc90eaad71ac3582d375f57"
+        }
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-network-information": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-network-information"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-statusbar"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-qqsdk": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-qqsdk"
+        },
+        "is_top_level": true,
+        "variables": {
+            "QQ_APP_ID": "101246042"
+        }
+    },
+    "Umeng": {
+        "source": {
+            "type": "local",
+            "path": "D:\\WorkSpace-web\\education\\document\\1.0\\PLUGIN\\umeng-plugin-android"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-hot-code-push-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-hot-code-push-plugin"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-hot-code-push-local-dev-addon": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-hot-code-push-local-dev-addon"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-wechat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-wechat"
+        },
+        "is_top_level": true,
+        "variables": {
+            "WECHATAPPID": "wxe6e9760f0c17cb1c"
+        }
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-app-version": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-app-version"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-alipay": {
+        "source": {
+            "type": "local",
+            "path": "D:\\WorkSpace-web\\education\\education\\1.2.2\\cordova-plugin-alipay"
+        },
+        "is_top_level": true,
+        "variables": {
+            "PARTNER_ID": "2088321021226094",
+            "SELLER_ACCOUNT": "le.yang@ichangtou.com",
+            "PRIVATE_KEY": "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJ9YCNM3eXfw7CpAn++KrhJp/bcot/0SVXhNRbsrsdrPlFcnJGnOdS52cRYaR8IJpRj5qkQ7lPic2tgw0BlZ5oQH2abxRROsTvU+sMCf5R8UZfad5i/GTxv0NBfMNxXJhZQP/qEsh6MWelrUwMR2VOjKFEZoiNpgb7c9piRlP37pAgMBAAECgYAfTcE2FYDkgk0zI80H1zvJXE8+y14R9qcZ4jxfv/7J2Nvwnzz1GF1HCne++ty8Dv8DQBEmJHpouQ/5RuWrBVFWsYQNogrEoYOB+bsKLQ78PJJ4SWOVY90snLT2gIv+842NHA3jttOLFwnAPs8MbC6WWisSPQ+xOAZY73gFc7fo7QJBAMuiPONYfuk8odK3IOxOGkNtqOigydJymkRe6YUwERxQa+Gfy0FhG6cFPhuG8QW82BD/K8YerDgp7Vm1L7GUBkMCQQDIUhM4pVM9guqXXE62zs5YJM484Qz3DSbryjiG9nw0i2sTugGMcLdNo4jWvz1VsQIsUZn3OCDC72AxgfKotPFjAkAlxt1A1+QDZOooayzCaeLZa3iQX3PRhM01rd3ohXhHJmw9GSXd5SP6IjDZbnk8NUJoNM5sHLiaWrzbjY9hhDJ9AkB4ObIpjCfCQiFTiGYBl2sGQci5hwRF/dG/MBXvAl4XFxnDtB4b0MZixWRqJkrEdEDuomb6legrtokQDYK6uCYrAkB5R7JvYlHlKcNDuDlm/EWoQLHAffQVAOQqCKdhj90Y9vS5qCUMuCnWiCsr2HmatXn2Qn1V8Bo04evJ4fMHtYlC"
+        }
+    }
+}

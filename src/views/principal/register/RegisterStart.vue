@@ -34,9 +34,6 @@
 
   export default {
     vuex: {
-      getters: {
-
-      },
       actions: {
         registerStart: userActions.registerStart,
         showAlert: globalActions.showAlert
@@ -44,10 +41,9 @@
     },
     data () {
       return {
-        phone: '18516560361',
-        plainPassword: 'hj123456',
+        phone: '',
+        plainPassword: '',
         buttonDisable: true
-//        buttonDisable: false
       }
     },
     computed: {
@@ -55,7 +51,6 @@
         let isAvailable = /^1[3|4|5|7|8]\d{9}$/.test(this.phone) && /^(?![0-9]+$)(?![a-zA-Z]+$)(?!_+$)[A-Za-z0-9_]{6,16}$/.test(this.plainPassword)
         this.buttonDisable = !isAvailable
         return this.buttonDisable
-//        return false
       }
     },
     methods: {
@@ -63,7 +58,6 @@
        * 点击注册
        */
       doRegister () {
-//        this.$route.router.go(`/register/end/${this.phone}/${this.plainPassword}`)
         this.registerStart(this.phone, this.plainPassword).then(
           () => this.$route.router.go(`/register/end/${this.phone}/${this.plainPassword}`),
           (err) => this.showAlert(err)

@@ -13,7 +13,6 @@ const userStore = store.state.user
  *
  * @param url
  * @param options
- * @param data
  * @returns {Promise}
  */
 const getWithoutAuth = ({url, options = {}}) => {
@@ -38,7 +37,6 @@ const getWithoutAuth = ({url, options = {}}) => {
  *
  * @param url
  * @param options
- * @param data
  * @param user
  * @returns {Promise}
  */
