@@ -18,6 +18,7 @@
         <div class="cache"></div>
       </div>
       <div class="timer">&nbsp; {{currentTime}}/{{totalTime}}</div>
+      <div v-touch:tap="onFullScreenTap">横屏</div>
     </div>
   </div>
 </template>
@@ -283,8 +284,11 @@
        */
       setTimeByAmplitude (amplitude) {
         this.currentTime = convertAudioTimeToString(webAudio.duration * amplitude)
-      }
+      },
 
+      onFullScreenTap () {
+        this.$dispatch('fullScreenTap')
+      }
     },
 
     events: {
