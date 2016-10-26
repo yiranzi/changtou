@@ -1,29 +1,31 @@
 <template>
-  <div class="newertest-question" v-bind:class="{'layout-card' : isFloat}">
-    <div class="top">
-      <div class="cancel" v-touch:tap="onCancel"></div>
-    </div>
-    <div class="title-box">
-      <div class="title">{{currQuestion.title}}</div>
-      <div class="subtitle">{{currQuestion.subtitle}}</div>
-    </div>
-    <div class="question">
-      <div class="option" v-for="optionArr in currQuestion.options">
-        <div class="content" v-touch:tap="isSelected($index)" v-bind:class="{'selected' : isClick}">{{optionArr.content}}</div>
+  <div>
+    <div class="newertest-question" v-bind:class="{'layout-card' : isFloat}">
+      <div class="top">
+        <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
-      <div class="question-tip" v-bind:class="{'btn-disabled': !isClick, 'btn-enable': isClick}" v-touch:tap="updateCurrQuIndex(this.currQuIndex)" >
-        <div class="box">
-          <span>{{btnObj.first}}</span>
-          <span>{{btnObj.second}}</span>
-          <span>{{btnObj.third}}</span>
+      <div class="title-box">
+        <div class="title">{{currQuestion ? currQuestion.title : ''}}</div>
+        <div class="subtitle">{{currQuestion ? currQuestion.subtitle : ''}}</div>
+      </div>
+      <div class="question">
+        <div class="option" v-for="optionArr in options">
+          <div class="content" v-touch:tap="isSelected($index)" v-bind:class="{'selected' : $index === currOpsIndex}">{{optionArr.content}}</div>
+        </div>
+        <div class="question-tip" :class="isClicked ? 'btn-enable': 'btn-disabled'" v-touch:tap="updateCurrQuIndex(this.currQuIndex)">
+          <div class="box">
+            <span>{{btnObj ? btnObj.first : '下'}}</span>
+            <span>{{btnObj ? btnObj.second : '一'}}</span>
+            <span>{{btnObj ? btnObj.third : '题'}}</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="question-floating" v-show="isFloat">
-    <div class="feedback-img"></div>
-    <div class="feedback-content">{{currQuestion.feedback}}</div>
-    <div class="feedback-btn" v-touch:tap="toHiddenFloating">原来如此，下一题</div>
+    <div class="question-floating" v-show="isFloat">
+      <div class="feedback-img"></div>
+      <div class="feedback-content">{{question[this.currQuIndex-1] ? question[this.currQuIndex-1].feedback : ''}}</div>
+      <div class="feedback-btn" v-touch:tap="toHiddenFloating">原来如此，下一题</div>
+    </div>
   </div>
 </template>
 <style lang="less">
@@ -119,8 +121,8 @@
 
       }
       .btn-disabled{
-         color: #ddd;
-       }
+        color: #ddd;
+      }
       .btn-enable{
         color: #e2af04;
       }
@@ -171,7 +173,8 @@
   export default {
     vuex: {
       actions: {
-        loadQuestion: newertestActions.loadQuestion
+        loadQuestion: newertestActions.loadQuestion,
+        postReport: newertestActions.postReport
       },
       getters: {
         question: newertestGetters.question
@@ -180,10 +183,14 @@
     data () {
       return {
         currQuIndex: 0, //当前题目序号
-        currOpsIndex: 0, //当前选项
+        currOpsIndex: -1, //当前选项
         maxQuIndex: 7, //最大的题目序号
-        isClick: false, // 是否可点击
-        isFloat: false // 是否显示浮层
+        isClicked: false, // 是否点击选项
+        isFloat: false, // 是否显示浮层
+        answer: [], //答案
+        comboId: 0, //模板id
+        level: 0, //等级
+        options: []
       }
     },
     computed: {
@@ -191,13 +198,13 @@
       currQuestion () {
         if (this.question) {
           let currQuestion = this.question[this.currQuIndex]
-          console.log('currQuestion', currQuestion)
+          this.options = currQuestion ? currQuestion.options : []
           return currQuestion
         }
       },
-      //按钮显示字
+      //按钮显示
       btnObj () {
-        let feedback = this.currQuestion.feedback
+        let feedback = this.currQuestion ? this.currQuestion.feedback : ''
         let btnWord = {first: '下', second: '一', third: '题'}
         if (feedback) {
           btnWord = {first: '小', second: '秘', third: '密'}
@@ -210,7 +217,7 @@
     watch: {
       'currQuIndex': function (newIndex) {
         this.currQuIndex = newIndex
-        this.isClick = false
+        this.isClicked = false
       }
     },
     route: {
@@ -234,33 +241,57 @@
        * 若到最后一题直接跳转到结果页
        */
       updateCurrQuIndex (currQuIndex) {
-        if (!this.isClick) {
+        if (!this.isClicked) {
           return
         } else {
-          if (currQuIndex > -1 && currQuIndex < this.maxQuIndex) {
-            this.currQuIndex = currQuIndex + 1
-            console.log('currQuIndex', this.currQuIndex)
-          } else if (currQuIndex === this.maxQuIndex) {
-            this.$route.router.replace('/newertest/ending')
-          }
           if (this.currQuestion.feedback) {
             this.isFloat = true
+          }
+          this.answer.push(this.currOpsIndex)
+          this.currOpsIndex = -1
+          if (currQuIndex > -1 && currQuIndex < this.maxQuIndex) {
+            this.currQuIndex = currQuIndex + 1
+          } else if (currQuIndex === this.maxQuIndex) {
+            this.countLevelId()
+            const me = this
+            this.postReport(this.comboId, this.level).then(
+              function () {
+                me.$route.router.replace('/newertest/ending')
+                me.updatePage()
+              },
+              function (err) {
+                console.log('err', err)
+              }
+            )
           }
         }
       },
       //选中选项
       isSelected (index) {
-        this.isClick = true
+        this.isClicked = true
         this.currOpsIndex = index
       },
       //隐藏浮层
       toHiddenFloating () {
         this.isFloat = false
-        console.log('currQuIndex', this.currQuIndex)
+      },
+      //计算等级，模板id
+      countLevelId () {
+        let secondSelected = this.answer.slice(1, 2)
+        let eighthSelected = this.answer.slice(7, 8)
+        const arr = ['1', '2', '3', '4', '5', '6', '7']
+        this.level = arr[secondSelected]
+        if (secondSelected < 2) {
+          secondSelected = 0
+        }
+        let sum = Number(secondSelected) + Number(eighthSelected)
+        this.comboId = arr[sum]
+      },
+      //刷新页面
+      updatePage () {
+        this.currQuIndex = 0
+        this.currOpsIndex = -1
       }
-    },
-    components: {
-
     }
   }
 </script>
