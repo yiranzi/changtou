@@ -15,7 +15,7 @@
         </swiper-item>
       </swiper>
       <web-audio :src.sync="currAudioSrc" v-el:audio
-                 :width="width" v-show="isFloatShow"></web-audio>
+                 :width="width" v-show="isFloatShow" size="mini"></web-audio>
     </div>
 </template>
 <script>
@@ -23,7 +23,7 @@
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import { courseDetailGetters } from '../../vuex/getters'
-  import { platformMap, getPlatform } from '../../plugin/device'
+  import { platformMap, Device } from '../../plugin/device'
 
 export default {
   vuex: {
@@ -119,8 +119,9 @@ export default {
      * 计算屏幕大小
      */
     calculateSize () {
-      const isWeb = getPlatform === platformMap.WEB
+      const isWeb = (Device.platform === platformMap.WEB)
       const html = document.getElementsByTagName('html')[0]
+
       this.width = (isWeb ? html.offsetHeight : window.screen.height)
       this.height = (isWeb ? html.offsetWidth : window.screen.width)
     },

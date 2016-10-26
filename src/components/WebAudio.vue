@@ -18,7 +18,7 @@
         <div class="cache"></div>
       </div>
       <div class="timer">&nbsp; {{currentTime}}/{{totalTime}}</div>
-      <div v-touch:tap="onFullScreenTap">横屏</div>
+      <div v-touch:tap="onFullScreenTap" v-show="isFullScreen" class="full-screen-icon"></div>
     </div>
   </div>
 </template>
@@ -93,6 +93,16 @@
     color: #fff
     /*felx: none;*/
   }
+
+  .full-screen-icon{
+    line-height: 40px;
+    padding: 0 15px;
+    &:before{
+      font-family: 'myicon';
+      content: '\e918';
+      font-size: 1rem;
+    }
+  }
 </style>
 
 <script>
@@ -102,7 +112,8 @@
   export default {
     props: [
       'src',
-      'isShow'
+      'isShow',
+      'size'
     ],
 
     data () {
@@ -117,7 +128,11 @@
         status: 'pause' // {'play' | 'pause' | 'stop'}
       }
     },
-
+    computed: {
+      isFullScreen () {
+        return this.size !== 'mini'
+      }
+    },
     watch: {
       'src': function (val, oldVal) {
 //        console.log('新消息', val)
