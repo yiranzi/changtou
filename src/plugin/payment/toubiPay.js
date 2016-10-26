@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType } from '../../util/pay/daelHelper'
+import { errorType } from '../../util/pay/dealHelper'
 
 /**
  * 投币支付

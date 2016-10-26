@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType } from '../../util/pay/daelHelper'
+import { errorType } from '../../util/pay/dealHelper'
 
 /**
  * 支付宝 browser 支付
@@ -15,7 +15,6 @@ import { errorType } from '../../util/pay/daelHelper'
 const AliBrowserPay = (trade) => {
   //window.alert('AliBrowserPay')
   let deal = Object.assign({}, trade)
-  delete deal.openId
   //添加支付返回提示
   deal.return_url = window.location.origin + window.location.pathname.replace('index.html', 'extra/aliBrowserPay/AliPayReturn.html')
   deal.show_url = window.location.href

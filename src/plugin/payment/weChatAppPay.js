@@ -4,7 +4,7 @@
  */
  import { postWithinAuth } from '../../frame/ajax'
  import { getUrl } from '../../frame/apiConfig'
- import { errorType } from '../../util/pay/daelHelper'
+ import { errorType } from '../../util/pay/dealHelper'
  let beginPay = false
 
 /**
@@ -120,7 +120,6 @@ const showPayComponent = (prepayResponse) => {
 const WeChatAppPay = (trade) => {
   //window.alert('WeChatAppPay')
   let deal = Object.assign({}, trade)
-  delete deal.openId
   let promise = Promise.resolve(deal)
   return promise.then(prepay).then(checkInstall).then(showPayComponent)
 }

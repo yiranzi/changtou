@@ -22,8 +22,8 @@
 <script>
 import IctTitlebar from '../../components/IctTitlebar.vue'
 import IctButton from '../../components/IctButton.vue'
-
-  let messages = {
+import { goodsType } from '../../util/pay/dealHelper'
+  const messages = {
     'S': {
       name: '课程',
       title: '听课说明：',
@@ -57,6 +57,7 @@ export default {
   data () {
     return {
       type: this.$route.params.type,
+      id: this.$route.params.id,
       message: '',
       isBtnShow: true
     }
@@ -71,7 +72,8 @@ export default {
       this.message = messages[type]
     },
     onConfirm () {
-      this.$route.router.go('/main')
+      let path = this.type === goodsType.SUBJECT ? `subject/detail/P/${this.id}/0` : '/mycourse'
+      this.$route.router.replace(path)
     }
   },
   components: {

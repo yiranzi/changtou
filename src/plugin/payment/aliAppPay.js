@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType } from '../../util/pay/daelHelper'
+import { errorType } from '../../util/pay/dealHelper'
 // 支付中
 let beginPay = false
 
@@ -104,7 +104,6 @@ const showPayComponent = (prepayResponse) => {
 const AliAppPay = (trade) => {
   //window.alert('AliAppPay')
   let deal = Object.assign({}, trade)
-  delete deal.openId
   let promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }

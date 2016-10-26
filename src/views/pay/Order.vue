@@ -45,7 +45,7 @@
   import CodePanel from '../../components/payment/CodePanel.vue'
   import Alert from 'vux/alert'
   import Confirm from 'vux/confirm'
-  import { payChannel, goodsType, dealType, getOrder, pay } from '../../util/pay/daelHelper'
+  import { payChannel, goodsType, dealType, getOrder, pay } from '../../util/pay/dealHelper'
 
   export default{
     data () {
@@ -121,8 +121,6 @@
       price (newPrice) {
         this.calculate()
       },
-      currPostponeIndex (postponeIndex) {
-      },
       currCouponIndex (newIndex) {
         this.calculate()
       }
@@ -130,18 +128,16 @@
     route: {
       data ({to: {path}}) {
         const pathArr = path.split('-')
-        var me = this
-        me.type = pathArr[1]
-        me.id = parseInt(pathArr[2])
-        me.checkAliBrowserPayState()
-        return Promise.all([getOrder(me.type, me.id)]).then(
+        const me = this
+        this.type = pathArr[1]
+        this.id = parseInt(pathArr[2])
+        this.checkAliBrowserPayState()
+        return Promise.all([getOrder(this.type, this.id)]).then(
             ([order]) => {
               return order
             }
         ).catch(
-          err => {
-            console.warn(err)
-          }
+          err => me.showAlert(err.message)
         )
       },
       deactivate () {
@@ -290,7 +286,7 @@
          * @param channel
          */
       payByChannel (channel) {
-        let me = this
+        const me = this
         pay(
           { trade: me.trade,
             channel: channel,
@@ -306,12 +302,7 @@
               me.gotoPaySuccess()
             }
           },
-          err => {
-            me.alert = {
-              show: true,
-              msg: err.reason
-            }
-          }
+          err => me.showAlert(err.reason)
         )
       },
 
@@ -352,6 +343,13 @@
         }
       },
 
+      showAlert (msg) {
+        this.alert = {
+          show: true,
+          msg: msg
+        }
+      },
+
       /**
        * 清除二维码信息
        */
@@ -384,7 +382,11 @@
        * 支付成功
        */
       gotoPaySuccess () {
-        this.$route.router.go('/pay/success/' + this.type)
+        if (this.type === goodsType.POSTPONE) {
+          this.$route.router.go(`subject/detail/P/${this.id}/0`)
+        } else {
+          this.$route.router.replace(`/pay/success/${this.type}/${this.id}`)
+        }
       },
 
       /**

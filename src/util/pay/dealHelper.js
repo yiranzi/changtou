@@ -208,7 +208,7 @@ const getPostponeOrder = (type, id) => {
  * @param is90DayAvailable
  * @param currentBalance
  * @param subjectId
- * @returns {{courseList: Array, couponList: Array, currentBalance: *, pic: string, postponeList: *[], price: number, title: string, trade: {body: string, deal: {cardUsed: boolean, channel: string, items: *[], stpId: null}, openId: *, sum: number}}}
+ * @returns {{courseList: Array, couponList: Array, currentBalance: *, pic: string, postponeList: *[], price: number, title: string, trade: {body: string, deal: {cardUsed: boolean, channel: string, items: *[], stpId: null}, sum: number}}}
  */
 const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
   const postponeList = [
@@ -264,7 +264,6 @@ const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
       ],
       stpId: null
     },
-    openId: user.openId,
     sum: 1
   }
   return {
@@ -370,8 +369,6 @@ const arrangeOrderFromServer = ({type, id, order}) => {
       items: dealItems,
       stpId: (type === goodsType.SPEC_TOPIC) ? id : null
     },
-    openId: user.openId,
-    //openId: 'oeTjys44hEc6-rSo5oH2c_ASSep8',
     sum: price
   }
 
@@ -461,14 +458,7 @@ const pay = ({trade, channel, isSubscriber}) => {
               if (isSubscriber) {
                 pay = WeChatQRCodePay
               } else {
-                if (trade.openId) {
-                  pay = WeChatBrowserPay
-                } else {
-                  reject({
-                    type: errorType.FAIL,
-                    reason: '用户信息获取失败，请重新登录后重试'
-                  })
-                }
+                pay = WeChatBrowserPay
               }
             } else {
               reject({
