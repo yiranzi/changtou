@@ -170,7 +170,6 @@
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {
-        console.log('goToNewertestStart', this.newertestReport)
         if (this.newertestReport) {
           this.$route.router.go('/newertest/ending')
         } else {

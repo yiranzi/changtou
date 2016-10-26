@@ -72,6 +72,7 @@
       }
     }
     .question{
+      height: 222/20rem;
       padding: 1.25rem 1.75rem;
       position: relative;
       .option{

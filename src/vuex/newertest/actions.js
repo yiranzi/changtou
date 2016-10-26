@@ -1,7 +1,7 @@
 /**
  * Created by dongdong on 2016/10/19.
  */
-import {getWithinAuth, getWithoutAuth} from '../../frame/ajax'
+import {getWithinAuth, getWithoutAuth, postWithinAuth, postWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import store from '../../vuex/store'
 let user = store.state.user
@@ -10,13 +10,36 @@ let user = store.state.user
 export const loadQuestion = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
-      let ajax = user.isLogin ? getWithinAuth : getWithoutAuth
+      const ajax = user.isLogin ? getWithinAuth : getWithoutAuth
       ajax({
         url: './static/newertest/questions.json'
       }).then(
         function (question) {
           dispatch('LOAD_QUESTION', question)
-          resolve(question)
+          resolve()
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+//上传测试报告
+export const postReport = ({ dispatch }, comboId, level) => {
+  return new Promise(
+    (resolve, reject) => {
+      const ajax = user.isLogin ? postWithinAuth : postWithoutAuth
+      ajax({
+        url: getUrl('newertest_report'),
+        data: {
+          comboId,
+          level
+        }
+      }).then(
+        function (report) {
+          dispatch('LOAD_TEST_REPORT', report)
+          resolve()
         },
         function (err) {
           reject(err)
@@ -26,11 +49,12 @@ export const loadQuestion = ({ dispatch }) => {
   )
 }
 
-//获取用户结果
+//获取测试结果
 export const loadNewertestReport = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth({
+      const ajax = user.isLogin ? getWithinAuth : getWithoutAuth
+      ajax({
         url: getUrl('newertest_report')
       }).then(
         function (newertestReport) {
