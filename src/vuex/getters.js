@@ -14,6 +14,7 @@ import * as specTopicGetters from './topicSpec/getters'
 import * as commonTopicGetters from './topicCommon/getters'
 import * as interviewGetters from './interview/getters'
 import * as dailyQuestionGetters from './dailyQuestion/getters'
+import * as homework from './homework/getters'
 
 export {
   userGetters,
@@ -28,5 +29,6 @@ export {
   specTopicGetters, //打包课专题
   commonTopicGetters, //通用课专题
   interviewGetters, //院生访谈
-  dailyQuestionGetters //每日一题
+  dailyQuestionGetters, //每日一题
+  homework
 }

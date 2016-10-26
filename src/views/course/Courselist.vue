@@ -50,7 +50,7 @@
     },
 
     ready () {
-      let me = this
+      const me = this
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({

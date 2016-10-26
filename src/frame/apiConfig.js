@@ -101,7 +101,16 @@ const apiUrl = {
   'pay_ali_app': '/payment/alipay/app/order', //支付宝 app 支付
   'pay_ali_browser': '/payment/alipay/H5/order', //支付宝 app 支付
   //投币余额
-  'toubi_balance': '/deal/coin/current-balance'
+  'toubi_balance': '/deal/coin/current-balance',
+
+  /**
+   * 作业
+   */
+  'drafts_list': '/student/article/draft-box', //草稿箱列表
+  'delete_drafts': ' /student/article/draft-box/:articleId', //删除草稿
+  'get_article': '/student/expense/lesson/article/:lessonId', //获取作业或草稿
+  'post_article': '/student/expense/lesson/article' //提交作业或草稿
+
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

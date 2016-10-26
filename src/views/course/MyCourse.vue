@@ -113,7 +113,7 @@ export default {
   route: {
     data () {
       let promiseArray = []
-      let me = this
+      const me = this
 
       if (this.isLogin) {
         promiseArray = [this.loadUserCourses(), this.loadAllFreeRecords(), this.loadAllExpenseRecords()]
@@ -139,7 +139,7 @@ export default {
      * 点击 草稿箱
      */
     onDraftsTap () {
-      console.log('进入草稿箱')
+      this.$route.router.go('/drafts')
     },
 
     /**
