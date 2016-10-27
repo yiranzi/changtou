@@ -56,7 +56,7 @@
     },
     data () {
       return {
-        phone: this.$route.params.phone,
+        phone: '',
         validationCode: '',
         validationBtnText: '获取验证码',
         isValidationBtnDisable: false,
@@ -67,6 +67,11 @@
     computed: {
       isDisabled () {
         return !(/^\d{6}$/.test(this.validationCode))
+      }
+    },
+    route: {
+      data ({to: {params: {phone}}}) {
+        this.phone = phone
       }
     },
     methods: {
@@ -103,7 +108,7 @@
         const me = this
         me.bindPhoneEnd(me.phone, me.validationCode).then(
           function () {
-            me.$route.router.go('/setting')
+            me.$route.router.go('/personal/information')
           },
           function (err) {
             me.showAlert(err)

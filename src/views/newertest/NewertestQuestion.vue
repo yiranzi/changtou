@@ -13,18 +13,14 @@
           <div class="content" v-touch:tap="isSelected($index)" v-bind:class="{'selected' : $index === currOpsIndex}">{{optionArr.content}}</div>
         </div>
         <div class="question-tip" :class="isClicked ? 'btn-enable': 'btn-disabled'" v-touch:tap="updateCurrQuIndex(this.currQuIndex)">
-          <div class="box">
-            <span>{{btnObj ? btnObj.first : '下'}}</span>
-            <span>{{btnObj ? btnObj.second : '一'}}</span>
-            <span>{{btnObj ? btnObj.third : '题'}}</span>
-          </div>
+          <div class="box">{{btnObj}}</div>
         </div>
       </div>
     </div>
     <div class="question-floating" v-show="isFloat">
       <div class="feedback-img"></div>
-      <div class="feedback-content">{{question[this.currQuIndex-1] ? question[this.currQuIndex-1].feedback : ''}}</div>
-      <div class="feedback-btn" v-touch:tap="toHiddenFloating">原来如此，下一题</div>
+      <div class="feedback-content">{{questionArr[this.currQuIndex-1] ? questionArr[this.currQuIndex-1].feedback : ''}}</div>
+      <div class="feedback-btn" v-touch:tap="hideAnswerPop">原来如此，下一题</div>
     </div>
   </div>
 </template>
@@ -106,20 +102,16 @@
         background-image: url("../../assets/styles/image/newertest/answerButton.png");
         background-size: 100%;
         line-height: 10.675rem;
+        text-align: center;
         .box{
           display: inline-block;
-          width: 100%;
+          width: 7.5rem;
           height: 4.5rem;
           vertical-align: middle;
-          span{
-            display: block;
-            font-size: 1.3rem;
-            font-weight: bold;
-            line-height: 1.5rem;
-            text-align: center;
-          }
+          font-size: 1.3rem;
+          font-weight: bold;
+          -webkit-writing-mode: vertical-rl;
         }
-
       }
       .btn-disabled{
         color: #ddd;
@@ -169,16 +161,17 @@
   }
 </style>
 <script>
-  import {newertestActions} from '../../vuex/actions'
+  import {newertestActions, globalActions} from '../../vuex/actions'
   import {newertestGetters} from '../../vuex/getters'
   export default {
     vuex: {
       actions: {
         loadQuestion: newertestActions.loadQuestion,
-        postReport: newertestActions.postReport
+        postReport: newertestActions.postReport,
+        showAlert: globalActions.showAlert
       },
       getters: {
-        question: newertestGetters.question
+        questionArr: newertestGetters.questionArr
       }
     },
     data () {
@@ -197,8 +190,8 @@
     computed: {
       //当前问题
       currQuestion () {
-        if (this.question) {
-          let currQuestion = this.question[this.currQuIndex]
+        if (this.questionArr) {
+          let currQuestion = this.questionArr[this.currQuIndex]
           this.options = currQuestion ? currQuestion.options : []
           return currQuestion
         }
@@ -206,29 +199,29 @@
       //按钮显示
       btnObj () {
         let feedback = this.currQuestion ? this.currQuestion.feedback : ''
-        let btnWord = {first: '下', second: '一', third: '题'}
+        let btnWord = '下一题'
         if (feedback) {
-          btnWord = {first: '小', second: '秘', third: '密'}
+          btnWord = '小秘密'
         } else if (this.currQuIndex === this.maxQuIndex) {
-          btnWord = {first: '大', second: '揭', third: '密'}
+          btnWord = '大揭秘'
         }
         return btnWord
       }
     },
     watch: {
       'currQuIndex': function (newIndex) {
-        this.currQuIndex = newIndex
         this.isClicked = false
       }
     },
     route: {
       data (transition) {
+        const me = this
         this.loadQuestion().then(
           function () {
             transition.next()
           },
-          function (err) {
-            console.log('err', err)
+          function () {
+            me.showAlert('加载信息失败，请重新加载')
           }
         )
       }
@@ -253,12 +246,12 @@
           if (currQuIndex > -1 && currQuIndex < this.maxQuIndex) {
             this.currQuIndex = currQuIndex + 1
           } else if (currQuIndex === this.maxQuIndex) {
-            this.countLevelId()
+            this.computeLevelId()
             const me = this
             this.postReport(this.comboId, this.level).then(
               function () {
                 me.$route.router.replace('/newertest/ending')
-                me.updatePage()
+                me.reset()
               },
               function (err) {
                 console.log('err', err)
@@ -273,23 +266,22 @@
         this.currOpsIndex = index
       },
       //隐藏浮层
-      toHiddenFloating () {
+      hideAnswerPop () {
         this.isFloat = false
       },
       //计算等级，模板id
-      countLevelId () {
-        let secondSelected = this.answer.slice(1, 2)
+      computeLevelId () {
+        let secondSelected = this.answer[1]
         let eighthSelected = this.answer.slice(7, 8)
-        const arr = ['1', '2', '3', '4', '5', '6', '7']
-        this.level = arr[secondSelected]
+        this.level = Number(secondSelected) + 1
         if (secondSelected < 2) {
           secondSelected = 0
         }
         let sum = Number(secondSelected) + Number(eighthSelected)
-        this.comboId = arr[sum]
+        this.comboId = sum + 1
       },
       //刷新页面
-      updatePage () {
+      reset () {
         this.currQuIndex = 0
         this.currOpsIndex = -1
       }

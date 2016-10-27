@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="newertest-end">
-      <div class="top" v-el:cancel>
+      <div class="top" v-el:onClose>
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
@@ -17,7 +17,7 @@
           <div class="level">{{testReport.level}}级</div>
           <div class="conclusion-box">
             <div class="content">
-              <div>在理财技能上，您还是个<span class="man-level">{{getLevel(testReport.level)}}</span></div>
+              <div>在理财技能上，您还是个<span class="man-level">{{getLevel(testReport.level-1)}}</span></div>
               <br>
               <div>{{testReport.conclusion}}</div>
             </div>
@@ -186,8 +186,7 @@
   export default {
     vuex: {
       getters: {
-        report: newertestGetters.testReport,
-        newertestReport: newertestGetters.newertestReport,
+        testReport: newertestGetters.newertestReport,
         isLogin: userGetters.isLogin
       }
     },
@@ -195,17 +194,6 @@
       return {
         scrollerHeight: '560px',
         remindLogin: false
-      }
-    },
-    computed: {
-      testReport () {
-        let testReport = {}
-        if (this.isLogin && this.newertestReport) {
-          testReport = this.newertestReport
-        } else {
-          testReport = this.report
-        }
-        return testReport
       }
     },
     watch: {
@@ -217,14 +205,11 @@
 //              top: 0
             })
           })
-        }, 1500)
-      },
-      'remindLogin': function (newVal) {
-        this.remindLogin = newVal
+        }, 300)
       }
     },
     ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.cancel.offsetHeight) + 'px'
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.onClose.offsetHeight) + 'px'
     },
     methods: {
       onCancel () {
@@ -235,7 +220,7 @@
         }
       },
       getLevel (level) {
-        let arr = ['', '理财原始人', '理财古代人', '理财现代人']
+        let arr = ['理财原始人', '理财古代人', '理财现代人']
         return arr[level]
       },
       tryAgain () {
@@ -247,7 +232,6 @@
       },
       //不登录
       notSave () {
-        this.remindLogin = false
         this.$route.router.go('/main')
       }
     },

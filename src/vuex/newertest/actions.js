@@ -4,7 +4,7 @@
 import {getWithinAuth, getWithoutAuth, postWithinAuth, postWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import store from '../../vuex/store'
-let user = store.state.user
+const user = store.state.user
 
 //加载问题
 export const loadQuestion = ({ dispatch }) => {
@@ -15,7 +15,7 @@ export const loadQuestion = ({ dispatch }) => {
         url: './static/newertest/questions.json'
       }).then(
         function (question) {
-          dispatch('LOAD_QUESTION', question)
+          dispatch('NEWERTEST_UPDATE_QUESTION', question)
           resolve()
         },
         function (err) {
@@ -38,7 +38,7 @@ export const postReport = ({ dispatch }, comboId, level) => {
         }
       }).then(
         function (report) {
-          dispatch('LOAD_TEST_REPORT', report)
+          dispatch('NEWERTEST_UPDATE_REPORT', report)
           resolve()
         },
         function (err) {
@@ -58,7 +58,7 @@ export const loadNewertestReport = ({ dispatch }) => {
         url: getUrl('newertest_report')
       }).then(
         function (newertestReport) {
-          dispatch('LOAD_NEWERTEST_REPORT', newertestReport)
+          dispatch('NEWERTEST_UPDATE_REPORT', newertestReport)
           resolve(newertestReport)
         },
         function (err) {

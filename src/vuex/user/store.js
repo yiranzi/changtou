@@ -57,9 +57,15 @@ const mutations = {
     state.userName = ''
     state.userId = ''
     clearLocalCache('frame-user')
+  },
+  /**
+   * 绑定手机后更新号码
+   * @constructor
+     */
+  UPDATE_PHONE (state, phone) {
+    state.phone = phone
   }
 }
-
 export default {
   state,
   mutations
