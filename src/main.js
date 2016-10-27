@@ -6,6 +6,8 @@ import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
 import {configRouter} from './frame/routeConfig'
 import {Device, platformMap} from './plugin/device'
+import eventBus from './util/eventBus'
+import {eventMap} from './frame/eventConfig'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
@@ -35,6 +37,7 @@ Vue.config.debug = process.env.NODE_ENV === 'dev'
 if ((Device.platform === platformMap.WEB)) {
   // on develop environment
   appRouter.start(App, 'app')
+  eventBus.emit(eventMap.APP_START)
 } else {
   // on production environment
 
@@ -43,6 +46,7 @@ if ((Device.platform === platformMap.WEB)) {
     initialize: function () {
       this.bindEvents()
     },
+
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
@@ -50,12 +54,14 @@ if ((Device.platform === platformMap.WEB)) {
     bindEvents: function () {
       document.addEventListener('deviceready', this.onDeviceReady, false)
     },
+
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
       //app.receivedEvent('deviceready');
+      eventBus.emit(eventMap.APP_START)
       appRouter.start(App, 'app')
       window.navigator.splashscreen.hide()
     },
@@ -71,5 +77,6 @@ if ((Device.platform === platformMap.WEB)) {
       console.log('Received Event: ' + id)
     }
   }
+
   app.initialize()
 }
