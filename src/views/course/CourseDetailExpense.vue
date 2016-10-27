@@ -391,7 +391,6 @@
         this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
       },
 
-
       /**
        * 选择题被点击
        **/
