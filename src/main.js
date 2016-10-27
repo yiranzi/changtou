@@ -8,6 +8,7 @@ import {configRouter} from './frame/routeConfig'
 import {Device, platformMap} from './plugin/device'
 import eventBus from './util/eventBus'
 import {eventMap} from './frame/eventConfig'
+import {addReceiveListener} from './plugin/jpush'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
@@ -64,6 +65,10 @@ if ((Device.platform === platformMap.WEB)) {
       eventBus.emit(eventMap.APP_START)
       appRouter.start(App, 'app')
       window.navigator.splashscreen.hide()
+      const event = function () {
+        window.alert('recdddd')
+      }
+      addReceiveListener(event)
     },
     // Update DOM on a Received Event
     receivedEvent: function (id) {
