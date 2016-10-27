@@ -200,8 +200,6 @@
 
         selectedLesson: null, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
-        currLessonId: null, //当前选中的lesson id
-        currChapterIndex: null, //当前选中的chater index
         currAudioSrc: null, //当前音频地址
         currPpts: [], //当前ppt地址集合
 
@@ -385,6 +383,22 @@
 
       'goToSubject': function (subject) {
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+      },
+
+      /**
+       * 选择题被点击
+       **/
+      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
+        // todo 选择题点击
+        console.log('点击选择题', choiceQuestionArr, lessonId)
+      },
+
+      /**
+       * 问答题被点击
+       * */
+      'homeworkEssayTap': function ({essayQuestion, lessonId}) {
+        // todo 问答题点击
+        console.log('点击问答题', essayQuestion, lessonId)
       },
 
       'fullScreenTap' () {

@@ -7,9 +7,11 @@
       </div>
 
       <!--<div v-show="lesson.lessonId === (selectedLesson ? selectedLesson.lessonId : 0)"-->
+      <!--需要动态给定每一个lesson的高度,才能保证动画效果-->
       <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false): false"
            transition="expand"
-           v-bind:style="{height: (lesson.lessonDetailsList.length) * 11/4 + 'rem'}" >
+           v-bind:style="{height: (lesson.lessonDetailsList.length +
+           (lesson.choiceQuestion.length > 0 ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' ? 1 : 0)) * 11/4 + 'rem'}" >
         <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
           <span style="width: 85%">
@@ -19,6 +21,22 @@
           </span>
           <span v-if="lesson.type === 'C'" style="color: #00b0f0; font-size:0.6rem">可试听</span>
         </div>
+
+        <!--选择题作业-->
+        <div v-if="lesson.choiceQuestion.length > 0" class="chapter-title"
+             v-touch:tap="onHomeworkChoiceTap(lesson.choiceQuestion, lesson.lessonId)">
+          <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
+          <span class="chioce-icon"></span>
+          &nbsp;&nbsp;课后作业
+        </div>
+
+        <!--问答题作业-->
+        <div v-if="lesson.essayQuestion.assigmentType !== 'N'" class="chapter-title"
+             v-touch:tap="onHomeworkEssayTap(lesson.essayQuestion, lesson.lessonId)">
+          <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
+          <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
+        </div>
+
       </div>
     </div>
 
@@ -36,6 +54,20 @@
     /*.lesson-title:first-child {*/
       /*margin-top: 0;*/
     /*}*/
+
+    .chioce-icon:before{
+      font-family: 'myicon';
+      content: '\e916';
+      font-size: 0.7rem !important;
+    }
+
+    .homework-icon:before{
+      font-family: 'myicon';
+      content: '\e91f';
+      font-size: 0.7rem !important;
+    }
+
+
 
     .lesson-title {
       display: flex;
@@ -134,17 +166,17 @@
       'selectedChapter'
     ],
 
-    watch: {
-      'lessons': function (newlessons, oldLessons) {
-        this.lessonListType = newlessons.map(({lessonId}) => {
-          return {lessonId: lessonId, isRollUp: false}
-        })
-      }
-    },
-
     data () {
       return {
         lessonListType: []
+      }
+    },
+
+    watch: {
+      'lessons': function (newlessons, oldLessons) {
+        this.lessonListType = newlessons.map(({lessonId}) => {
+            return {lessonId: lessonId, isRollUp: false}
+          })
       }
     },
 
@@ -171,10 +203,25 @@
           }
         }
       },
+
       updateSelectedChapter (chapter, $index) {
         this.selectedChapter = chapter
         // 向父组件派发事件
         this.$dispatch('chapterSelected', chapter, $index)
+      }
+
+      /**
+       * 点击选择题
+       */
+      onHomeworkChoiceTap (choiceQuestionArr, lessonId) {
+        this.$dispatch('homeworkChoiceTap', {choiceQuestionArr, lessonId})
+      },
+
+      /**
+       * 点击问答题
+       */
+      onHomeworkEssayTap (essayQuestion, lessonId) {
+        this.$dispatch('homeworkEssayTap', {essayQuestion, lessonId})
       }
     }
   }
