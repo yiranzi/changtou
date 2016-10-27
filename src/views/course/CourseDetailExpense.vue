@@ -380,6 +380,22 @@
 
       'goToSubject': function (subject) {
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+      },
+
+      /**
+       * 选择题被点击
+       **/
+      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
+        // todo 选择题点击
+        console.log('点击选择题', choiceQuestionArr, lessonId)
+      },
+
+      /**
+       * 问答题被点击
+       * */
+      'homeworkEssayTap': function ({essayQuestion, lessonId}) {
+        // todo 问答题点击
+        console.log('点击问答题', essayQuestion, lessonId)
       }
     },
 
