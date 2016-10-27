@@ -208,7 +208,7 @@
         this.selectedChapter = chapter
         // 向父组件派发事件
         this.$dispatch('chapterSelected', chapter, $index)
-      }
+      },
 
       /**
        * 点击选择题
