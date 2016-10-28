@@ -2,8 +2,8 @@
  * Created by jun on 2016/10/26.
  * 作业模块
  */
-import {postWithinAuth, getWithinAuth} from '../../frame/ajax'
-import {getUrl} from '../../frame/apiConfig'
+import {postWithinAuth, getWithinAuth} from '../../../frame/ajax'
+import {getUrl} from '../../../frame/apiConfig'
 /**
  * 获取草稿箱内容
  * @returns {Promise}
@@ -30,7 +30,7 @@ export const getDrafts = () => {
  * @param articleId
  * @returns {Promise}
  */
-export const deleteDrafts = (articleId) => {
+export const deleteDrafts = ({ dispatch }, articleId) => {
   return new Promise(
     (resolve, reject) => {
       postWithinAuth(//todo delete
@@ -52,16 +52,17 @@ export const deleteDrafts = (articleId) => {
  * @param lessonId
  * @returns {Promise}
  */
-export const getArticle = (lessonId) => {
+export const getArticle = ({ dispatch }, lessonId) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('drafts_list').replace(':lessonId', lessonId)
+          url: getUrl('get_article').replace(':lessonId', lessonId)
         }
       ).then(
         article => {
           resolve(article)
+          dispatch('UPDATE_ESSAY_STATUS', article)
         },
         err => reject(err)
       )
@@ -74,12 +75,12 @@ export const getArticle = (lessonId) => {
  * @param article
  * @returns {Promise}
  */
-export const postArticle = (article) => {
+export const submitArticle = ({ dispatch }, article) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth(
+      postWithinAuth(
         {
-          url: getUrl('post_article'),
+          url: getUrl('submit_article'),
           data: article
         }
       ).then(
@@ -90,4 +91,22 @@ export const postArticle = (article) => {
       )
     }
   )
+}
+
+/**
+ * 设置 当前作业
+ * @param dispatch
+ * @param essay
+ */
+export const setEssay = ({ dispatch }, essay) => {
+  dispatch('UPDATE_ESSAY', essay)
+}
+
+/**
+ * 设置 当前作业 lessonId
+ * @param dispatch
+ * @param essay
+ */
+export const setEssayLessonId = ({ dispatch }, lessonId) => {
+  dispatch('UPDATE_ESSAY_LESSONID', lessonId)
 }

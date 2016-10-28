@@ -109,7 +109,7 @@ const apiUrl = {
   'drafts_list': '/student/article/draft-box', //草稿箱列表
   'delete_drafts': ' /student/article/draft-box/:articleId', //删除草稿
   'get_article': '/student/expense/lesson/article/:lessonId', //获取作业或草稿
-  'post_article': '/student/expense/lesson/article' //提交作业或草稿
+  'submit_article': '/student/expense/lesson/article' //提交作业或草稿
 
 }
 

@@ -22,12 +22,12 @@
 <script>
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import Scroller from 'vux/scroller'
-  import { homework } from '../../vuex/actions'
+  import { essayActions } from '../../vuex/actions'
 export default {
   vuex: {
     actions: {
-      getDrafts: homework.getDrafts,
-      deleteDraft: homework.deleteDrafts
+      getDrafts: essayActions.getDrafts,
+      deleteDraft: essayActions.deleteDrafts
     }
   },
   data () {
@@ -40,9 +40,6 @@ export default {
     isEmpty () {
       return this.draftList.length <= 0
     }
-  },
-  watch: {
-
   },
   route: {
     data () {

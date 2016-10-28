@@ -383,7 +383,7 @@
        */
       gotoPaySuccess () {
         if (this.type === goodsType.POSTPONE) {
-          this.$route.router.go(`subject/detail/P/${this.id}/0`)
+          this.$route.router.go(`/subject/detail/P/${this.id}/0`)
         } else {
           this.$route.router.replace(`/pay/success/${this.type}/${this.id}`)
         }

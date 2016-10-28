@@ -184,8 +184,25 @@ export function configRouter (router) {
       /**
        * 作业
        */
+    //草稿箱
     '/drafts': {
         component: require('../views/homework/Drafts.vue')
+    },
+    //问答题 写作业
+    '/essay/answer/:articleId': {
+      component: require('../views/homework/EssayAnswer.vue')
+    },
+    //问答题 看分数
+    '/essay/mark/:lessonId': {
+      component: require('../views/homework/EssayMark.vue')
+    },
+    //选择题 做测试
+    '/choice/answer': {
+      component: require('../views/homework/ChoiceAnswer.vue')
+    },
+    //选择题 看分数
+    '/choice/mark': {
+      component: require('../views/homework/ChoiceMark.vue')
     }
   })
 

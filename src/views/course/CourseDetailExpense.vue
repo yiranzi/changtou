@@ -32,7 +32,6 @@
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-
         <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
           <!--<swiper-item>-->
             <!--<specific :subject="currSubject"></specific>-->
@@ -78,6 +77,8 @@
         <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
       </div>
     </div>
+    <essay-float :show="showEssay" @close="resumeHomework" @confirm="resumeHomework"></essay-float>
+    <choice-float :show="showChoice"  @close="resumeHomework" @confirm="resumeHomework"></choice-float>
   </div>
 </template>
 <style lang="less">
@@ -145,13 +146,15 @@
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
+  import essayFloat from '../homework/essayFloat.vue'
+  import choiceFloat from '../homework/ChoiceFloat.vue'
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, globalActions, essayActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
 
   export default {
@@ -171,7 +174,11 @@
 //        postonSubject: courseRecordActions.postponeSubject,
 
         showAlert: globalActions.showAlert,
-        showConfirm: globalActions.showConfirm
+        showConfirm: globalActions.showConfirm,
+
+        setEssayQuestion: essayActions.setEssay,
+        setEssayLessonId: essayActions.setEssayLessonId,
+        getArticle: essayActions.getArticle
       }
     },
 
@@ -205,7 +212,9 @@
         currAudioSrc: null, //当前音频地址
         currPpts: [], //当前ppt地址集合
 
-        isSelectdLessonLimited: true //当前选中lesson是否受限
+        isSelectdLessonLimited: true, //当前选中lesson是否受限
+        showEssay: false,
+        showChoice: false
       }
     },
 
@@ -391,6 +400,7 @@
        * 选择题被点击
        **/
       'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
+        this.showChoice = true
         // todo 选择题点击
         console.log('点击选择题', choiceQuestionArr, lessonId)
       },
@@ -399,6 +409,43 @@
        * 问答题被点击
        * */
       'homeworkEssayTap': function ({essayQuestion, lessonId}) {
+        const me = this
+        this.getArticle(lessonId).then(
+          (evaluation) => {
+            if (evaluation && evaluation.status !== null) {
+              switch (evaluation.status) {
+                case 0://作业已提交
+                  console.log('查看作业')
+                  break
+                case 1://草稿已提交 写作业
+                  me.goEssayAnswer({
+                    essayQuestion,
+                    lessonId
+                  })
+                  break
+                case 2://已批改 未通过 查看作业
+                  console.log('查看作业')
+                  break
+                case 3://已批改 通过 查看作业
+                  console.log('查看作业')
+                  break
+
+                default:
+                  console.log('查看作业')
+                  break
+              }
+            } else {
+              me.goEssayAnswer({
+                essayQuestion,
+                lessonId
+              })
+            }
+          },
+          err => {
+              console.log(err)
+          }
+        )
+
         // todo 问答题点击
         console.log('点击问答题', essayQuestion, lessonId)
       },
@@ -409,6 +456,22 @@
     },
 
     methods: {
+      /**
+       * 跳转去写作业
+       */
+      goEssayAnswer ({ essayQuestion, lessonId }) {
+        this.setEssayQuestion(essayQuestion)
+        this.setEssayLessonId(lessonId)
+        this.showEssay = true
+      },
+      /**
+       * 重置 作业浮层
+       */
+      resumeHomework () {
+        this.showChoice = false
+        this.showEssay = false
+      },
+
       back () {
         window.history.back()
       },
@@ -479,6 +542,9 @@
           confirmText = '去写作业'
           confirmHandler = function () {
             // todo 跳转到写作业页面
+//            this.setEssayQuestion(essayQuestion)
+//            this.setEssayLessonId(lessonId)
+//            this.showEssay = true
           }
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
@@ -646,7 +712,9 @@
       Sticky,
       Specific,
       Content,
-      IctButton
+      IctButton,
+      choiceFloat,
+      essayFloat
     }
   }
 </script>

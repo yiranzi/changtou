@@ -7,45 +7,62 @@
     <div class="ict_actionsheet_mask"
          :class="{'ict_actionsheet_fade_toggle': show}"
          :style="{display: show ? 'block' : 'none'}"
-         v-touch:tap="show=false"></div>
+         v-touch:tap="onCloseTap"></div>
     <div class="ict_actionsheet" :class="{'ict_actionsheet_toggle': show}">
+      <div class="ict_actionsheet_title">{{title}}<span class="close-icon" v-touch:tap="onCloseTap"></span></div>
       <slot></slot>
-      <div class="pay_actionsheet_cell pay_actionsheet_confirm" v-touch:tap="onConfirmTap">{{{confirmText}}}</div>
+      <div class="ict_actionsheet_confirm" v-touch:tap="onConfirmTap">{{btnText}}</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  vuex: {
-    getters: {
-
+  props: {
+    show: {
+      type: Boolean,
+      required: true
     },
-    actions: {
-
-    }
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
+    title: String,
+    btnText: String
   },
   watch: {
-
-  },
-  route: {
-
-  },
-  ready () {
-
+    show (val) {
+      if (val) {
+        this.fixIos(-1)
+      } else {
+        var me = this
+        setTimeout(() => {
+          me.fixIos(100)
+      }, 200)
+      }
+    },
+    beforeDestroy () {
+      this.fixIos(100)
+    }
   },
   methods: {
-
-  },
-  components: {
-
+    /**
+     * 点击 关闭按钮
+     */
+    onCloseTap () {
+      this.show = false
+      this.$emit('close')
+    },
+    /**
+     * 点击确认支付
+     */
+    onConfirmTap () {
+      this.show = false
+      this.$emit('confirm')
+    },
+    /**
+     * iOS兼容处理
+     */
+    fixIos (zIndex) {
+      if (this.$tabbar && /iphone/i.test(navigator.userAgent)) {
+        this.$tabbar.style.zIndex = zIndex
+      }
+    }
   }
 }
 </script>
@@ -72,7 +89,6 @@ export default {
       backface-visibility: hidden;
       z-index: 5000;
       width: 100%;
-      height: 15rem;
       background-color: #fff;
       -webkit-transition: -webkit-transform .3s;
       transition: transform .3s;
@@ -93,7 +109,7 @@ export default {
           &:before{
             position: absolute;
             width: 2.6rem;
-            left: 0;
+            right: 0;
             text-align: center;
             font-family: 'myicon';
             content: '\e90d';
@@ -102,58 +118,7 @@ export default {
         }
       }
 
-      &_menu{
-        background-color: #FFF;
-      }
-
-      &_cell {
-        position: relative;
-        display: block;
-        padding: 0 0.9rem;
-        height: 3rem;
-        text-align: left;
-        font-size: 0.8rem;
-        color: #aaa;
-        line-height: 3rem;
-        &_img {
-          width: 1.6rem;
-          vertical-align: middle;
-          margin-right: 1rem;
-        }
-      }
-
-      .cell_checked {
-        position: absolute;
-        top: 1rem;
-        right: 0.9rem;
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        border: #ddd 1px solid;
-        border-radius: 50%;
-      }
-      .cell_check{
-        position: absolute;
-        left: -999em;
-        &:checked {
-          & + .cell_checked {
-            border: 0;
-            &:before {
-              position: absolute;
-              display: block;
-              width: 1rem;
-              height: 1rem;
-              line-height: 1rem;
-              font-family: 'myicon';
-              content: '\e90c';
-              color: #00b0f0;
-              font-size: 1rem !important;
-            }
-          }
-        }
-      }
-
-      &_title:before, &_cell:before {
+      &_title:before{
         content: " ";
         position: absolute;
         left: 0;
@@ -165,10 +130,12 @@ export default {
 
       &_confirm {
         position: absolute;
+        display: block;
         bottom: 0;
         width: 100%;
         height: 2.45rem;
         padding: 0;
+        display: block;
         text-align: center;
         line-height: 2.45rem;
         background: #00b0f0;
