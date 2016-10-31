@@ -59,22 +59,21 @@
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
   import {setLocalCache, getLocalCache} from '../../util/cache'
-  import {navigatorGetters, dailyQuestionGetters, newertestGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
+  import {navigatorGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList,
-        dailyQuestion: dailyQuestionGetters.question,
-        newertestReport: newertestGetters.newertestReport
+        expenseList: navigatorGetters.expenseCourseList
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        loadNewertestReport: newertestActions.loadNewertestReport
+        loadNewertestReport: newertestActions.loadNewertestReport,
+        showAlert: globalActions.showAlert
       }
     },
     data () {
@@ -148,18 +147,15 @@
       //跳转到理财揭秘起始页
       goToNewertestStart () {
         const me = this
-        me.loadNewertestReport().then(
-          function () {
-            if (me.newertestReport) {
-              me.$route.router.go('/newertest/ending')
-            } else {
-              me.$route.router.go('/newertest/start')
-            }
-          },
-          function (err) {
-            console.log('err', err)
+        me.loadNewertestReport().then(function (newertestReport) {
+          if (newertestReport) {
+            me.$route.router.go('/newertest/ending')
+          } else {
+            me.$route.router.go('/newertest/start')
           }
-        )
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
       },
       //跳转到院生访谈列表页面
       goToInterviewList () {
@@ -168,22 +164,19 @@
       //跳转到每日一题
       goToDailyQuestion () {
         const me = this
-        this.loadDailyQuestion().then(
-          function () {
-            if (me.dailyQuestion.selectedOption) {
-              me.$route.router.go('daily/answer')
-            } else {
-              me.$route.router.go('daily/quiz')
-            }
-          },
-          function (err) {
-            console.log('err', err)
+        me.loadDailyQuestion().then(function (dailyQuestion) {
+          if (dailyQuestion.selectedOption) {
+            me.$route.router.go('daily/answer')
+          } else {
+            me.$route.router.go('daily/quiz')
           }
-        )
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
       },
       //判断是否显示新手测试弹框
       showNewTestPop () {
-        if (getLocalCache('cache-first-test')) {
+        if (getLocalCache('first-test')) {
           this.isShowNewTestPop = false
         } else {
           this.isShowNewTestPop = true
@@ -192,7 +185,7 @@
       //关闭新手测试弹框
       closeNewerTestPop () {
         this.isShowNewTestPop = false
-        setLocalCache('cache-first-test', true)
+        setLocalCache('first-test', true)
       }
     },
     components: {

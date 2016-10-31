@@ -108,7 +108,7 @@
         const me = this
         me.bindPhoneEnd(me.phone, me.validationCode).then(
           function () {
-            me.$route.router.go('/personal/information')
+            me.$route.router.replace('/personal/information')
           },
           function (err) {
             me.showAlert(err)

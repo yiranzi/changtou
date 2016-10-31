@@ -272,12 +272,12 @@
       //计算等级，模板id
       computeLevelId () {
         let secondSelected = this.answer[1]
-        let eighthSelected = this.answer.slice(7, 8)
+        const eighthSelected = this.answer[7]
         this.level = Number(secondSelected) + 1
         if (secondSelected < 2) {
           secondSelected = 0
         }
-        let sum = Number(secondSelected) + Number(eighthSelected)
+        const sum = Number(secondSelected) + Number(eighthSelected)
         this.comboId = sum + 1
       },
       //刷新页面

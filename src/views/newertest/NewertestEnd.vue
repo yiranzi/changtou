@@ -17,7 +17,7 @@
           <div class="level">{{testReport.level}}级</div>
           <div class="conclusion-box">
             <div class="content">
-              <div>在理财技能上，您还是个<span class="man-level">{{getLevel(testReport.level-1)}}</span></div>
+              <div>在理财技能上，您还是个<span class="man-level">{{getLevel(testReport.level)}}</span></div>
               <br>
               <div>{{testReport.conclusion}}</div>
             </div>
@@ -183,6 +183,8 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
+  const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
+
   export default {
     vuex: {
       getters: {
@@ -220,8 +222,7 @@
         }
       },
       getLevel (level) {
-        let arr = ['理财原始人', '理财古代人', '理财现代人']
-        return arr[level]
+        return financialLevel.get(level)
       },
       tryAgain () {
         this.$route.router.go('/newertest/question')
