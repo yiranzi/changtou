@@ -17,7 +17,7 @@ import topicCommon from './topicCommon/store'
 import interview from './interview/store'
 import dailyQuestion from './dailyQuestion/store'
 
-  Vue.use(Vuex)
+Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     mine, //个人中心
