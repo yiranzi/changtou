@@ -410,39 +410,35 @@
        * */
       'homeworkEssayTap': function ({essayQuestion, lessonId}) {
         const me = this
+        this.setEssayQuestion(essayQuestion)
+        this.setEssayLessonId(lessonId)
+
         this.getArticle(lessonId).then(
           (evaluation) => {
             if (evaluation && evaluation.status !== null) {
               switch (evaluation.status) {
                 case 0://作业已提交
-                  console.log('查看作业')
+                  me.goEssayMark()
                   break
                 case 1://草稿已提交 写作业
-                  me.goEssayAnswer({
-                    essayQuestion,
-                    lessonId
-                  })
+                  me.goEssayAnswer(evaluation.articleId)
                   break
                 case 2://已批改 未通过 查看作业
-                  console.log('查看作业')
+                  me.goEssayMark()
                   break
                 case 3://已批改 通过 查看作业
-                  console.log('查看作业')
+                  me.goEssayMark()
                   break
-
                 default:
-                  console.log('查看作业')
+                  me.goEssayMark()
                   break
               }
             } else {
-              me.goEssayAnswer({
-                essayQuestion,
-                lessonId
-              })
+              me.showEssayFloat()
             }
           },
           err => {
-              console.log(err)
+              console.log(err.message)
           }
         )
 
@@ -457,12 +453,24 @@
 
     methods: {
       /**
-       * 跳转去写作业
+       * 跳转到问答题 编辑页
        */
-      goEssayAnswer ({ essayQuestion, lessonId }) {
-        this.setEssayQuestion(essayQuestion)
-        this.setEssayLessonId(lessonId)
+      goEssayAnswer (articleId) {
+        this.$route.router.go('/essay/answer/' + articleId)
+      },
+
+      /**
+       * 显示 作业提示框
+       */
+      showEssayFloat () {
         this.showEssay = true
+      },
+
+      /**
+       * 跳转到问答题 查看页
+       */
+      goEssayMark () {
+        this.$route.router.go('/essay/mark/' + this.currLessonId)
       },
       /**
        * 重置 作业浮层

@@ -32,6 +32,7 @@ export default {
     getters: {
       essayType: essayGetters.essayType,
       essayContent: essayGetters.essayQuestion,
+      essayAnswer: essayGetters.essayAnswer,
       essayLessonId: essayGetters.essayLessonId
     },
     actions: {
@@ -52,7 +53,7 @@ export default {
       foldText: '收起',
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: '', // 填写的答案
+      answer: this.essayAnswer, // 填写的答案
       articleId: this.$route.params.articleId, //作业Id
       alertHandler: () => {}
     }
