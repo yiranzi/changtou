@@ -4,6 +4,7 @@
 
 //当前的题目
 export const currQuestion = (state) => {
+  console.log(state.choice.currQuestion)
   return state.choice.currQuestion
 }
 // lessonId

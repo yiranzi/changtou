@@ -11,6 +11,7 @@ const state = {
   },
   totalNum: 0, //总题数
   currIndex: 0, //当前题号
+  answerRight: 0,
   currQuestion: null //当前的题目
 }
 
@@ -44,35 +45,36 @@ const mutations = {
    * @constructor
      */
   UPDATE_CHOICE_QUESTION (state, question) {
+    state.lessonId = ''
+    state.report = {
+      kpScore: [],
+      rightNum: 0,
+      totalNum: 0
+    }
+    state.currIndex = 0
+    state.answerRight = 0
     state.choiceQuestion = question
     state.totalNum = question.length
+    state.currQuestion = question[0]
   },
 
   /**
-   * index +1
+   * 下一题
    * @param state
    * @constructor
      */
-  INCREASE_INDEX (state) {
+  NEXT_QUESTION (state) {
     state.currIndex ++
+    state.currQuestion = state.choiceQuestion[state.currIndex]
   },
 
   /**
-   * 重置 选择题store
+   * 答题正确
    * @param state
    * @constructor
      */
-  RESET_CHOICE (state) {
-      state.lessonId = ''
-      state.choiceQuestion = null
-      state.report = {
-        kpScore: [],
-        rightNum: 0,
-        totalNum: 0
-      }
-      state.totalNum = 0
-      state.currIndex = 0
-      state.currQuestion = null
+  UPDATE_ANSWER (state) {
+    state.answerRight ++
   }
 }
 

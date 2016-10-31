@@ -23,8 +23,19 @@ export const setLessonId = ({dispatch}, lessonId) => {
   dispatch('UPDATE_CHOICE_LESSONID', lessonId)
 }
 
-export const increaseIndex = ({dispatch}) => {
-  dispatch('INCREASE_INDEX')
+/**
+ * 记录答对
+ * @param dispatch
+ * @param answer
+ */
+export const updateAnswer = ({dispatch}, answer) => {
+  if (answer) {
+    dispatch('UPDATE_ANSWER')
+  }
+}
+
+export const goToNextQuestion = ({dispatch}) => {
+  dispatch('NEXT_QUESTION')
 }
 
 /**
