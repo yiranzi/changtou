@@ -12,7 +12,7 @@
         </div>
       <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
         <div v-el:draftbar class="draft-box">
-          <span>存草稿</span>
+          <span v-touch:tap="submitDraft">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
         </div>
       <alert :show.sync="isAlert" button-text="知道了" class="ict-alert" @on-hide="alertHandler">{{alertMsg}}</alert>
@@ -24,6 +24,7 @@
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
   import Alert from 'vux/alert'
+  import Toast from 'vux/toast'
   import { essayGetters } from '../../vuex/getters'
   import { essayActions } from '../../vuex/actions'
 export default {
@@ -139,14 +140,14 @@ export default {
        */
     submitDraft () {
       const essay = {
-        articleId: this.articleId,
+        articleId: parseInt(this.articleId) ? this.articleId : null,
         content: this.answer,
         lessonId: this.essayLessonId,
         status: 1
       }
-      this.submit(essay).then(
-        () => {
-          this.alertHandler = this.onAlertHide
+      this.submitArticle(essay).then(
+        result => {
+          this.articleId = result.articleId
           this.toastMsg = '你的草稿已保存'
           this.isToast = true
         },
@@ -177,7 +178,8 @@ export default {
     IctTitlebar,
     Scroller,
     xTextarea,
-    Alert
+    Alert,
+    Toast
   }
 }
 </script>

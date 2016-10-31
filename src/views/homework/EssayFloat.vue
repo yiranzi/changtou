@@ -5,7 +5,7 @@
 <template>
     <ict-sheet title="课后作业" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
-        <div class="essay-content">{{{essayContent}}}</div>
+        <div class="essay-content">{{{essayQuestion}}}</div>
         <div class="essay-explain">
           {{{explain}}}
         </div>
@@ -41,7 +41,7 @@
     vuex: {
       getters: {
         essayType: essayGetters.essayType,
-        essayContent: essayGetters.essayContent,
+        essayQuestion: essayGetters.essayQuestion,
         essayLessonId: essayGetters.essayLessonId
       }
     },
