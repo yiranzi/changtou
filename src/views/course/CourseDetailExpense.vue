@@ -154,7 +154,7 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions, essayActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, globalActions, essayActions, choiceActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
 
   export default {
@@ -178,7 +178,11 @@
 
         setEssayQuestion: essayActions.setEssay,
         setEssayLessonId: essayActions.setEssayLessonId,
-        getArticle: essayActions.getArticle
+        getArticle: essayActions.getArticle,
+
+        setChoiceQuestion: choiceActions.setChoice,
+        setChoiceLessonId: choiceActions.setLessonId,
+        getReport: choiceActions.getReport
       }
     },
 
@@ -351,7 +355,7 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter, index) {
+      'chapterSelected': function (chapter, index, type) {
         this.currChapterIndex = index // 用于横屏
         if (this.isSelectdLessonLimited) { //课程受限
           if (this.isUserLogin) {
@@ -365,7 +369,7 @@
                 this.active()
                 break
               case 'N':
-                this.showTipWhenLessonLimitedAndOnLine()
+                this.showTipWhenLessonLimitedAndOnLine(type)
                 break
               case 'P':
                 this.resume()
@@ -385,10 +389,14 @@
             // 用户在未登录的情况下, 直接跳转前去购买
             this.buy()
           }
-        } else { //当前课程可以听
+        } else if (type === 'common') { //当前课程可以听
           this.hasVaildChapterCicked = true
           this.currAudioSrc = chapter.audio
           this.currPpts = chapter.ppts
+        } else if (type === 'choice') {
+          //
+        } else if (type === 'essay') {
+          //
         }
       },
 
@@ -399,10 +407,26 @@
       /**
        * 选择题被点击
        **/
-      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
-        this.showChoice = true
-        // todo 选择题点击
-        console.log('点击选择题', choiceQuestionArr, lessonId)
+      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId, index}) {
+        console.log('选择题', index)
+        const me = this
+        this.setChoiceQuestion(choiceQuestionArr)
+        this.setChoiceLessonId(lessonId)
+        this.getReport(lessonId).then(
+          report => {
+            console.log(report)
+            if (report.kpScore) {
+              // 做过选择题
+              me.$route.router.go('/choice/mark')
+            } else {
+              // 没做过
+              me.showChoice = true
+            }
+          },
+          err => {
+            console.log(err.message)
+          }
+        )
       },
 
       /**
@@ -441,9 +465,6 @@
               console.log(err.message)
           }
         )
-
-        // todo 问答题点击
-        console.log('点击问答题', essayQuestion, lessonId)
       },
 
       'fullScreenTap' () {

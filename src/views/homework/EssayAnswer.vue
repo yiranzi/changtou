@@ -5,7 +5,7 @@
 <template>
     <div class="essay-answer">
       <ict-titlebar :right-options="rightOptions" v-el:titlebar>
-        <a slot="right" v-touch:tap="submitEssay">提交</a>
+        <a slot="right">提交</a>
       </ict-titlebar>
         <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}
           <span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span>
