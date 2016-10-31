@@ -19,7 +19,7 @@ import dailyQuestion from './dailyQuestion/store'
 import essay from './homework/essay/store'
 import choice from './homework/choice/store'
 
-  Vue.use(Vuex)
+Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     mine, //个人中心

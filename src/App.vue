@@ -34,13 +34,16 @@
 
 <script>
   import store from './vuex/store'
-  import {userActions, courseRecordActions} from './vuex/actions'
+  import {userActions} from './vuex/actions'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
+  import mixins from './vuex/mixins'
 
   export default {
+    mixins: mixins,
+
     store,
 
     vuex: {
@@ -50,9 +53,9 @@
       },
 
       actions: {
-        initUser: userActions.initUser,
-        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
-        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        initUser: userActions.initUser
+//        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
+//        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
 
@@ -63,10 +66,11 @@
     created () {
       //初始化，加载用户
       this.initUser()
-
+//      console.log(this.initUser)
+//      console.log(this)
       //加载课程进度
-      this.loadFreeRecords()
-      this.loadExpenseRecords()
+//      this.loadFreeRecords()
+//      this.loadExpenseRecords()
     },
 
     computed: {
