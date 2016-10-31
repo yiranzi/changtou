@@ -190,6 +190,13 @@ export function configRouter (router) {
     //用户提交答案
     'daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
+    },
+    /**
+     * 小投答疑
+     */
+    //
+    'help/self/service': {
+      component: require('../views/help/SelfService.vue')
     }
   })
 

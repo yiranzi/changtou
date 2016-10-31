@@ -75,6 +75,11 @@ const apiUrl = {
   'load_person_list': '/person/information/list', //获取系统消息
 
   /**
+   * 小投答疑
+   */
+  'load_common_qanda': '/suggestion/common-qanda', //获取自助答疑列表
+
+  /**
    * 新手测试
    */
   'newertest_report': '/homepage/newcomer-test/report', //测试报告
