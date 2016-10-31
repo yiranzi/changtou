@@ -4,6 +4,8 @@
 
 export const eventMap = {
   APP_START: 'start',
-  LOGIN_SUCCESS: 'login'
+  LOGIN_SUCCESS: 'login',
+  LOGOUT_SUCCESS: 'logout',
+  MESSAGE_READ: 'e_messageread' //消息已读
 }
 

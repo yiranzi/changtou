@@ -50,13 +50,17 @@ const mutations = {
     state.image = ''
     state.lastLogin = ''
     state.level = ''
-    state.newMessageNum = ''
+    state.newMessageNum = 0
     state.phone = ''
     state.sessionId = ''
     state.strategy = ''
     state.userName = ''
     state.userId = ''
     clearLocalCache('frame-user')
+  },
+
+  USER_ADD_NEW_MESSAGE_NUM () {
+    state.newMessageNum ++
   }
 }
 

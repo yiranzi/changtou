@@ -30,8 +30,8 @@
               link="">
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
-    <ict-item title="系统消息"
-              link="/system/message">
+    <ict-item title="系统消息"  :badg="newMessageNum"
+              link="/system/message" v-touch:tap="viewSystemMessage">
     </ict-item>
     <ict-item title="意见反馈"
               link="/feedback">
@@ -51,13 +51,19 @@
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {userGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
+  import eventBus from '../../util/eventBus'
+  import {eventMap} from '../../frame/eventConfig'
+  import {setIconBadgeNumber} from '../../plugin/jpush'
+
   export default {
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
         userName: userGetters.userName,
-        strategy: userGetters.strategy
+        strategy: userGetters.strategy,
+        newMessageNum: userGetters.newMessageNum + ''
       }
     },
     computed: {
@@ -87,6 +93,16 @@
       },
       doRegister: function () {
         this.$route.router.go('/register/start')
+      },
+      viewSystemMessage () {
+        //重置消息数量
+        if (this.newMessageNum) {
+          setLocalCache('cache-frame-user', {newMessageNum: 0})
+          //触发消息已读事件
+          eventBus.on(eventMap.MESSAGE_READ)
+        }
+        //设置应用显示角标
+        setIconBadgeNumber(0)
       }
     }
   }

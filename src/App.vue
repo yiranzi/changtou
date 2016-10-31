@@ -8,11 +8,11 @@
         <span class="home-icon" slot="icon"></span>
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" badge="9">
+      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
         <span class="my-icon" slot="icon"></span>
-        <span slot="label"><span v-if="componentName" class="vux-demo-tabbar-component">{{componentName}}</span><span v-else>我的课程</span></span>
+        <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" show-dot>
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="newMessageNum">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -39,6 +39,10 @@
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
+  import {userGetters} from './vuex/getters'
+  import {setIconBadgeNumber} from './plugin/jpush'
+  import eventBus from './util/eventBus'
+  import {eventMap} from './frame/eventConfig'
 
   export default {
     store,
@@ -46,7 +50,9 @@
     vuex: {
       getters: {
         route: (state) => state.route,
-        direction: (state) => state.direction
+        direction: (state) => state.direction,
+        isLogin: userGetters.isLogin,
+        newMessageNum: userGetters.newMessageNum + ''
       },
 
       actions: {
@@ -59,7 +65,12 @@
     data () {
       return store.state.global
     },
-
+    watch: {
+      'newMessageNum': function () {
+        if (this.isLogin()) {
+          setIconBadgeNumber(this.newMessageNum)
+      } }
+    },
     created () {
       //初始化，加载用户
       this.initUser()
@@ -67,6 +78,8 @@
       //加载课程进度
       this.loadFreeRecords()
       this.loadExpenseRecords()
+     //个人中心加小红点
+      this.addRedDot()
     },
 
     computed: {
@@ -82,6 +95,32 @@
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
+      },
+      addRedDot () {
+        const me = this
+        document.addEventListener('jpush.receiveNotification',
+          function () {
+            if (me.isLogin()) {
+              //设置应用显示角标
+              setIconBadgeNumber(me.newMessageNum)
+            }
+          },
+          false
+        )
+        document.addEventListener('jpush.openNotification',
+          function () {
+            if (me.isLogin()) {
+              setIconBadgeNumber(me.newMessageNum)
+            }
+          },
+          false
+        )
+        //消息已读，设置消息
+        eventBus.on(eventMap.MESSAGE_READ, function () {
+          if (me.isLogin()) {
+            setIconBadgeNumber(0)
+          }
+        })
       }
     },
 
