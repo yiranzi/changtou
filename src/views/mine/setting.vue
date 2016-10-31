@@ -97,7 +97,7 @@
       viewSystemMessage () {
         //重置消息数量
         if (this.newMessageNum) {
-          setLocalCache('cache-frame-user', {newMessageNum: 0})
+          setLocalCache('frame-user', {newMessageNum: 0})
           //触发消息已读事件
           eventBus.on(eventMap.MESSAGE_READ)
         }

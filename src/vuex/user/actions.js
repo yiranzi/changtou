@@ -4,6 +4,8 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache} from '../../util/cache'
+//import eventBus from '../../util/eventBus'
+//import {eventMap} from '../../frame/eventConfig'
 
 export const initUser = ({ dispatch }) => {
   const user = getLocalCache('frame-user')
@@ -30,6 +32,7 @@ export const login = ({ dispatch }, identity, plainPassword) => {
     ).then(
       user => {
         dispatch('UPDATE_USER', user)
+        //eventBus.fireEvent(eventMap.LOGIN_SUCCESS, user)
         resolve()
       },
       err => {
@@ -45,6 +48,7 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  */
 export const logout = ({ dispatch }) => {
   dispatch('LOGOUT_USER')
+  //eventBus.fireEvent(eventMap.LOGOUT_SUCCESS)
 }
 
 /**

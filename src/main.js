@@ -34,51 +34,32 @@ if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
-// start run app
-if ((Device.platform === platformMap.WEB)) {
-  // on develop environment
+const app = {
+  onDeviceReady: function () {
+    //app.receivedEvent('deviceready')
+    window.navigator.splashscreen.hide()
+    init()  //消息推送 Jpush
+  },
+
+  receivedEvent: function (id) {
+    var parentElement = document.getElementById(id)
+    var listeningElement = parentElement.querySelector('.listening')
+    var receivedElement = parentElement.querySelector('.received')
+
+    listeningElement.setAttribute('style', 'display:none;')
+    receivedElement.setAttribute('style', 'display:block;')
+
+    console.log('Received Event: ' + id)
+  }
+}
+
+const onDeviceReady = () => {
   appRouter.start(App, 'app')
   eventBus.emit(eventMap.APP_START)
-} else {
-  // on production environment
 
-  const app = {
-    // Application Constructor
-    initialize: function () {
-      this.bindEvents()
-    },
-
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function () {
-      document.addEventListener('deviceready', this.onDeviceReady, false)
-    },
-
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function () {
-      //app.receivedEvent('deviceready');
-      eventBus.emit(eventMap.APP_START)
-      appRouter.start(App, 'app')
-      window.navigator.splashscreen.hide()
-      init()  //消息推送 Jpush
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function (id) {
-      var parentElement = document.getElementById(id)
-      var listeningElement = parentElement.querySelector('.listening')
-      var receivedElement = parentElement.querySelector('.received')
-
-      listeningElement.setAttribute('style', 'display:none;')
-      receivedElement.setAttribute('style', 'display:block;')
-
-      console.log('Received Event: ' + id)
-    }
+  if ((Device.platform !== platformMap.WEB)) {
+    app.onDeviceReady()
   }
-
-  app.initialize()
 }
+
+document.addEventListener('deviceready', onDeviceReady, false)

@@ -8,40 +8,46 @@ import {eventMap} from '../frame/eventConfig'
 import store from '../vuex/store'
 
 const commit = store.commit || store.dispatch
+
 const userId = function () {
-  const userId = window.localStorage.get('cache-frame-user').userId
+  const userId = JSON.parse(window.localStorage.getItem('cache-frame-user')).userId
   return userId
 }
+
 const newMessageNum = function () {
-  const newMessageNum = window.localStorage.get('cache-frame-user').newMessageNum
+  const newMessageNum = JSON.parse(window.localStorage.getItem('cache-frame-user')).newMessageNum
   return newMessageNum
 }
 
-export const constructor = () => {
-  /**
-   * 监听
-   * event bus 的 LOGIN_SUCCESS 事件  设置设备关联
-   */
-  eventBus.on(eventMap.LOGIN_SUCCESS, this.bindPushUser, this)
-
-  /**
-   * 监听
-   * event bus 的 LOGOUT_SUCCESS 事件  解除设备关联
-   */
-  eventBus.on(eventMap.LOGOUT_SUCCESS, this.unwrapPushUser, this)
-}
 /**
  * 设置设备关联
  */
-export const bindPushUser = () => {
+const bindPushUser = () => {
+  window.alert('bindPushUser')
   this.setAlias(userId() || 'unloginuser')
 }
 
 /**
  * 解除设备关联
  */
-export const unwrapPushUser = () => {
+const unwrapPushUser = () => {
+  window.alert('unwrapPushUser')
   this.setAlias('unloginuser')
+}
+
+const bindLoginEvents = () => {
+  window.alert('bindLoginEvents')
+  /**
+   * 监听
+   * event bus 的 LOGIN_SUCCESS 事件  设置设备关联
+   */
+  eventBus.on(eventMap.LOGIN_SUCCESS, bindPushUser, this)
+
+  /**
+   * 监听
+   * event bus 的 LOGOUT_SUCCESS 事件  解除设备关联
+   */
+  eventBus.on(eventMap.LOGOUT_SUCCESS, unwrapPushUser, this)
 }
 
 /**
@@ -49,35 +55,33 @@ export const unwrapPushUser = () => {
  */
 export const init = () => {
   try {
-    let onGetRegistradionID = function (data) {
+    const onGetRegistradionID = function (data) {
       try {
         console.log('JPushPlugin:registrationID is ' + data)
       } catch (exception) {
         console.log('JPushPlugin:onGetRegistradionID' + exception)
       }
     }
-    window.plugins.jPushPlugin.init()
-    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID)
     /**
      * 监听打开消息
      */
-    const onOpenNotification = function (event) {
+    const onOpenNotification = (event) => {
       try {
         //跳转到消息页
         if (this.$route.path !== '/system/message') {
           if (Device.platform === platformMap.IOS) {
             //取消红点
-            setLocalCache('cache-frame-user', {newMessageNum: 0})
+            setLocalCache('frame-user', {newMessageNum: 0})
           }
           this.$route.router.go('')
         }
         if (Device.platform === platformMap.ANDROID) {
           //取消红点
-          setLocalCache('cache-frame-user', {newMessageNum: 0})
+          setLocalCache('frame-user', {newMessageNum: 0})
         }
-        const me = this
+        window.alert('1')
         setTimeout(function () {
-          me.setIconBadgeNumber(0)
+          setIconBadgeNumber(0)
         }, 1000)
       } catch (exception) {
         console.log('JPushPlugin:onOpenNotification' + exception)
@@ -86,18 +90,21 @@ export const init = () => {
     /**
      * 监听接收消息
      */
-    const onReceiveNotification = function (event) {
+    const onReceiveNotification = (event) => {
       try {
         //设置红点
+        window.alert(JSON.stringify(newMessageNum))
+        window.alert('2')
         let num = newMessageNum() + 1
+        window.alert('3')
         commit('USER_ADD_NEW_MESSAGE_NUM')
-        setLocalCache('cache-frame-user', {newMessageNum: num})
-
+        setLocalCache('frame-user', {newMessageNum: num})
+        window.alert('4')
         //ios设置角标
         if (Device.platform === platformMap.IOS) {
           //if (isLogin()) {
-            let badgeNum = this.newMessageNum
-            this.setIconBadgeNumber(badgeNum)
+          let badgeNum = newMessageNum()
+          setIconBadgeNumber(badgeNum)
           //} else {
           //  this.setIconBadgeNumber(1)
           //}
@@ -107,6 +114,9 @@ export const init = () => {
       }
     }
 
+    bindLoginEvents()
+    window.plugins.jPushPlugin.init()
+    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID)
     document.addEventListener('jpush.openNotification', onOpenNotification, false)
     document.addEventListener('jpush.receiveNotification', onReceiveNotification, false)
   } catch (exception) {
