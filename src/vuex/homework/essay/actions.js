@@ -103,10 +103,28 @@ export const setEssay = ({ dispatch }, essay) => {
 }
 
 /**
+ * 设置 当前作业 题目
+ * @param dispatch
+ * @param question
+ */
+export const setEssayQuestion = ({ dispatch }, question) => {
+  dispatch('UPDATE_ESSAY_QUESTION', question)
+}
+
+/**
  * 设置 当前作业 lessonId
  * @param dispatch
- * @param essay
+ * @param lessonId
  */
 export const setEssayLessonId = ({ dispatch }, lessonId) => {
   dispatch('UPDATE_ESSAY_LESSONID', lessonId)
+}
+
+/**
+ * 设置 草稿
+ * @param dispatch
+ * @param draft
+ */
+export const setEssayDraft = ({ dispatch }, draft) => {
+  dispatch('UPDATE_ESSAY_DRAFT', draft)
 }

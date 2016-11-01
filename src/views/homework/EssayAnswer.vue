@@ -30,14 +30,12 @@
 export default {
   vuex: {
     getters: {
-      essayType: essayGetters.essayType,
       essayContent: essayGetters.essayQuestion,
       essayAnswer: essayGetters.essayAnswer,
       essayLessonId: essayGetters.essayLessonId
     },
     actions: {
-      submitArticle: essayActions.submitArticle,
-      getArticle: essayActions.getArticle
+      submitArticle: essayActions.submitArticle
     }
   },
   data () {
@@ -157,6 +155,23 @@ export default {
           this.isAlert = true
         }
       )
+
+//        let cachedEssay = window.localStorage.getItem('cache-essay-draft')
+//        if (cachedEssay) {
+//          cachedEssay = JSON.parse(cachedEssay)
+//          cachedEssay[this.essayLessonId] = {
+//            answer: this.answer,
+//            question: this.essayQuestion
+//          }
+//          window.localStorage.setItem('cache-essay-draft', JSON.stringify(cachedEssay))
+//        } else {
+//          cachedEssay = {}
+//          cachedEssay[this.essayLessonId] = {
+//            answer: this.answer,
+//            question: this.essayQuestion
+//          }
+//          window.localStorage.setItem('cache-essay-draft', JSON.stringify(cachedEssay))
+//        }
     },
 
     onAlertHide () {

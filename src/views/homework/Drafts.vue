@@ -10,10 +10,13 @@
           <img src="/static/image/mine/noMessages.png">
         </div>
         <div v-if="!isEmpty">
-          <div v-for="draft in draftList" class="draft-item" v-touch:tap="goToArticleEdit(draft.articleId)">
-            <p class="title">{{draft.lessonTitle}}</p>
-            <p class="content">{{draft.content}}</p>
-            <p class="time">最后修改时间:{{draft.createTime}}<span class="delete" v-touch:tap="deleteDraft(draft.articleId)">删除</span></p>
+          <div v-for="draft in draftList" class="draft-item">
+            <div v-touch:tap="goToArticleEdit(draft)">
+              <p class="title">{{draft.lessonTitle}}</p>
+              <p class="content">{{draft.content}}</p>
+              <p class="time">最后修改时间:{{draft.createTime}}</p>
+            </div>
+            <span class="delete" v-touch:tap="goToDeleteDraft(draft.articleId)">删除</span>
           </div>
         </div>
       </scroller>
@@ -27,7 +30,10 @@ export default {
   vuex: {
     actions: {
       getDrafts: essayActions.getDrafts,
-      deleteDraft: essayActions.deleteDrafts
+      deleteDraft: essayActions.deleteDrafts,
+      setEssayQuestion: essayActions.setEssayQuestion,
+      setEssayLessonId: essayActions.setEssayLessonId,
+      setEssayDraft: essayActions.setEssayDraft
     }
   },
   data () {
@@ -64,14 +70,23 @@ export default {
     }, 300)
   },
   methods: {
-    goToArticleEdit (articleId) {
-      this.$route.router.go('/essay/answer/' + articleId)
+    goToArticleEdit (draft) {
+      this.setEssayQuestion(draft.assignment)
+      this.setEssayLessonId(draft.lessonId)
+      this.setEssayDraft(draft.content)
+      this.$route.router.go('/essay/answer/' + draft.articleId)
     },
-    deleteDraft (articleId) {
+    goToDeleteDraft (articleId) {
       const me = this
       this.deleteDraft(articleId).then(
         isDelete => {
-          me.getDrafts()
+          this.getDrafts().then(
+            draftList => {
+              me.draftList = draftList
+            }
+          ).catch(
+            err => console.warn(err)
+          )
         }
       ).catch(
         err => console.warn(err)
@@ -120,14 +135,16 @@ export default {
         overflow: hidden;
       }
       .time{
-        position: relative;
         padding-top: 0.9rem;
         font-size: 0.65rem;
         color: #aaa;
       }
       .delete{
         position: absolute;
+        padding: 0.5rem 1rem;
         right: 0;
+        bottom: 0;
+        font-size: 0.65rem;
         color: #007aff;
       }
     }

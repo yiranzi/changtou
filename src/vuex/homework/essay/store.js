@@ -47,6 +47,18 @@ const mutations = {
     state.remarkList = essay.remarkList
     state.score = essay.score
     state.status = essay.status
+  },
+
+  UPDATE_ESSAY_QUESTION (state, essayQuestion) {
+    state.essayQuestion = essayQuestion
+  },
+  /**
+   * 更新 草稿内容
+   * @param draft
+   * @constructor
+     */
+  UPDATE_ESSAY_DRAFT (state, draft) {
+    state.essayAnswer = draft
   }
 }
 
