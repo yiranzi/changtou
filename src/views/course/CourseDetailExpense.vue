@@ -263,6 +263,8 @@
        * 当前课程被选中, 设置进度是否有权限
        */
       'selectedLesson': function (lesson, oldlesson) {
+        this.currLessonId = lesson && lesson.lessonId // 用于横屏
+
         // 如果是公开课,永远不受限
         if (lesson && lesson.type === 'C') {
           this.isSelectdLessonLimited = false
@@ -338,7 +340,8 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter) {
+      'chapterSelected': function (chapter, index) {
+        this.currChapterIndex = index // 用于横屏
         if (this.isSelectdLessonLimited) { //课程受限
           if (this.isUserLogin) {
             // 用户登录的情况下,判断状态
@@ -396,6 +399,10 @@
       'homeworkEssayTap': function ({essayQuestion, lessonId}) {
         // todo 问答题点击
         console.log('点击问答题', essayQuestion, lessonId)
+      },
+
+      'fullScreenTap' () {
+        this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
       }
     },
 
@@ -572,7 +579,7 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        const path = '/pay-P-' + this.subjectId
+        const path = `/pay-P-${this.subjectId}`
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })
@@ -611,11 +618,18 @@
        * 购买
        */
       buy () {
-        const path = '/pay-S-' + this.subjectId
+        const path = `/pay-S-${this.subjectId}`
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
         })
         this.$route.router.go(path)
+      },
+
+        /**
+         * 跳转到横屏
+         */
+      gotoFullScreen (subjectId, lessonId, index) {
+          this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
       }
     },
 

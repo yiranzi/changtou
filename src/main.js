@@ -1,36 +1,17 @@
 import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
-import VueRouter from 'vue-router'
 import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
-import {configRouter} from './frame/routeConfig'
+import {appRouter} from './util/appRouter'
 import {Device, platformMap} from './plugin/device'
-import eventBus from './util/eventBus'
+//import eventBus from './util/eventBus'
 import {eventMap} from './frame/eventConfig'
 import {init} from './plugin/jpush'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
 Vue.use(VueResource)
-Vue.use(VueRouter)
-
-const appRouter = new VueRouter({
-  hashbang: true
-})
-
-configRouter(appRouter)
-
-/**
- *
- * @type {boolean}
- */
-if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
-  let path = window.location.hash.substr(2)
-  appRouter.on(path, {
-    component: require('./views/pay/Order.vue')
-  })
-}
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 

@@ -34,7 +34,7 @@
 
 <script>
   import store from './vuex/store'
-  import {userActions, courseRecordActions} from './vuex/actions'
+  import {userActions} from './vuex/actions'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
@@ -45,6 +45,8 @@
   import {eventMap} from './frame/eventConfig'
 
   export default {
+    mixins: mixins,
+
     store,
 
     vuex: {
@@ -56,9 +58,9 @@
       },
 
       actions: {
-        initUser: userActions.initUser,
-        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
-        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        initUser: userActions.initUser
+//        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
+//        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
 
@@ -75,9 +77,6 @@
       //初始化，加载用户
       this.initUser()
 
-      //加载课程进度
-      this.loadFreeRecords()
-      this.loadExpenseRecords()
      //个人中心加小红点
       this.addRedDot()
     },
