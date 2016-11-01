@@ -12,7 +12,7 @@
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
            (lesson.choiceQuestion.length > 0 ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' ? 1 : 0)) * 11/4 + 'rem'}" >
-        <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter)"
+        <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
           <span style="width: 85%">
             <span class="number">{{$index+1}}</span>
@@ -204,10 +204,10 @@
         }
       },
 
-      updateSelectedChapter (chapter) {
+      updateSelectedChapter (chapter, $index) {
         this.selectedChapter = chapter
         // 向父组件派发事件
-        this.$dispatch('chapterSelected', chapter)
+        this.$dispatch('chapterSelected', chapter, $index)
       },
 
       /**
