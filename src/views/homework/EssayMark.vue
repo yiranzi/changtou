@@ -59,10 +59,10 @@ export default {
     }
   },
   computed: {
-    scoreNum () {
+    scoreNum () { //分数
       return this.status === 3 ? this.score : '!'
     },
-    isEditable () {
+    isEditable () { //是否可编辑
       return this.status !== 3
     }
   },

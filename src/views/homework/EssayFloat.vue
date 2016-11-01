@@ -60,9 +60,11 @@
       }
     },
     methods: {
+      // 关闭提示
       onClose () {
         this.$emit('close')
       },
+      // 点击确认
       onConfirmTap () {
         this.show = false
         this.$emit('confirm')

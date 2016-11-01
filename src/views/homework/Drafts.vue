@@ -10,7 +10,7 @@
           <img src="/static/image/mine/noMessages.png">
         </div>
         <div v-if="!isEmpty">
-          <div v-for="draft in draftList" class="draft-item" v-touch:tap="goToArticleEdit(draft.lessonId)">
+          <div v-for="draft in draftList" class="draft-item" v-touch:tap="goToArticleEdit(draft.articleId)">
             <p class="title">{{draft.lessonTitle}}</p>
             <p class="content">{{draft.content}}</p>
             <p class="time">最后修改时间:{{draft.createTime}}<span class="delete" v-touch:tap="deleteDraft(draft.articleId)">删除</span></p>
@@ -49,7 +49,7 @@ export default {
           me.draftList = draftList
         }
       ).catch(
-
+        err => console.warn(err)
       )
     }
   },
@@ -64,8 +64,8 @@ export default {
     }, 300)
   },
   methods: {
-    goToArticleEdit () {
-      console.log('跳转到编辑页')
+    goToArticleEdit (articleId) {
+      this.$route.router.go('/essay/answer/' + articleId)
     },
     deleteDraft (articleId) {
       const me = this
@@ -74,7 +74,7 @@ export default {
           me.getDrafts()
         }
       ).catch(
-
+        err => console.warn(err)
       )
     }
   },

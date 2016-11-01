@@ -186,7 +186,7 @@ export function configRouter (router) {
        */
     //草稿箱
     '/drafts': {
-        component: require('../views/homework/Drafts.vue')
+      component: require('../views/homework/Drafts.vue')
     },
     //问答题 写作业
     '/essay/answer/:articleId': {

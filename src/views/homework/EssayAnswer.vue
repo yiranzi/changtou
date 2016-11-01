@@ -46,11 +46,11 @@ export default {
       toastMsg: '',
       isAlert: false,
       alertMsg: '',
-      rightOptions: {
+      rightOptions: { //titlebar
         callback: '',
         disabled: true
       },
-      foldText: '收起',
+      foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
       answer: this.essayAnswer, // 填写的答案

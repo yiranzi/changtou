@@ -2,7 +2,7 @@
  * Created by jun on 2016/10/26.
  * 作业模块
  */
-import {postWithinAuth, getWithinAuth} from '../../../frame/ajax'
+import {postWithinAuth, getWithinAuth, deleteWithinAuth} from '../../../frame/ajax'
 import {getUrl} from '../../../frame/apiConfig'
 /**
  * 获取草稿箱内容
@@ -33,7 +33,7 @@ export const getDrafts = () => {
 export const deleteDrafts = ({ dispatch }, articleId) => {
   return new Promise(
     (resolve, reject) => {
-      postWithinAuth(//todo delete
+      deleteWithinAuth(
         {
           url: getUrl('delete_drafts').replace(':articleId', articleId)
         }
