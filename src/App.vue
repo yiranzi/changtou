@@ -12,7 +12,7 @@
         <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="newMessageNum">
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="newMessageNumber">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -41,9 +41,11 @@
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {userGetters} from './vuex/getters'
   import {setIconBadgeNumber} from './plugin/jpush'
-  import eventBus from './util/eventBus'
-  import {eventMap} from './frame/eventConfig'
+  import {Device, platformMap} from './plugin/device'
+  import mixins from './vuex/mixins'
+  import {setLocalCache} from './util/cache'
 
+  const commit = store.commit || store.dispatch
   export default {
     mixins: mixins,
 
@@ -53,8 +55,7 @@
       getters: {
         route: (state) => state.route,
         direction: (state) => state.direction,
-        isLogin: userGetters.isLogin,
-        newMessageNum: userGetters.newMessageNum + ''
+        newMessageNum: userGetters.newMessageNum
       },
 
       actions: {
@@ -67,59 +68,57 @@
     data () {
       return store.state.global
     },
-    watch: {
-      'newMessageNum': function () {
-        if (this.isLogin()) {
-          setIconBadgeNumber(this.newMessageNum)
-      } }
-    },
     created () {
       //初始化，加载用户
       this.initUser()
-
-     //个人中心加小红点
-      this.addRedDot()
     },
 
     computed: {
+      newMessageNumber () {
+        let number = this.newMessageNum + ''
+        if (this.newMessageNum === 0) {
+          number = ''
+        }
+        return number
+      },
       isTabbarView () {
         return this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse'
       }
     },
 
     methods: {
+      /**
+       * 接收消息
+       */
+      onReceiveNotification () {
+        commit('USER_ADD_NEW_MESSAGE_NUM')
+        setLocalCache('frame-user', {newMessageNum: this.newMessageNum})
+        if (Device.platform === platformMap.IOS) {
+          let badgeNum = this.newMessageNum
+          setIconBadgeNumber(badgeNum)
+        }
+      },
+
+      /**
+       * 打开消息
+       */
+      onOpenNotification () {
+        if (this.$route.path === '/system/message') {
+          commit('USER_EMPTY_NEW_MESSAGE_NUM')
+          setLocalCache('frame-user', {newMessageNum: 0})
+          setTimeout(function () {
+            setIconBadgeNumber(0)
+          }, 1000)
+          this.$route.router.go('/system/message')
+        }
+      },
+
       onAction (type) {
         if (type === 'confirm') {
           this.confirmHandler()
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
-      },
-      addRedDot () {
-        const me = this
-        document.addEventListener('jpush.receiveNotification',
-          function () {
-            if (me.isLogin()) {
-              //设置应用显示角标
-              setIconBadgeNumber(me.newMessageNum)
-            }
-          },
-          false
-        )
-        document.addEventListener('jpush.openNotification',
-          function () {
-            if (me.isLogin()) {
-              setIconBadgeNumber(me.newMessageNum)
-            }
-          },
-          false
-        )
-        //消息已读，设置消息
-        eventBus.on(eventMap.MESSAGE_READ, function () {
-          if (me.isLogin()) {
-            setIconBadgeNumber(0)
-          }
-        })
       }
     },
 

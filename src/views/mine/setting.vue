@@ -30,8 +30,9 @@
               link="">
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
-    <ict-item title="系统消息"  :badg="newMessageNum"
+    <ict-item title="系统消息"
               link="/system/message" v-touch:tap="viewSystemMessage">
+      <badge :text="newMessageNumber" slot="badge" v-show="newMessageNumber"></badge>
     </ict-item>
     <ict-item title="意见反馈"
               link="/feedback">
@@ -52,10 +53,11 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {userGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
-  import eventBus from '../../util/eventBus'
-  import {eventMap} from '../../frame/eventConfig'
   import {setIconBadgeNumber} from '../../plugin/jpush'
+  import Badge from 'vux/badge'
+  import store from '../../vuex/store'
 
+  const commit = store.commit || store.dispatch
   export default {
     vuex: {
       getters: {
@@ -63,10 +65,17 @@
         avatar: userGetters.avatar,
         userName: userGetters.userName,
         strategy: userGetters.strategy,
-        newMessageNum: userGetters.newMessageNum + ''
+        newMessageNum: userGetters.newMessageNum
       }
     },
     computed: {
+      newMessageNumber () {
+        let number = this.newMessageNum + ''
+        if (this.newMessageNum === 0) {
+          number = ''
+        }
+        return number
+      },
       isZSB () {
         return this.strategy && (this.strategy.strategyLevel === 'A')
       },
@@ -85,7 +94,8 @@
       IctButton,
       IctItem,
       Flexbox,
-      FlexboxItem
+      FlexboxItem,
+      Badge
     },
     methods: {
       doLogin: function () {
@@ -97,9 +107,10 @@
       viewSystemMessage () {
         //重置消息数量
         if (this.newMessageNum) {
+          setTimeout(function () {
+            commit('USER_EMPTY_NEW_MESSAGE_NUM')
+          }, 1000)
           setLocalCache('frame-user', {newMessageNum: 0})
-          //触发消息已读事件
-          eventBus.on(eventMap.MESSAGE_READ)
         }
         //设置应用显示角标
         setIconBadgeNumber(0)

@@ -61,6 +61,10 @@ const mutations = {
 
   USER_ADD_NEW_MESSAGE_NUM () {
     state.newMessageNum ++
+  },
+  //清空新消息数
+  USER_EMPTY_NEW_MESSAGE_NUM () {
+    state.newMessageNum = 0
   }
 }
 
