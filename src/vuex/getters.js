@@ -15,6 +15,7 @@ import * as commonTopicGetters from './topicCommon/getters'
 import * as interviewGetters from './interview/getters'
 import * as dailyQuestionGetters from './dailyQuestion/getters'
 import * as newertestGetters from './newertest/getters'
+import * as helpGetters from './help/getters'
 
 export {
   userGetters,
@@ -30,5 +31,6 @@ export {
   commonTopicGetters, //通用课专题
   interviewGetters, //院生访谈
   dailyQuestionGetters, //每日一题
-  newertestGetters //新手测试
+  newertestGetters, //新手测试
+  helpGetters //小投答疑
 }

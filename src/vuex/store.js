@@ -17,6 +17,7 @@ import topicCommon from './topicCommon/store'
 import interview from './interview/store'
 import dailyQuestion from './dailyQuestion/store'
 import newertest from './newertest/store'
+import help from './help/store'
 
   Vue.use(Vuex)
 export default new Vuex.Store({
@@ -34,6 +35,7 @@ export default new Vuex.Store({
     topicCommon, //通用专题
     interview, //院生访谈
     dailyQuestion, //每日一题
-    newertest //新手测试
+    newertest, //新手测试
+    help //小投答疑
   }
 })
