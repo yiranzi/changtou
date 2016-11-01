@@ -156,6 +156,21 @@ export function configRouter (router) {
     '/spec/topic/:stpId': {
       component: require('../views/topic/SpecTopic.vue')
     },
+    /**
+     * 新手测试
+     */
+    //新手测试起始页
+    '/newertest/start': {
+      component: require('../views/newertest/NewertestStart.vue')
+    },
+    //答题页
+    '/newertest/question': {
+      component: require('../views/newertest/NewertestQuestion.vue')
+    },
+    //结果页
+    '/newertest/ending': {
+      component: require('../views/newertest/NewertestEnd.vue')
+    },
 
     /**
      * 院生访谈
@@ -168,7 +183,6 @@ export function configRouter (router) {
     '/interview/interview-record/:interviewId': {
       component: require('../views/interview/InterviewRecord.vue')
     },
-
     /**
      * 每日一题
      */
