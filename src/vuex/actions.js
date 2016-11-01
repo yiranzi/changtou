@@ -32,7 +32,7 @@ export {
   commonTopicActions, //通用专题
   interviewActions, //院生访谈
   dailyQuestionActions, //每日一题
-  newertestActions //新手测试
-  essayActions,
-  choiceActions
+  newertestActions, //新手测试
+  essayActions, // 问答题
+  choiceActions// 选择题
 }

@@ -36,8 +36,8 @@ export default new Vuex.Store({
     topicCommon, //通用专题
     interview, //院生访谈
     dailyQuestion, //每日一题
-    newertest //新手测试
-    essay,
-    choice
+    newertest, //新手测试
+    essay, // 问答题
+    choice// 选择题
   }
 })
