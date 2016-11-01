@@ -23,7 +23,7 @@
 
         <!--选择题作业-->
         <div v-if="lesson.choiceQuestion.length > 0" class="chapter-title"
-             v-touch:tap="onHomeworkChoiceTap(lesson.choiceQuestion, lesson.lessonId, $index)">
+             v-touch:tap="onHomeworkChoiceTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
           <span class="chioce-icon"></span>
           &nbsp;&nbsp;课后作业
@@ -31,7 +31,7 @@
 
         <!--问答题作业-->
         <div v-if="lesson.essayQuestion.assigmentType !== 'N'" class="chapter-title"
-             v-touch:tap="onHomeworkEssayTap(lesson.essayQuestion, lesson.lessonId, $index)">
+             v-touch:tap="onHomeworkEssayTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
           <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
         </div>
@@ -212,18 +212,15 @@
       /**
        * 点击选择题
        */
-      onHomeworkChoiceTap (choiceQuestionArr, lessonId, index) {
-        this.$dispatch('homeworkChoiceTap', {choiceQuestionArr, lessonId, index})
-
-//        this.$dispatch('chapterSelected', null, -1, 'choice')
+      onHomeworkChoiceTap () {
+        this.$dispatch('chapterSelected', null, 0, 'choice')
       },
 
       /**
        * 点击问答题
        */
-      onHomeworkEssayTap (essayQuestion, lessonId, index) {
-        this.$dispatch('homeworkEssayTap', {essayQuestion, lessonId, index})
-//        this.$dispatch('chapterSelected', null, -1, 'essay')
+      onHomeworkEssayTap () {
+        this.$dispatch('chapterSelected', null, 0, 'essay')
       }
     }
   }

@@ -34,7 +34,7 @@
 
 <script>
   import store from './vuex/store'
-  import {userActions} from './vuex/actions'
+  import {userActions, choiceActions} from './vuex/actions'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
@@ -53,7 +53,8 @@
       },
 
       actions: {
-        initUser: userActions.initUser
+        initUser: userActions.initUser,
+          getKnowledgePointMap: choiceActions.getKnowledgePointMap
 //        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
 //        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
@@ -66,6 +67,7 @@
     created () {
       //初始化，加载用户
       this.initUser()
+      this.getKnowledgePointMap()
 //      console.log(this.initUser)
 //      console.log(this)
       //加载课程进度

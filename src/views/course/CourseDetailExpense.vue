@@ -394,9 +394,9 @@
           this.currAudioSrc = chapter.audio
           this.currPpts = chapter.ppts
         } else if (type === 'choice') {
-          //
+          this.onChoiceTap()
         } else if (type === 'essay') {
-          //
+          this.onEssayTap()
         }
       },
 
@@ -404,17 +404,24 @@
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
 
+      'fullScreenTap' () {
+        this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
+      }
+    },
+
+    methods: {
       /**
        * 选择题被点击
        **/
-      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId, index}) {
-        console.log('选择题', index)
+      onChoiceTap () {
         const me = this
-        this.setChoiceQuestion(choiceQuestionArr)
-        this.setChoiceLessonId(lessonId)
-        this.getReport(lessonId).then(
+        const lessonId = this.currLessonId
+        const choiceQuestionArr = this.selectedLesson.choiceQuestion
+
+        me.setChoiceQuestion(choiceQuestionArr)
+        me.setChoiceLessonId(lessonId)
+        me.getReport(lessonId).then(
           report => {
-            console.log(report)
             if (report.kpScore) {
               // 做过选择题
               me.$route.router.go('/choice/mark')
@@ -432,47 +439,42 @@
       /**
        * 问答题被点击
        * */
-      'homeworkEssayTap': function ({essayQuestion, lessonId}) {
+      onEssayTap (limitedLessonId, limitedEssayQuestion) {
         const me = this
-        this.setEssayQuestion(essayQuestion)
-        this.setEssayLessonId(lessonId)
+        const lessonId = limitedLessonId || this.currLessonId
+        const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
 
-        this.getArticle(lessonId).then(
+        me.setEssayQuestion(essayQuestion)
+        me.setEssayLessonId(lessonId)
+        me.getArticle(lessonId).then(
           (evaluation) => {
             if (evaluation && evaluation.status !== null) {
               switch (evaluation.status) {
                 case 0://作业已提交
-                  me.goEssayMark()
+                  me.goEssayMark(lessonId)
                   break
                 case 1://草稿已提交 写作业
                   me.goEssayAnswer(evaluation.articleId)
                   break
                 case 2://已批改 未通过 查看作业
-                  me.goEssayMark()
+                  me.goEssayMark(lessonId)
                   break
                 case 3://已批改 通过 查看作业
-                  me.goEssayMark()
+                  me.goEssayMark(lessonId)
                   break
                 default:
-                  me.goEssayMark()
+                  me.goEssayMark(lessonId)
                   break
               }
             } else {
               me.showEssayFloat()
             }
-          },
-          err => {
-              console.log(err.message)
-          }
+        },
+        err => {
+          console.log(err.message)
+        }
         )
       },
-
-      'fullScreenTap' () {
-        this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
-      }
-    },
-
-    methods: {
       /**
        * 跳转到问答题 编辑页
        */
@@ -490,8 +492,9 @@
       /**
        * 跳转到问答题 查看页
        */
-      goEssayMark () {
-        this.$route.router.go('/essay/mark/' + this.currLessonId)
+      goEssayMark (LimitedLessonId) {
+        const lessonId = LimitedLessonId || this.currLessonId
+        this.$route.router.go('/essay/mark/' + lessonId)
       },
       /**
        * 重置 作业浮层
@@ -558,22 +561,19 @@
         let confirmHandler = null
 
         let lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-
+        let essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            // todo 跳转到查看作业页面
+            me.$route.router.go('/essay/mark/' + me.lastSubmitlessonId)
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
           confirmText = '去写作业'
           confirmHandler = function () {
-            // todo 跳转到写作业页面
-//            this.setEssayQuestion(essayQuestion)
-//            this.setEssayLessonId(lessonId)
-//            this.showEssay = true
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }

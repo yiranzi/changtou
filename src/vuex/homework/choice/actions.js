@@ -2,7 +2,7 @@
  * Created by jun on 2016/10/26.
  * 作业模块
  */
-import {postWithinAuth, getWithinAuth} from '../../../frame/ajax'
+import {postWithinAuth, getWithinAuth, getWithoutAuth} from '../../../frame/ajax'
 import {getUrl} from '../../../frame/apiConfig'
 
 /**
@@ -29,11 +29,13 @@ export const setLessonId = ({dispatch}, lessonId) => {
  * @param answer
  */
 export const updateAnswer = ({dispatch}, answer) => {
-  if (answer) {
-    dispatch('UPDATE_ANSWER')
-  }
+  dispatch('UPDATE_ANSWER', answer)
 }
 
+/**
+ * 进入下一题
+ * @param dispatch
+ */
 export const goToNextQuestion = ({dispatch}) => {
   dispatch('NEXT_QUESTION')
 }
@@ -88,4 +90,37 @@ export const submitReport = ({dispatch}, report) => {
       )
     }
   )
+}
+
+/**
+ * 获取知识点对应关系
+ * @param dispatch
+ * @returns {Promise}
+ */
+export const getKnowledgePointMap = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithoutAuth(
+        {
+          url: getUrl('get_choice_knowledge_point')
+        }
+      ).then(
+        knowledgeMap => {
+          dispatch('UPDATE_KNOWLEDGE_MAP', knowledgeMap)
+          resolve(knowledgeMap)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 重测
+ * @param dispatch
+ */
+export const reTest = ({dispatch}) => {
+  dispatch('CHOICE_RETEST')
 }

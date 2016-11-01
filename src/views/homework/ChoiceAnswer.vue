@@ -8,7 +8,9 @@
       <div class="choice-title">
         {{title}}
       </div>
-      <div class="choice-options" v-for="option in currQuestion.content" :class="{'select-right':isRight, 'select-wrong':isWrong}" v-touch:tap="onOptionsTap($index)">
+      <div class="choice-options" v-for="option in currQuestion.content"
+           :class="{'select-right': optionTaped && $index === selectedOptionIndex && $index === currQuestion.answer, 'select-wrong': optionTaped && $index === selectedOptionIndex && $index !== currQuestion.answer}"
+           v-touch:tap="onOptionsTap($index)">
         {{option}}
       </div>
       <ict-button :disabled="isBtnDisabled" v-touch:tap="onNextTap">{{btnText}}</ict-button>
@@ -21,40 +23,65 @@
 </template>
 <script>
   import IctButton from '../../components/IctButton.vue'
-  import { choiceGetters } from '../../vuex/getters'
+  import { choiceGetters, userGetters } from '../../vuex/getters'
   import { choiceActions } from '../../vuex/actions'
 export default {
   vuex: {
     getters: {
+      isLogin: userGetters.isLogin,
       currQuestion: choiceGetters.currQuestion,
       totalNum: choiceGetters.totalNum,
       currIndex: choiceGetters.currIndex,
-      lessonId: choiceGetters.lessonId
+      lessonId: choiceGetters.lessonId,
+      postReport: choiceGetters.postReport
     },
     actions: {
       updateAnswer: choiceActions.updateAnswer,
-      nextQuestion: choiceActions.goToNextQuestion
+      nextQuestion: choiceActions.goToNextQuestion,
+      submitReport: choiceActions.submitReport
     }
   },
   data () {
     return {
-      btnText: '下一题', //按钮文案
-      isBtnDisabled: true,  //按钮是否可用
-      isRight: false, //答对
-      isWrong: false, //答错
-      explain: null, //答案解释
-      optionTaped: false
+      btnText: '下一题', // 按钮文案
+      isBtnDisabled: true,  // 按钮是否可用
+      isRight: false, // 答对
+      isWrong: false, // 答错
+      explain: null, // 答案解释
+      optionTaped: false, // 当前问题 已回答
+      selectedOptionIndex: null //当前问题 回答的index
     }
   },
   computed: {
+    // 题目
     title () {
       return `${this.currIndex + 1}/${this.totalNum}${this.currQuestion.title}`
     },
+    // 是否显示 错误提示
     isExplainShow () {
       return !!this.explain
+    },
+    // 按钮文案
+    btnText () {
+      if (this.currIndex === this.totalNum - 1) {
+        return '查看结果'
+      } else {
+        return '下一题'
+      }
+    }
+  },
+  watch: {
+    // 生成新报告时 登录提交
+    postReport (newReport) {
+      if (this.isLogin && newReport.kpScore.length > 0) {
+        this.submitReport(newReport)
+      }
     }
   },
   methods: {
+    /**
+     * 点击右上方关闭按钮
+     */
     onCloseTap () {
       window.history.back(-1)
     },
@@ -65,8 +92,11 @@ export default {
       if (this.optionTaped) {
         return
       }
+
+      this.optionTaped = true
+      this.selectedOptionIndex = index
       this.isBtnDisabled = false
-      console.log(this.currQuestion, index)
+
       if (this.currQuestion.answer === index) {
         this.updateAnswer(true)
       } else {
@@ -74,16 +104,25 @@ export default {
         this.explain = this.currQuestion.explain
       }
     },
+    /**
+     * 点击 下一题
+     */
     onNextTap () {
       this.optionTaped = false
+      this.selectedOptionIndex = null
       this.isBtnDisabled = true
       this.explain = null
-      if (this.currIndex === this.totalNum -1) {
-        // todo 结果页
+
+      if (this.currIndex === this.totalNum - 1) {
+        //最后一题
+        this.$route.router.replace('/choice/mark')
       } else {
         this.nextQuestion()
       }
     },
+    /**
+     * 关闭 错误提示
+     */
     onExplainClose () {
       this.explain = null
     }
@@ -133,6 +172,32 @@ export default {
       font-size: .7rem;
       color: #444;
       line-height: .8rem;
+    }
+    .select-right{
+      border: 2px solid #76cb30;
+      &:before{
+        position: absolute;
+        left: -2px;
+        top: -2px;
+        line-height: 30px;
+        font-family: 'myicon';
+        content: '\e91e';
+        font-size: 1.5rem !important;
+        color: #76cb30;
+      }
+    }
+    .select-wrong{
+      border: 2px solid #f43b3b;
+      &:before{
+        position: absolute;
+        left: -2px;
+        top: -2px;
+        line-height: 30px;
+        font-family: 'myicon';
+        content: '\e91d';
+        font-size: 1.5rem !important;
+        color: #f43b3b;
+      }
     }
     .ict-btn{
       width: 7rem !important;
