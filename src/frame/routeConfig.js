@@ -14,6 +14,11 @@ history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
+/**
+ *
+ * @param router
+ * @param commit
+ */
 const setRouterHook = (router, commit) => {
   router.beforeEach(({ to, from, next }) => {
     const toIndex = history.getItem(to.path)
@@ -39,6 +44,10 @@ const setRouterHook = (router, commit) => {
   })
 }
 
+/**
+ *
+ * @param router
+ */
 export function configRouter (router) {
   const commit = store.commit || store.dispatch
   setRouterHook(router, commit)
