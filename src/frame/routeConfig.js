@@ -74,6 +74,9 @@ export function configRouter (router) {
     '/mycourse': {    //我的课程
       component: require('../views/course/MyCourse.vue')
     },
+    '/full/screen/:subjectId/:lessonId/:chapterIndex': { //横屏
+      component: require('../views/course/FullScreen.vue')
+    },
     /**
      * 登录模块
      */
@@ -147,7 +150,7 @@ export function configRouter (router) {
      * 支付模块
      */
     // 支付成功
-    'pay/success/:type': {
+    'pay/success/:type/:id': {
       component: require('../views/pay/Success.vue')
     },
 
@@ -162,6 +165,21 @@ export function configRouter (router) {
     '/spec/topic/:stpId': {
       component: require('../views/topic/SpecTopic.vue')
     },
+    /**
+     * 新手测试
+     */
+    //新手测试起始页
+    '/newertest/start': {
+      component: require('../views/newertest/NewertestStart.vue')
+    },
+    //答题页
+    '/newertest/question': {
+      component: require('../views/newertest/NewertestQuestion.vue')
+    },
+    //结果页
+    '/newertest/ending': {
+      component: require('../views/newertest/NewertestEnd.vue')
+    },
 
     /**
      * 院生访谈
@@ -174,7 +192,6 @@ export function configRouter (router) {
     '/interview/interview-record/:interviewId': {
       component: require('../views/interview/InterviewRecord.vue')
     },
-
     /**
      * 每日一题
      */

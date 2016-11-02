@@ -14,6 +14,7 @@ import * as specTopicActions from './topicSpec/actions'
 import * as commonTopicActions from './topicCommon/actions'
 import * as interviewActions from './interview/actions'
 import * as dailyQuestionActions from './dailyQuestion/actions'
+import * as newertestActions from './newertest/actions'
 
 export {
   userActions,
@@ -28,5 +29,6 @@ export {
   specTopicActions, //打包课专题
   commonTopicActions, //通用专题
   interviewActions, //院生访谈
-  dailyQuestionActions //每日一题
+  dailyQuestionActions, //每日一题
+  newertestActions //新手测试
 }
