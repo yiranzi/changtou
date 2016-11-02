@@ -34,7 +34,7 @@
               link="/system/message">
     </ict-item>
     <ict-item title="小投答疑"
-              link="help/self/service">
+              link="/self/service">
     </ict-item>
     <ict-item title="意见反馈"
               link="/feedback">

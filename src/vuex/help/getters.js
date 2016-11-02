@@ -5,3 +5,7 @@
 export const helpList = (state) => {
   return state.help.helpList
 }
+//获取问答记录
+export const records = (state) => {
+  return state.help.records
+}
