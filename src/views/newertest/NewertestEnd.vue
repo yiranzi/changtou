@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="newertest-end">
-      <div class="top" v-el:cancel>
+      <div class="top" v-el:onClose>
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
@@ -183,11 +183,12 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
+  const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
+
   export default {
     vuex: {
       getters: {
-        report: newertestGetters.testReport,
-        newertestReport: newertestGetters.newertestReport,
+        testReport: newertestGetters.newertestReport,
         isLogin: userGetters.isLogin
       }
     },
@@ -195,17 +196,6 @@
       return {
         scrollerHeight: '560px',
         remindLogin: false
-      }
-    },
-    computed: {
-      testReport () {
-        let testReport = {}
-        if (this.isLogin && this.newertestReport) {
-          testReport = this.newertestReport
-        } else {
-          testReport = this.report
-        }
-        return testReport
       }
     },
     watch: {
@@ -217,14 +207,11 @@
 //              top: 0
             })
           })
-        }, 1500)
-      },
-      'remindLogin': function (newVal) {
-        this.remindLogin = newVal
+        }, 300)
       }
     },
     ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.cancel.offsetHeight) + 'px'
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.onClose.offsetHeight) + 'px'
     },
     methods: {
       onCancel () {
@@ -235,8 +222,7 @@
         }
       },
       getLevel (level) {
-        let arr = ['', '理财原始人', '理财古代人', '理财现代人']
-        return arr[level]
+        return financialLevel.get(level)
       },
       tryAgain () {
         this.$route.router.go('/newertest/question')
@@ -247,7 +233,6 @@
       },
       //不登录
       notSave () {
-        this.remindLogin = false
         this.$route.router.go('/main')
       }
     },

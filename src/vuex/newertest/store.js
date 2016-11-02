@@ -3,17 +3,13 @@
  */
 const state = {
   question: {}, //问题
-  report: null, //测试报告
-  newertestReport: null
+  newertestReport: null //测试报告
 }
 const mutations = {
-  LOAD_QUESTION (state, question) {
+  NEWERTEST_UPDATE_QUESTION (state, question) {
     state.question = question
   },
-  LOAD_TEST_REPORT (state, report) {
-    state.report = report
-  },
-  LOAD_NEWERTEST_REPORT (state, newertestReport) {
+  NEWERTEST_UPDATE_REPORT (state, newertestReport) {
     state.newertestReport = newertestReport
   }
 }

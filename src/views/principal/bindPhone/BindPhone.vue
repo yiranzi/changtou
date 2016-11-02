@@ -30,14 +30,7 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
-  import {userActions, globalActions} from '../../../vuex/actions'
   export default {
-    vuex: {
-      actions: {
-        bindPhone: userActions.bindPhone,
-        showAlert: globalActions.showAlert
-      }
-    },
     data () {
       return {
         phone: ''

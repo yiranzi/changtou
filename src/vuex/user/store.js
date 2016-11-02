@@ -58,7 +58,13 @@ const mutations = {
     state.userId = ''
     clearLocalCache('frame-user')
   },
-
+  /**
+   * 绑定手机后更新号码
+   * @constructor
+     */
+  UPDATE_PHONE (state, phone) {
+    state.phone = phone
+  },
   USER_ADD_NEW_MESSAGE_NUM () {
     state.newMessageNum ++
   },

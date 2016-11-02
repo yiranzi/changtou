@@ -46,9 +46,9 @@
         <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
-    <div class="tip" v-show="isShowNewTestPop">
-      <div class="tip-close" v-touch:tap="closeTip"></div>
-      <div class="tip-img"></div>
+    <div class="newertest-pop" v-show="isShowNewTestPop">
+      <div class="newertest-pop-close" v-touch:tap="closeNewerTestPop"></div>
+      <div class="newertest-pop-img"></div>
     </div>
   </div>
 </template>
@@ -58,22 +58,22 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
-  import {navigatorGetters, dailyQuestionGetters, newertestGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
+  import {navigatorGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList,
-        dailyQuestion: dailyQuestionGetters.question,
-        newertestReport: newertestGetters.newertestReport
+        expenseList: navigatorGetters.expenseCourseList
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        loadNewertestReport: newertestActions.loadNewertestReport
+        loadNewertestReport: newertestActions.loadNewertestReport,
+        showAlert: globalActions.showAlert
       }
     },
     data () {
@@ -82,36 +82,14 @@
         isShowNewTestPop: false
       }
     },
-    route: {
-      data () {
-        let taskArr = []
-        taskArr.push(this.loadDailyQuestion())
-        taskArr.push(this.loadNewertestReport())
-        return Promise.all(taskArr).then(
-          function () {
-            let isShowNewTestPop = true
-            if (window.localStorage.getItem('cache-first-test')) {
-              isShowNewTestPop = false
-            } else {
-              isShowNewTestPop = true
-            }
-            return {
-              isShowNewTestPop
-            }
-          }
-        ).catch(
-          function () {
-
-          }
-        )
-      }
-    },
     ready () {
       const me = this
       this.loadData().then(
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
+          //新手测试弹框
+          me.showNewTestPop()
         },
         function () {
 
@@ -136,7 +114,6 @@
         return newBanners
       }
     },
-
     methods: {
       /**
        * 设置滚动条高度
@@ -156,7 +133,6 @@
         })
         }, 150)
       },
-
       gotoCourseDetail (type, index) {
         let courseList = type === 'P' ? this.expenseList : this.freeList
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
@@ -170,11 +146,16 @@
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {
-        if (this.newertestReport) {
-          this.$route.router.go('/newertest/ending')
-        } else {
-          this.$route.router.go('/newertest/start')
-        }
+        const me = this
+        me.loadNewertestReport().then(function (newertestReport) {
+          if (newertestReport) {
+            me.$route.router.go('/newertest/ending')
+          } else {
+            me.$route.router.go('/newertest/start')
+          }
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
       },
       //跳转到院生访谈列表页面
       goToInterviewList () {
@@ -182,16 +163,29 @@
       },
       //跳转到每日一题
       goToDailyQuestion () {
-        if (this.dailyQuestion.selectedOption) {
-          this.$route.router.go('daily/answer')
+        const me = this
+        me.loadDailyQuestion().then(function (dailyQuestion) {
+          if (dailyQuestion.selectedOption) {
+            me.$route.router.go('daily/answer')
+          } else {
+            me.$route.router.go('daily/quiz')
+          }
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
+      },
+      //判断是否显示新手测试弹框
+      showNewTestPop () {
+        if (getLocalCache('first-test')) {
+          this.isShowNewTestPop = false
         } else {
-          this.$route.router.go('daily/quiz')
+          this.isShowNewTestPop = true
         }
       },
       //关闭新手测试弹框
-      closeTip () {
+      closeNewerTestPop () {
         this.isShowNewTestPop = false
-        window.localStorage.setItem('cache-first-test', true)
+        setLocalCache('first-test', true)
       }
     },
     components: {
@@ -351,7 +345,7 @@
       opacity: 0.6;
       position: relative;
     }
-    .tip{
+    .newertest-pop{
       width: 16.7rem;
       height: 10.4rem;
       margin: auto;
@@ -359,7 +353,7 @@
       position: absolute;
       top: 30%;
       left: 5%;
-      .tip-close{
+      .newertest-pop-close{
         position: absolute;
         width: 1.8rem;
         height: 1.8rem;
@@ -367,7 +361,7 @@
         background: transparent url("../../assets/styles/image/newertest/tip/tipCancel.png") center center no-repeat;
         background-size: 100% 100%;
       }
-      .tip-img{
+      .newertest-pop-img{
         width: 16.7rem;
         height: 10.4rem;
         background: transparent url("../../assets/styles/image/newertest/tip/tipImg.png") center center no-repeat;
@@ -375,7 +369,7 @@
       }
     }
     @media all and (max-width: 320px) {
-      .tip-img{
+      .newertest-pop-img{
         width: 10.7rem;
         height: 8.5rem;
         background: transparent url("../../assets/styles/image/newertest/tip/tipImg.png") center center no-repeat;

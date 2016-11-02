@@ -273,6 +273,7 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
         }
       ).then(
         () => {
+          dispatch('UPDATE_PHONE', phone)
           resolve()
         },
         err => {
