@@ -31,8 +31,8 @@
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
-              link="/system/message" v-touch:tap="viewSystemMessage">
-      <badge :text="newMessageNumber" slot="badge" v-show="newMessageNumber"></badge>
+              link="/system/message">
+      <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
     </ict-item>
     <ict-item title="意见反馈"
               link="/feedback">
@@ -47,19 +47,19 @@
   </div>
 </template>
 <script>
+  import Badge from 'vux/badge'
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {userGetters} from '../../vuex/getters'
-  import {setLocalCache} from '../../util/cache'
-  import {setIconBadgeNumber} from '../../plugin/jpush'
-  import Badge from 'vux/badge'
-  import store from '../../vuex/store'
+  import {addOpenHandler} from '../../vuex/jpush/actions'
 
-  const commit = store.commit || store.dispatch
   export default {
     vuex: {
+      actions: {
+        addOpenHandler
+      },
       getters: {
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
@@ -69,7 +69,7 @@
       }
     },
     computed: {
-      newMessageNumber () {
+      badgeMessageNum () {
         let number = this.newMessageNum + ''
         if (this.newMessageNum === 0) {
           number = ''
@@ -77,7 +77,7 @@
         return number
       },
       isZSB () {
-        return this.strategy && (this.strategy.strategyLevel === 'A')
+        return !!this.strategy && (this.strategy.strategyLevel === 'A')
       },
       isSpire () {
 
@@ -89,6 +89,14 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
+    methods: {
+      doLogin: function () {
+        this.$route.router.go('/entry')
+      },
+      doRegister: function () {
+        this.$route.router.go('/register/start')
+      }
+    },
     components: {
       IctTitlebar,
       IctButton,
@@ -96,25 +104,6 @@
       Flexbox,
       FlexboxItem,
       Badge
-    },
-    methods: {
-      doLogin: function () {
-        this.$route.router.go('/entry')
-      },
-      doRegister: function () {
-        this.$route.router.go('/register/start')
-      },
-      viewSystemMessage () {
-        //重置消息数量
-        if (this.newMessageNum) {
-          setTimeout(function () {
-            commit('USER_EMPTY_NEW_MESSAGE_NUM')
-          }, 1000)
-          setLocalCache('frame-user', {newMessageNum: 0})
-        }
-        //设置应用显示角标
-        setIconBadgeNumber(0)
-      }
     }
   }
 </script>

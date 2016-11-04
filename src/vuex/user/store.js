@@ -3,6 +3,7 @@
  * 用户信息
  */
 import {setLocalCache, clearLocalCache} from '../../util/cache'
+import {setIconBadgeNumber} from '../../plugin/jpush'
 
 const state = {
   isLogin: false,
@@ -71,6 +72,8 @@ const mutations = {
   //清空新消息数
   USER_EMPTY_NEW_MESSAGE_NUM () {
     state.newMessageNum = 0
+    setLocalCache('frame-user', {newMessageNum: 0})
+    setIconBadgeNumber(0)
   }
 }
 

@@ -29,27 +29,16 @@ const addReceiveHandler = function (handler) {
 }
 
 /**
- *监听打开消息
- * @param handler
- */
-const addOpenHandler = function (handler) {
-  document.addEventListener('jpush.openNotification', handler, false)
-}
-
-/**
  * 设置应用显示的数字
  */
 export const setIconBadgeNumber = (num) => {
-  if (Device.platform === platformMap.IOS) {
-    if (window.plugins) {
-      window.plugins.jPushPlugin.setBadge(num)
-    }
+  if (window.plugins && Device.platform === platformMap.IOS) {
+    window.plugins.jPushPlugin.setBadge(num)
   }
 }
 
 export default {
   init,
   setAlias,
-  addReceiveHandler,
-  addOpenHandler
+  addReceiveHandler
 }

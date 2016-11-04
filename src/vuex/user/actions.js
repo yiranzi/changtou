@@ -3,9 +3,9 @@
  */
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-import {getLocalCache} from '../../util/cache'
-//import eventBus from '../../util/eventBus'
-//import {eventMap} from '../../frame/eventConfig'
+import {getLocalCache, setLocalCache} from '../../util/cache'
+import {setIconBadgeNumber} from '../../plugin/jpush'
+import {Device, platformMap} from '../../plugin/device'
 
 export const initUser = ({ dispatch }) => {
   const user = getLocalCache('frame-user')
@@ -32,7 +32,6 @@ export const login = ({ dispatch }, identity, plainPassword) => {
     ).then(
       user => {
         dispatch('UPDATE_USER', user)
-        //eventBus.fireEvent(eventMap.LOGIN_SUCCESS, user)
         resolve()
       },
       err => {
@@ -48,7 +47,6 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  */
 export const logout = ({ dispatch }) => {
   dispatch('LOGOUT_USER')
-  //eventBus.fireEvent(eventMap.LOGOUT_SUCCESS)
 }
 
 /**
@@ -281,5 +279,17 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
         }
       )
     })
+}
+
+/**
+ * 增加新消息数
+ */
+export const addNewMessageNum = ({ dispatch }) => {
+  dispatch('USER_ADD_NEW_MESSAGE_NUM')
+  const newMessageNum = JSON.parse(getLocalCache('frame-user')).newMessageNum + 1
+  setLocalCache('frame-user', {newMessageNum: newMessageNum})
+  if (Device.platform === platformMap.IOS) {
+    setIconBadgeNumber(newMessageNum)
+  }
 }
 

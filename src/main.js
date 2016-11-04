@@ -13,9 +13,9 @@ Vue.use(VueResource)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
-//const onDeviceReady = () => {
+const onDeviceReady = () => {
 appRouter.start(App, 'app')
-//window.navigator.splashscreen.hide()
+window.navigator.splashscreen.hide()
 
 setTimeout(function () {
   appRouter.app.$emit(eventMap.APP_START)
@@ -24,6 +24,6 @@ setTimeout(function () {
 //if ((Device.platform !== platformMap.WEB)) {
 //  app.onDeviceReady()
 //}
-//}
+}
 
-//document.addEventListener('deviceready', onDeviceReady, false)
+document.addEventListener('deviceready', onDeviceReady, false)

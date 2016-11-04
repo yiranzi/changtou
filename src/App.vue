@@ -12,7 +12,7 @@
         <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="newMessageNumber">
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMessageNum">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -40,12 +40,8 @@
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {userGetters} from './vuex/getters'
-  import {setIconBadgeNumber} from './plugin/jpush'
-  import {Device, platformMap} from './plugin/device'
   import mixins from './vuex/mixins'
-  import {setLocalCache} from './util/cache'
 
-  const commit = store.commit || store.dispatch
   export default {
     mixins: mixins,
 
@@ -57,11 +53,10 @@
         direction: (state) => state.direction,
         newMessageNum: userGetters.newMessageNum
       },
-
       actions: {
-        initUser: userActions.initUser
-//        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
-//        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        initUser: userActions.initUser,
+        addNewMessageNum: userActions.addNewMessageNum,
+        resetNewMessageNum: userActions.resetNewMessageNum
       }
     },
 
@@ -74,7 +69,7 @@
     },
 
     computed: {
-      newMessageNumber () {
+      badgeNewMessageNum () {
         let number = this.newMessageNum + ''
         if (this.newMessageNum === 0) {
           number = ''
@@ -91,26 +86,7 @@
        * 接收消息
        */
       onReceiveNotification () {
-        commit('USER_ADD_NEW_MESSAGE_NUM')
-        setLocalCache('frame-user', {newMessageNum: this.newMessageNum})
-        if (Device.platform === platformMap.IOS) {
-          let badgeNum = this.newMessageNum
-          setIconBadgeNumber(badgeNum)
-        }
-      },
-
-      /**
-       * 打开消息
-       */
-      onOpenNotification () {
-        if (this.$route.path === '/system/message') {
-          commit('USER_EMPTY_NEW_MESSAGE_NUM')
-          setLocalCache('frame-user', {newMessageNum: 0})
-          setTimeout(function () {
-            setIconBadgeNumber(0)
-          }, 1000)
-          this.$route.router.go('/system/message')
-        }
+        this.addNewMessageNum()
       },
 
       onAction (type) {

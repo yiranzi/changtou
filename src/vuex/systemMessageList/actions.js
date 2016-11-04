@@ -12,6 +12,7 @@ export const loadMessageList = ({ dispatch }) => {
       }).then(
         function (response) {
           dispatch('UPDATE_MESSAGE_LIST', response)
+          dispatch('USER_EMPTY_NEW_MESSAGE_NUM')
           resolve(response)
         },
         function () {

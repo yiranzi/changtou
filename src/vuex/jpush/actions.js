@@ -12,6 +12,6 @@ export const setAlias = ({dispatch}, userId) => {
   jpush.setAlias(userId)
 }
 
-export const addOpenHandler = jpush.addOpenHandler
-
-export const addReceiveHandler = jpush.addReceiveHandler
+export const addReceiveHandler = ({dispatch}, receiveHandler) => {
+  jpush.addReceiveHandler(receiveHandler)
+}

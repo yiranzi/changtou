@@ -5,7 +5,7 @@
  */
 import {eventMap} from '../frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords} from './courseRecords/actions'
-import {jpushInit, setAlias, addOpenHandler, addReceiveHandler} from './jpush/actions'
+import {jpushInit, setAlias, addReceiveHandler} from './jpush/actions'
 import {isLogin, userId} from './user/getters'
 
 const mixin = {
@@ -15,7 +15,6 @@ const mixin = {
       loadAllExpenseRecords,
       jpushInit,
       setAlias,
-      addOpenHandler,
       addReceiveHandler
     },
     getters: {
@@ -25,11 +24,11 @@ const mixin = {
   },
 
   watch: {
-    'isLogin': function () {
+    'isLogin': function (val) {
       if (this.isLogin) {
         this.setAlias(this.userId)
       } else {
-        this.setAlias('unloginuser')
+        this.setAlias('00')
       }
     }
   },
@@ -41,9 +40,7 @@ const mixin = {
     [eventMap.APP_START]: function () {
       console.log('APP_START')
       //接收消息
-      addReceiveHandler(this.onReceiveNotification)
-      //打开消息
-      addOpenHandler(this.onOpenNotification)
+      this.addReceiveHandler(this.onReceiveNotification)
 
       let tasks = []
       tasks.push(this.loadAllFreeRecords)
