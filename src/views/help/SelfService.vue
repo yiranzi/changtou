@@ -108,7 +108,7 @@
     data () {
       return {
         scrollerHeight: '530px',
-        currQuestionIndex: 0 //当前查看的问题集合
+        currQuestionIndex: null //当前查看的问题集合
       }
     },
     watch: {
@@ -142,7 +142,11 @@
     },
     methods: {
       lookAnswer (index) {
-        this.currQuestionIndex = index
+        if (this.currQuestionIndex !== index) {
+          this.currQuestionIndex = index
+        } else {
+          this.currQuestionIndex = null
+        }
       },
       goToManualService () {
         this.$route.router.go('/manual/service')
