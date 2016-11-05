@@ -3,9 +3,9 @@
  */
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-import {getLocalCache, setLocalCache} from '../../util/cache'
-import {setIconBadgeNumber} from '../../plugin/jpush'
-import {Device, platformMap} from '../../plugin/device'
+import {getLocalCache} from '../../util/cache'
+//import {getLocalCache, setLocalCache} from '../../util/cache'
+//import {setIconBadgeNumber} from '../../plugin/jpush'
 
 export const initUser = ({ dispatch }) => {
   const user = getLocalCache('frame-user')
@@ -286,10 +286,9 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
  */
 export const addNewMessageNum = ({ dispatch }) => {
   dispatch('USER_ADD_NEW_MESSAGE_NUM')
-  const newMessageNum = JSON.parse(getLocalCache('frame-user')).newMessageNum + 1
-  setLocalCache('frame-user', {newMessageNum: newMessageNum})
-  if (Device.platform === platformMap.IOS) {
-    setIconBadgeNumber(newMessageNum)
-  }
+  //todo setLocalCache setIconBadgeNumber
+  //const newMessageNum = JSON.parse(getLocalCache('frame-user')).newMessageNum + 1
+  //setLocalCache('frame-user', {newMessageNum: newMessageNum})
+  //setIconBadgeNumber(newMessageNum)
 }
 

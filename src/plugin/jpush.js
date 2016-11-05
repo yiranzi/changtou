@@ -33,7 +33,7 @@ const addReceiveHandler = function (handler) {
  */
 export const setIconBadgeNumber = (num) => {
   if (window.plugins && Device.platform === platformMap.IOS) {
-    window.plugins.jPushPlugin.setBadge(num)
+    window.plugins.jPushPlugin.setApplicationIconBadgeNumber(num)
   }
 }
 
