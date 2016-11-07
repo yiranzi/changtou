@@ -369,7 +369,7 @@
       }
     }
     @media all and (max-width: 320px) {
-      .tip-img{
+      .newertest-pop-img{
         width: 10.7rem;
         height: 8.5rem;
         background: transparent url("../../assets/styles/image/newertest/tip/tipImg.png") center center no-repeat;

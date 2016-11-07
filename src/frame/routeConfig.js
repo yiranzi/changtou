@@ -65,6 +65,9 @@ export function configRouter (router) {
     '/mycourse': {    //我的课程
       component: require('../views/course/MyCourse.vue')
     },
+    '/full/screen/:subjectId/:lessonId/:chapterIndex': { //横屏
+      component: require('../views/course/FullScreen.vue')
+    },
     /**
      * 登录模块
      */
@@ -150,7 +153,7 @@ export function configRouter (router) {
      * 支付模块
      */
     // 支付成功
-    'pay/success/:type': {
+    'pay/success/:type/:id': {
       component: require('../views/pay/Success.vue')
     },
 
