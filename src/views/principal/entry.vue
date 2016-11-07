@@ -92,7 +92,7 @@
             () => {
               me.$route.router.go('/setting')
               me.disabled = true
-            },
+            }).catch(
             err => {
               me.showAlert(err.message)
               me.disabled = true

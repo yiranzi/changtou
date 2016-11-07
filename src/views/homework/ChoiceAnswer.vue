@@ -29,15 +29,12 @@ export default {
   vuex: {
     getters: {
       isLogin: userGetters.isLogin,
-      currQuestion: choiceGetters.currQuestion,
-      totalNum: choiceGetters.totalNum,
-      currIndex: choiceGetters.currIndex,
       lessonId: choiceGetters.lessonId,
-      postReport: choiceGetters.postReport
+      choiceQuestion: choiceGetters.choiceQuestionArr,
+      knowledgeMap: choiceGetters.knowledgeMap
     },
     actions: {
-      updateAnswer: choiceActions.updateAnswer,
-      nextQuestion: choiceActions.goToNextQuestion,
+      updateReport: choiceActions.updateReport,
       submitReport: choiceActions.submitReport
     }
   },
@@ -47,9 +44,15 @@ export default {
       isBtnDisabled: true,  // 按钮是否可用
       isRight: false, // 答对
       isWrong: false, // 答错
-      explain: null, // 答案解释
+      explain: '', // 答案解释
       optionTaped: false, // 当前问题 已回答
-      selectedOptionIndex: null //当前问题 回答的index
+      selectedOptionIndex: -1, //当前问题 回答的index
+      totalNum: 0, //总题数
+      rightNum: 0, //答对的题数
+      currIndex: 0, //当前题号
+      currQuestion: null, //当前的题目
+      pointData: null, // 计算时使用的临时报告
+      report: null // 选择题 报告
     }
   },
   computed: {
@@ -68,23 +71,70 @@ export default {
       } else {
         return '下一题'
       }
+    },
+    totalNum () {
+      return this.choiceQuestion.length
+    },
+    currQuestion () {
+      return this.choiceQuestion[this.currIndex]
     }
   },
-  watch: {
-    // 生成新报告时 登录提交
-    postReport (newReport) {
-      if (this.isLogin && newReport.kpScore.length > 0) {
-        this.submitReport(newReport)
-      }
+  route: {
+    data () {
+      this.initPointData()
     }
   },
   methods: {
+    initPointData () {
+        const idArr = []
+        const countArr = []
+        const rightNumArr = []
+        const contentArr = []
+        for (let i = 0, length = this.choiceQuestion.length; i < length; i++) {
+          const index = idArr.indexOf(this.choiceQuestion[i].kpId)
+          if (index < 0) {
+            idArr.push(this.choiceQuestion[i].kpId)
+            countArr.push(1)
+            rightNumArr.push(0)
+            contentArr.push(this.knowledgeMap[this.choiceQuestion[i].kpId])
+          } else {
+            countArr[index] ++
+          }
+        }
+        this.pointData = {
+          idArr,
+          countArr,
+          rightNumArr,
+          contentArr
+        }
+    },
     /**
      * 点击右上方关闭按钮
      */
     onCloseTap () {
-      window.history.back(-1)
+      window.history.back()
+      this.resetView()
     },
+
+    /**
+     * 重置页面数据
+     */
+    resetView () {
+      this.btnText = '下一题'
+      this.isBtnDisabled = true
+      this.isRight = false
+      this.isWrong = false
+      this.explain = ''
+      this.optionTaped = false
+      this.selectedOptionIndex = -1
+      this.totalNum = 0
+      this.rightNum = 0
+      this.currIndex = 0
+      this.currQuestion = null
+      this.pointData = null
+      this.report = null
+    },
+
     /**
     * 点击选项
     */
@@ -108,16 +158,29 @@ export default {
      * 点击 下一题
      */
     onNextTap () {
+      if (this.optionTaped === false) {
+        // 未选中任何选项
+        return
+      }
       this.optionTaped = false
-      this.selectedOptionIndex = null
+      this.selectedOptionIndex = -1
       this.isBtnDisabled = true
-      this.explain = null
+      this.explain = ''
 
       if (this.currIndex === this.totalNum - 1) {
         //最后一题
+        this.updateReport(this.report)
         this.$route.router.replace('/choice/mark')
+        if (this.isLogin && parseInt(this.rightNum / this.totalNum) >= 6) {
+          this.submitReport(this.report).then(
+            () => {}
+          ).catch(
+            err => console.warn(err.message)
+          )
+        }
+        this.resetView()
       } else {
-        this.nextQuestion()
+        this.goToNextQuestion()
       }
     },
     /**
@@ -125,6 +188,55 @@ export default {
      */
     onExplainClose () {
       this.explain = null
+    },
+
+      /**
+       * 下一题
+       */
+    goToNextQuestion () {
+      this.currIndex ++
+    },
+
+      /**
+       * 更新 回答
+       * @param answer
+       */
+    updateAnswer (answer) {
+        //答对
+      if (answer) {
+        this.answerRight()
+      }
+        // 最后一题 计算报告
+      if (this.currIndex === this.totalNum - 1) {
+        this.calReport()
+      }
+    },
+
+      /**
+       * 回答正确
+       */
+    answerRight () {
+      let index = this.pointData.idArr.indexOf(this.currQuestion.kpId)
+      this.pointData.rightNumArr[index] ++
+      this.rightNum ++
+    },
+
+    /**
+     * 生成报告
+     */
+    calReport () {
+      const postReportKpScore = []
+      for (var i = 0, length = this.pointData.idArr.length; i < length; i++) {
+        postReportKpScore.push({
+          kpId: this.pointData.idArr[i],
+          score: parseInt(this.pointData.rightNumArr[i] / this.pointData.countArr[i] * 10)
+        })
+      }
+      this.report = {
+        kpScore: postReportKpScore,
+        lessonId: this.lessonId,
+        rightNum: this.rightNum
+      }
     }
   },
   components: {

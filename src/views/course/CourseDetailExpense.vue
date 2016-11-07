@@ -177,11 +177,9 @@
         showConfirm: globalActions.showConfirm,
 
         setEssayQuestion: essayActions.setEssay,
-        setEssayLessonId: essayActions.setEssayLessonId,
         getArticle: essayActions.getArticle,
 
         setChoiceQuestion: choiceActions.setChoice,
-        setChoiceLessonId: choiceActions.setLessonId,
         getReport: choiceActions.getReport
       }
     },
@@ -211,8 +209,7 @@
 
         selectedLesson: null, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
-        currLessonId: null, //当前选中的lesson id
-        currChapterIndex: null, //当前选中的chater index
+        currChapterIndex: -1, //当前选中的chater index
         currAudioSrc: null, //当前音频地址
         currPpts: [], //当前ppt地址集合
 
@@ -278,8 +275,6 @@
        * 当前课程被选中, 设置进度是否有权限
        */
       'selectedLesson': function (lesson, oldlesson) {
-        this.currLessonId = lesson && lesson.lessonId // 用于横屏
-
         // 如果是公开课,永远不受限
         if (lesson && lesson.type === 'C') {
           this.isSelectdLessonLimited = false
@@ -405,7 +400,7 @@
       },
 
       'fullScreenTap' () {
-        this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
+        this.gotoFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
       }
     },
 
@@ -415,11 +410,9 @@
        **/
       onChoiceTap () {
         const me = this
-        const lessonId = this.currLessonId
+        const lessonId = this.selectedLesson.lessonId
         const choiceQuestionArr = this.selectedLesson.choiceQuestion
-
         me.setChoiceQuestion(choiceQuestionArr)
-        me.setChoiceLessonId(lessonId)
         me.getReport(lessonId).then(
           report => {
             if (report.kpScore) {
@@ -429,7 +422,7 @@
               // 没做过
               me.showChoice = true
             }
-          },
+          }).catch(
           err => {
             console.log(err.message)
           }
@@ -441,20 +434,18 @@
        * */
       onEssayTap (limitedLessonId, limitedEssayQuestion) {
         const me = this
-        const lessonId = limitedLessonId || this.currLessonId
+        const lessonId = limitedLessonId || this.selectedLesson.lessonId
         const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
-
         me.setEssayQuestion(essayQuestion)
-        me.setEssayLessonId(lessonId)
         me.getArticle(lessonId).then(
-          (evaluation) => {
+          evaluation => {
             if (evaluation && evaluation.status !== null) {
               switch (evaluation.status) {
                 case 0://作业已提交
                   me.goEssayMark(lessonId)
                   break
                 case 1://草稿已提交 写作业
-                  me.goEssayAnswer(evaluation.articleId)
+                  me.goEssayAnswer(lessonId)
                   break
                 case 2://已批改 未通过 查看作业
                   me.goEssayMark(lessonId)
@@ -469,17 +460,22 @@
             } else {
               me.showEssayFloat()
             }
-        },
-        err => {
-          console.log(err.message)
-        }
+        }).catch(
+          err => {
+            console.log(err.message)
+          }
         )
       },
       /**
        * 跳转到问答题 编辑页
        */
-      goEssayAnswer (articleId) {
-        this.$route.router.go('/essay/answer/' + articleId)
+      goEssayAnswer (lessonId) {
+        const me = this
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/answer')
+        ).catch(
+            err => console.warn(err)
+        )
       },
 
       /**
@@ -493,8 +489,13 @@
        * 跳转到问答题 查看页
        */
       goEssayMark (LimitedLessonId) {
-        const lessonId = LimitedLessonId || this.currLessonId
-        this.$route.router.go('/essay/mark/' + lessonId)
+        const me = this
+        const lessonId = LimitedLessonId || this.selectedLesson
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/mark')
+        ).catch(
+            err => console.warn(err)
+        )
       },
       /**
        * 重置 作业浮层
@@ -566,7 +567,11 @@
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            me.$route.router.go('/essay/mark/' + me.lastSubmitlessonId)
+            me.getArticle(me.lastSubmitlessonId).then(
+              () => me.$route.router.go('/essay/mark')
+            ).catch(
+              err => console.warn(err)
+            )
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {

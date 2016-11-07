@@ -13,7 +13,7 @@ export const getDrafts = () => {
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('drafts_list')
+          url: getUrl('homework_drafts_list')
         }
       ).then(
         draftsList => {
@@ -35,7 +35,7 @@ export const deleteDrafts = ({ dispatch }, articleId) => {
     (resolve, reject) => {
       deleteWithinAuth(
         {
-          url: getUrl('delete_drafts').replace(':articleId', articleId)
+          url: getUrl('homework_delete_drafts').replace(':articleId', articleId)
         }
       ).then(
         isDelete => {
@@ -57,12 +57,13 @@ export const getArticle = ({ dispatch }, lessonId) => {
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('get_article').replace(':lessonId', lessonId)
+          url: getUrl('homework_get_article').replace(':lessonId', lessonId)
         }
       ).then(
         article => {
-          resolve(article)
+          dispatch('UPDATE_ESSAY_LESSONID', lessonId)
           dispatch('UPDATE_ESSAY_STATUS', article)
+          resolve(article)
         },
         err => reject(err)
       )
@@ -80,7 +81,7 @@ export const submitArticle = ({ dispatch }, article) => {
     (resolve, reject) => {
       postWithinAuth(
         {
-          url: getUrl('submit_article'),
+          url: getUrl('homework_submit_article'),
           data: article
         }
       ).then(
@@ -103,28 +104,10 @@ export const setEssay = ({ dispatch }, essay) => {
 }
 
 /**
- * 设置 当前作业 题目
- * @param dispatch
- * @param question
- */
-export const setEssayQuestion = ({ dispatch }, question) => {
-  dispatch('UPDATE_ESSAY_QUESTION', question)
-}
-
-/**
- * 设置 当前作业 lessonId
- * @param dispatch
- * @param lessonId
- */
-export const setEssayLessonId = ({ dispatch }, lessonId) => {
-  dispatch('UPDATE_ESSAY_LESSONID', lessonId)
-}
-
-/**
  * 设置 草稿
  * @param dispatch
  * @param draft
  */
-export const setEssayDraft = ({ dispatch }, draft) => {
+export const updateDraft = ({ dispatch }, draft) => {
   dispatch('UPDATE_ESSAY_DRAFT', draft)
 }

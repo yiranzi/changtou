@@ -15,32 +15,6 @@ export const setChoice = ({dispatch}, choice) => {
 }
 
 /**
- * 设置lessonId
- * @param dispatch
- * @param lessonId
- */
-export const setLessonId = ({dispatch}, lessonId) => {
-  dispatch('UPDATE_CHOICE_LESSONID', lessonId)
-}
-
-/**
- * 记录答对
- * @param dispatch
- * @param answer
- */
-export const updateAnswer = ({dispatch}, answer) => {
-  dispatch('UPDATE_ANSWER', answer)
-}
-
-/**
- * 进入下一题
- * @param dispatch
- */
-export const goToNextQuestion = ({dispatch}) => {
-  dispatch('NEXT_QUESTION')
-}
-
-/**
  * 获取报告
  * @param dispatch
  * @param lessonId
@@ -51,10 +25,11 @@ export const getReport = ({dispatch}, lessonId) => {
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('get_report').replace(':lessonId', lessonId)
+          url: getUrl('homework_get_report').replace(':lessonId', lessonId)
         }
       ).then(
         report => {
+          dispatch('UPDATE_CHOICE_LESSONID', lessonId)
           dispatch('UPDATE_CHOICE_REPORT', report)
           resolve(report)
         },
@@ -64,6 +39,15 @@ export const getReport = ({dispatch}, lessonId) => {
       )
     }
   )
+}
+
+/**
+ * 更新 报告
+ * @param dispatch
+ * @param report
+ */
+export const updateReport = ({dispatch}, report) => {
+  dispatch('UPDATE_CHOICE_REPORT', report)
 }
 
 /**
@@ -77,7 +61,7 @@ export const submitReport = ({dispatch}, report) => {
     (resolve, reject) => {
       postWithinAuth(
         {
-          url: getUrl('submit_report'),
+          url: getUrl('homework_submit_report'),
           data: report
         }
       ).then(
@@ -102,7 +86,7 @@ export const getKnowledgePointMap = ({dispatch}) => {
     (resolve, reject) => {
       getWithoutAuth(
         {
-          url: getUrl('get_choice_knowledge_point')
+          url: getUrl('homework_get_choice_knowledge_point')
         }
       ).then(
         knowledgeMap => {
@@ -117,10 +101,3 @@ export const getKnowledgePointMap = ({dispatch}) => {
   )
 }
 
-/**
- * 重测
- * @param dispatch
- */
-export const reTest = ({dispatch}) => {
-  dispatch('CHOICE_RETEST')
-}

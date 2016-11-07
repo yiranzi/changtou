@@ -37,7 +37,6 @@
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import Scroller from 'vux/scroller'
   import { userGetters, essayGetters } from '../../vuex/getters'
-  import { essayActions } from '../../vuex/actions'
 export default {
   vuex: {
     getters: {
@@ -48,9 +47,6 @@ export default {
       remarkList: essayGetters.remarkList,
       score: essayGetters.score,
       status: essayGetters.status
-    },
-    actions: {
-      getArticle: essayActions.getArticle
     }
   },
   data () {
@@ -66,17 +62,12 @@ export default {
       return this.status !== 3
     }
   },
-  route: {
-    data ({to: {params: {lessonId}}}) {
-      this.getArticle(lessonId)
-    }
-  },
   methods: {
     /**
      * 点击编辑作业
      */
     editAnswer () {
-      this.$route.router.go('/essay/answer/' + this.articleId)
+      this.$route.router.go('/essay/answer')
     }
   },
   components: {

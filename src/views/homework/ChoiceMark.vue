@@ -9,28 +9,28 @@
         <a slot="right">完成</a>
       </ict-titlebar>
       <div class="choice-score">
-        <rater :value.sync="report.score" slot="value" active-color="#04BE02" :font-size="40" disabled></rater>
+        <rater :value.sync="score" slot="value" active-color="#04BE02" :font-size="40" disabled></rater>
         <p class="tip-up">知识点掌握度</p>
         <p class="tip-down">{{{choiceScoreTip}}}</p>
       </div>
       <div class="point-score">
         <p class="knowledge-tip">此次作业小测试设计知识点{{report.kpScore.length}}个</p>
         <div v-for="point in report.kpScore" class="item">
-          <cell :title="point.content">
-            <rater :class="point-score" :value.sync="point.score" slot="value" active-color="#04BE02" :font-size="20" disabled></rater>
+          <cell :title="pointContent($index)">
+            <rater :class="point-score" :value="pointScore($index)" slot="value" active-color="#04BE02" :font-size="20" disabled></rater>
           </cell>
         </div>
         <hr>
         <div class="score-summary">
-          <p class="defeat-num">同期战胜{{report.defeatNum}}的人</p>
-          <p class="correct-rate">小测试共{{report.totalNum}}道 正确率{{report.score * 20}}%</p>
+          <p class="defeat-num">同期战胜{{defeatNum}}的人</p>
+          <p class="correct-rate">小测试共{{report.totalNum}}道 正确率{{score * 20}}%</p>
           <p class="right-num">答对{{report.rightNum}}道 答错{{report.totalNum-report.rightNum}}道</p>
           <span class="retest-btn" v-touch:tap="reTest">重测</span>
         </div>
       </div>
-      <div class="choice-mark-mask" v-touch:tap="onMaskTap" v-if="isFloatShow"></div>
-      <div class="choice-mark-float" v-if="isFloatShow">
-        <div class="title">{{100 - report.score * 20}}%错误</div>
+      <div class="choice-mark-mask" v-touch:tap="onMaskTap" v-show="isFloatShow"></div>
+      <div class="choice-mark-float" v-show="isFloatShow">
+        <div class="title">{{100 - score * 20}}%错误</div>
         <img class="rate" src="/static/image/homework/notPassed/failRate.png">
         <img class="backImg" src="/static/image/homework/notPassed/failBg.png">
         <img class="btn" src="/static/image/homework/notPassed/reTestBtn.png" v-touch:tap="reTest">
@@ -41,16 +41,14 @@
   import Cell from 'vux/cell'
   import Rater from 'vux/rater'
   import IctTitlebar from '../../components/IctTitlebar.vue'
-  import { choiceGetters } from '../../vuex/getters'
-  import { choiceActions } from '../../vuex/actions'
+  import { choiceGetters, userGetters } from '../../vuex/getters'
   export default {
   vuex: {
     getters: {
+      isLogin: userGetters.isLogin,
       lessonId: choiceGetters.lessonId,
-      report: choiceGetters.report
-    },
-    actions: {
-      reTestChoice: choiceActions.reTest
+      report: choiceGetters.report,
+      knowledgeMap: choiceGetters.knowledgeMap
     }
   },
   data () {
@@ -65,16 +63,34 @@
   computed: {
     // 通过 | 未通过 提示
     choiceScoreTip () {
-      if (this.report.score >= 3) {
+      if (this.score >= 3) {
         return `恭喜您本课<span class="passed">已通过</span>`
       } else {
         return `本课<span class="not-passed">未通过</span>`
       }
     },
-    //是否显示 错误浮层
-    isFloatShow () {
-      console.log(this.report.score)
-      return this.report.score < 3
+    // 总分数
+    score () {
+      return parseInt(this.report.rightNum / this.report.totalNum * 10) * 0.5
+    },
+    // 打败人数
+    defeatNum () {
+      if (this.score < 3) {
+        return 0
+      } else if (this.score <= 4) {
+        return 70 + parseInt(Math.random() * 10)
+      } else if (this.score <= 4.5) {
+        return 80 + parseInt(Math.random() * 10)
+      } else if (this.score <= 5) {
+        return 90 + parseInt(Math.random() * 10)
+      }
+    }
+  },
+  watch: {
+    score (newScore) {
+      if (newScore && newScore < 3) {
+        this.isFloatShow = true
+      }
     }
   },
   methods: {
@@ -82,13 +98,12 @@
      * 完成
      */
     onFinish () {
-      window.history.back(-1)
+      window.history.back()
     },
     /**
      * 重测
      */
     reTest () {
-      this.reTestChoice()
       this.$route.router.replace('/choice/answer')
     },
     /**
@@ -96,6 +111,22 @@
      */
     onMaskTap () {
       this.isFloatShow = false
+    },
+    /**
+     * 知识点名称
+     * @param index
+     * @returns {*}
+       */
+    pointContent (index) {
+      return this.knowledgeMap[this.report.kpScore[index].kpId]
+    },
+    /**
+     * 知识点得分
+     * @param index
+     * @returns {number}
+       */
+    pointScore (index) {
+      return this.report.kpScore[index].score * 0.5
     }
   },
   components: {

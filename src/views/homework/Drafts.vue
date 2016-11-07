@@ -29,11 +29,10 @@
 export default {
   vuex: {
     actions: {
+      getArticle: essayActions.getArticle,
       getDrafts: essayActions.getDrafts,
       deleteDraft: essayActions.deleteDrafts,
-      setEssayQuestion: essayActions.setEssayQuestion,
-      setEssayLessonId: essayActions.setEssayLessonId,
-      setEssayDraft: essayActions.setEssayDraft
+      updateDraft: essayActions.updateDraft
     }
   },
   data () {
@@ -71,21 +70,19 @@ export default {
   },
   methods: {
     goToArticleEdit (draft) {
-      this.setEssayQuestion(draft.assignment)
-      this.setEssayLessonId(draft.lessonId)
-      this.setEssayDraft(draft.content)
-      this.$route.router.go('/essay/answer/' + draft.articleId)
+      this.updateDraft(draft)
+      this.$route.router.go('/essay/answer')
     },
     goToDeleteDraft (articleId) {
       const me = this
       this.deleteDraft(articleId).then(
         isDelete => {
-          this.getDrafts().then(
+          me.getDrafts().then(
             draftList => {
               me.draftList = draftList
             }
           ).catch(
-            err => console.warn(err)
+              err => console.warn(err)
           )
         }
       ).catch(

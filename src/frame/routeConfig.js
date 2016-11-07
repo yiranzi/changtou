@@ -203,11 +203,11 @@ export function configRouter (router) {
       component: require('../views/homework/Drafts.vue')
     },
     //问答题 写作业
-    '/essay/answer/:articleId': {
+    '/essay/answer': {
       component: require('../views/homework/EssayAnswer.vue')
     },
     //问答题 看分数
-    '/essay/mark/:lessonId': {
+    '/essay/mark': {
       component: require('../views/homework/EssayMark.vue')
     },
     //选择题 做测试

@@ -49,16 +49,17 @@ const mutations = {
     state.status = essay.status
   },
 
-  UPDATE_ESSAY_QUESTION (state, essayQuestion) {
-    state.essayQuestion = essayQuestion
-  },
   /**
    * 更新 草稿内容
    * @param draft
    * @constructor
      */
   UPDATE_ESSAY_DRAFT (state, draft) {
-    state.essayAnswer = draft
+    state.essayAnswer = draft.content
+    state.articleId = draft.articleId
+    state.essayLessonId = draft.lessonId
+    state.createTime = draft.create_time
+    state.essayQuestion = draft.assignment
   }
 }
 

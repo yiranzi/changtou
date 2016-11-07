@@ -111,13 +111,13 @@ const apiUrl = {
   /**
    * 作业
    */
-  'drafts_list': '/student/article/draft-box', //草稿箱列表
-  'delete_drafts': '/student/article/draft-box/:articleId', //删除草稿
-  'get_article': '/student/expense/lesson/article/:lessonId', //获取作业或草稿
-  'submit_article': '/student/expense/lesson/article', //提交作业或草稿
-  'get_report': '/student/choice-question-report/:lessonId', // 获取选择题 测试报告
-  'submit_report': '/student/choice-question-report', // 提交选择题 测试报告
-  'get_choice_knowledge_point': '/course/knowledge-point' // 获取选择题 对应知识点
+  'homework_drafts_list': '/student/article/draft-box', //草稿箱列表
+  'homework_delete_drafts': '/student/article/draft-box/:articleId', //删除草稿
+  'homework_get_article': '/student/expense/lesson/article/:lessonId', //获取作业或草稿
+  'homework_submit_article': '/student/expense/lesson/article', //提交作业或草稿
+  'homework_get_report': '/student/choice-question-report/:lessonId', // 获取选择题 测试报告
+  'homework_submit_report': '/student/choice-question-report', // 提交选择题 测试报告
+  'homework_get_choice_knowledge_point': '/course/knowledge-point' // 获取选择题 对应知识点
 
 }
 

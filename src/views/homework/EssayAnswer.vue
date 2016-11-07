@@ -32,7 +32,8 @@ export default {
     getters: {
       essayContent: essayGetters.essayQuestion,
       essayAnswer: essayGetters.essayAnswer,
-      essayLessonId: essayGetters.essayLessonId
+      lessonId: essayGetters.essayLessonId,
+      articleId: essayGetters.articleId
     },
     actions: {
       submitArticle: essayActions.submitArticle
@@ -52,7 +53,6 @@ export default {
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
       answer: this.essayAnswer, // 填写的答案
-      articleId: this.$route.params.articleId, //作业Id
       alertHandler: () => {}
     }
   },
@@ -110,9 +110,9 @@ export default {
     submitEssay () {
       this.rightOptions.disabled = true
       const essayContent = {
-        articleId: parseInt(this.articleId) ? this.articleId : null,
+        articleId: this.articleId,
         content: this.answer,
-        lessonId: this.essayLessonId,
+        lessonId: this.lessonId,
         status: 0
       }
       this.submitArticle(essayContent).then(
@@ -125,10 +125,9 @@ export default {
           } else {
             window.history.back()
           }
-        },
+        }).catch(
         err => {
-          this.alertMsg = err.message
-          this.isAlert = true
+          console.log(err)
           this.rightOptions.disabled = false
         }
       )
@@ -139,9 +138,9 @@ export default {
        */
     submitDraft () {
       const essay = {
-        articleId: parseInt(this.articleId) ? this.articleId : null,
+        articleId: this.articleId,
         content: this.answer,
-        lessonId: this.essayLessonId,
+        lessonId: this.lessonId,
         status: 1
       }
       this.submitArticle(essay).then(
@@ -149,29 +148,9 @@ export default {
           this.articleId = result.articleId
           this.toastMsg = '你的草稿已保存'
           this.isToast = true
-        },
-        err => {
-          this.alertMsg = err.message
-          this.isAlert = true
-        }
+        }).catch(
+        err => console.log(err)
       )
-
-//        let cachedEssay = window.localStorage.getItem('cache-essay-draft')
-//        if (cachedEssay) {
-//          cachedEssay = JSON.parse(cachedEssay)
-//          cachedEssay[this.essayLessonId] = {
-//            answer: this.answer,
-//            question: this.essayQuestion
-//          }
-//          window.localStorage.setItem('cache-essay-draft', JSON.stringify(cachedEssay))
-//        } else {
-//          cachedEssay = {}
-//          cachedEssay[this.essayLessonId] = {
-//            answer: this.answer,
-//            question: this.essayQuestion
-//          }
-//          window.localStorage.setItem('cache-essay-draft', JSON.stringify(cachedEssay))
-//        }
     },
 
     onAlertHide () {

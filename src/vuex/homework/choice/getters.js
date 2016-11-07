@@ -2,10 +2,6 @@
  * Created by jun on 2016/10/26.
  */
 
-//当前的题目
-export const currQuestion = (state) => {
-  return state.choice.currQuestion
-}
 // lessonId
 export const lessonId = (state) => {
   return state.choice.lessonId
@@ -13,20 +9,15 @@ export const lessonId = (state) => {
 
 // 测试 报告
 export const report = (state) => {
-  return state.choice.showedReport
+  return state.choice.report
 }
 
-//当前题号
-export const currIndex = (state) => {
-  return state.choice.currIndex
+// 选择题数组
+export const choiceQuestionArr = (state) => {
+  return state.choice.choiceQuestion
 }
 
-//总题数
-export const totalNum = (state) => {
-  return state.choice.totalNum
-}
-
-// 提交服务器 的报告
-export const postReport = (state) => {
-  return state.choice.postReport
+// 知识点对应关系
+export const knowledgeMap = (state) => {
+  return state.choice.knowledgeMap
 }

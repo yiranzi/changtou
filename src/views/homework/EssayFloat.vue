@@ -69,7 +69,7 @@
         this.show = false
         this.$emit('confirm')
         if (this.essayType === 'S') {
-          this.$route.router.go('/essay/answer/' + (parseInt(this.articleId) ? this.articleId : 0))
+          this.$route.router.go('/essay/answer')
         }
       }
     },
