@@ -4,40 +4,40 @@
 
   //作业类型
 export const essayType = (state) => {
-  return state.essay.essayType
+  return state.homeworkEssay.essayType
 }
 
 //作业题目
 export const essayQuestion = (state) => {
-  return state.essay.essayQuestion
+  return state.homeworkEssay.essayQuestion
 }
 
 //作业 lessonId
 export const essayLessonId = (state) => {
-  return state.essay.essayLessonId
+  return state.homeworkEssay.essayLessonId
 }
 
 // 用户答案
 export const essayAnswer = (state) => {
-  return state.essay.essayAnswer
+  return state.homeworkEssay.essayAnswer
 }
 // 作业Id
 export const articleId = (state) => {
-  return state.essay.articleId
+  return state.homeworkEssay.articleId
 }
 // 作业提交时间
 export const createTime = (state) => {
-  return state.essay.createTime
+  return state.homeworkEssay.createTime
 }
 // 留言
 export const remarkList = (state) => {
-  return state.essay.remarkList
+  return state.homeworkEssay.remarkList
 }
 // 分数
 export const score = (state) => {
-  return state.essay.score
+  return state.homeworkEssay.score
 }
 // 状态
 export const status = (state) => {
-  return state.essay.status
+  return state.homeworkEssay.status
 }

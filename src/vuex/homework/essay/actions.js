@@ -86,6 +86,7 @@ export const submitArticle = ({ dispatch }, article) => {
         }
       ).then(
         markInfo => {
+          dispatch('UPDATE_ESSAY_STATUS', markInfo)
           resolve(markInfo)
         },
         err => reject(err)

@@ -567,11 +567,7 @@
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            me.getArticle(me.lastSubmitlessonId).then(
-              () => me.$route.router.go('/essay/mark')
-            ).catch(
-              err => console.warn(err)
-            )
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {

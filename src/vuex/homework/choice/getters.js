@@ -4,20 +4,20 @@
 
 // lessonId
 export const lessonId = (state) => {
-  return state.choice.lessonId
+  return state.homeworkChoice.lessonId
 }
 
 // 测试 报告
 export const report = (state) => {
-  return state.choice.report
+  return state.homeworkChoice.report
 }
 
 // 选择题数组
 export const choiceQuestionArr = (state) => {
-  return state.choice.choiceQuestion
+  return state.homeworkChoice.choiceQuestion
 }
 
 // 知识点对应关系
 export const knowledgeMap = (state) => {
-  return state.choice.knowledgeMap
+  return state.homeworkChoice.knowledgeMap
 }

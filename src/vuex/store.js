@@ -17,8 +17,8 @@ import topicCommon from './topicCommon/store'
 import interview from './interview/store'
 import dailyQuestion from './dailyQuestion/store'
 import newertest from './newertest/store'
-import essay from './homework/essay/store'
-import choice from './homework/choice/store'
+import homeworkEssay from './homework/essay/store'
+import homeworkChoice from './homework/choice/store'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -37,7 +37,7 @@ export default new Vuex.Store({
     interview, //院生访谈
     dailyQuestion, //每日一题
     newertest, //新手测试
-    essay, // 问答题
-    choice// 选择题
+    homeworkEssay, // 问答题
+    homeworkChoice// 选择题
   }
 })
