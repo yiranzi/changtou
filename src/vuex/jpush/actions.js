@@ -8,10 +8,15 @@ export const jpushInit = () => {
   return Promise.resolve(jpush.init())
 }
 
-export const setAlias = ({dispatch}, userId) => {
+export const jpushSetAlias = ({dispatch}, userId) => {
   jpush.setAlias(userId)
 }
 
-export const addReceiveHandler = ({dispatch}, receiveHandler) => {
+export const jpushAddReceiveHandler = ({dispatch}, receiveHandler) => {
   jpush.addReceiveHandler(receiveHandler)
 }
+
+export const jpushAddOpenHandler = ({dispatch}, openHandler) => {
+  jpush.addReceiveHandler(openHandler)
+}
+

@@ -3,7 +3,9 @@
  */
 
 export const eventMap = {
-  APP_START: 'start',
-  LOGIN_SUCCESS: 'login'
+  APP_START: 'app_start',
+  LOGIN_SUCCESS: 'login',
+  REGISTER_SUCCESS: 'register',
+  LOGOUT: 'logout'
 }
 

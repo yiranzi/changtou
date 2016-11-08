@@ -53,12 +53,12 @@
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {userGetters} from '../../vuex/getters'
-  import {addOpenHandler} from '../../vuex/jpush/actions'
+  import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
 
   export default {
     vuex: {
       actions: {
-        addOpenHandler
+        jpushAddOpenHandler
       },
       getters: {
         isLogin: userGetters.isLogin,

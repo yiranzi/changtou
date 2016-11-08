@@ -29,6 +29,15 @@
              @on-cancel="onAction('cancel')">
       <p style="text-align:center;">{{{confirmMsg}}}</p>
     </confirm>
+
+    <!--新手测试-->
+    <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
+      <!--<div class="newertest-pop-close" v-touch:tap="closeNewerTestPop"></div>-->
+      <!--<div class="newertest-pop-img">-->
+        <!--<img src="./assets/styles/image/newertest/tip/tipImg.png" style=" width: 16.7rem; height: 10.4rem;">-->
+      <!--</div>-->
+    <!--</div>-->
+
   </div>
 </template>
 
@@ -40,6 +49,7 @@
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {userGetters} from './vuex/getters'
+  import {setLocalCache, getLocalCache} from './util/cache'
   import mixins from './vuex/mixins'
 
   export default {
@@ -54,18 +64,14 @@
         newMessageNum: userGetters.newMessageNum
       },
       actions: {
-        initUser: userActions.initUser,
-        addNewMessageNum: userActions.addNewMessageNum,
-        resetNewMessageNum: userActions.resetNewMessageNum
+//        initUser: userActions.loadUserFromCache,
+        addNewMessageNum: userActions.addNewMessageNum
+//        resetNewMessageNum: userActions.resetNewMessageNum
       }
     },
 
     data () {
-      return store.state.global
-    },
-    created () {
-      //初始化，加载用户
-      this.initUser()
+      return Object.assign({}, store.state.global, {isShowNewTestPop: false})
     },
 
     computed: {
@@ -78,6 +84,16 @@
       },
       isTabbarView () {
         return this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse'
+      }
+    },
+
+    created () {
+      this.showNewTestPopIf()
+    },
+
+    events: {
+      ['start']: function () {
+        console.log('strat two!!!!1')
       }
     },
 
@@ -95,6 +111,20 @@
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
+      },
+
+      //判断是否显示新手测试弹框
+      showNewTestPopIf () {
+        if (getLocalCache('first-test')) {
+          this.isShowNewTestPop = false
+        } else {
+          this.isShowNewTestPop = true
+        }
+      },
+      //关闭新手测试弹框
+      closeNewerTestPop () {
+        this.isShowNewTestPop = false
+        setLocalCache('first-test', true)
       }
     },
 
@@ -130,7 +160,6 @@
     width: 100%;
     height: 100%;
   }
-
 
   /**
   * vue-router transition

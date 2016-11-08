@@ -5,8 +5,10 @@
  */
 import {eventMap} from '../frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords} from './courseRecords/actions'
-import {jpushInit, setAlias, addReceiveHandler} from './jpush/actions'
+import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './jpush/actions'
+import {syncUser} from './user/actions'
 import {isLogin, userId} from './user/getters'
+import {platformMap, Device} from '../plugin/device'
 
 const mixin = {
   vuex: {
@@ -14,8 +16,9 @@ const mixin = {
       loadAllFreeRecords,
       loadAllExpenseRecords,
       jpushInit,
-      setAlias,
-      addReceiveHandler
+      jpushSetAlias,
+      jpushAddReceiveHandler,
+      syncUser
     },
     getters: {
       isLogin,
@@ -24,13 +27,13 @@ const mixin = {
   },
 
   watch: {
-    'isLogin': function (val) {
-      if (this.isLogin) {
-        this.setAlias(this.userId)
-      } else {
-        this.setAlias('00')
-      }
-    }
+    //'isLogin': function (currLoginStatus, preloginStatus) {
+    //  if (currLoginStatus) {
+    //    this.setAlias(this.userId)
+    //  } else {
+    //    this.setAlias('00')
+    //  }
+    //}
   },
 
   events: {
@@ -39,21 +42,80 @@ const mixin = {
      */
     [eventMap.APP_START]: function () {
       console.log('APP_START')
-      //接收消息
-      this.addReceiveHandler(this.onReceiveNotification)
 
+      // 设置推送配置
+      this.jpushInit()
+      // 默认用户 设置成'00'
+      this.jpushSetAlias('00')
+      // 增加推送消息接收处理
+      this.jpushAddReceiveHandler(this.onReceiveNotification)
+
+      // 同步用户信息
+      this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
+
+      this.hideSplashscreen()
+    },
+
+    /**
+     * 登录成功事件
+     */
+    [eventMap.LOGIN_SUCCESS]: function (user) {
+      console.info('LOGIN_SUCCESS', user)
+      this.doWhenUserValid(user)
+    },
+
+    /**
+     * 注册成功事件
+     */
+    [eventMap.REGISTER_SUCCESS]: function (user) {
+      console.info('REGISTER_SUCCESS', user)
+      this.doWhenUserValid(user)
+    },
+
+    /**
+     * 退出账号事件
+     */
+    [eventMap.LOGOUT]: function (user) {
+      console.info('LOGOUT', user)
+      this.doWhenUserNotValid(user)
+    }
+  },
+
+  methods: {
+    /**
+     * 用户信息合法并且成功进入系统
+     * @param user
+     */
+    doWhenUserValid: function (user) {
       let tasks = []
+      // 获取课程进度
       tasks.push(this.loadAllFreeRecords)
       tasks.push(this.loadAllExpenseRecords)
-      tasks.push(this.jpushInit)
-      const aliasTask = Promise.resolve(this.isLogin ? this.userId : '00').then(this.setAlias)
-      tasks.push(aliasTask)
+      // 设置jpush用户关联
+      tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
 
       return Promise.all(tasks).then(
         () => {}
       ).catch(
         () => {}
       )
+    },
+
+    /**
+     * 如果没有合法的用户
+     * （未登录，账户退出）
+     */
+    doWhenUserNotValid: function () {
+
+    },
+
+    /**
+     * 隐藏启动图片
+     */
+    hideSplashscreen: function () {
+      if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
+        window.navigator.splashscreen.hide()
+      }
     }
   }
 }

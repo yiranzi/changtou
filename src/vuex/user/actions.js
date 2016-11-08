@@ -3,12 +3,16 @@
  */
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-import {getLocalCache} from '../../util/cache'
+import {getLocalCache, clearLocalCache} from '../../util/cache'
 //import {getLocalCache, setLocalCache} from '../../util/cache'
 //import {setIconBadgeNumber} from '../../plugin/jpush'
 
-export const initUser = ({ dispatch }) => {
-  const user = getLocalCache('frame-user')
+//export const loadUserFromCache = ({ dispatch }) => {
+//  const user = getLocalCache('frame-user')
+//  user && dispatch('UPDATE_USER', user)
+//}
+
+export const updateUser = ({ dispatch }, user) => {
   user && dispatch('UPDATE_USER', user)
 }
 
@@ -54,21 +58,29 @@ export const logout = ({ dispatch }) => {
  * @param dispatch
  */
 export const syncUser = ({ dispatch }) => {
+  const localUser = getLocalCache('frame-user')
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth(
-        {
-          url: getUrl('sync_user')
-        }
-      ).then(
-        user => {
-          dispatch('UPDATE_USER', user)
-          resolve()
-        },
-        err => {
-          reject(err)
-        }
-      )
+      // 如果本地没有记录, 直接返回
+      if (!localUser) {
+        reject(null)
+      } else {
+        getWithinAuth(
+          {
+            url: getUrl('sync_user'),
+            user: localUser
+          }
+        ).then(
+          user => {
+            dispatch('UPDATE_USER', user)
+            resolve()
+          },
+          err => {
+            clearLocalCache('frame-user')
+            reject(err)
+          }
+        )
+      }
     }
   )
 }
