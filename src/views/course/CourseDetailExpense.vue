@@ -400,7 +400,7 @@
       },
 
       'fullScreenTap' () {
-        this.gotoFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+        this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
       }
     },
 
@@ -726,7 +726,7 @@
         /**
          * 跳转到横屏
          */
-      gotoFullScreen (subjectId, lessonId, index) {
+      goToFullScreen (subjectId, lessonId, index) {
           this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
       }
     },

@@ -247,7 +247,7 @@
       checkAliBrowserPayState () {
         if (window.sessionStorage.getItem('ali-browser-pay-state') === 'success') {
           window.sessionStorage.removeItem('ali-browser-pay-state')
-          this.gotoPaySuccess()
+          this.goToPaySuccess()
         }
       },
 
@@ -299,7 +299,7 @@
               me.showCodePanel(result.url)
             } else {
               // 其他支付 （不包括支付宝网页支付）
-              me.gotoPaySuccess()
+              me.goToPaySuccess()
             }
           },
           err => me.showAlert(err.reason)
@@ -333,7 +333,7 @@
           show: true,
             finish: {
             text: '已支付',
-              callback: this.gotoPaySuccess
+              callback: this.goToPaySuccess
           },
           cancel: {
             text: '未支付',
@@ -381,7 +381,7 @@
       /**
        * 支付成功
        */
-      gotoPaySuccess () {
+      goToPaySuccess () {
         if (this.type === goodsType.POSTPONE) {
           this.$route.router.go(`/subject/detail/P/${this.id}/0`)
         } else {

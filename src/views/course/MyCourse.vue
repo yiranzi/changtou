@@ -19,8 +19,8 @@
           </div>
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="gotoCourseDetail($index)" :src=myCourseList[$index].pic>
-            <div class="course-list-info" v-touch:tap="gotoCourseDetail($index)">
+            <img class="course-list-img" v-touch:tap="goToCourseDetail($index)" :src=myCourseList[$index].pic>
+            <div class="course-list-info" v-touch:tap="goToCourseDetail($index)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state">{{course.status}}</p>
@@ -28,6 +28,15 @@
           </div>
           <div style="height: 4.8rem; background-color: transparent"></div>
           <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
+          <div class="changtou-card-tip" v-show="isCardTipShow">
+            <div class="changtou-card-tip-mask" v-touch:tap="onCardMaskTap"></div>
+            <div class="changtou-card-tip-content">
+              <div class="changtou-card-tip-title">长投卡说明<span class="close-icon" v-touch:tap="onCardMaskTap"></span></div>
+              <div class="changtou-card-tip-explain">
+                <p v-for="explain in cardExplain">{{explain}}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </scroller>
     </div>
@@ -60,27 +69,36 @@ export default {
   },
   data () {
     return {
+      cardExplain: [
+        '1.长投卡是专为长投用户提供的VIP优惠卡，在有效期内使用，全场付费商品均可7折；',
+        '2.超过有效期后，长投卡将无法继续使用，需要再次购买；',
+        '3.长投卡一年仅售两次，年初售卖一年卡、年中售卖半年卡；'
+      ],
       isAlert: false,
-      alertMsg: ''
+      alertMsg: '',
+      isCardTipShow: false //显示 长投卡说明
     }
   },
   computed: {
+    // 截止日期
     validity () {
       const createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
       const newYear = createTime.getFullYear() + 1
       const expireTimeValue = new Date(createTime.setFullYear(newYear))
       return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
     },
+    // 累计学习时间
     accumulatedTime () {
       let accumulatedTime = 0
       this.expenseRecords.map(
         record => {
-        accumulatedTime = accumulatedTime + record.accumulatedTime
-      return record.accumulatedTime
-    }
-    )
+          accumulatedTime = accumulatedTime + record.accumulatedTime
+          return record.accumulatedTime
+        }
+      )
       return accumulatedTime
     },
+    // 我的课程 列表
     courseList () {
       let courseList = []
       this.myCourseList.map(
@@ -146,7 +164,7 @@ export default {
      * 进入课程详情
      * @param index
        */
-    gotoCourseDetail (index) {
+    goToCourseDetail (index) {
       const myCourseList = this.myCourseList
       const path = `/subject/detail/${myCourseList[index].type}/${myCourseList[index].subjectId}/0`
       this.$route.router.go(path)
@@ -156,7 +174,11 @@ export default {
      * 点击长投卡帮助
      */
     onCardHelpIconTap () {
-      console.log('弹出提示框')
+      this.isCardTipShow = true
+    },
+
+    onCardMaskTap () {
+      this.isCardTipShow = false
     },
 
     resetScroller () {
@@ -322,6 +344,48 @@ export default {
           font-size: 0.7rem !important;
           vertical-align: bottom;
         }
+      }
+    }
+    .changtou-card-tip{
+      p{
+        margin: 0;
+      }
+      &-mask{
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(0,0,0,.6);
+      }
+      &-content{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1001;
+        width: 80%;
+        height: 6rem;
+        margin: auto;
+        background: #fff;
+      }
+      &-title{
+        position: relative;
+        padding: 0 0.75rem;
+        line-height: 2.5rem;
+        font-size: 0.8rem;
+        color: #222;
+        text-align: center;
+        border-bottom: 1px solid #f0eff5;
+        background: #fff;
+      }
+      &-explain{
+        padding: 1rem 1.25rem 1.5rem;
+        font-size: 0.7rem;
+        color: #666;
+        background: #fff;
       }
     }
 
