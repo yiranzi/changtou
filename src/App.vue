@@ -50,10 +50,10 @@
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {userGetters} from './vuex/getters'
   import {setLocalCache, getLocalCache} from './util/cache'
-  import mixins from './vuex/mixins'
+  import mixin from './vuex/mixins'
 
   export default {
-    mixins: mixins,
+    mixins: [mixin],
 
     store,
 

@@ -4,7 +4,7 @@
  * 全局的事件监听器
  */
 import {eventMap} from '../frame/eventConfig'
-import {loadAllFreeRecords, loadAllExpenseRecords} from './courseRecords/actions'
+import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './courseRecords/actions'
 import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './jpush/actions'
 import {syncUser} from './user/actions'
 import {isLogin, userId} from './user/getters'
@@ -15,6 +15,7 @@ const mixin = {
     actions: {
       loadAllFreeRecords,
       loadAllExpenseRecords,
+      resetRecords,
       jpushInit,
       jpushSetAlias,
       jpushAddReceiveHandler,
@@ -106,7 +107,8 @@ const mixin = {
      * （未登录，账户退出）
      */
     doWhenUserNotValid: function () {
-
+      // 清理课程进度
+      this.resetRecords()
     },
 
     /**
@@ -120,4 +122,4 @@ const mixin = {
   }
 }
 
-export default [mixin]
+export default mixin
