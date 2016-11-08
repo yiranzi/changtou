@@ -11,7 +11,7 @@ import courseRecords from './courseRecords/store'
 import courseDetail from './courseDetail/store'
 import myCourses from './myCourse/store'
 import mine from './mine/store'
-import systemMessageList from './systemMessageList/store'
+import message from './message/store'
 import topicSpec from './topicSpec/store'
 import topicCommon from './topicCommon/store'
 import interview from './interview/store'
@@ -29,7 +29,7 @@ export default new Vuex.Store({
     navigator, //首页信息
     courselist, //课程列表
     myCourses, //我的课程
-    systemMessageList, //系统消息
+    message, //系统消息
     topicSpec, //打包课专题
     topicCommon, //通用专题
     interview, //院生访谈

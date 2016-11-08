@@ -12,7 +12,7 @@
         <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMessageNum">
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -43,12 +43,12 @@
 
 <script>
   import store from './vuex/store'
-  import {userActions} from './vuex/actions'
+  import {messageActions} from './vuex/actions'
+  import {messageGetters} from './vuex/getters'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
-  import {userGetters} from './vuex/getters'
   import {setLocalCache, getLocalCache} from './util/cache'
   import mixin from './vuex/mixins'
 
@@ -61,12 +61,10 @@
       getters: {
         route: (state) => state.route,
         direction: (state) => state.direction,
-        newMessageNum: userGetters.newMessageNum
+        newMsgNum: messageGetters.newMsgNum
       },
       actions: {
-//        initUser: userActions.loadUserFromCache,
-        addNewMessageNum: userActions.addNewMessageNum
-//        resetNewMessageNum: userActions.resetNewMessageNum
+        addNewMessageNum: messageActions.addNewMessageNum
       }
     },
 
@@ -75,13 +73,10 @@
     },
 
     computed: {
-      badgeNewMessageNum () {
-        let number = this.newMessageNum + ''
-        if (this.newMessageNum === 0) {
-          number = ''
-        }
-        return number
+      badgeNewMsgNum () {
+        return this.newMsgNum ? (this.newMsgNum + '') : ''
       },
+
       isTabbarView () {
         return this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse'
       }
@@ -89,12 +84,6 @@
 
     created () {
       this.showNewTestPopIf()
-    },
-
-    events: {
-      ['start']: function () {
-        console.log('strat two!!!!1')
-      }
     },
 
     methods: {

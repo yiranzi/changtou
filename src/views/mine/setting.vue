@@ -52,7 +52,7 @@
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import {userGetters} from '../../vuex/getters'
+  import {messageGetters, userGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
 
   export default {
@@ -65,7 +65,7 @@
         avatar: userGetters.avatar,
         userName: userGetters.userName,
         strategy: userGetters.strategy,
-        newMessageNum: userGetters.newMessageNum
+        newMessageNum: messageGetters.newMsgNum
       }
     },
     computed: {

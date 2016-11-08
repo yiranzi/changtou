@@ -116,7 +116,7 @@ const mixin = {
      */
     hideSplashscreen: function () {
       if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
-        window.navigator.splashscreen.hide()
+         window.navigator.splashscreen.hide()
       }
     }
   }

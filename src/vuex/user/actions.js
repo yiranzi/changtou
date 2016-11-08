@@ -12,8 +12,19 @@ import {getLocalCache, clearLocalCache} from '../../util/cache'
 //  user && dispatch('UPDATE_USER', user)
 //}
 
-export const updateUser = ({ dispatch }, user) => {
-  user && dispatch('UPDATE_USER', user)
+/**
+ * 全局更新 账户信息
+ * @param dispatch
+ * @param user
+ */
+const updateAppUser = (dispatch, user) => {
+  // 分别设置  user，系统消息，策略产品权限，鼓励师权限信息
+  if (user) {
+    dispatch('UPDATE_USER', user)
+    dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', user.newMessageNum)
+    // todo 设置鼓励师权限
+    // todo 设置产品策略类权限
+  }
 }
 
 /**
@@ -35,8 +46,8 @@ export const login = ({ dispatch }, identity, plainPassword) => {
       }
     ).then(
       user => {
-        dispatch('UPDATE_USER', user)
-        resolve()
+        updateAppUser(dispatch, user)
+        resolve(user)
       },
       err => {
         reject(err)
@@ -72,8 +83,8 @@ export const syncUser = ({ dispatch }) => {
           }
         ).then(
           user => {
-            dispatch('UPDATE_USER', user)
-            resolve()
+            updateAppUser(dispatch, user)
+            resolve(user)
           },
           err => {
             clearLocalCache('frame-user')
@@ -102,7 +113,8 @@ export const fastLogin = ({ dispatch }, phone, validationCode) => {
     }
   ).then(
     user => {
-      dispatch('UPDATE_USER', user)
+      updateAppUser(dispatch, user)
+      //resolve(user)
     },
     err => console.warn(err)
   )
@@ -155,8 +167,8 @@ export const registerEnd = ({ dispatch }, phone, plainPassword, validationCode) 
       }
     ).then(
       user => {
-        dispatch('UPDATE_USER', user)
-        resolve()
+        updateAppUser(dispatch, user)
+        resolve(user)
       },
       err => {
         reject(err.message)
@@ -292,15 +304,3 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
       )
     })
 }
-
-/**
- * 增加新消息数
- */
-export const addNewMessageNum = ({ dispatch }) => {
-  dispatch('USER_ADD_NEW_MESSAGE_NUM')
-  //todo setLocalCache setIconBadgeNumber
-  //const newMessageNum = JSON.parse(getLocalCache('frame-user')).newMessageNum + 1
-  //setLocalCache('frame-user', {newMessageNum: newMessageNum})
-  //setIconBadgeNumber(newMessageNum)
-}
-
