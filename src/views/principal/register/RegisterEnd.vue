@@ -48,6 +48,7 @@
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
   import {userActions, globalActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
 
   export default {
     vuex: {
@@ -115,7 +116,10 @@
        */
       doRegister () {
         this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
-          () => window.history.go(-2),
+          (user) => {
+            this.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            window.history.go(-2)
+          },
           (err) => this.showAlert(err)
         )
       }

@@ -17,10 +17,7 @@ export const lastLogin = (state) => {
 export const level = (state) => {
   return state.user.level
 }
-// 获取新消息条数
-export const newMessageNum = (state) => {
-  return state.user.newMessageNum
-}
+
 // 获取手机号码
 export const phone = (state) => {
   return state.user.phone
@@ -29,18 +26,22 @@ export const phone = (state) => {
 export const sessionId = (state) => {
   return state.user.sessionId
 }
+
 // 获取长投宝信息
 export const strategy = (state) => {
   return state.user.strategy
 }
+
 // 获取用户名
 export const userName = (state) => {
   return state.user.userName
 }
+
 // 获取用户ID
 export const userId = (state) => {
   return state.user.userId
 }
+
 //是否登录
 export const isLogin = (state) => {
   return state.user.isLogin
