@@ -25,10 +25,10 @@ if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
   })
 }
 
-console.log('appRouter.app', appRouter.app)
-let rootVm = appRouter.app
+//console.log('appRouter.app', appRouter.app)
+//let rootVm = appRouter.app
 
 export {
-  appRouter,
-  rootVm
+  appRouter
+  //rootVm
 }

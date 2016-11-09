@@ -42,8 +42,9 @@ const getWithoutAuth = ({url, options = {}}) => {
  */
 const getWithinAuth = ({url, options = {}, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {
@@ -95,8 +96,9 @@ const postWithoutAuth = ({url, options = {}, data}) => {
  */
 const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {
@@ -123,8 +125,9 @@ const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
  */
 const putWithinAuth = ({url, options = {}, data, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {

@@ -45,6 +45,7 @@
   import XInput from 'vux/x-input'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
   import Alert from 'vux/alert'
   export default{
     vuex: {
@@ -68,7 +69,10 @@
     methods: {
       doLogin () {
         this.login(this.identity, this.plainPassword).then(
-          () => this.$route.router.go('/setting'),
+          (user) => {
+            this.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            this.$route.router.go('/setting')
+          },
           err => this.showAlert(err.message)
         )
       },

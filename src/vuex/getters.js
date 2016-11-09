@@ -9,7 +9,7 @@ import * as courseRecordsGetters from './courseRecords/getters'
 import * as globalGetters from './global/getters'
 import * as myCoursesGetters from './myCourse/getters'
 import * as mineGetters from './mine/getters'
-import * as systemMessageListGetters from './systemMessageList/getters'
+import * as messageGetters from './message/getters'
 import * as specTopicGetters from './topicSpec/getters'
 import * as commonTopicGetters from './topicCommon/getters'
 import * as interviewGetters from './interview/getters'
@@ -25,7 +25,7 @@ export {
   globalGetters,
   myCoursesGetters,
   mineGetters, //个人中心
-  systemMessageListGetters, //系统消息提醒
+  messageGetters, //系统消息提醒
   specTopicGetters, //打包课专题
   commonTopicGetters, //通用课专题
   interviewGetters, //院生访谈
