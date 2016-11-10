@@ -16,6 +16,7 @@
             <div class="answer" v-show="$index === currQuestionIndex">A  :  {{questionArr.a}}</div>
           </div>
         </div>
+        <!--<div style="height: 1rem; width: 100%"></div>-->
       </div>
     </scroller>
     <div class="ask_more_questions" v-el:helpBottom>
@@ -98,19 +99,21 @@
   export default {
     vuex: {
       actions: {
-        loadSelfHelpList: helpActions.loadSelfHelpList,
+        loadQAList: helpActions.loadQAList,
         showAlert: globalActions.showAlert
       },
       getters: {
-        helpList: helpGetters.helpList
+        helpList: helpGetters.QAList
       }
     },
+
     data () {
       return {
-        scrollerHeight: '530px',
-        currQuestionIndex: null //当前查看的问题集合
+        scrollerHeight: '500px',
+        currQuestionIndex: -1 //当前查看的问题集合
       }
     },
+
     watch: {
       'helpList': function () {
         const me = this
@@ -123,29 +126,38 @@
         }, 300)
       }
     },
+
     route: {
       data (transition) {
         const me = this
-        me.loadSelfHelpList().then(
+        me.loadQAList().then(
           function () {
             transition.next()
           },
           function () {
-            me.showAlert('加载信息失败，请重试！')
+//            me.showAlert('加载信息失败，请重试！')
           }
         )
       }
     },
     ready () {
-//      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.helpBottom.offsetHeight) + 'px'
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
     },
     methods: {
       lookAnswer (index) {
         if (this.currQuestionIndex !== index) {
           this.currQuestionIndex = index
+          // todo 如果是最后一题， 页面滚动
+//          if (index === (this.helpList.length - 1)) {
+//            console.log('xxxx')
+//            this.$nextTick(() => {
+//              setTimeout(() => {
+//                this.$refs.scroller._xscroll.resetSize()
+//              }, 50)
+//            })
+//          }
         } else {
-          this.currQuestionIndex = null
+          this.currQuestionIndex = -1
         }
       },
       goToManualService () {
