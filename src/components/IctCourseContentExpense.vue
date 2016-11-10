@@ -7,7 +7,6 @@
       </div>
 
       <!--<div v-show="lesson.lessonId === (selectedLesson ? selectedLesson.lessonId : 0)"-->
-      <!--需要动态给定每一个lesson的高度,才能保证动画效果-->
       <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false): false"
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
@@ -24,7 +23,7 @@
 
         <!--选择题作业-->
         <div v-if="lesson.choiceQuestion.length > 0" class="chapter-title"
-             v-touch:tap="onHomeworkChoiceTap(lesson.choiceQuestion, lesson.lessonId)">
+             v-touch:tap="onHomeworkChoiceTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
           <span class="chioce-icon"></span>
           &nbsp;&nbsp;课后作业
@@ -32,7 +31,7 @@
 
         <!--问答题作业-->
         <div v-if="lesson.essayQuestion.assigmentType !== 'N'" class="chapter-title"
-             v-touch:tap="onHomeworkEssayTap(lesson.essayQuestion, lesson.lessonId)">
+             v-touch:tap="onHomeworkEssayTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
           <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
         </div>
@@ -207,21 +206,21 @@
       updateSelectedChapter (chapter, $index) {
         this.selectedChapter = chapter
         // 向父组件派发事件
-        this.$dispatch('chapterSelected', chapter, $index)
+        this.$dispatch('chapterSelected', chapter, $index, 'common')
       },
 
       /**
        * 点击选择题
        */
-      onHomeworkChoiceTap (choiceQuestionArr, lessonId) {
-        this.$dispatch('homeworkChoiceTap', {choiceQuestionArr, lessonId})
+      onHomeworkChoiceTap () {
+        this.$dispatch('chapterSelected', null, 0, 'choice')
       },
 
       /**
        * 点击问答题
        */
-      onHomeworkEssayTap (essayQuestion, lessonId) {
-        this.$dispatch('homeworkEssayTap', {essayQuestion, lessonId})
+      onHomeworkEssayTap () {
+        this.$dispatch('chapterSelected', null, 0, 'essay')
       }
     }
   }

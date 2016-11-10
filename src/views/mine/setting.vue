@@ -32,6 +32,7 @@
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
               link="/system/message">
+      <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
     </ict-item>
     <ict-item title="小投答疑"
               link="/self/service">
@@ -49,23 +50,37 @@
   </div>
 </template>
 <script>
+  import Badge from 'vux/badge'
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import {userGetters} from '../../vuex/getters'
+  import {messageGetters, userGetters} from '../../vuex/getters'
+  import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
+
   export default {
     vuex: {
+      actions: {
+        jpushAddOpenHandler
+      },
       getters: {
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
         userName: userGetters.userName,
-        strategy: userGetters.strategy
+        strategy: userGetters.strategy,
+        newMessageNum: messageGetters.newMsgNum
       }
     },
     computed: {
+      badgeMessageNum () {
+        let number = this.newMessageNum + ''
+        if (this.newMessageNum === 0) {
+          number = ''
+        }
+        return number
+      },
       isZSB () {
-        return this.strategy && (this.strategy.strategyLevel === 'A')
+        return !!this.strategy && (this.strategy.strategyLevel === 'A')
       },
       isSpire () {
 
@@ -77,13 +92,6 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
-    components: {
-      IctTitlebar,
-      IctButton,
-      IctItem,
-      Flexbox,
-      FlexboxItem
-    },
     methods: {
       doLogin: function () {
         this.$route.router.go('/entry')
@@ -91,6 +99,14 @@
       doRegister: function () {
         this.$route.router.go('/register/start')
       }
+    },
+    components: {
+      IctTitlebar,
+      IctButton,
+      IctItem,
+      Flexbox,
+      FlexboxItem,
+      Badge
     }
   }
 </script>

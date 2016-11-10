@@ -21,12 +21,12 @@
         </group>
 
         <div style="height: 4rem" class="spacer"></div>
-        <ict-button type="default"  v-touch:tap="doLogin">登陆</ict-button>
+        <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登陆</ict-button>
 
         <flexbox>
           <ict-button type="string" text="注册" v-touch:tap="doRegister"></ict-button>
           <flexbox-item></flexbox-item>
-          <ict-button type="string" text="忘记密码"  v-touch:tap="doResetPassword"></ict-button>
+          <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
         </flexbox>
 
       </flexbox-item>
@@ -45,6 +45,7 @@
   import XInput from 'vux/x-input'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
   import Alert from 'vux/alert'
   export default{
     vuex: {
@@ -61,16 +62,47 @@
         isAlert: false,
         alertMsg: '',
         plainPassword: '',
-        identity: ''
+        identity: '',
+        disabled: true
+      }
+    },
+
+    watch: {
+      identity (newVal) {
+        if (/\S/.test(newVal) && /\S/.test(this.plainPassword)) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+        }
+      },
+      plainPassword (newVal) {
+        if (/\S/.test(this.identity) && /\S/.test(newVal)) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+        }
       }
     },
 
     methods: {
       doLogin () {
-        this.login(this.identity, this.plainPassword).then(
-          () => this.$route.router.go('/setting'),
-          err => this.showAlert(err.message)
+        this.disabled = true
+        const me = this
+        if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
+          this.login(this.identity, this.plainPassword).then(
+            () => {
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            me.$route.router.go('/setting')
+            me.disabled = true
+        }).catch(
+            err => {
+            me.showAlert(err.message)
+          me.disabled = true
+        }
         )
+        } else {
+          me.disabled = true
+        }
       },
       doRegister () {
         this.$route.router.go('/register/start')

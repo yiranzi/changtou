@@ -10,7 +10,7 @@ const state = {
   image: '', // 2 头像路径
   lastLogin: '', // 3 最后登录时间
   level: '',  // 4 用户等级
-  newMessageNum: 0, // 5 新消息条数
+  //newMessageNum: 0, // 5 新消息条数
   phone: '', // 6 手机号码
   sessionId: '', // 7
   strategy: '',  // 8 长投宝信息
@@ -25,13 +25,13 @@ const mutations = {
    * @param user
    * @constructor
      */
-  UPDATE_USER (state, user) {
+  USER_UPDATE (state, user) {
     state.isLogin = true
     state.card = user.card
     state.image = user.image
     state.lastLogin = user.lastLogin
     state.level = user.level
-    state.newMessageNum = user.newMessageNum
+    //state.newMessageNum = user.newMessageNum
     state.phone = user.phone
     state.sessionId = user.sessionId
     state.strategy = user.strategy
@@ -44,13 +44,13 @@ const mutations = {
    * 登出
    * @constructor
      */
-  LOGOUT_USER (state) {
+  USER_LOGOUT (state) {
     state.isLogin = false
     state.card = ''
     state.image = ''
     state.lastLogin = ''
     state.level = ''
-    state.newMessageNum = ''
+    //state.newMessageNum = 0
     state.phone = ''
     state.sessionId = ''
     state.strategy = ''
@@ -66,6 +66,7 @@ const mutations = {
     state.phone = phone
   }
 }
+
 export default {
   state,
   mutations

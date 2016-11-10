@@ -8,6 +8,7 @@
       <p>
         {{title}}
         <slot name="after-title"></slot>
+        <slot name="badge"></slot>
       </p>
     </div>
     <div class="ict-item-value with-arrow" >

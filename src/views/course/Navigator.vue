@@ -2,7 +2,7 @@
   <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div v-bind:class="{'layout-tip' : isShowNewTestPop}">
+      <div>
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
@@ -22,7 +22,7 @@
           </p>
           <div v-for="(index, course) in expenseList"
                v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
-               v-touch:tap="gotoCourseDetail('P',$index)">
+               v-touch:tap="goToCourseDetail('P',$index)">
             <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
@@ -37,7 +37,7 @@
             <span class="subtitle" v-touch:tap="onFreeListTap">全部课程</span>
           </p>
           <div v-for="course in freeList"
-               v-touch:tap="gotoCourseDetail('F',$index)"
+               v-touch:tap="goToCourseDetail('F',$index)"
                class="free-course">
             <img v-bind:src=freeList[$index].pic class="free-course-img"/>
             <p class="free-course-title">{{course.title}}</p>
@@ -46,10 +46,7 @@
         <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
-    <div class="newertest-pop" v-show="isShowNewTestPop">
-      <div class="newertest-pop-close" v-touch:tap="closeNewerTestPop"></div>
-      <div class="newertest-pop-img"></div>
-    </div>
+
   </div>
 </template>
 
@@ -58,7 +55,6 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/webAudio.vue'
-  import {setLocalCache, getLocalCache} from '../../util/cache'
   import {navigatorGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
 
@@ -88,16 +84,11 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
-          //新手测试弹框
-          me.showNewTestPop()
         },
         function () {
 
         }
       )
-    },
-
-    created () {
     },
 
     computed: {
@@ -133,7 +124,7 @@
         })
         }, 150)
       },
-      gotoCourseDetail (type, index) {
+      goToCourseDetail (type, index) {
         let courseList = type === 'P' ? this.expenseList : this.freeList
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)
@@ -173,19 +164,6 @@
         }).catch(function () {
           me.showAlert('信息加载失败，请重试！')
         })
-      },
-      //判断是否显示新手测试弹框
-      showNewTestPop () {
-        if (getLocalCache('first-test')) {
-          this.isShowNewTestPop = false
-        } else {
-          this.isShowNewTestPop = true
-        }
-      },
-      //关闭新手测试弹框
-      closeNewerTestPop () {
-        this.isShowNewTestPop = false
-        setLocalCache('first-test', true)
       }
     },
     components: {
@@ -340,34 +318,7 @@
         }
       }
     }
-    .layout-tip{
-      overflow: hidden;
-      opacity: 0.6;
-      position: relative;
-    }
-    .newertest-pop{
-      width: 16.7rem;
-      height: 10.4rem;
-      margin: auto;
-      background: transparent;
-      position: absolute;
-      top: 30%;
-      left: 5%;
-      .newertest-pop-close{
-        position: absolute;
-        width: 1.8rem;
-        height: 1.8rem;
-        right: 0;
-        background: transparent url("../../assets/styles/image/newertest/tip/tipCancel.png") center center no-repeat;
-        background-size: 100% 100%;
-      }
-      .newertest-pop-img{
-        width: 16.7rem;
-        height: 10.4rem;
-        background: transparent url("../../assets/styles/image/newertest/tip/tipImg.png") center center no-repeat;
-        background-size: 100% 100%;
-      }
-    }
+
     @media all and (max-width: 320px) {
       .newertest-pop-img{
         width: 10.7rem;

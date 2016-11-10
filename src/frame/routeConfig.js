@@ -14,6 +14,11 @@ history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
+/**
+ *
+ * @param router
+ * @param commit
+ */
 const setRouterHook = (router, commit) => {
   router.beforeEach(({ to, from, next }) => {
     const toIndex = history.getItem(to.path)
@@ -39,6 +44,10 @@ const setRouterHook = (router, commit) => {
   })
 }
 
+/**
+ *
+ * @param router
+ */
 export function configRouter (router) {
   const commit = store.commit || store.dispatch
   setRouterHook(router, commit)
@@ -205,6 +214,30 @@ export function configRouter (router) {
     //用户提交答案
     'daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
+    },
+
+      /**
+       * 作业
+       */
+    //草稿箱
+    '/drafts': {
+      component: require('../views/homework/Drafts.vue')
+    },
+    //问答题 写作业
+    '/essay/answer': {
+      component: require('../views/homework/EssayAnswer.vue')
+    },
+    //问答题 看分数
+    '/essay/mark': {
+      component: require('../views/homework/EssayMark.vue')
+    },
+    //选择题 做测试
+    '/choice/answer': {
+      component: require('../views/homework/ChoiceAnswer.vue')
+    },
+    //选择题 看分数
+    '/choice/mark': {
+      component: require('../views/homework/ChoiceMark.vue')
     }
 
   })

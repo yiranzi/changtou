@@ -9,12 +9,14 @@ import * as courseRecordsGetters from './courseRecords/getters'
 import * as globalGetters from './global/getters'
 import * as myCoursesGetters from './myCourse/getters'
 import * as mineGetters from './mine/getters'
-import * as systemMessageListGetters from './systemMessageList/getters'
+import * as messageGetters from './message/getters'
 import * as specTopicGetters from './topicSpec/getters'
 import * as commonTopicGetters from './topicCommon/getters'
 import * as interviewGetters from './interview/getters'
 import * as dailyQuestionGetters from './dailyQuestion/getters'
 import * as newertestGetters from './newertest/getters'
+import * as essayGetters from './homework/essay/getters'
+import * as choiceGetters from './homework/choice/getters'
 import * as helpGetters from './help/getters'
 
 export {
@@ -26,11 +28,13 @@ export {
   globalGetters,
   myCoursesGetters,
   mineGetters, //个人中心
-  systemMessageListGetters, //系统消息提醒
+  messageGetters, //系统消息提醒
   specTopicGetters, //打包课专题
   commonTopicGetters, //通用课专题
   interviewGetters, //院生访谈
   dailyQuestionGetters, //每日一题
   newertestGetters, //新手测试
+  essayGetters, // 问答题
+  choiceGetters, // 选择题
   helpGetters //小投答疑
 }
