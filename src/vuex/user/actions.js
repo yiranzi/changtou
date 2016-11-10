@@ -20,7 +20,7 @@ import {getLocalCache, clearLocalCache} from '../../util/cache'
 const updateAppUser = (dispatch, user) => {
   // 分别设置  user，系统消息，策略产品权限，鼓励师权限信息
   if (user) {
-    dispatch('UPDATE_USER', user)
+    dispatch('USER_UPDATE', user)
     dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', user.newMessageNum)
     // todo 设置鼓励师权限
     // todo 设置产品策略类权限
@@ -61,7 +61,7 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  * @param dispatch
  */
 export const logout = ({ dispatch }) => {
-  dispatch('LOGOUT_USER')
+  dispatch('USER_LOGOUT')
 }
 
 /**

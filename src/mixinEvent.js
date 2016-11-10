@@ -3,12 +3,12 @@
  *
  * 全局的事件监听器
  */
-import {eventMap} from '../frame/eventConfig'
-import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './courseRecords/actions'
-import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './jpush/actions'
-import {syncUser} from './user/actions'
-import {isLogin, userId} from './user/getters'
-import {platformMap, Device} from '../plugin/device'
+import {eventMap} from './frame/eventConfig'
+import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
+import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/actions'
+import {syncUser} from './vuex/user/actions'
+import {isLogin, userId} from './vuex/user/getters'
+import {platformMap, Device} from './plugin/device'
 
 const mixin = {
   vuex: {
@@ -109,6 +109,8 @@ const mixin = {
     doWhenUserNotValid: function () {
       // 清理课程进度
       this.resetRecords()
+      // 设置推送关联
+      this.jpushSetAlias('00')
     },
 
     /**
