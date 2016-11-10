@@ -5,10 +5,10 @@
       <div>
         <div class="course-list" v-for="course in courseList">
           <img class="course-list-img"
-               v-touch:tap="gotoCourseDetail(myCourses[$index].type,$index)"
+               v-touch:tap="goToCourseDetail($index)"
                v-bind:src=courseList[$index].pic>
           <div class="course-list-info"
-               v-touch:tap="gotoCourseDetail($index)">
+               v-touch:tap="goToCourseDetail($index)">
             <p class="course-list-title">{{course.title}}</p>
             <p class="course-list-subtitle">{{course.description}}</p>
             <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="courseList[$index].price">￥{{course.price}}</span></p>
@@ -50,7 +50,7 @@
     },
 
     ready () {
-      let me = this
+      const me = this
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
@@ -75,7 +75,7 @@
       }
     },
     methods: {
-      gotoCourseDetail (index) {
+      goToCourseDetail (index) {
         let courseList = this.courseList
         let path = `/subject/detail/${courseList[index].type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)

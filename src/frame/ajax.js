@@ -175,6 +175,34 @@ const responseCodeMap = {
   TIMEOUT: 0
 }
 
+/**
+ *
+ * @type {Function}
+ */
+const deleteWithinAuth = ({url, options = {}, user = userStore}) => {
+  return new Promise((resolve, reject) => {
+    if (!user.isLogin) {
+      reject('请先登录')
+    }
+
+    options.headers = {
+      'X-iChangTou-Json-Api-Token': API_TOKEN,
+      'Content-Type': CONTENT_TYPE,
+      'X-iChangTou-Json-Api-Session': user.sessionId,
+      'X-iChangTou-Json-Api-User': user.userId
+    }
+
+    Vue.http.delete(url, options).then(
+      (response) => {
+        resolve(response.data)
+      },
+      (response) => {
+        reject(response.data)
+      }
+    )
+  })
+}
+
 export {
   postWithinAuth,
   postWithoutAuth,
@@ -183,4 +211,5 @@ export {
   putWithinAuth,
   setAjaxInterceptors,
   responseCodeMap
+  deleteWithinAuth
 }

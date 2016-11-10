@@ -15,7 +15,7 @@
           </x-input>
         </group>
         <div style="height: 4rem" class="spacer"></div>
-        <ict-button type="default" :disabled="buttonDisable" v-bind:class="{'disable': isDisable}" @click="doRegister">注册</ict-button>
+        <ict-button type="default" :disabled="buttonDisable" v-bind:class="{'disable': buttonDisable}" @click="doRegister">注册</ict-button>
         <p class="register-tip">点击“注册”即代表你同意
           <span class="user-agreement" v-touch:tap="showAgreement">长投学堂用户协议</span>
         </p>
@@ -46,22 +46,47 @@
         buttonDisable: true
       }
     },
-    computed: {
-      isDisable () {
-        let isAvailable = /^1[3|4|5|7|8]\d{9}$/.test(this.phone) && /^(?![0-9]+$)(?![a-zA-Z]+$)(?!_+$)[A-Za-z0-9_]{6,16}$/.test(this.plainPassword)
-        this.buttonDisable = !isAvailable
-        return this.buttonDisable
+    watch: {
+      phone () {
+        this.verifyPhoneAndPassword()
+      },
+      plainPassword () {
+        this.verifyPhoneAndPassword()
       }
     },
     methods: {
       /**
+       * 验证手机号和密码是否合法
+       */
+      verifyPhoneAndPassword () {
+        if (/^1[3|4|5|7|8]\d{9}$/.test(this.phone) && /^(?![0-9]+$)(?![a-zA-Z]+$)(?!_+$)[A-Za-z0-9_]{6,16}$/.test(this.plainPassword)) {
+          this.buttonDisable = false
+          return false
+        } else {
+          this.buttonDisable = true
+          return true
+        }
+      },
+      /**
        * 点击注册
        */
       doRegister () {
-        this.registerStart(this.phone, this.plainPassword).then(
-          () => this.$route.router.go(`/register/end/${this.phone}/${this.plainPassword}`),
-          (err) => this.showAlert(err)
-        )
+        const me = this
+        this.buttonDisable = true
+        if (this.verifyPhoneAndPassword()) {
+          this.registerStart(this.phone, this.plainPassword).then(
+            () => {
+              me.$route.router.go(`/register/end/${this.phone}/${this.plainPassword}`)
+              me.buttonDisable = false
+            },
+            (err) => {
+              me.showAlert(err.message)
+              me.buttonDisable = false
+            }
+          )
+        } else {
+          me.buttonDisable = false
+        }
       },
       /**
        * 点击协议

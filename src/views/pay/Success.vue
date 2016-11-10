@@ -72,7 +72,7 @@ export default {
       this.message = messages[type]
     },
     onConfirm () {
-      let path = this.type === goodsType.SUBJECT ? `subject/detail/P/${this.id}/0` : '/mycourse'
+      let path = this.type === goodsType.SUBJECT ? `/subject/detail/P/${this.id}/0` : '/mycourse'
       this.$route.router.replace(path)
     }
   },

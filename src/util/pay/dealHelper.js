@@ -70,11 +70,6 @@ const getOrder = (type, id) => {
 }
 
 /**
- * 订单的get类型
- */
-const orderGet = user.isLogin ? getWithinAuth : getWithoutAuth
-
-/**
  * 订单的url
  * @type {{S: string, CT: string, ST: string}}
  */
@@ -89,6 +84,7 @@ const orderUrl = {
  * @returns {Promise}
  */
 const getCommonOrder = (type, id) => {
+  const orderGet = user.isLogin ? getWithinAuth : getWithoutAuth
   return new Promise(
     (resolve, reject) => {
       orderGet(
