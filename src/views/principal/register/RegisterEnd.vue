@@ -76,7 +76,14 @@
         validationBtnText: '获取验证码',
         isValidationBtnDisable: false,
         leftTime: 120,
+        isDisabled: true,
         timer: null
+      }
+    },
+
+    watch: {
+      validationCode () {
+        this.verifyCode()
       }
     },
 
@@ -88,10 +95,20 @@
 
     methods: {
       /**
+       * 验证验证码
+       */
+      verifyCode () {
+        if (/^\d{6}$/.test(this.validationCode)) {
+          this.isDisabled = false
+          return false
+        }
+      },
+      /**
        * 点击 获取验证码
        */
       getValidationCode () {
-        var me = this
+        const me = this
+        me.isValidationBtnDisable = true
         me.registerStart(this.phone, this.plainPassword).then(
           res => {
             me.timer = setInterval(
@@ -108,20 +125,33 @@
                 }
               }, 1000)
             },
-          err => me.showAlert(err)
+          err => {
+            me.showAlert(err.message)
+            me.isValidationBtnDisable = false
+          }
         )
       },
       /**
        * 点击提交
        */
       doRegister () {
-        this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
-          (user) => {
-            this.$dispatch(eventMap.REGISTER_SUCCESS, user)
-            window.history.go(-2)
-          },
-          (err) => this.showAlert(err)
-        )
+        const me = this
+        this.isDisabled = true
+        if (this.verifyCode()) {
+          this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
+            () => {
+              this.$dispatch(eventMap.REGISTER_SUCCESS, user)
+              window.history.go(-2)
+              me.isDisabled = false
+            },
+            (err) => {
+              me.showAlert(err.message)
+              me.isDisabled = false
+            }
+          )
+        } else {
+          me.isDisabled = false
+        }
       }
     }
   }
