@@ -8,11 +8,11 @@
         <span class="home-icon" slot="icon"></span>
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" badge="9">
+      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
         <span class="my-icon" slot="icon"></span>
-        <span slot="label"><span v-if="componentName" class="vux-demo-tabbar-component">{{componentName}}</span><span v-else>我的课程</span></span>
+        <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" show-dot>
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -29,65 +29,92 @@
              @on-cancel="onAction('cancel')">
       <p style="text-align:center;">{{{confirmMsg}}}</p>
     </confirm>
+
+    <!--新手测试-->
+    <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
+      <!--<div class="newertest-pop-close" v-touch:tap="closeNewerTestPop"></div>-->
+      <!--<div class="newertest-pop-img">-->
+        <!--<img src="./assets/styles/image/newertest/tip/tipImg.png" style=" width: 16.7rem; height: 10.4rem;">-->
+      <!--</div>-->
+    <!--</div>-->
+
   </div>
 </template>
 
 <script>
   import store from './vuex/store'
-  import {userActions, choiceActions} from './vuex/actions'
+  import {messageActions} from './vuex/actions'
+  import {messageGetters} from './vuex/getters'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
-  import mixins from './vuex/mixins'
+  import {setLocalCache, getLocalCache} from './util/cache'
+  import mixinEvent from './mixinEvent'
+  import mixinAjax from './mixinAjax'
 
   export default {
-    mixins: mixins,
+    mixins: [mixinEvent, mixinAjax],
 
     store,
 
     vuex: {
       getters: {
         route: (state) => state.route,
-        direction: (state) => state.direction
+        direction: (state) => state.direction,
+        newMsgNum: messageGetters.newMsgNum
       },
-
       actions: {
-        initUser: userActions.initUser,
-          getKnowledgePointMap: choiceActions.getKnowledgePointMap
-//        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
-//        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        addNewMessageNum: messageActions.addNewMessageNum
       }
     },
 
     data () {
-      return store.state.global
-    },
-
-    created () {
-      //初始化，加载用户
-      this.initUser()
-      this.getKnowledgePointMap()
-//      console.log(this.initUser)
-//      console.log(this)
-      //加载课程进度
-//      this.loadFreeRecords()
-//      this.loadExpenseRecords()
+      return Object.assign({}, store.state.global, {isShowNewTestPop: false})
     },
 
     computed: {
+      badgeNewMsgNum () {
+        return this.newMsgNum ? (this.newMsgNum + '') : ''
+      },
+
       isTabbarView () {
         return this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse'
       }
     },
 
+    created () {
+      this.showNewTestPopIf()
+    },
+
     methods: {
+      /**
+       * 接收消息, 显示消息提示
+       */
+      onReceiveNotification () {
+        this.addNewMessageNum()
+      },
+
       onAction (type) {
         if (type === 'confirm') {
           this.confirmHandler()
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
+      },
+
+      //判断是否显示新手测试弹框
+      showNewTestPopIf () {
+        if (getLocalCache('first-test')) {
+          this.isShowNewTestPop = false
+        } else {
+          this.isShowNewTestPop = true
+        }
+      },
+      //关闭新手测试弹框
+      closeNewerTestPop () {
+        this.isShowNewTestPop = false
+        setLocalCache('first-test', true)
       }
     },
 
@@ -123,7 +150,6 @@
     width: 100%;
     height: 100%;
   }
-
 
   /**
   * vue-router transition

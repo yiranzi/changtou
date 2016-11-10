@@ -45,6 +45,7 @@
   import XInput from 'vux/x-input'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
   import Alert from 'vux/alert'
   export default{
     vuex: {
@@ -90,14 +91,15 @@
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
           this.login(this.identity, this.plainPassword).then(
             () => {
-              me.$route.router.go('/setting')
-              me.disabled = true
-            }).catch(
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            me.$route.router.go('/setting')
+            me.disabled = true
+        }).catch(
             err => {
-              me.showAlert(err.message)
-              me.disabled = true
-            }
-          )
+            me.showAlert(err.message)
+          me.disabled = true
+        }
+        )
         } else {
           me.disabled = true
         }

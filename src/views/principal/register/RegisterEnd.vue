@@ -48,6 +48,7 @@
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
   import {userActions, globalActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
 
   export default {
     vuex: {
@@ -75,33 +76,22 @@
         validationBtnText: '获取验证码',
         isValidationBtnDisable: false,
         leftTime: 120,
-        isDisabled: true,
         timer: null
       }
     },
 
-    watch: {
-      validationCode () {
-        this.verifyCode()
+    computed: {
+      isDisabled () {
+        return !(/^\d{6}$/.test(this.validationCode))
       }
     },
 
     methods: {
       /**
-       * 验证验证码
-       */
-      verifyCode () {
-        if (/^\d{6}$/.test(this.validationCode)) {
-          this.isDisabled = false
-          return false
-        }
-      },
-      /**
        * 点击 获取验证码
        */
       getValidationCode () {
-        const me = this
-        me.isValidationBtnDisable = true
+        var me = this
         me.registerStart(this.phone, this.plainPassword).then(
           res => {
             me.timer = setInterval(
@@ -118,32 +108,20 @@
                 }
               }, 1000)
             },
-          err => {
-            me.showAlert(err.message)
-            me.isValidationBtnDisable = false
-          }
+          err => me.showAlert(err)
         )
       },
       /**
        * 点击提交
        */
       doRegister () {
-        const me = this
-        this.isDisabled = true
-        if (this.verifyCode()) {
-          this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
-            () => {
-              window.history.go(-2)
-              me.isDisabled = false
-            },
-            (err) => {
-              me.showAlert(err.message)
-              me.isDisabled = false
-            }
-          )
-        } else {
-          me.isDisabled = false
-        }
+        this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
+          (user) => {
+            this.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            window.history.go(-2)
+          },
+          (err) => this.showAlert(err)
+        )
       }
     }
   }

@@ -9,7 +9,7 @@ import * as courseDetailActions from './courseDetail/actions'
 import * as globalActions from './global/actions'
 import * as myCoursesActions from './myCourse/actions'
 import * as mineActions from './mine/actions'
-import * as systemMessageListActions from './systemMessageList/actions'
+import * as messageActions from './message/actions'
 import * as specTopicActions from './topicSpec/actions'
 import * as commonTopicActions from './topicCommon/actions'
 import * as interviewActions from './interview/actions'
@@ -27,7 +27,7 @@ export {
   globalActions,
   myCoursesActions,
   mineActions,
-  systemMessageListActions, //系统消息提醒
+  messageActions, //系统消息提醒
   specTopicActions, //打包课专题
   commonTopicActions, //通用专题
   interviewActions, //院生访谈

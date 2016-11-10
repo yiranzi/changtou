@@ -6,9 +6,9 @@
 import Vue from 'vue'
 import {API_TOKEN, CONTENT_TYPE} from './serverConfig'
 import store from '../vuex/store'
-// import appUser from '../store/appUser'
 
 const userStore = store.state.user
+
 /**
  *
  * @param url
@@ -42,8 +42,9 @@ const getWithoutAuth = ({url, options = {}}) => {
  */
 const getWithinAuth = ({url, options = {}, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {
@@ -95,8 +96,9 @@ const postWithoutAuth = ({url, options = {}, data}) => {
  */
 const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {
@@ -123,8 +125,9 @@ const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
  */
 const putWithinAuth = ({url, options = {}, data, user = userStore}) => {
   return new Promise((resolve, reject) => {
-    if (!user.isLogin) {
+    if (!user.isLogin && !user.userId) {
       reject('请先登录')
+      return null
     }
 
     options.headers = {
@@ -143,6 +146,33 @@ const putWithinAuth = ({url, options = {}, data, user = userStore}) => {
       }
     )
   })
+}
+
+//======================== 拦截器,处理ajax请求=================================
+/**
+ *
+ * @param requestInterceptor
+ * @param responseInterceptor
+ */
+const setAjaxInterceptors = function (requestInterceptor, responseInterceptor) {
+  Vue.http.interceptors.push((request, next) => {
+    // modify request
+    //request.method = 'POST';
+    requestInterceptor(request)
+
+    next((response) => {
+      responseInterceptor(response)
+      // modify response
+      //response.body = '...';
+    })
+  })
+}
+
+const responseCodeMap = {
+  OK: 200,
+  ERR: 400,
+  UNAUTHORIZED: 401,
+  TIMEOUT: 0
 }
 
 /**
@@ -179,5 +209,7 @@ export {
   getWithinAuth,
   getWithoutAuth,
   putWithinAuth,
+  setAjaxInterceptors,
+  responseCodeMap
   deleteWithinAuth
 }
