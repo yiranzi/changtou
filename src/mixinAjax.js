@@ -19,7 +19,7 @@ const mixin = {
      */
     requestIntercepter: function (req) {
       // todo nothing
-      console.log('request', req, req.method)
+      //console.log('request', req, req.method)
     },
 
     /**
@@ -27,7 +27,7 @@ const mixin = {
      * @param res
      */
     responIntercepter: function (res) {
-      console.log('res', res)
+      //console.log('res', res)
       if (res.status === responseCodeMap.ERR) {
         //todo 显示浮框
       } else if (res.status === responseCodeMap.TIMEOUT) {
