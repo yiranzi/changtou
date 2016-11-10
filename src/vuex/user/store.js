@@ -25,7 +25,7 @@ const mutations = {
    * @param user
    * @constructor
      */
-  UPDATE_USER (state, user) {
+  USER_UPDATE (state, user) {
     state.isLogin = true
     state.card = user.card
     state.image = user.image
@@ -44,7 +44,7 @@ const mutations = {
    * 登出
    * @constructor
      */
-  LOGOUT_USER (state) {
+  USER_LOGOUT (state) {
     state.isLogin = false
     state.card = ''
     state.image = ''

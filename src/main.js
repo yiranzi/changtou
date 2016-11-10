@@ -11,6 +11,7 @@ Vue.use(VueTouch)
 Vue.use(VueResource)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
+
 // start run app
 //if ((Device.platform === platformMap.WEB)) {
   // on develop environment
@@ -54,11 +55,7 @@ appRouter.start(App, 'app')
 setTimeout(function () {
   appRouter.app.$emit(eventMap.APP_START)
 }, 50)
-      //appRouter.start(App, 'app')
-      //setTimeout(function () {
-      //  appRouter.app.$emit(eventMap.APP_START)
-      //}, 50)
-      //window.navigator.splashscreen.hide()
+
     //},
     // Update DOM on a Received Event
     //receivedEvent: function (id) {

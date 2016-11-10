@@ -10,23 +10,23 @@ import {getUrl} from '../../frame/apiConfig'
  */
 export const loadAllExpenseRecords = ({ dispatch }) => {
   return new Promise((resolve, reject) => {
-  postWithinAuth(
-    {
-      url: getUrl('expense_records'),
-      data: {
-        subjectId: -1
+    postWithinAuth(
+      {
+        url: getUrl('expense_records'),
+        data: {
+          subjectId: -1
+        }
       }
-    }
-  ).then(
-    records => {
-      dispatch('UPDATE_EXPENSE_RECORDS_ALL', records)
-      resolve()
-    },
-    err => {
-      console.warn(err)
-      reject(err)
-    }
-  )
+    ).then(
+      records => {
+        dispatch('UPDATE_EXPENSE_RECORDS_ALL', records)
+        resolve()
+      },
+      err => {
+        console.warn(err)
+        reject(err)
+      }
+    )
   })
 }
 

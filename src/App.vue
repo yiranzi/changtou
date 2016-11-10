@@ -50,10 +50,11 @@
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {setLocalCache, getLocalCache} from './util/cache'
-  import mixin from './vuex/mixins'
+  import mixinEvent from './mixinEvent'
+  import mixinAjax from './mixinAjax'
 
   export default {
-    mixins: [mixin],
+    mixins: [mixinEvent, mixinAjax],
 
     store,
 
@@ -88,7 +89,7 @@
 
     methods: {
       /**
-       * 接收消息
+       * 接收消息, 显示消息提示
        */
       onReceiveNotification () {
         this.addNewMessageNum()

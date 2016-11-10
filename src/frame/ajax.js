@@ -6,9 +6,9 @@
 import Vue from 'vue'
 import {API_TOKEN, CONTENT_TYPE} from './serverConfig'
 import store from '../vuex/store'
-// import appUser from '../store/appUser'
 
 const userStore = store.state.user
+
 /**
  *
  * @param url
@@ -148,10 +148,39 @@ const putWithinAuth = ({url, options = {}, data, user = userStore}) => {
   })
 }
 
+//======================== 拦截器,处理ajax请求=================================
+/**
+ *
+ * @param requestInterceptor
+ * @param responseInterceptor
+ */
+const setAjaxInterceptors = function (requestInterceptor, responseInterceptor) {
+  Vue.http.interceptors.push((request, next) => {
+    // modify request
+    //request.method = 'POST';
+    requestInterceptor(request)
+
+    next((response) => {
+      responseInterceptor(response)
+      // modify response
+      //response.body = '...';
+    })
+  })
+}
+
+const responseCodeMap = {
+  OK: 200,
+  ERR: 400,
+  UNAUTHORIZED: 401,
+  TIMEOUT: 0
+}
+
 export {
   postWithinAuth,
   postWithoutAuth,
   getWithinAuth,
   getWithoutAuth,
-  putWithinAuth
+  putWithinAuth,
+  setAjaxInterceptors,
+  responseCodeMap
 }
