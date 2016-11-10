@@ -77,9 +77,9 @@ const apiUrl = {
   /**
    * 小投答疑
    */
-  'load_common_qanda': '/suggestion/common-qanda', //获取自助答疑列表
-  'post_help_suggestion': '/suggestion/add-suggestion', //提交用户问题
-  'load_records': '/suggestion/get-records', //获取问答记录
+  'help_load_QA_list': '/suggestion/common-qanda', //获取自助答疑列表
+  'help_submit_question': '/suggestion/add-suggestion', //提交用户问题
+  'help_load_QA_records': '/suggestion/get-records', //获取问答记录
 
   /**
    * 新手测试

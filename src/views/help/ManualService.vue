@@ -2,6 +2,7 @@
   <div>
     <div class="manual_service">
       <ict-titlebar v-el:titlebar>你问我答</ict-titlebar>
+
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div class="conversation" v-el:conversation>
           <div class="answer">
@@ -28,16 +29,18 @@
             </div>
           </div>
         </div>
-
       </scroller>
+
       <div class="send_message">
-        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="judgeLogin">
+        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion">
         <span class="send_box" :class="isDisabled ? 'notSend' : 'send'" v-touch:tap="sendUserQuestion">发送</span>
       </div>
     </div>
-    <confirm :show.sync="remindToLogin" title="" cancel-text="我再想想" confirm-text="登录" @on-confirm="toSave" @on-cancel="">
+
+    <confirm :show.sync="isShowConfirm" title="" cancel-text="我再想想" confirm-text="登录" @on-confirm="goToLogin" @on-cancel="">
       <p style="text-align:center;">登录后才能提问</p>
     </confirm>
+
   </div>
 </template>
 <style lang="less">
@@ -143,120 +146,130 @@
   import {helpGetters, userGetters} from '../../vuex/getters'
 
   const hrefTag = {
-      '打包课专题': {
-        url: '/spec/topic/:stpId',
-        paramName: 'stpid'
-      },
-      '通用专题': {
-        url: '/common/topic/:ctpId',
-        paramName: 'ctpid'
-      }
+    '打包课专题': {
+      url: '/spec/topic/:stpId',
+      paramName: 'stpid'
+    },
+    '通用专题': {
+      url: '/common/topic/:ctpId',
+      paramName: 'ctpid'
     }
-    export default {
+  }
+
+  export default {
     vuex: {
       actions: {
         loadRecords: helpActions.loadRecords,
-        postSuggestion: helpActions.postSuggestion,
+        resetRecords: helpActions.resetRecords,
+        submitQuestion: helpActions.submitQuestion,
         showAlert: globalActions.showAlert
       },
+
       getters: {
         records: helpGetters.records,
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar //获取用户头像
       }
     },
+
     data () {
       return {
         scrollerHeight: '530px',
-        remindToLogin: false
+        isShowConfirm: false,
+        userQuestion: ''
       }
     },
-    props: {
-      userQuestion: {
-        type: null,
-        default: () => []
-      }
-    },
+
     computed: {
       isDisabled () {
-        if (this.isLogin && this.userQuestion !== null && this.userQuestion.length > 0) {
-          return false
-        } else {
-          return true
-        }
+        return !(this.isLogin && this.userQuestion)
       },
+
       avatarUrl () {
         return this.avatar ? this.avatar : './static/image/defaultUserImg.png'
-      },
-      scrollerToTop () {
-        let height = this.$els.conversation.offsetHeight - (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 49)
-        return height
       }
-
     },
+
     watch: {
       'records': function () {
-         const me = this
+        const me = this
         setTimeout(function () {
           me.$nextTick(() => {
+            const offsetHeight = me.$els.conversation.offsetHeight - parseInt(me.scrollerHeight.replace('px', ''))
             me.$refs.scroller.reset({
-              top: me.scrollerToTop
+                top: offsetHeight
+            })
           })
-        })
-        }, 300)
+        }, 200)
+      },
+
+      /**
+       * 当用户登录
+       **/
+      'isLogin': function (currLoginState) {
+        if (currLoginState) {
+          this.loadRecords().then().catch()
+        } else {
+          this.resetRecords().then(this.refreshScroller)
+        }
       }
     },
+
     route: {
-      data () {
+      data (transition) {
         if (this.isLogin) { //登录情况下加载问答记录
-          const me = this
-          me.loadRecords().then(
-            function () {
-              me.userQuestion = null //清空输入框数据
-            },
-            function () {
-              me.showAlert('加载信息失败，请重试！')
-            }
-          )
+          this.loadRecords().then(transition.next).catch()
+        } else {
+          this.refreshScroller()
         }
       }
     },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 49) + 'px'
-  },
-  methods: {
-    //判断是否登录
-    judgeLogin () {
-      if (!this.isLogin) {
-        this.remindToLogin = true
-      }
+
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 49) + 'px'
     },
-    //去登录
-    toSave () {
-      this.$route.router.go('/entry')
-    },
-    sendUserQuestion () {
-      if (this.isDisabled) {
-        return
-      }
-      const me = this
-      me.postSuggestion(me.userQuestion).then(
-        function () {   //发送信息成功后重新加载问答记录
-          me.loadRecords().then(
-            function () {
-              me.userQuestion = null
-            },
-            function () {
-              me.showAlert('加载信息失败，请重试！')
-            }
-          )
-        },
-        function () {
-          me.showAlert('问题发送失败，请重新发送！')
+
+    methods: {
+      /**
+       * 编辑问题
+       */
+      editQuestion () {
+        // 如没有登录， 弹框提示登录
+        if (!this.isLogin) {
+          this.isShowConfirm = true
         }
-      )
-    },
-    hrefFilter (content) {
+      },
+
+      /**
+       *  转去登录
+       */
+      goToLogin () {
+        this.$route.router.go('/entry')
+      },
+
+      sendUserQuestion () {
+        if (this.isDisabled) {
+          return
+        }
+        const me = this
+        me.submitQuestion(me.userQuestion).then(
+          function () {   //发送信息成功后重新加载问答记录
+            me.loadRecords().then(
+              function () {
+                me.userQuestion = ''
+              },
+              function () {
+                me.showAlert('加载信息失败，请重试！')
+              }
+            )
+          },
+          function () {
+            me.showAlert('问题发送失败，请重新发送！')
+          }
+        )
+      },
+
+      hrefFilter (content) {
         let jumpStr = content.match(/&\S*&/)
         if (jumpStr && jumpStr.length > 0) {
           let params = jumpStr[0].replace(/&/g, '').split('#')
@@ -269,15 +282,28 @@
         } else {
           return content
         }
+      },
+
+      toLink (url, id) {
+        this.$route.router.go(url + id)
+      },
+
+      refreshScroller: function () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+              top: 0
+          })
+        })
+        }, 200)
+      }
     },
-    toLink (url, id) {
-      this.$route.router.go(url + id)
+
+    components: {
+      IctTitlebar,
+      Scroller,
+      Confirm
     }
-  },
-  components: {
-    IctTitlebar,
-    Scroller,
-    Confirm
-  }
   }
 </script>

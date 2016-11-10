@@ -90,10 +90,10 @@
         const me = this
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
           this.login(this.identity, this.plainPassword).then(
-            () => {
-            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-            me.$route.router.go('/setting')
+            (user) => {
             me.disabled = true
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            window.history.back()
         }).catch(
             err => {
             me.showAlert(err.message)

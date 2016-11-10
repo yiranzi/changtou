@@ -2,18 +2,20 @@
  * Created by dongdong on 2016/10/31.
  */
 const state = {
-  helpList: null, //自助答疑列表
-  records: null
+  QAList: [], //自助答疑列表
+  records: [] //答疑列表
 }
 
 const mutations = {
-  HELP_SELF_LIST (state, helpList) {
-    state.helpList = helpList
+  HELP_UPDATE_QA_LIST (state, QAList) {
+    state.QAList = QAList
   },
-  LOAD_RECORDS (state, records) {
+
+  HELP_UPDATE_QA_RECORDS (state, records) {
     state.records = records
   }
 }
+
 export default {
   state,
   mutations

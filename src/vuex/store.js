@@ -39,7 +39,7 @@ export default new Vuex.Store({
     dailyQuestion, //每日一题
     newertest, //新手测试
     homeworkEssay, // 问答题
-    homeworkChoice,// 选择题
+    homeworkChoice, // 选择题
     help //小投答疑
   }
 })

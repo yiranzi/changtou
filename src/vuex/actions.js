@@ -35,6 +35,6 @@ export {
   dailyQuestionActions, //每日一题
   newertestActions, //新手测试
   essayActions, // 问答题
-  choiceActions,// 选择题
+  choiceActions, // 选择题
   helpActions //小投答疑
 }

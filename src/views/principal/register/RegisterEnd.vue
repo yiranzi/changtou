@@ -139,7 +139,7 @@
         this.isDisabled = true
         if (this.verifyCode()) {
           this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
-            () => {
+            (user) => {
               this.$dispatch(eventMap.REGISTER_SUCCESS, user)
               window.history.go(-2)
               me.isDisabled = false

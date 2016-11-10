@@ -9,15 +9,15 @@ import {getUrl} from '../../frame/apiConfig'
  * @param dispatch
  * @returns {Promise}
  */
-export const loadSelfHelpList = ({ dispatch }) => {
+export const loadQAList = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithoutAuth({
-        url: getUrl('load_common_qanda')
+        url: getUrl('help_load_QA_list')
       }).then(
-        function (helpList) {
-          dispatch('HELP_SELF_LIST', helpList)
-          resolve(helpList)
+        function (QAList) {
+          dispatch('HELP_UPDATE_QA_LIST', QAList)
+          resolve(QAList)
         },
         function (err) {
           reject(err)
@@ -30,11 +30,12 @@ export const loadSelfHelpList = ({ dispatch }) => {
 /**
  * 用户提交问题
  */
-export const postSuggestion = ({ dispatch }, content) => {
+export const submitQuestion = ({ dispatch }, content) => {
+  console.log('xxxx', content)
   return new Promise(
     (resolve, reject) => {
       postWithinAuth({
-        url: getUrl('post_help_suggestion'),
+        url: getUrl('help_submit_question'),
         data: {
           content
         }
@@ -57,10 +58,10 @@ export const loadRecords = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('load_records')
+        url: getUrl('help_load_QA_records')
       }).then(
         function (records) {
-          dispatch('LOAD_RECORDS', records)
+          dispatch('HELP_UPDATE_QA_RECORDS', records)
           resolve(records)
         },
         function (err) {
@@ -69,4 +70,12 @@ export const loadRecords = ({ dispatch }) => {
       )
     }
   )
+}
+
+/**
+ * 重置
+ * @param dispatch
+ */
+export const resetRecords = ({ dispatch }) => {
+  return Promise.resolve().then(() => dispatch('HELP_UPDATE_QA_RECORDS', []))
 }
