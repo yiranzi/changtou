@@ -147,6 +147,18 @@ export function configRouter (router) {
     },
 
     /**
+     * 小投答疑
+     */
+    //自助答疑
+    '/self/service': {
+      component: require('../views/help/SelfService.vue')
+    },
+    //人工解答
+    '/manual/service': {
+      component: require('../views/help/ManualService.vue')
+    },
+
+    /**
      * 支付模块
      */
     // 支付成功
@@ -227,6 +239,7 @@ export function configRouter (router) {
     '/choice/mark': {
       component: require('../views/homework/ChoiceMark.vue')
     }
+
   })
 
   // redirect

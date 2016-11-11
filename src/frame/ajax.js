@@ -148,33 +148,6 @@ const putWithinAuth = ({url, options = {}, data, user = userStore}) => {
   })
 }
 
-//======================== 拦截器,处理ajax请求=================================
-/**
- *
- * @param requestInterceptor
- * @param responseInterceptor
- */
-const setAjaxInterceptors = function (requestInterceptor, responseInterceptor) {
-  Vue.http.interceptors.push((request, next) => {
-    // modify request
-    //request.method = 'POST';
-    requestInterceptor(request)
-
-    next((response) => {
-      responseInterceptor(response)
-      // modify response
-      //response.body = '...';
-    })
-  })
-}
-
-const responseCodeMap = {
-  OK: 200,
-  ERR: 400,
-  UNAUTHORIZED: 401,
-  TIMEOUT: 0
-}
-
 /**
  *
  * @type {Function}
@@ -203,6 +176,33 @@ const deleteWithinAuth = ({url, options = {}, user = userStore}) => {
   })
 }
 
+//======================== 拦截器,处理ajax请求=================================
+/**
+ *
+ * @param requestInterceptor
+ * @param responseInterceptor
+ */
+const setAjaxInterceptors = function (requestInterceptor, responseInterceptor) {
+  Vue.http.interceptors.push((request, next) => {
+    // modify request
+    //request.method = 'POST';
+    requestInterceptor(request)
+
+    next((response) => {
+      responseInterceptor(response)
+      // modify response
+      //response.body = '...';
+    })
+  })
+}
+
+const responseCodeMap = {
+  OK: 200,
+  ERR: 400,
+  UNAUTHORIZED: 401,
+  TIMEOUT: 0
+}
+
 export {
   postWithinAuth,
   postWithoutAuth,
@@ -210,6 +210,6 @@ export {
   getWithoutAuth,
   putWithinAuth,
   setAjaxInterceptors,
-  responseCodeMap
+  responseCodeMap,
   deleteWithinAuth
 }
