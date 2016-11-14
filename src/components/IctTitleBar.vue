@@ -1,3 +1,16 @@
+/**
+titlebar
+@example
+  <!--<ict-titlebar :right-options="rightOptions">
+    意见反馈
+    <a slot="right" v-touch:tap="isShow">提交</a>
+  </ict-titlebar>-->
+
+  rightOptions: {
+    disabled: true,
+    callback: this.doSave
+  }
+**/
 <template>
   <div class="ict-titlebar"  v-el:titlebar>
     <div class="ict-titlebar-left" v-touch:tap="leftTapCallback">

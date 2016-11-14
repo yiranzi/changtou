@@ -9,7 +9,7 @@
       <swiper :show-dots="false" :auto="false"
               :loop="false" :show-desc-mask="false"
               :aspect-ratio="aspectRatio" :style="style"
-              v-touch:tap="onPptTap">
+              v-touch:tap="onPptTap" direction="vertical">
         <swiper-item v-for="ppt in currPpts" class="black" :style="style">
           <img :src="ppt" alt="" style="height: 100%; width: 100%">
         </swiper-item>

@@ -26,7 +26,7 @@
     <div class="pay_actionsheet_mask"
          :class="{'pay_actionsheet_fade_toggle': show}"
          :style="{display: show ? 'block' : 'none'}"
-         v-touch:tap="show=false"></div>
+         v-touch:tap="onCloseTap"></div>
     <div class="pay_actionsheet" :class="{'pay_actionsheet_toggle': show}">
       <div class="pay_actionsheet_title"><span class="close-icon" v-touch:tap="onCloseTap"></span>支付详情</div>
       <div class="pay_actionsheet_menu">

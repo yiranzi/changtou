@@ -140,7 +140,7 @@ export const registerStart = ({ dispatch }, phone, plainPassword) => {
       ).then(
         () => resolve(),
         err => {
-          reject(err.message)
+          reject(err)
         }
       )
     })
@@ -171,7 +171,7 @@ export const registerEnd = ({ dispatch }, phone, plainPassword, validationCode) 
         resolve(user)
       },
       err => {
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -198,7 +198,7 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
         resolve()
       },
       err => {
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -227,7 +227,7 @@ export const resetPassword = ({ dispatch }, phone, validationCode) => {
         resolve()
       },
       (err) => {
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -249,7 +249,7 @@ export const resetPasswordEnd = ({ dispatch }, phone, newPlainPassword) => {
         resolve()
       },
       err => {
-        reject(err.message)
+        reject(err)
       }
     )
   })

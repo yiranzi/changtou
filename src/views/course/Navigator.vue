@@ -22,7 +22,7 @@
           </p>
           <div v-for="(index, course) in expenseList"
                v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
-               v-touch:tap="gotoCourseDetail('P',$index)">
+               v-touch:tap="goToCourseDetail('P',$index)">
             <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
@@ -37,7 +37,7 @@
             <span class="subtitle" v-touch:tap="onFreeListTap">全部课程</span>
           </p>
           <div v-for="course in freeList"
-               v-touch:tap="gotoCourseDetail('F',$index)"
+               v-touch:tap="goToCourseDetail('F',$index)"
                class="free-course">
             <img v-bind:src=freeList[$index].pic class="free-course-img"/>
             <p class="free-course-title">{{course.title}}</p>
@@ -124,7 +124,7 @@
         })
         }, 150)
       },
-      gotoCourseDetail (type, index) {
+      goToCourseDetail (type, index) {
         let courseList = type === 'P' ? this.expenseList : this.freeList
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)

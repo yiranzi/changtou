@@ -32,7 +32,6 @@
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-
         <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
           <!--<swiper-item>-->
             <!--<specific :subject="currSubject"></specific>-->
@@ -78,6 +77,8 @@
         <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
       </div>
     </div>
+    <essay-float :show="showEssay" @close="resumeHomework" @confirm="resumeHomework"></essay-float>
+    <choice-float :show="showChoice"  @close="resumeHomework" @confirm="resumeHomework"></choice-float>
   </div>
 </template>
 <style lang="less">
@@ -145,13 +146,15 @@
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
+  import essayFloat from '../homework/essayFloat.vue'
+  import choiceFloat from '../homework/ChoiceFloat.vue'
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, globalActions, essayActions, choiceActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
 
   export default {
@@ -171,7 +174,13 @@
 //        postonSubject: courseRecordActions.postponeSubject,
 
         showAlert: globalActions.showAlert,
-        showConfirm: globalActions.showConfirm
+        showConfirm: globalActions.showConfirm,
+
+        setEssayQuestion: essayActions.setEssay,
+        getArticle: essayActions.getArticle,
+
+        setChoiceQuestion: choiceActions.setChoice,
+        getReport: choiceActions.getReport
       }
     },
 
@@ -200,10 +209,13 @@
 
         selectedLesson: null, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
+        currChapterIndex: -1, //当前选中的chater index
         currAudioSrc: null, //当前音频地址
         currPpts: [], //当前ppt地址集合
 
-        isSelectdLessonLimited: true //当前选中lesson是否受限
+        isSelectdLessonLimited: true, //当前选中lesson是否受限
+        showEssay: false,
+        showChoice: false
       }
     },
 
@@ -263,8 +275,6 @@
        * 当前课程被选中, 设置进度是否有权限
        */
       'selectedLesson': function (lesson, oldlesson) {
-        this.currLessonId = lesson && lesson.lessonId // 用于横屏
-
         // 如果是公开课,永远不受限
         if (lesson && lesson.type === 'C') {
           this.isSelectdLessonLimited = false
@@ -340,7 +350,7 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter, index) {
+      'chapterSelected': function (chapter, index, type) {
         this.currChapterIndex = index // 用于横屏
         if (this.isSelectdLessonLimited) { //课程受限
           if (this.isUserLogin) {
@@ -354,7 +364,7 @@
                 this.active()
                 break
               case 'N':
-                this.showTipWhenLessonLimitedAndOnLine()
+                this.showTipWhenLessonLimitedAndOnLine(type)
                 break
               case 'P':
                 this.resume()
@@ -374,10 +384,14 @@
             // 用户在未登录的情况下, 直接跳转前去购买
             this.buy()
           }
-        } else { //当前课程可以听
+        } else if (type === 'common') { //当前课程可以听
           this.hasVaildChapterCicked = true
           this.currAudioSrc = chapter.audio
           this.currPpts = chapter.ppts
+        } else if (type === 'choice') {
+          this.onChoiceTap()
+        } else if (type === 'essay') {
+          this.onEssayTap()
         }
       },
 
@@ -385,28 +399,112 @@
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
 
+      'fullScreenTap' () {
+        this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+      }
+    },
+
+    methods: {
       /**
        * 选择题被点击
        **/
-      'homeworkChoiceTap': function ({choiceQuestionArr, lessonId}) {
-        // todo 选择题点击
-        console.log('点击选择题', choiceQuestionArr, lessonId)
+      onChoiceTap () {
+        const me = this
+        const lessonId = this.selectedLesson.lessonId
+        const choiceQuestionArr = this.selectedLesson.choiceQuestion
+        me.setChoiceQuestion(choiceQuestionArr)
+        me.getReport(lessonId).then(
+          report => {
+            if (report.kpScore) {
+              // 做过选择题
+              me.$route.router.go('/choice/mark')
+            } else {
+              // 没做过
+              me.showChoice = true
+            }
+          }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
       },
 
       /**
        * 问答题被点击
        * */
-      'homeworkEssayTap': function ({essayQuestion, lessonId}) {
-        // todo 问答题点击
-        console.log('点击问答题', essayQuestion, lessonId)
+      onEssayTap (limitedLessonId, limitedEssayQuestion) {
+        const me = this
+        const lessonId = limitedLessonId || this.selectedLesson.lessonId
+        const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
+        me.setEssayQuestion(essayQuestion)
+        me.getArticle(lessonId).then(
+          evaluation => {
+            if (evaluation && evaluation.status !== null) {
+              switch (evaluation.status) {
+                case 0://作业已提交
+                  me.goEssayMark(lessonId)
+                  break
+                case 1://草稿已提交 写作业
+                  me.goEssayAnswer(lessonId)
+                  break
+                case 2://已批改 未通过 查看作业
+                  me.goEssayMark(lessonId)
+                  break
+                case 3://已批改 通过 查看作业
+                  me.goEssayMark(lessonId)
+                  break
+                default:
+                  me.goEssayMark(lessonId)
+                  break
+              }
+            } else {
+              me.showEssayFloat()
+            }
+        }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
+      },
+      /**
+       * 跳转到问答题 编辑页
+       */
+      goEssayAnswer (lessonId) {
+        const me = this
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/answer')
+        ).catch(
+            err => console.warn(err)
+        )
       },
 
-      'fullScreenTap' () {
-        this.gotoFullScreen(this.subjectId, this.currLessonId, this.currChapterIndex)
-      }
-    },
+      /**
+       * 显示 作业提示框
+       */
+      showEssayFloat () {
+        this.showEssay = true
+      },
 
-    methods: {
+      /**
+       * 跳转到问答题 查看页
+       */
+      goEssayMark (LimitedLessonId) {
+        const me = this
+        const lessonId = LimitedLessonId || this.selectedLesson
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/mark')
+        ).catch(
+            err => console.warn(err)
+        )
+      },
+      /**
+       * 重置 作业浮层
+       */
+      resumeHomework () {
+        this.showChoice = false
+        this.showEssay = false
+      },
+
       back () {
         window.history.back()
       },
@@ -464,19 +562,19 @@
         let confirmHandler = null
 
         let lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-
+        let essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            // todo 跳转到查看作业页面
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
           confirmText = '去写作业'
           confirmHandler = function () {
-            // todo 跳转到写作业页面
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
@@ -628,7 +726,7 @@
         /**
          * 跳转到横屏
          */
-      gotoFullScreen (subjectId, lessonId, index) {
+      goToFullScreen (subjectId, lessonId, index) {
           this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
       }
     },
@@ -644,7 +742,9 @@
       Sticky,
       Specific,
       Content,
-      IctButton
+      IctButton,
+      choiceFloat,
+      essayFloat
     }
   }
 </script>

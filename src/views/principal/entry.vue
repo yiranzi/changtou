@@ -21,12 +21,12 @@
         </group>
 
         <div style="height: 4rem" class="spacer"></div>
-        <ict-button type="default"  v-touch:tap="doLogin">登陆</ict-button>
+        <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登陆</ict-button>
 
         <flexbox>
           <ict-button type="string" text="注册" v-touch:tap="doRegister"></ict-button>
           <flexbox-item></flexbox-item>
-          <ict-button type="string" text="忘记密码"  v-touch:tap="doResetPassword"></ict-button>
+          <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
         </flexbox>
 
       </flexbox-item>
@@ -62,7 +62,25 @@
         isAlert: false,
         alertMsg: '',
         plainPassword: '',
-        identity: ''
+        identity: '',
+        disabled: true
+      }
+    },
+
+    watch: {
+      identity (newVal) {
+        if (/\S/.test(newVal) && /\S/.test(this.plainPassword)) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+        }
+      },
+      plainPassword (newVal) {
+        if (/\S/.test(this.identity) && /\S/.test(newVal)) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+        }
       }
     },
 
@@ -75,13 +93,23 @@
 
     methods: {
       doLogin () {
-        this.login(this.identity, this.plainPassword).then(
-          (user) => {
-            this.$dispatch(eventMap.LOGIN_SUCCESS, user)
-            this.$route.router.go('/setting')
-          },
-          err => this.showAlert(err.message)
+        this.disabled = true
+        const me = this
+        if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
+          this.login(this.identity, this.plainPassword).then(
+            (user) => {
+            me.disabled = true
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            window.history.back()
+        }).catch(
+            err => {
+            me.showAlert(err.message)
+          me.disabled = true
+        }
         )
+        } else {
+          me.disabled = true
+        }
       },
       doRegister () {
         this.$route.router.go('/register/start')
