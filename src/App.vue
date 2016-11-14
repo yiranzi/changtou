@@ -18,16 +18,19 @@
       </tabbar-item>
     </tabbar>
 
-    <!--global-->
-    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
-    <toast :show.sync="isToast" class="ict-toast" :type="toastType">{{toastMsg}}</toast>
-    <confirm :show.sync="isConfirm"
-             :title="confirmTitle"
-             :confirm-text="confirmText"
-             :cancel-text="cancelText"
-             @on-confirm="onAction('confirm')"
-             @on-cancel="onAction('cancel')">
-      <p style="text-align:center;">{{{confirmMsg}}}</p>
+    <alert :show.sync="alertBox.show"
+           :button-text="alertBox.btnText"
+           class="ict-alert">{{alertBox.message}}</alert>
+    <toast class="ict-toast"
+           :show.sync="toast.show"
+           :type="toast.type">{{toast.message}}</toast>
+    <confirm :show.sync="confirmBox.show"
+             :title="confirmBox.title"
+             :confirm-text="confirmBox.okText"
+             :cancel-text="confirmBox.cancelText"
+             @on-confirm="confirmBox.okCallback"
+             @on-cancel="confirmBox.cancelCallback">
+      <p style="text-align:center;">{{{confirmBox.message}}}</p>
     </confirm>
 
     <!--新手测试-->
@@ -52,9 +55,10 @@
   import {setLocalCache, getLocalCache} from './util/cache'
   import mixinEvent from './mixinEvent'
   import mixinAjax from './mixinAjax'
+  import mixinModal from './mixinModal'
 
   export default {
-    mixins: [mixinEvent, mixinAjax],
+    mixins: [mixinEvent, mixinAjax, mixinModal],
 
     store,
 
@@ -70,7 +74,15 @@
     },
 
     data () {
-      return Object.assign({}, store.state.global, {isShowNewTestPop: false})
+      return {
+        isShowNewTestPop: false,
+        alertBox: {},
+        toast: {},
+        confirmBox: {
+          title: ''
+        }
+      }
+//    Object.assign({}, store.state.global, {isShowNewTestPop: false})
     },
 
     computed: {

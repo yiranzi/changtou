@@ -210,6 +210,6 @@ export {
   getWithoutAuth,
   putWithinAuth,
   setAjaxInterceptors,
-  responseCodeMap
+  responseCodeMap,
   deleteWithinAuth
 }

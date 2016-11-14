@@ -54,6 +54,7 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {messageGetters, userGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
+  import {backHandlerSet} from '../../plugin/backHandler'
 
   export default {
     vuex: {
@@ -87,6 +88,11 @@
       },
       avatarUrl () {
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
+      }
+    },
+    route: {
+      data () {
+        backHandlerSet(function () { window.alert('setting') }, this.$route.path)
       }
     },
     methods: {
