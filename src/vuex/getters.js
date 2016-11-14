@@ -17,6 +17,7 @@ import * as dailyQuestionGetters from './dailyQuestion/getters'
 import * as newertestGetters from './newertest/getters'
 import * as essayGetters from './homework/essay/getters'
 import * as choiceGetters from './homework/choice/getters'
+import * as helpGetters from './help/getters'
 
 export {
   userGetters,
@@ -34,5 +35,6 @@ export {
   dailyQuestionGetters, //每日一题
   newertestGetters, //新手测试
   essayGetters, // 问答题
-  choiceGetters // 选择题
+  choiceGetters, // 选择题
+  helpGetters //小投答疑
 }

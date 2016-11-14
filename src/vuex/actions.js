@@ -17,6 +17,7 @@ import * as dailyQuestionActions from './dailyQuestion/actions'
 import * as newertestActions from './newertest/actions'
 import * as essayActions from './homework/essay/actions'
 import * as choiceActions from './homework/choice/actions'
+import * as helpActions from './help/actions'
 
 export {
   userActions,
@@ -34,5 +35,6 @@ export {
   dailyQuestionActions, //每日一题
   newertestActions, //新手测试
   essayActions, // 问答题
-  choiceActions// 选择题
+  choiceActions, // 选择题
+  helpActions //小投答疑
 }
