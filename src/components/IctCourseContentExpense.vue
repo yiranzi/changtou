@@ -66,8 +66,6 @@
       font-size: 0.7rem !important;
     }
 
-
-
     .lesson-title {
       display: flex;
       align-items: center;
