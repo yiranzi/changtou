@@ -2,6 +2,8 @@
  * Created by zl on 16/10/20.
  *
  * 全局事件订阅器
+ *
+ * 暂时没有用到
  */
 
 export default {
