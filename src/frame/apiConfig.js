@@ -124,7 +124,16 @@ const apiUrl = {
   'homework_submit_article': '/student/expense/lesson/article', //提交作业或草稿
   'homework_get_report': '/student/choice-question-report/:lessonId', // 获取选择题 测试报告
   'homework_submit_report': '/student/choice-question-report', // 提交选择题 测试报告
-  'homework_get_choice_knowledge_point': '/course/knowledge-point' // 获取选择题 对应知识点
+  'homework_get_choice_knowledge_point': '/course/knowledge-point', // 获取选择题 对应知识点
+
+  /**
+   * 策略产品
+   */
+  'strategy_vip_data': '/strategy/data/vip',
+  'strategy_professional_data': '/strategy/data/professional',
+  'strategy_professional_intro': '/strategy/promotion/professional',
+  'strategy_vip_intro': '/strategy/promotion/vip',
+  'strategy_notice': '/strategy/data/message/:authority' // 通知
 
 }
 

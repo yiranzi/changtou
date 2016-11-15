@@ -238,8 +238,11 @@ export function configRouter (router) {
     //选择题 看分数
     '/choice/mark': {
       component: require('../views/homework/ChoiceMark.vue')
-    }
+    },
 
+    '/strategy/professional/intro': {
+      component: require('../views/strategy/ProfessionalIntro.vue')
+    }
   })
 
   // redirect

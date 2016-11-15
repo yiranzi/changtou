@@ -20,6 +20,7 @@ import newertest from './newertest/store'
 import homeworkEssay from './homework/essay/store'
 import homeworkChoice from './homework/choice/store'
 import help from './help/store'
+import strategy from './strategy/store'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -40,6 +41,7 @@ export default new Vuex.Store({
     newertest, //新手测试
     homeworkEssay, // 问答题
     homeworkChoice, // 选择题
-    help //小投答疑
+    help, //小投答疑
+    strategy // 策略产品
   }
 })

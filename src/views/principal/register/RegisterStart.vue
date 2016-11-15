@@ -15,7 +15,7 @@
           </x-input>
         </group>
         <div style="height: 4rem" class="spacer"></div>
-        <ict-button type="default" :disabled="buttonDisable" v-bind:class="{'disable': buttonDisable}" @click="doRegister">注册</ict-button>
+        <ict-button type="default" :disabled.sync="buttonDisable" v-touch:tap="doRegister">注册</ict-button>
         <p class="register-tip">点击“注册”即代表你同意
           <span class="user-agreement" v-touch:tap="showAgreement">长投学堂用户协议</span>
         </p>
@@ -61,10 +61,10 @@
       verifyPhoneAndPassword () {
         if (/^1[3|4|5|7|8]\d{9}$/.test(this.phone) && /^(?![0-9]+$)(?![a-zA-Z]+$)(?!_+$)[A-Za-z0-9_]{6,16}$/.test(this.plainPassword)) {
           this.buttonDisable = false
-          return false
+          return true
         } else {
           this.buttonDisable = true
-          return true
+          return false
         }
       },
       /**
