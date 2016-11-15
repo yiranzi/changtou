@@ -90,8 +90,8 @@ const mixin = {
     doWhenUserValid: function (user) {
       let tasks = []
       // 获取课程进度
-      tasks.push(this.loadAllFreeRecords)
-      tasks.push(this.loadAllExpenseRecords)
+      tasks.push(this.loadAllFreeRecords())
+      tasks.push(this.loadAllExpenseRecords())
       // 设置jpush用户关联
       tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
 
