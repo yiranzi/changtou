@@ -195,6 +195,7 @@
         subjectId: '', //课程Id
         hasVaildChapterCicked: false,
 
+        isSubjectBranch: false, // 当前课程是否为选修课
         currSubject: null, // 当前课程
         currRecord: null, //当起进度
         currUseabLessonArr: [], //当前可用lessonId集合
@@ -302,6 +303,9 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         //设置课程信息
         this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
+
+        //设置是否为选修课
+        this.isSubjectBranch = this.currSubject.type === 'B'
 
         this.$nextTick(() => {
           this.$refs.scroller.reset({
@@ -718,6 +722,28 @@
        * 购买
        */
       buy () {
+        // 如果是选修课
+        if (this.isSubjectBranch) {
+          // 先判断主线课程是否购买
+          const isOrignSubjectBought = this.expenseRecordsArr.findIndex(subject =>
+            subject.subjectId === this.currSubject.relatedMajorSubjectId) > -1
+          if (isOrignSubjectBought) {
+            // 若主线课程已经购买, 直接转去购买页面
+            this.goToPay()
+          } else {
+            // todo 主线课程未购买, 显示提示去购买主线课程
+//            console.log('未骨偶买主线')
+          }
+        } else {
+          // 不是选修课, 直接转去订单页面
+          this.goToPay()
+        }
+      },
+
+      /**
+       * 前去支付页面
+       */
+      goToPay: function () {
         const path = `/pay-S-${this.subjectId}`
         this.$route.router.on(path, {
           component: require('../pay/Order.vue')
@@ -729,7 +755,7 @@
          * 跳转到横屏
          */
       goToFullScreen (subjectId, lessonId, index) {
-          this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
+        this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
       }
     },
 
