@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="newertest-end">
-      <div class="top" v-el:onClose>
+      <div class="top" v-el:titlebar>
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
@@ -204,15 +204,17 @@
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-//              top: 0
+              top: 0
             })
           })
         }, 300)
       }
     },
+
     ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.onClose.offsetHeight) + 'px'
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
     },
+
     methods: {
       onCancel () {
         if (this.isLogin) {
