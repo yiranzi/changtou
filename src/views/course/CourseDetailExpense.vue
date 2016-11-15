@@ -233,7 +233,7 @@
       data ({to: {params: {subjectId}}}) {
         this.resetView()
 
-        let tasks = [this.loadExpenseSubject(subjectId)]
+        const tasks = [this.loadExpenseSubject(subjectId)]
         if (this.isUserLogin) {
           tasks.push(this.loadExpenseRecord(subjectId))
         }
@@ -611,8 +611,10 @@
        */
       audition () {
         this.currTabIndex = 1
-        this.selectedLesson = this.currSubject.lessonList[0]
-        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
+        // 交给子控件统一处理
+        this.$broadcast('audition', this.currSubject.lessonList[0])
+//        this.selectedLesson = this.currSubject.lessonList[0]
+//        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
       },
 
       /**

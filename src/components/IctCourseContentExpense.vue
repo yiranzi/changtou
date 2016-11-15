@@ -3,11 +3,11 @@
     <div v-for="lesson in lessons" v-touch:tap="updateSelectedLesson(lesson, $event)">
       <div class="lesson-title">
         <span class="lesson-title-title">{{lesson.title}}</span>
-        <span v-bind:class="[(lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false) : false) ? 'lesson-title-roll-up' : 'lesson-title-roll-down']"></span>
+        <span v-bind:class="[(lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false) : false) ? 'lesson-title-roll-up' : 'lesson-title-roll-down']"></span>
       </div>
 
       <!--<div v-show="lesson.lessonId === (selectedLesson ? selectedLesson.lessonId : 0)"-->
-      <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false): false"
+      <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false): false"
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
            (lesson.choiceQuestion.length > 0 ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' ? 1 : 0)) * 11/4 + 'rem'}" >
@@ -174,7 +174,7 @@
     watch: {
       'lessons': function (newlessons, oldLessons) {
         this.lessonListType = newlessons.map(({lessonId}) => {
-            return {lessonId: lessonId, isRollUp: false}
+            return {lessonId: lessonId, isUnfold: false}
           })
       }
     },
@@ -183,22 +183,36 @@
       this.selectedLesson = this.lessons[0]
     },
 
+    events: {
+      /**
+       * 试听事件
+       */
+      'audition': function (lesson) {
+        //  展开某(第)一个lesson
+        this.selectedLesson = lesson
+
+        const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+        if (this.isLessonUnfold(lessonIndex)) {
+          // to do nothing
+        } else {
+          this.unfoldLesson(lessonIndex)
+        }
+
+        this.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
+      }
+    },
+
     methods: {
       updateSelectedLesson (lesson, $event) {
         this.selectedLesson = lesson
 
         // 则设置开关列表状态
         if ($event.target.className.includes('lesson-title')) { // 若是选中的是 lesson 而不是 chapter
-          let index = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
-          if (index > -1) {
-            this.lessonListType = this.lessonListType.map(function (item, itemIndex) {
-              if (index !== itemIndex) {
-                item.isRollUp = false
-              } else {
-                item.isRollUp = !item.isRollUp
-              }
-              return item
-            })
+          const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+          if (this.isLessonUnfold(lessonIndex)) {
+            this.rollupLesson(lessonIndex)
+          } else {
+            this.unfoldLesson(lessonIndex)
           }
         }
       },
@@ -221,6 +235,46 @@
        */
       onHomeworkEssayTap () {
         this.$dispatch('chapterSelected', null, 0, 'essay')
+      },
+
+      /**
+       * 展开某个lesson
+       * (自动卷起 其他lesson)
+       **/
+      unfoldLesson: function (lessonIndex) {
+//        const index = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+        if (lessonIndex > -1) {
+          if (!this.lessonListType[lessonIndex].isUnfold) {
+            this.lessonListType = this.lessonListType.map(function (item, itemIndex) {
+              if (lessonIndex === itemIndex) {
+                item.isUnfold = true
+              } else {
+                item.isUnfold = false
+              }
+              return item
+            })
+          }
+        }
+      },
+
+      /**
+       *  卷起某个lesson
+       **/
+      rollupLesson: function (lessonIndex) {
+        if (lessonIndex > -1) {
+          this.lessonListType[lessonIndex].isUnfold = false
+        }
+      },
+
+      /**
+       * lesson 是否处于展开状态
+       */
+      isLessonUnfold: function (lessonIndex) {
+        if (lessonIndex > -1) {
+          return this.lessonListType[lessonIndex].isUnfold
+        } else {
+          return true
+        }
       }
     }
   }
