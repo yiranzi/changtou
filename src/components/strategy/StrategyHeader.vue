@@ -22,6 +22,8 @@ export default {
     font-size: 0.8rem;
     color: #00b0f0;
     span{
+      display: inline-block;
+      margin: 0 0.5rem;
       color: #97ebff;
     }
   }

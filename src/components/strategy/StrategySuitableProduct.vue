@@ -6,7 +6,7 @@
     <div class="strategy-suitable-product">
       <strategy-header><slot></slot></strategy-header>
       <div class="strategy">
-        <div class="strategy-options" v-for="product in suitableProduct">
+        <div class="strategy-options" v-for="product in strategyOptions">
           <div class="strategy-up-item">
             <p class="strategy-options-title">{{product.title}}</p>
             <p class="strategy-options-subtitle">{{product.subtitle}}</p>
@@ -19,7 +19,7 @@
             {{course.itemName}}》
             <span class="play-icon" ></span>
           </p>
-          <div class="strategy-options-intro">
+          <div class="strategy-options-intro" v-if="product.intro">
             <p v-for="item in product.intro">{{item}}</p>
           </div>
         </div>
@@ -32,23 +32,14 @@ export default {
   props: {
     strategyOptions: Array
   },
-  computed: {
-    suitableProduct () {
-      if (this.strategyOptions) {
-        let suitableProduct = this.strategyOptions && this.strategyOptions.concat()
-
-        for (let i = 0, length = suitableProduct.length; i < length; i++) {
-          suitableProduct[i].labels = this.strategyOptions[i].labels.split('#')
-          suitableProduct[i].intro = this.strategyOptions[i].intro.replace(/#/g, '#●').split('#')
-        }
-
-        return suitableProduct
-      }
-    }
-  },
   methods: {
-    goToCourse () {
-
+    goToCourse (courseType, id, subjectType) {
+      console.log(courseType, id, subjectType)
+      if (courseType === 'seminar') {
+        //todo
+      } else if (courseType === 'subject') {
+        //todo
+      }
     }
   },
   components: {
@@ -93,33 +84,38 @@ export default {
     }
 
     .strategy-options-related-item {
-      position: relative;
       width: 100%;
       border: 0;
       height: 1.75rem;
       line-height: 1.75rem;
       padding: 0 2rem;
+      box-sizing: border-box;
       background: #96abe0;
       font-size: 0.6rem;
       color: #fff;
 
-      .play-icon:before {
+      .play-icon{
         position: absolute;
         right: 2.25rem;
-        font-family: 'myicon';
-        content: '\e907';
-        font-size: 0.9rem;
-      }
-      &:nth-child(1){
-        .play-icon:before {
-          top: -2.25rem;
-          right: 2rem;
-          font-size: 1.4rem;
+        &:before {
+          font-family: 'myicon';
+          content: '\e907';
+          font-size: 0.9rem;
         }
       }
+
+      &:nth-of-type(1){
+        .play-icon{
+          right: 2rem;
+          &:before {
+            position: relative;
+            top: -2.25rem;
+            font-size: 1.4rem;
+          }
+        }
+
+      }
     }
-
-
     .strategy {
       p{
         margin: 0;
@@ -150,7 +146,7 @@ export default {
         }
         .strategy-options-related-item {
           background: #87bef0;
-          &:nth-child(2){
+          &:nth-of-type(2){
             background: #b7d8f6;
           }
         }

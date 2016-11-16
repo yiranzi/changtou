@@ -208,11 +208,11 @@ export function configRouter (router) {
      * 每日一题
      */
     //获取每日一题
-    'daily/quiz': {
+    '/daily/quiz': {
       component: require('../views/daily/DailyQuestion.vue')
     },
     //用户提交答案
-    'daily/answer': {
+    '/daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
     },
 
@@ -239,9 +239,16 @@ export function configRouter (router) {
     '/choice/mark': {
       component: require('../views/homework/ChoiceMark.vue')
     },
-
+    /**
+     * 策略产品
+     */
+    //策略 专业版 宣传
     '/strategy/professional/intro': {
       component: require('../views/strategy/ProfessionalIntro.vue')
+    },
+    //策略 vip 宣传
+    '/strategy/vip/intro': {
+      component: require('../views/strategy/VipIntro.vue')
     }
   })
 

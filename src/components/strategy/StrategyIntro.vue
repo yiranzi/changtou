@@ -5,21 +5,14 @@
 <template>
     <div class="strategy-intro">
       <strategy-header><slot></slot></strategy-header>
-      <p v-for="item in introArr" class="intro-item">{{item}}</p>
+      <p v-for="item in intro" class="intro-item">{{item}}</p>
     </div>
 </template>
 <script>
   import strategyHeader from './StrategyHeader.vue'
 export default {
   props: {
-    intro: String
-  },
-  computed: {
-    introArr () {
-      if (this.intro) {
-        return this.intro.replace(/#/g, '#●').split('#')
-      }
-    }
+    intro: Array
   },
   components: {
     strategyHeader
