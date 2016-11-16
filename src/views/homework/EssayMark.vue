@@ -2,44 +2,39 @@
  * Created by jun on 2016/10/27.
  *
  */
-
 <template>
     <div class="essay-mark">
-      <!--<ict-titlebar></ict-titlebar>-->
-      <!--<div class="essay">-->
-        <!--<span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>-->
-        <!--<div class="essay-info">-->
-          <!--<div class="score" :class={'score-passed':!isEditable}>{{scoreNum}}</div>-->
-          <!--<div class="user-info">-->
-            <!--<p class="user-name">{{userName}}的作业</p>-->
-            <!--<p class="create-time">{{createTime}}提交</p>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="essay-answer">-->
-          <!--{{essayAnswer}}-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="message">-->
-        <!--<p class="title">作业留言</p>-->
-        <!--<div v-for="remark in remarkList">-->
-          <!--<div class="user-info">-->
-            <!--<img src="/static/image/homework/portrait.png">-->
-            <!--<div class="user-box">-->
-              <!--<p class="user-name">{{remark.userName}}的作业</p>-->
-              <!--<p class="create-time">发表于{{remark.create_time}}</p>-->
-            <!--</div>-->
-            <!--<div class="content">{{remark.content}}</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <ict-titlebar></ict-titlebar>
+      <div class="essay">
+        <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
+        <div class="essay-info">
+          <div class="score" v-bind:class="{'score-passed':!isEditable}">{{scoreNum}}</div>
+          <div class="user-info">
+            <p class="user-name">{{userName}}的作业</p>
+            <p class="create-time">{{createTime}}提交</p>
+          </div>
+        </div>
+        <div class="essay-answer">{{essayAnswer}}</div>
+      </div>
+      <div class="message">
+        <p class="title">作业留言</p>
+        <div v-for="remark in remarkList">
+          <div class="user-info">
+            <img src="/static/image/homework/portrait.png">
+            <div class="user-box">
+              <p class="user-name">{{remark.userName}}的作业</p>
+              <p class="create-time">发表于{{remark.create_time}}</p>
+            </div>
+            <div class="content">{{remark.content}}</div>
+          </div>
+        </div>
+      </div>
     </div>
 </template>
-
 <script>
   import IctTitlebar from '../../components/IctTitlebar.vue'
   import Scroller from 'vux/scroller'
   import { userGetters, essayGetters } from '../../vuex/getters'
-
 export default {
   vuex: {
     getters: {
