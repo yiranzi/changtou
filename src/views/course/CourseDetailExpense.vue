@@ -725,14 +725,15 @@
         // 如果是选修课
         if (this.isSubjectBranch) {
           // 先判断主线课程是否购买
-          const isOrignSubjectBought = this.expenseRecordsArr.findIndex(subject =>
-            subject.subjectId === this.currSubject.relatedMajorSubjectId) > -1
-          if (isOrignSubjectBought) {
-            // 若主线课程已经购买, 直接转去购买页面
+           const originSubject = this.expenseRecordsArr.find(subject =>
+            subject.subjectId === this.currSubject.relatedMajorSubjectId)
+
+          const isOrignSubjectVaildBought = !!(originSubject && originSubject.status === 'N')
+          if (isOrignSubjectVaildBought) {
+            // 若主线课程已经购买并且是在读, 直接转去购买页面
             this.goToPay()
           } else {
-            // todo 主线课程未购买, 显示提示去购买主线课程
-//            console.log('未骨偶买主线')
+            this.showConfirm({message: `仅支持在"${this.currSubject.relatedMajorSubjectTitle}"有效学习时间内购买该选修课`})
           }
         } else {
           // 不是选修课, 直接转去订单页面
