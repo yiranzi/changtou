@@ -154,7 +154,7 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions, essayActions, choiceActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
 
   export default {
@@ -172,9 +172,6 @@
         suspendSubject: courseRecordActions.suspendSubject,
         resumeSubject: courseRecordActions.resumeSubject,
 //        postonSubject: courseRecordActions.postponeSubject,
-
-        showAlert: globalActions.showAlert,
-        showConfirm: globalActions.showConfirm,
 
         setEssayQuestion: essayActions.setEssay,
         getArticle: essayActions.getArticle,
@@ -562,7 +559,6 @@
 
         let msg = ''
         let confirmText = '确认'
-        let cancelHandler = () => {}
         let confirmHandler = null
 
         let lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
@@ -584,16 +580,13 @@
         }
 
         // 加入延迟,防止出现msg被点透的情况
-        setTimeout(function () {
-          me.showConfirm({
-            title: '',
-            msg: msg,
-            confirmText: confirmText,
-            cancelText: '继续听课',
-            confirmHandler: confirmHandler,
-            cancelHandler: cancelHandler
-          })
-        }, 150)
+        me.showConfirm({
+          title: '',
+          message: msg,
+          okText: confirmText,
+          cancelText: '继续听课',
+          okCallback: confirmHandler
+        })
       },
 
       /**
@@ -636,17 +629,15 @@
             }
           )
         }
-        const cancelHandler = function () {}
         const msg = '<p style="text-align: left">课程暂停功能为在短时间内无法继续学习的院生提供临时性免费停课机会，暂停功能只在课程有效期内使用；</p>' +
             '<p style="text-align: left">仅有一次暂停30天机会，中途支持提前开启课程；</p>' +
             '<p style="text-align: left">您是否想暂停课程？</p>'
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认暂停',
+          message: msg,
+          okText: '确认暂停',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 
@@ -665,16 +656,13 @@
             }
           )
         }
-        const cancelHandler = function () {}
         const msg = '<p>仅有一次暂停30天机会,</p><p>您是否想提前开启课程?</p>'
-        // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认开启',
+          message: msg,
+          okText: '确认开启',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 
@@ -705,16 +693,14 @@
             }
           )
         }
-        const cancelHandler = function () {}
+
         const msg = '<p>该课程尚未激活</p><p>您是否想现在激活此课程?</p>'
-        // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认激活',
+          message: msg,
+          okText: '确认激活',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 

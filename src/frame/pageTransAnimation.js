@@ -20,7 +20,6 @@ history.setItem('/', 0)
  */
 const setRouterHook = (router, commit) => {
   router.beforeEach(({ to, from, next }) => {
-    console.log(to, from)
     if (to.path === '/main') {
       // 若是进入导航页, 总是返回, 动画从左到右
       commit('UPDATE_DIRECTION', 'reverse')
