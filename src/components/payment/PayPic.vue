@@ -3,14 +3,13 @@
  *
  */
 <template>
-    <div class="pay-pic" v-if="show">
+    <div class="pay-pic">
       <img :src="pic">
     </div>
 </template>
 <script>
 export default {
   props: {
-    show: Boolean,
     pic: String
   }
 }

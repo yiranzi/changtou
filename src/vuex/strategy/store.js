@@ -4,17 +4,10 @@
  */
 
 const state = {
-  professionalIntro: {
-    feature: null,
-    intro: '',
-    promotionUrl: '',
-    purchaseOptionsUrl: '',
-    strategyOptions: null,
-    targetUser: null
-  },
-  professionalProduct: null,
-  vipIntro: null,
-  vipProduct: null
+  professionalIntro: {},
+  professionalProduct: {},
+  vipIntro: {},
+  vipProduct: {}
 }
 
 const mutations = {

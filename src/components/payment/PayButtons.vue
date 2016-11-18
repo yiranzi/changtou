@@ -31,7 +31,8 @@
       </div>
       <ict-button class="right"
                   :class="{'right-exception' : (state === 'exception')}"
-                  v-touch:tap="rightOptions.callback">{{rightText}}</ict-button>
+                  v-touch:tap="onRightTap"
+                  :disabled="rightOptions.disabled">{{rightText}}</ict-button>
     </div>
 </template>
 <script>
@@ -47,6 +48,7 @@ export default {
     rightOptions: {
       type: Object,
       text: String,
+      disabled: Boolean,
       callback: {
         type: Function,
         required: true
@@ -61,6 +63,13 @@ export default {
       return this.state === 'exception' ? this.rightOptions.text : '确认订单'
     }
   },
+  methods: {
+    onRightTap () {
+      if (!this.rightOptions.disabled) {
+        this.rightOptions.callback()
+      }
+    }
+  },
   components: {
     IctButton
   }
@@ -71,8 +80,8 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 98/40rem;
-    line-height: 98/40rem;
+    height: 88/40rem;
+    line-height: 88/40rem;
     display: flex;
     .left{
       padding: 0 30/40rem;

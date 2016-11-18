@@ -17,7 +17,17 @@
   import SuitableProduct from './StrategySuitableProduct.vue'
 export default {
   props: {
-    featuredStrategy: Object
+    featuredStrategy: {
+      type: Object,
+      default: function () {
+        return {
+          product: [],
+          strategyBenefit: '',
+          csi300Benefit: '',
+          historicProfitsUrl: ''
+        }
+      }
+    }
   },
   components: {
     SuitableProduct

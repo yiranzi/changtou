@@ -70,6 +70,7 @@ export default {
     .ict-item-value{
       flex: 1;
       text-align: right;
+      padding-right: 1rem;
       font-size: @size-ict-item-value-font;
       color: @color-ict-item-value-font;
     }
@@ -98,6 +99,7 @@ export default {
     border-style: solid;
     position: absolute;
     right: 1rem;
+    top: 0.9rem;
     margin-left: .3em;
   }
 

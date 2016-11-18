@@ -249,6 +249,14 @@ export function configRouter (router) {
     //策略 vip 宣传
     '/strategy/vip/intro': {
       component: require('../views/strategy/VipIntro.vue')
+    },
+    //策略 vip 数据
+    '/strategy/vip/product': {
+      component: require('../views/strategy/VipProduct.vue')
+    },
+    //策略 专业版 数据
+    '/strategy/professional/product': {
+      component: require('../views/strategy/ProfessionalProduct.vue')
     }
   })
 

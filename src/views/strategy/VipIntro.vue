@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div class="vip-intro">
+  <div class="strategy-vip-intro">
     <ict-titlebar v-el:titlebar>长投宝VIP版</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
@@ -17,6 +17,7 @@
         <tip></tip>
       </div>
     </scroller>
+    <div class="tip-on-btn" v-el:tip>{{tip}}</div>
     <ict-button v-touch:tap="buyNow" v-el:btns>立即购买</ict-button>
   </div>
 </template>
@@ -31,28 +32,28 @@
   import TargetUser from '../../components/strategy/StrategyTargetUser.vue'
   import Tip from '../../components/strategy/StrategyTip.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
-  import {getWithoutAuth} from '../../frame/ajax'
-  import {getUrl} from '../../frame/apiConfig'
+  import {strategyActions} from '../../vuex/actions'
+  import {strategyGetters, userGetters} from '../../vuex/getters'
   export default {
+    vuex: {
+      getters: {
+        isLogin: userGetters.isLogin,
+        strategy: userGetters.strategy,
+        vipIntro: strategyGetters.vipIntro
+      },
+      actions: {
+        getVipIntro: strategyActions.getVipIntro
+      }
+    },
     data () {
       return {
-        vipIntro: {
-          availableNum: 0,
-          feature: null,
-          featuredStrategy: {
-            product: [],
-            strategyBenefit: '',
-            csi300Benefit: '',
-            historicProfitsUrl: ''
-          },
-          intro: [],
-          promotionUrl: '',
-          promotionId: 0,
-          purchaseOptionsUrl: '',
-          strategyOptions: [],
-          targetUser: null
-        },
         scrollerHeight: '0px'
+      }
+    },
+    computed: {
+      // 按钮上方提示语
+      tip () {
+        return `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天`
       }
     },
     ready () {
@@ -75,44 +76,13 @@
         }, 200)
       },
       /**
-       * 获取vip宣传
-       */
-      getVipIntro () {
-        const me = this
-        getWithoutAuth(
-          {
-            url: getUrl('strategy_vip_intro')
-          }
-        ).then(
-          vipIntro => {
-            vipIntro.intro = vipIntro.intro.split('#')
-            vipIntro.featuredStrategy.labels = vipIntro.featuredStrategy.labels.split('#')
-            vipIntro.featuredStrategy.intro = vipIntro.featuredStrategy.intro.replace(/#/g, '#●').split('#')
-            vipIntro.featuredStrategy.related.push({
-              type: 'FAQ',
-              itemName: '多因子策略使用FAQ'
-            })
-            vipIntro.featuredStrategy = {
-              product: [vipIntro.featuredStrategy],
-              strategyBenefit: vipIntro.featuredStrategy.strategyBenefit,
-              csi300Benefit: vipIntro.featuredStrategy.csi300Benefit,
-              historicProfitsUrl: vipIntro.featuredStrategy.historicProfitsUrl
-            }
-            for (let i = 0, length = vipIntro.strategyOptions.length; i < length; i++) {
-              vipIntro.strategyOptions[i].labels = null
-              vipIntro.strategyOptions[i].intro = null
-              vipIntro.strategyOptions[i].related = null
-            }
-            me.vipIntro = vipIntro
-        }).catch(
-          err => { console.log(err) }
-        )
-      },
-      /**
        * 立即购买
        */
       buyNow () {
-
+        this.$route.router.on(`/pay-VS-0`, {
+          component: require('../pay/VipStrategyOrder.vue')
+        })
+        this.$route.router.go(`/pay-VS-0`)
       }
     },
     components: {
@@ -130,7 +100,7 @@
   }
 </script>
 <style lang="less">
-  .vip-intro{
+  .strategy-vip-intro{
     position: relative;
     background: #fff;
     .intro-promotion{
@@ -158,6 +128,17 @@
     }
     .strategy-options-subtitle{
       padding-bottom: 1rem;
+    }
+    .tip-on-btn{
+      position: absolute;
+      bottom: 2.2rem;
+      width: 100%;
+      opacity: 0.9;
+      background: #ff9800;
+      font-size: 0.7rem;
+      color: #fff;
+      text-align: center;
+      line-height: 1.5rem;
     }
   }
 </style>

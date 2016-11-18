@@ -99,13 +99,18 @@ const apiUrl = {
   'submit_answer': '/homepage/daily-question/submit-answer', //用户提交答案
 
   /**
-   * 支付模块
+   * 订单获取
    */
   //获取订单
   'order_subject': '/deal/expense/course/:id', // 课程 订单
   'order_common_topic': '/deal/expense/common-topic/:id', // 通用专题 订单
   'order_spec_topic': '/deal/expense/course/package/:id', // 打包课专题 订单
-  //支付
+  'order_pro_strategy': '/deal/expense/pro-changtoubao',  // 专业版 长投宝
+  'order_vip_strategy': '/deal/expense/vip-changtoubao', // vip 长投宝
+
+  /**
+   * 支付流程
+   */
   'pay_toubi': '/deal/request', // 投币 支付
   'pay_weChat_app': '/payment/wx/app/order', // 微信 app 支付
   'pay_weChat_browser': '/payment/wx/jsapi/order', // 微信 浏览器 支付

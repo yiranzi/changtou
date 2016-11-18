@@ -3,7 +3,7 @@
 *
 */
 <template>
-    <div class="professional-intro">
+    <div class="strategy-professional-intro">
       <ict-titlebar v-el:titlebar>长投宝专业版</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
@@ -16,9 +16,10 @@
           <tip></tip>
         </div>
       </scroller>
+      <div class="tip-on-btn" v-el:tip>{{tip}}</div>
       <div class="pay-button" v-el:btns>
         <div class="left" v-touch:tap="goToVip">了解VIP</div>
-        <ict-button class="right" v-touch:tap="buyNow">立即购买</ict-button>
+        <ict-button class="right" v-touch:tap="buyNow" :disabled="disabled">立即购买</ict-button>
       </div>
     </div>
 </template>
@@ -33,21 +34,32 @@
   import SuitableProduct from '../../components/strategy/StrategySuitableProduct.vue'
   import Tip from '../../components/strategy/StrategyTip.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
-  import {getWithoutAuth} from '../../frame/ajax'
-  import {getUrl} from '../../frame/apiConfig'
-
+  import {strategyActions} from '../../vuex/actions'
+  import {strategyGetters, userGetters} from '../../vuex/getters'
   export default {
+    vuex: {
+      getters: {
+        isLogin: userGetters.isLogin,
+        strategy: userGetters.strategy,
+        professionalIntro: strategyGetters.professionalIntro
+      },
+      actions: {
+        getProfessionalIntro: strategyActions.getProfessionalIntro
+      }
+    },
     data () {
       return {
-        scrollerHeight: '0px',
-        professionalIntro: {
-          feature: [],
-          intro: [],
-          promotionUrl: '',
-          purchaseOptionsUrl: '',
-          strategyOptions: [],
-          targetUser: null
-        }
+        scrollerHeight: '0px'
+      }
+    },
+    computed: {
+      // 按钮上方提示语
+      tip () {
+        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+      },
+      // 支付按钮 信息
+      disabled () {
+        return !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A')
       }
     },
     ready () {
@@ -69,26 +81,7 @@
         })
         }, 200)
       },
-      /**
-       * 获取专业版 宣传
-       */
-      getProfessionalIntro () {
-        const me = this
-        getWithoutAuth(
-          {url: getUrl('strategy_professional_intro')}
-        ).then(
-          professionalIntro => {
-            professionalIntro.intro = professionalIntro.intro.split('#')
-            for (let i = 0, length = professionalIntro.strategyOptions.length; i < length; i++) {
-              professionalIntro.strategyOptions[i].labels = professionalIntro.strategyOptions[i].labels.split('#')
-              professionalIntro.strategyOptions[i].intro = professionalIntro.strategyOptions[i].intro.replace(/#/g, '#●').split('#')
-            }
 
-            me.professionalIntro = professionalIntro
-        }).catch(
-          err => { console.log(err) }
-        )
-      },
       /**
        * 跳转到vip宣传
        */
@@ -99,7 +92,12 @@
        * 立即购买
        */
       buyNow () {
-
+        if (!this.disabled) {
+          this.$route.router.on(`/pay-PS-0`, {
+            component: require('../pay/ProStrategyOrder.vue')
+          })
+          this.$route.router.go(`/pay-PS-0`)
+        }
       }
     },
     components: {
@@ -117,7 +115,7 @@
   }
 </script>
 <style lang="less">
-  .professional-intro{
+  .strategy-professional-intro{
     position: relative;
     background: #fff;
     .intro-promotion{
@@ -137,6 +135,17 @@
       .right{
         flex: 750-240;
       }
+    }
+    .tip-on-btn{
+      position: absolute;
+      bottom: 2.2rem;
+      width: 100%;
+      opacity: 0.9;
+      background: #ff9800;
+      font-size: 0.7rem;
+      color: #fff;
+      text-align: center;
+      line-height: 1.5rem;
     }
   }
 </style>
