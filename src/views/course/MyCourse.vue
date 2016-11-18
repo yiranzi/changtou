@@ -48,7 +48,6 @@
   import Alert from 'vux/alert'
   import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
-  import {backHandlerSet} from '../../plugin/backHandler'
 
 export default {
   vuex: {
@@ -131,8 +130,6 @@ export default {
   },
   route: {
     data () {
-      backHandlerSet(function () { window.alert('setting') }, this.$route.path)
-
       let promiseArray = []
       const me = this
 

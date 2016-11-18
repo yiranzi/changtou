@@ -9,7 +9,7 @@ import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/act
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {platformMap, Device} from './plugin/device'
-import {backHandlerInit} from './plugin/backHandler'
+
 const mixin = {
   vuex: {
     actions: {
@@ -53,8 +53,6 @@ const mixin = {
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
-
-      backHandlerInit()
 
       this.hideSplashscreen()
     },
