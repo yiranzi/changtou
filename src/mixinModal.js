@@ -57,15 +57,18 @@ const mixin = {
         me.isMaskShow = false
       }
 
-      this.confirmBox = {
-        show: true,
-        title: title,
-        message: message,
-        okText: okText,
-        cancelText: cancelText,
-        okCallback: okAction,
-        cancelCallback: cancelAction
-      }
+      // 这里加入延迟是防止出现被点透无法响应的情况
+      setTimeout(function () {
+        me.confirmBox = {
+          show: true,
+          title: title,
+          message: message,
+          okText: okText,
+          cancelText: cancelText,
+          okCallback: okAction,
+          cancelCallback: cancelAction
+        }
+      }, 150)
     },
 
     [eventMap.SHOW_ALERT]: function ({message, btnText = '确定'}) {
