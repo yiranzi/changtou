@@ -36,13 +36,12 @@ const apiUrl = {
 
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
+  'course_list': '/course/free/category-list', //课程列表
 
-  'expenselist': '/course/expense/list', //总课程列表 付费课程优先
   'expense_records': '/student/expense/lesson/record', //付费课程进度
   'expense_subject_specific': '/course/subject/specific/P/:subjectId', //付费课程简介
   'expense_subject_lessons': '/course/subject/content/P/:subjectId', //付费课程简介
 
-  'freelist': '/course/free/list', //总课程列表 免费课程优先
   'free_records': '/student/free/lesson/record', //免费课程进度
   'free_subject_specific': '/course/subject/specific/F/:subjectId', //免费课程简介
   'free_subject_lessons': '/course/subject/content/F/:subjectId', //免费课程lessons
