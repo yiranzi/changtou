@@ -86,7 +86,7 @@
         this.$route.router.on(`/pay-VS-0`, {
           component: require('../pay/VipStrategyOrder.vue')
         })
-        this.$route.router.go(`/pay-VS-0`)
+        this.$route.router.replace(`/pay-VS-0`)
       }
     },
     components: {

@@ -126,7 +126,7 @@
         this.$route.router.on(path, {
           component: require('../pay/CommonTopicOrder.vue')
         })
-        this.$route.router.go(path)
+        this.$route.router.replace(path)
       }
     },
     components: {

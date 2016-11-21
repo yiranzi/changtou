@@ -303,7 +303,7 @@
         this.$route.router.on(path, {
           component: require('../pay/SpecTopicOrder.vue')
         })
-        this.$route.router.go(path)
+        this.$route.router.replace(path)
       }
     },
     components: {
