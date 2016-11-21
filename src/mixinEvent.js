@@ -56,7 +56,7 @@ const mixin = {
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
 
-      backHandlerInit()
+      this.getKnowledgePointMap()
 
       this.hideSplashscreen()
     },
