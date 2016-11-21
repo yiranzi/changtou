@@ -8,11 +8,13 @@ import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/co
 import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
+import {choiceActions} from './vuex/actions'
 import {platformMap, Device} from './plugin/device'
 import {backHandlerInit} from './plugin/backHandler'
 const mixin = {
   vuex: {
     actions: {
+      getKnowledgePointMap: choiceActions.getKnowledgePointMap,
       loadAllFreeRecords,
       loadAllExpenseRecords,
       resetRecords,
@@ -55,6 +57,8 @@ const mixin = {
       this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
 
       backHandlerInit()
+
+      this.getKnowledgePointMap()
 
       this.hideSplashscreen()
     },
