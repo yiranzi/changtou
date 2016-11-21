@@ -124,7 +124,7 @@
         //跳转到订单页面
         const path = '/pay-CT-' + this.ctpId
         this.$route.router.on(path, {
-          component: require('../pay/Order.vue')
+          component: require('../pay/CommonTopicOrder.vue')
         })
         this.$route.router.go(path)
       }

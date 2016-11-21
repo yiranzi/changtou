@@ -1,38 +1,38 @@
 /**
-* Created by jun on 2016/11/17.
-* 支付 订单页 专业版 长投宝
-*/
+ * Created by jun on 2016/11/21.
+ *
+ */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
-      <pay-pic :pic="pic"></pay-pic>
-      <pay-period :periods="periods"></pay-period>
+    <pay-base :coupons="coupons" :toubi="toubi"
+              :total="total" :sum="sum"
+              :btn-options="btnOptions" :tip="tip"
+              :sheet-show="sheetShow">
+      <pay-title :price="price">{{title}}</pay-title>
+      <pay-subject :course-list="courseList"></pay-subject>
     </pay-base>
   </div>
 </template>
 <script>
-  import PayPeriod from '../../components/payment/PayPeriod.vue'
-  import PayPic from '../../components/payment/PayPic.vue'
+  import PayTitle from '../../components/payment/PayTitle.vue'
+  import PaySubject from '../../components/payment/PaySubject.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
     vuex: {
       getters: {
-        isLogin: userGetters.isLogin,
-        strategy: userGetters.strategy
+        isLogin: userGetters.isLogin
       }
     },
     data () {
       return {
-        pic: '', // 图片
+        title: '', // 专题名词
         price: 0, // 价格
-        periods: [],  // 服务期限列表
+        courseList: [], //课程列表
         coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
-        selectedPeriod: null, // 选择的服务期限
-        itemId: 1, // 交易 id
         currentBalance: 0,  // 投币余额
         sheetShow: false // 显示支付sheet
       }
@@ -46,13 +46,12 @@
       total () {
         return this.price - this.selectedCouponUserBene
       },
+      tip () {
+        return '' //todo 不能购买的情况
+      },
       // 使用的投币金额
       toubi () {
         return this.total > this.currentBalance ? this.currentBalance : this.total
-      },
-      // 按钮上方提示语
-      tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 实付金额
       sum () {
@@ -65,31 +64,26 @@
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A'),
+            disabled: !this.isLogin, // todo 购买过其中一门课
             callback: this.onConfirmTap
           }
         }
       }
     },
     route: {
-      data () {
+      data ({to: {path}}) {
+        const pathArr = path.split('-')
         const me = this
-        return Promise.all([getStrategyOrder(goodsType.PRO_STRATEGY)]).then(
-          ([order]) => {
+        this.type = pathArr[1]
+        this.stpId = parseInt(pathArr[2])
+        return Promise.all([getOrder(this.type, this.stpId)]).then(
+            ([order]) => {
             me.arrangeOrder(order)
       }).catch(
           (err) => console.log(err)
       ) }
     },
     events: {
-      // 服务期限 更改
-      'periodChange' (periodIndex) {
-        this.itemId = periodIndex ? 2 : 1 // 交易用到的itemId //1 一年专业版 2 两年专业版
-        this.price = this.periods[ periodIndex ].price
-        if (this.coupons.length > 0 && !this.coupons[ this.coupons.length - 1 ].couponNo) {
-          this.coupons[ this.coupons.length - 1 ].userBene = Math.floor(this.periods[ periodIndex ].price * 0.3)
-        }
-      },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCoupon = this.coupons[ couponsIndex ]
@@ -103,19 +97,13 @@
        * 整理显示数据
        */
       arrangeOrder (order) {
-        this.pic = order.pic
-        this.periods = [
-          {
-            name: '长投卡专业版一年服务费',
-            price: order.price
-          },
-          {
-            name: '长投卡专业版两年服务费',
-            price: order.price * 2 * order.discount,
-            discount: order.discount
-          }
-        ]
-        this.proLeftDays = order.proLeftDays
+        this.title = order.stpTitle
+        this.price = order.courseItems.reduce(
+          (former, latter) => {
+            return { price: former.price + latter.price }
+          }, { price: 0 }
+        ).price
+        this.courseList = order.courseItems
         this.coupons = this.getCoupons(order)
         this.currentBalance = order.currentBalance
       },
@@ -124,13 +112,14 @@
        */
       getCoupons (order) {
         let coupons = []
+
         if (order.coupons) {
           coupons = order.coupons
         }
         if (order.card) {
           coupons.push({
             name: '长投卡(7折)',
-            userBene: 0
+            userBene: Math.floor(this.price * 0.3)
           })
         }
         return coupons
@@ -146,6 +135,25 @@
         }
       },
       /**
+       * 生成 交易的items
+       */
+      getDealItems (courseList) {
+        let items = []
+        let priceSum = 0
+        for (let i = 0, length = courseList.length; i < length; i++) {
+          items.push({
+            coupon: null,
+            dealType: dealType.BUY,
+            itemId: courseList[i].subjectId,
+            mchantType: 1,
+            misc: '',
+            price: this.selectedCoupon ? (i === length - 1) ? (Math.ceil(this.price * 0.7) - priceSum) : Math.floor(courseList[i].price * 0.7) : courseList[i].price
+          })
+          priceSum += this.selectedCoupon ? Math.floor(courseList[i].price * 0.7) : courseList[i].price
+        }
+        return items
+      },
+      /**
        * 支付
        * @param channel
        */
@@ -153,18 +161,12 @@
         const me = this
         const trade = {
           sum: this.sum,
-          body: this.selectedPeriod,
+          body: '长投课程',
           deal: {
+            stpId: this.stpId,
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
-            items: [{
-              coupon: null,
-              dealType: this.strategy.strategyLevel === 'C' ? dealType.BUY : dealType.POSTPONE,
-              itemId: this.itemId,
-              mchantType: 6,
-              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,
-              price: this.total
-            }]
+            items: this.getDealItems(this.courseList)
           }
         }
 
@@ -186,15 +188,15 @@
       )
       },
       /**
-       * 跳转到 支付成功
+       * 跳转到 支付成功页
        */
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/PS/0`)
+        this.$route.router.replace(`/pay/success/ST/${this.stpId}`)
       }
     },
     components: {
-      PayPic,
-      PayPeriod,
+      PayTitle,
+      PaySubject,
       PayBase
     }
   }

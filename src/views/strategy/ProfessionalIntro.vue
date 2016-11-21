@@ -62,8 +62,12 @@
         return !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A')
       }
     },
+    route: {
+      data () {
+        this.getProfessionalIntro()
+      }
+    },
     ready () {
-      this.getProfessionalIntro()
       this.setScrollerHeight()
     },
     methods: {

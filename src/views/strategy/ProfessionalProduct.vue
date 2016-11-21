@@ -41,8 +41,12 @@
         scrollerHeight: '0px'
       }
     },
+    route: {
+      data () {
+        this.getProfessionalProduct()
+      }
+    },
     ready () {
-      this.getProfessionalProduct()
       this.setScrollerHeight()
     },
     methods: {

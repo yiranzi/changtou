@@ -41,7 +41,7 @@ import { goodsType } from '../../util/pay/dealHelper'
       content: [
         `本次购买套餐课程仅属于各自对应的有效期，请认真查看课程有效时间范围，合理安排学习时间。`
       ],
-      btnText: '参看课程'
+      btnText: '查看课程'
     },
     'CT': {
       name: '专题',
@@ -49,15 +49,17 @@ import { goodsType } from '../../util/pay/dealHelper'
       content: [
         `本次购买套餐课程仅属于各自对应的有效期，请认真查看课程有效时间范围，合理安排学习时间。`
       ],
-      btnText: '参看'
+      btnText: '查看'
     },
     'VS': {
       name: '策略',
       title: '说明：',
       content: [
-
+        `1. 长投宝VIP版{period}期服务是专为长投用户提供的咨询服务，有效期{period}。`,
+        `2. 超过有效期后，长投宝VIP版将无法继续使用，需要再次购买；`,
+        `3. 底栏点击“我的”，进入指数宝VIP版栏目，即可随时查看最新资讯。`
       ],
-      btnText: ''
+      btnText: '立即查看'
     },
     'PS': {
       name: '策略',
@@ -70,18 +72,19 @@ import { goodsType } from '../../util/pay/dealHelper'
       btnText: '立即查看'
     }
   }
-
 export default {
   data () {
     return {
-      type: this.$route.params.type,
-      id: this.$route.params.id,
+      type: '',
+      id: 0,
       message: '',
       isBtnShow: true
     }
   },
   route: {
-    data ({to: {params: { type }}}) {
+    data ({to: {params: { type, id }}}) {
+      this.type = type
+      this.id = id
       this.setMessage(type)
     }
   },
@@ -90,7 +93,30 @@ export default {
       this.message = messages[type]
     },
     onConfirm () {
-      let path = this.type === goodsType.SUBJECT ? `/subject/detail/P/${this.id}/0` : '/mycourse'
+      let path
+      switch (this.type) {
+        case goodsType.SUBJECT:
+          path = `/subject/detail/P/${this.id}/0`
+          break
+        case goodsType.SPEC_TOPIC:
+          path = '/mycourse'
+          break
+        case goodsType.COMMON_TOPIC:
+          path = '/main'
+          break
+        case goodsType.POSTPONE:
+          path = `/subject/detail/P/${this.id}/0`
+          break
+        case goodsType.PRO_STRATEGY:
+          path = '/strategy/professional/product'
+          break
+        case goodsType.VIP_STRATEGY:
+          path = '/strategy/vip/product'
+          break
+        default:
+          path = '/main'
+          break
+      }
       this.$route.router.replace(path)
     }
   },
@@ -121,7 +147,6 @@ export default {
       }
     }
     .message{
-      width: 100%;
       padding: 1.25rem;
       font-size: 0.7rem;
       line-height: 1rem;

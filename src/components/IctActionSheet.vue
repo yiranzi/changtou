@@ -25,21 +25,6 @@ export default {
     title: String,
     btnText: String
   },
-  watch: {
-    show (val) {
-      if (val) {
-        this.fixIos(-1)
-      } else {
-        var me = this
-        setTimeout(() => {
-          me.fixIos(100)
-      }, 200)
-      }
-    },
-    beforeDestroy () {
-      this.fixIos(100)
-    }
-  },
   methods: {
     /**
      * 点击 关闭按钮
@@ -49,19 +34,11 @@ export default {
       this.$emit('close')
     },
     /**
-     * 点击确认支付
+     * 点击 确认
      */
     onConfirmTap () {
       this.show = false
       this.$emit('confirm')
-    },
-    /**
-     * iOS兼容处理
-     */
-    fixIos (zIndex) {
-      if (this.$tabbar && /iphone/i.test(navigator.userAgent)) {
-        this.$tabbar.style.zIndex = zIndex
-      }
     }
   }
 }

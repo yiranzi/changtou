@@ -301,7 +301,7 @@
         //跳转到订单页面
         const path = '/pay-ST-' + this.$route.params.stpId
         this.$route.router.on(path, {
-          component: require('../pay/Order.vue')
+          component: require('../pay/SpecTopicOrder.vue')
         })
         this.$route.router.go(path)
       }

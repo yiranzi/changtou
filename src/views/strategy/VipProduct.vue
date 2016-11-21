@@ -38,8 +38,12 @@ export default {
       scrollerHeight: '0px'
     }
   },
+  route: {
+    data () {
+      this.getVipProduct()
+    }
+  },
   ready () {
-    this.getVipProduct()
     this.setScrollerHeight()
   },
   methods: {

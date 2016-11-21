@@ -56,8 +56,12 @@
         return (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       }
     },
+    route: {
+      data () {
+        this.getVipIntro()
+      }
+    },
     ready () {
-      this.getVipIntro()
       this.setScrollerHeight()
     },
     methods: {
