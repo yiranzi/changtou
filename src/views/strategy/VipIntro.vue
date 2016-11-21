@@ -32,17 +32,17 @@
   import TargetUser from '../../components/strategy/StrategyTargetUser.vue'
   import Tip from '../../components/strategy/StrategyTip.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
-  import {strategyActions} from '../../vuex/actions'
-  import {strategyGetters, userGetters} from '../../vuex/getters'
+  import {strategyIntroActions} from '../../vuex/actions'
+  import {strategyIntroGetters, userGetters} from '../../vuex/getters'
   export default {
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
         strategy: userGetters.strategy,
-        vipIntro: strategyGetters.vipIntro
+        vipIntro: strategyIntroGetters.vipIntro
       },
       actions: {
-        getVipIntro: strategyActions.getVipIntro
+        getVipIntro: strategyIntroActions.getVipIntro
       }
     },
     data () {
@@ -53,7 +53,7 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天`
+        return (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       }
     },
     ready () {

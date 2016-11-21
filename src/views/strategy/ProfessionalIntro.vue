@@ -34,17 +34,17 @@
   import SuitableProduct from '../../components/strategy/StrategySuitableProduct.vue'
   import Tip from '../../components/strategy/StrategyTip.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
-  import {strategyActions} from '../../vuex/actions'
-  import {strategyGetters, userGetters} from '../../vuex/getters'
+  import {strategyIntroActions} from '../../vuex/actions'
+  import {strategyIntroGetters, userGetters} from '../../vuex/getters'
   export default {
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
         strategy: userGetters.strategy,
-        professionalIntro: strategyGetters.professionalIntro
+        professionalIntro: strategyIntroGetters.professionalIntro
       },
       actions: {
-        getProfessionalIntro: strategyActions.getProfessionalIntro
+        getProfessionalIntro: strategyIntroActions.getProfessionalIntro
       }
     },
     data () {

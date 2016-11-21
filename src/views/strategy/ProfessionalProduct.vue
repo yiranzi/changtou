@@ -25,15 +25,15 @@
   import ZhiShubao from '../../components/strategy/StrategyZhiShuBao.vue'
   import DingToubao from '../../components/strategy/StrategyDingTouBao.vue'
   import FenJibao from '../../components/strategy/StrategyFenJiBao.vue'
-  import {strategyActions} from '../../vuex/actions'
-  import {strategyGetters} from '../../vuex/getters'
+  import {strategyProductActions} from '../../vuex/actions'
+  import {strategyProductGetters} from '../../vuex/getters'
   export default {
     vuex: {
       getters: {
-        professionalProduct: strategyGetters.professionalProduct
+        professionalProduct: strategyProductGetters.professionalProduct
       },
       actions: {
-        getProfessionalProduct: strategyActions.getProfessionalProduct
+        getProfessionalProduct: strategyProductActions.getProfessionalProduct
       }
     },
     data () {

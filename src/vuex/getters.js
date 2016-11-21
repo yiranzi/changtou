@@ -18,8 +18,8 @@ import * as newertestGetters from './newertest/getters'
 import * as essayGetters from './homework/essay/getters'
 import * as choiceGetters from './homework/choice/getters'
 import * as helpGetters from './help/getters'
-import * as strategyGetters from './strategy/getters'
-
+import * as strategyIntroGetters from './strategy/intro/getters'
+import * as strategyProductGetters from './strategy/product/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -38,5 +38,6 @@ export {
   essayGetters, // 问答题
   choiceGetters, // 选择题
   helpGetters, //小投答疑
-  strategyGetters // 策略产品
+  strategyIntroGetters, // 策略产品 宣传
+  strategyProductGetters // 策略产品 数据
 }

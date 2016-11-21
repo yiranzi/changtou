@@ -5,9 +5,7 @@
 
 const state = {
   professionalIntro: {},
-  professionalProduct: {},
-  vipIntro: {},
-  vipProduct: {}
+  vipIntro: {}
 }
 
 const mutations = {
@@ -22,16 +20,6 @@ const mutations = {
   },
 
   /**
-   * 更新 专业版 数据
-   * @param state
-   * @param professionalProduct
-   * @constructor
-     */
-  STRATEGY_UPDATE_PROFESSIONAL_PRODUCT (state, professionalProduct) {
-    state.professionalProduct = professionalProduct
-  },
-
-  /**
    * 更新 vip 宣传页
    * @param state
    * @param vipIntro
@@ -39,16 +27,6 @@ const mutations = {
      */
   STRATEGY_UPDATE_VIP_INTRO (state, vipIntro) {
     state.vipIntro = vipIntro
-  },
-
-  /**
-   * 更新 vip 数据
-   * @param state
-   * @param vipProduct
-   * @constructor
-     */
-  STRATEGY_UPDATE_VIP_PRODUCT (state, vipProduct) {
-    state.vipProduct = vipProduct
   }
 }
 
