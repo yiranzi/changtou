@@ -15,7 +15,6 @@
     width: 100%;
     height: 100%;
     background-color: #f6cf3f;
-    position: relative;
     .cancel:before{
       position: absolute;
       top: 0.6rem;
@@ -87,7 +86,7 @@
   export default {
     methods: {
       onCancel () {
-        this.$route.router.go('/main')
+        window.history.back()
       },
       goToNewertestQuestion () {
         this.$route.router.go('/newertest/question')

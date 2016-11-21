@@ -53,21 +53,24 @@
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
   import {setLocalCache, getLocalCache} from './util/cache'
+
   import mixinEvent from './mixinEvent'
   import mixinAjax from './mixinAjax'
   import mixinModal from './mixinModal'
+  import mixinBackHandler from './mixinBackHandler'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler],
 
     store,
 
     vuex: {
       getters: {
         route: (state) => state.route,
-        direction: (state) => state.direction,
+        direction: (state) => state.global.direction,
         newMsgNum: messageGetters.newMsgNum
       },
+
       actions: {
         addNewMessageNum: messageActions.addNewMessageNum
       }
@@ -75,14 +78,8 @@
 
     data () {
       return {
-        isShowNewTestPop: false,
-        alertBox: {},
-        toast: {},
-        confirmBox: {
-          title: ''
-        }
+        isShowNewTestPop: false
       }
-//    Object.assign({}, store.state.global, {isShowNewTestPop: false})
     },
 
     computed: {
@@ -169,7 +166,7 @@
   .vux-pop-out-transition,
   .vux-pop-in-transition {
     width: 100%;
-    animation-duration: 0.5s;
+    animation-duration: 0.3s;
     animation-fill-mode: both;
     backface-visibility: hidden;
   }

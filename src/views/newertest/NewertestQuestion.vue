@@ -162,7 +162,8 @@
 </style>
 <script>
   import {newertestActions, globalActions} from '../../vuex/actions'
-  import {newertestGetters} from '../../vuex/getters'
+//  import {newertestGetters} from '../../vuex/getters'
+
   export default {
     vuex: {
       actions: {
@@ -171,9 +172,10 @@
         showAlert: globalActions.showAlert
       },
       getters: {
-        questionArr: newertestGetters.questionArr
+//        questionArr: newertestGetters.questionArr
       }
     },
+
     data () {
       return {
         currQuIndex: 0, //当前题目序号
@@ -184,21 +186,23 @@
         answer: [], //答案
         comboId: 0, //模板id
         level: 0, //等级
-        options: []
+        questionArr: []
       }
     },
+
     computed: {
-      //当前问题
       currQuestion () {
-        if (this.questionArr) {
-          let currQuestion = this.questionArr[this.currQuIndex]
-          this.options = currQuestion ? currQuestion.options : []
-          return currQuestion
-        }
+        return this.questionArr[this.currQuIndex]
       },
+
+      //当前问题
+      options () {
+        return this.currQuestion ? this.currQuestion.options : []
+      },
+
       //按钮显示
       btnObj () {
-        let feedback = this.currQuestion ? this.currQuestion.feedback : ''
+        const feedback = this.currQuestion ? this.currQuestion.feedback : ''
         let btnWord = '下一题'
         if (feedback) {
           btnWord = '小秘密'
@@ -208,17 +212,19 @@
         return btnWord
       }
     },
+
     watch: {
       'currQuIndex': function (newIndex) {
         this.isClicked = false
       }
     },
+
     route: {
       data (transition) {
         const me = this
         this.loadQuestion().then(
-          function () {
-            transition.next()
+          function (question) {
+            transition.next({questionArr: question})
           },
           function () {
             me.showAlert('加载信息失败，请重新加载')

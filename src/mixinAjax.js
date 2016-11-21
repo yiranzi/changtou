@@ -27,7 +27,15 @@ const mixin = {
      * @param res
      */
     responIntercepter: function (res) {
-      //console.log('res', res)
+      // 若返回值不是object, 强制转换
+      if (typeof res.data === 'string') {
+        try {
+          res.data = JSON.parse(res.data)
+        } catch (e) {
+          //todo 上传此错误
+        }
+      }
+
       if (res.status === responseCodeMap.ERR) {
         //todo 显示浮框
       } else if (res.status === responseCodeMap.TIMEOUT) {

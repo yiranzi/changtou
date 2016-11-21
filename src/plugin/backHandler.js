@@ -1,113 +1,50 @@
 /**
  * Created by jun on 2016/11/11.
+ *
+ * 处理 (安卓后退键)
  */
 
-let backHandler = null
-let doubleBack = false
-let viewPath = ''
-const backHandlerInit = () => {
-  document.addEventListener('backbutton', backManager)
+// 默认后退处理
+let defaultHandler = null
+
+// 当前的设置的后退处理
+let currbackHandler = null
+
+/**
+ * 添加处理函数
+ * 若是没有设置后退处理, 执行默认.
+ */
+document.addEventListener('backbutton', () => {
+  const handler = currbackHandler || defaultHandler
+  handler && handler()
+})
+
+/**
+ * 初始化默认(后退)处理
+ * @param defaultHandler
+ */
+const setDefaultHandler = (handler) => {
+  defaultHandler = handler
 }
 
-const backHandlerSet = (backHandlerFromView, path) => {
-  viewPath = path
-  backHandler = backHandlerFromView
+/**
+ * 设置处理
+ * @param handler
+ */
+const setHandler = (handler) => {
+  currbackHandler = handler
 }
 
-const backManager = () => {
-  if (viewPath === '/main' || viewPath === '/mycourse' || viewPath === '/setting') {
-    if (doubleBack) {
-      window.navigator.app.exitApp()
-    } else {
-      doubleBack = true
-      setTimeout(() => {
-        doubleBack = false
-      }, 2000)
-    }
-  } else {
-    backHandler()
-  }
+/**
+ * 重置处理
+ */
+const resetHandler = () => {
+  currbackHandler = defaultHandler
 }
 
-export {
-  backHandlerInit,
-  backHandlerSet
+export default {
+  setDefaultHandler,
+  setHandler,
+  resetHandler
 }
 
-//Ext.define('education.util.plugin.BackHandler', {
-//  alternateClassName: 'BackHandler',
-//  singleton: true,
-//
-//  config: {
-//    quitDesire: false
-//  },
-//
-//  VIEW_HANDLER: 'backButtonHandler', //各个视图的物理键处理函数
-//
-//  /**
-//   *
-//   */
-//  constructor: function(config){
-//    this.initConfig(config);
-//  },
-//
-//  /**
-//   * back事件初始化
-//   */
-//  backHandlerInit: function(){
-//
-//  },
-//
-//  /**
-//   * 后退处理
-//   */
-//  backHandler: function(){
-//
-//    if( BackHandler._isPreventDefault() ){
-//      return;
-//    }
-//
-//    if(UrlHistory.getUrlCount() === 1){
-//      BackHandler.quitApp();
-//    }else{
-//      location.back();
-//    }
-//  },
-//
-//  /**
-//   * 是否阻止默认事件
-//   * @returns {boolean}
-//   * @private
-//   */
-//  _isPreventDefault: function(){
-//
-//    //如果视图有自定义的物理键拦截动作，则优先执行。
-//    var activeView = Cmp.getActiveView();
-//    if( activeView && activeView[this.VIEW_HANDLER]){
-//      if( activeView[this.VIEW_HANDLER].apply(activeView) ){
-//        return true;
-//      }
-//    }
-//
-//    return false;
-//  },
-//
-//  /**
-//   * 退出app
-//   */
-//  quitApp: function(){
-//    var me = this;
-//    if(me.getQuitDesire()){
-//      EventBus.fireEvent(eventMap.QUIT_APP);
-//      navigator.app.exitApp();
-//      me.setQuitDesire(false);
-//    }else{
-//      Msg.showFloatPanel('再按一次退出长投学堂',2000);
-//      me.setQuitDesire(true);
-//      setTimeout(function(){
-//        me.setQuitDesire(false);
-//      },2000);
-//    }
-//  }
-
-//let confirmQuit = false

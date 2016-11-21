@@ -16,7 +16,7 @@ export const loadQuestion = ({ dispatch }) => {
       }).then(
         function (question) {
           dispatch('NEWERTEST_UPDATE_QUESTION', question)
-          resolve()
+          resolve(question)
         },
         function (err) {
           reject(err)
