@@ -9,7 +9,7 @@ import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/act
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {platformMap, Device} from './plugin/device'
-import {backHandlerInit} from './plugin/backHandler'
+
 const mixin = {
   vuex: {
     actions: {
@@ -54,8 +54,6 @@ const mixin = {
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
 
-      backHandlerInit()
-
       this.hideSplashscreen()
     },
 
@@ -92,8 +90,8 @@ const mixin = {
     doWhenUserValid: function (user) {
       let tasks = []
       // 获取课程进度
-      tasks.push(this.loadAllFreeRecords)
-      tasks.push(this.loadAllExpenseRecords)
+      tasks.push(this.loadAllFreeRecords())
+      tasks.push(this.loadAllExpenseRecords())
       // 设置jpush用户关联
       tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
 

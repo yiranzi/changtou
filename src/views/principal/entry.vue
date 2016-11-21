@@ -84,6 +84,13 @@
       }
     },
 
+    route: {
+      data () {
+        // 这里初始化 前一个用户的 user 信息
+//        console.log('exe')
+      }
+    },
+
     methods: {
       doLogin () {
         this.disabled = true

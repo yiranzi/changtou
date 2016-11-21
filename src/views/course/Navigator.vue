@@ -57,7 +57,6 @@
   import WebAudio from '../../components/webAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
-  import {backHandlerSet} from '../../plugin/backHandler'
 
   export default {
     vuex: {
@@ -91,11 +90,7 @@
         }
       )
     },
-    route: {
-      data () {
-        backHandlerSet(function () { window.alert('navigator') }, this.$route.path)
-      }
-    },
+
     computed: {
       banners () {
         let banners = this.originBanners
