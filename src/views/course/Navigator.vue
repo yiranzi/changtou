@@ -18,7 +18,7 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">热门畅销</span>
-            <span class="subtitle" v-touch:tap="onExpenseListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
                v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
@@ -34,7 +34,7 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">免费好课</span>
-            <span class="subtitle" v-touch:tap="onFreeListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="course in freeList"
                v-touch:tap="goToCourseDetail('F',$index)"
@@ -138,11 +138,8 @@
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)
       },
-      onExpenseListTap () {
-        this.$route.router.go('/totalList/P')
-      },
-      onFreeListTap () {
-        this.$route.router.go('/totalList/F')
+      onListTap () {
+        this.$route.router.go('/totalList')
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {

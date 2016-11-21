@@ -62,7 +62,7 @@ export function configRouter (router) {
     '/main': { //主页面课程导航页
       component: require('../views/course/Navigator.vue')
     },
-    '/totalList/:type': { //查看所有课程列表页
+    '/totalList': { //查看所有课程列表页
       component: require('../views/course/Courselist.vue')
     },
     'subject/detail/F/:subjectId/:position': { //课程详情页

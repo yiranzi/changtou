@@ -14,7 +14,6 @@ export const loadCourseList = ({ dispatch }) => {
     }
   ).then(
     list => {
-      console.log(list)
       dispatch('DISPLAY_UPDATE_TOTAL_LIST', list)
     },
     err => console.warn(err)
