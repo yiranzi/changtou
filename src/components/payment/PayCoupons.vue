@@ -18,7 +18,7 @@
     <div class="order-coupons" v-if="show">
       <p class="coupons-label">长投卡/优惠券（不可叠加使用）</p>
       <label v-for="coupon in coupons" for="coupons_{{$index}}" class="coupon-item">
-        <span>{{coupon.name}}</span>
+        <span>{{coupon.name}}</span><span v-if="!coupons.couponNo">省{{coupon.userBene}}元</span>
         <input class="coupon-item-check" type="radio" value="{{$index}}" checked="{{!$index}}" v-model="value" id="coupons_{{$index}}">
         <span class="coupon-item-checked"></span>
       </label>
@@ -27,14 +27,8 @@
 <script>
 export default {
   props: {
-    coupons: {
-      type: Array,
-      required: true
-    },
-    value: {
-      type: Array,
-      default: null
-    }
+    coupons: Array,
+    value: Array
   },
   computed: {
     show () {
@@ -43,6 +37,7 @@ export default {
   },
   watch: {
     value (newVal) {
+      this.$dispatch('couponChange', newVal)
       this.$emit('pay-coupons-change', newVal)
     }
   }
@@ -116,22 +111,22 @@ export default {
     .coupon-item-check{
       position: absolute;
       left: -1rem;
-        &:checked {
-          & + .coupon-item-checked {
-            border: 0;
-            &:before {
-              position: absolute;
-              display: block;
-              width: 1rem;
-              height: 1rem;
-              line-height: 1rem;
-              font-family: 'myicon';
-              content: '\e90c';
-              color: #00b0f0;
-              font-size: 1rem !important;
-            }
+      &:checked {
+        & + .coupon-item-checked {
+          border: 0;
+          &:before {
+            position: absolute;
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            line-height: 1rem;
+            font-family: 'myicon';
+            content: '\e90c';
+            color: #00b0f0;
+            font-size: 1rem !important;
           }
         }
+      }
     }
   }
 </style>

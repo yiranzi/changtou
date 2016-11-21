@@ -36,13 +36,12 @@ const apiUrl = {
 
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
+  'course_list': '/course/free/category-list', //课程列表
 
-  'expenselist': '/course/expense/list', //总课程列表 付费课程优先
   'expense_records': '/student/expense/lesson/record', //付费课程进度
   'expense_subject_specific': '/course/subject/specific/P/:subjectId', //付费课程简介
   'expense_subject_lessons': '/course/subject/content/P/:subjectId', //付费课程简介
 
-  'freelist': '/course/free/list', //总课程列表 免费课程优先
   'free_records': '/student/free/lesson/record', //免费课程进度
   'free_subject_specific': '/course/subject/specific/F/:subjectId', //免费课程简介
   'free_subject_lessons': '/course/subject/content/F/:subjectId', //免费课程lessons
@@ -99,13 +98,18 @@ const apiUrl = {
   'submit_answer': '/homepage/daily-question/submit-answer', //用户提交答案
 
   /**
-   * 支付模块
+   * 订单获取
    */
   //获取订单
   'order_subject': '/deal/expense/course/:id', // 课程 订单
   'order_common_topic': '/deal/expense/common-topic/:id', // 通用专题 订单
   'order_spec_topic': '/deal/expense/course/package/:id', // 打包课专题 订单
-  //支付
+  'order_pro_strategy': '/deal/expense/pro-changtoubao',  // 专业版 长投宝
+  'order_vip_strategy': '/deal/expense/vip-changtoubao', // vip 长投宝
+
+  /**
+   * 支付流程
+   */
   'pay_toubi': '/deal/request', // 投币 支付
   'pay_weChat_app': '/payment/wx/app/order', // 微信 app 支付
   'pay_weChat_browser': '/payment/wx/jsapi/order', // 微信 浏览器 支付
@@ -124,7 +128,16 @@ const apiUrl = {
   'homework_submit_article': '/student/expense/lesson/article', //提交作业或草稿
   'homework_get_report': '/student/choice-question-report/:lessonId', // 获取选择题 测试报告
   'homework_submit_report': '/student/choice-question-report', // 提交选择题 测试报告
-  'homework_get_choice_knowledge_point': '/course/knowledge-point' // 获取选择题 对应知识点
+  'homework_get_choice_knowledge_point': '/course/knowledge-point', // 获取选择题 对应知识点
+
+  /**
+   * 策略产品
+   */
+  'strategy_vip_data': '/strategy/data/vip',
+  'strategy_professional_data': '/strategy/data/professional',
+  'strategy_professional_intro': '/strategy/promotion/professional',
+  'strategy_vip_intro': '/strategy/promotion/vip',
+  'strategy_notice': '/strategy/data/message/:authority' // 通知
 
 }
 

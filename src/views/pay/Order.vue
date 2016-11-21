@@ -1,7 +1,7 @@
 /**
 * 支付 订单页
      this.$route.router.go('/pay-:type-:id')
-     type: 'S' 课程 | 'CT' 通用专题 |'ST' 打包课专题 |'P' 延期
+     type: 'S' 课程 | 'CT' 通用专题 |'ST' 打包课专题 |'P' 延期 |'VS' vip长投宝 | 'PS' 专业版长投宝
      id: subjectId | ctpId | stpId | subjectId
 **/
 
@@ -470,7 +470,7 @@
           default:
             break
         }
-//        console.log(this.type, '订单信息', JSON.stringify(this.trade))
+        console.log(this.type, '订单信息', JSON.stringify(this.trade))
       }
     },
     components: {

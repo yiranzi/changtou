@@ -24,7 +24,7 @@ export function configRouter (router) {
     '/main': { //主页面课程导航页
       component: require('../views/course/Navigator.vue')
     },
-    '/totalList/:type': { //查看所有课程列表页
+    '/totalList': { //查看所有课程列表页
       component: require('../views/course/Courselist.vue')
     },
     'subject/detail/F/:subjectId/:position': { //课程详情页
@@ -170,11 +170,11 @@ export function configRouter (router) {
      * 每日一题
      */
     //获取每日一题
-    'daily/quiz': {
+    '/daily/quiz': {
       component: require('../views/daily/DailyQuestion.vue')
     },
     //用户提交答案
-    'daily/answer': {
+    '/daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
     },
 
@@ -200,8 +200,26 @@ export function configRouter (router) {
     //选择题 看分数
     '/choice/mark': {
       component: require('../views/homework/ChoiceMark.vue')
+    },
+    /**
+     * 策略产品
+     */
+    //策略 专业版 宣传
+    '/strategy/professional/intro': {
+      component: require('../views/strategy/ProfessionalIntro.vue')
+    },
+    //策略 vip 宣传
+    '/strategy/vip/intro': {
+      component: require('../views/strategy/VipIntro.vue')
+    },
+    //策略 vip 数据
+    '/strategy/vip/product': {
+      component: require('../views/strategy/VipProduct.vue')
+    },
+    //策略 专业版 数据
+    '/strategy/professional/product': {
+      component: require('../views/strategy/ProfessionalProduct.vue')
     }
-
   })
 
   // redirect

@@ -17,13 +17,13 @@
         <flexbox-item :span="1/10"></flexbox-item>
       </flexbox>
     </div>
+    <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
+              :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
+              v-touch:tap="onStrategyTap">
+    </ict-item>
     <ict-item title="个人资料"
               link="/personal/information"
               :disabled="!isLogin">
-    </ict-item>
-    <ict-item title="指数宝"
-              v-if="isZSB"
-              link="">
     </ict-item>
     <ict-item title="鼓励师首页"
               v-if="isSpire"
@@ -36,9 +36,6 @@
     </ict-item>
     <ict-item title="小投答疑"
               link="/self/service">
-    </ict-item>
-    <ict-item title="意见反馈"
-              link="/feedback">
     </ict-item>
     <ict-item title="关于我们"
               link="/contact/us">
@@ -79,9 +76,7 @@
         }
         return number
       },
-      isZSB () {
-        return !!this.strategy && (this.strategy.strategyLevel === 'A')
-      },
+
       isSpire () {
 
       },
@@ -94,11 +89,20 @@
     },
 
     methods: {
-      doLogin: function () {
+      doLogin   () {
         this.$route.router.go('/entry')
       },
-      doRegister: function () {
+      doRegister () {
         this.$route.router.go('/register/start')
+      },
+      onStrategyTap () {
+        if (!this.strategy || this.strategy.strategyLevel === 'C') {
+          this.$route.router.go('/strategy/professional/intro')
+        } else if (this.strategy.strategyLevel === 'A') {
+          this.$route.router.go('/strategy/vip/product')
+        } else if (this.strategy.strategyLevel === 'B') {
+          this.$route.router.go('/strategy/professional/product')
+        }
       }
     },
     components: {
