@@ -165,7 +165,8 @@
 
     data () {
       return {
-        lessonListType: []
+        lessonListType: [],
+        selectChapterIndex: -1
       }
     },
 
@@ -197,6 +198,16 @@
         }
 
         this.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
+      },
+
+      /**
+       * 播放下一章节
+       */
+      'playNextCapterExpense': function () {
+        // 如何合理, 自动播放下一章节
+        if (this.selectChapterIndex + 1 < this.selectedLesson.lessonDetailsList.length) {
+          this.updateSelectedChapter(this.selectedLesson.lessonDetailsList[this.selectChapterIndex + 1], this.selectChapterIndex + 1)
+        }
       }
     },
 
@@ -217,22 +228,23 @@
 
       updateSelectedChapter (chapter, $index) {
         this.selectedChapter = chapter
+        this.selectChapterIndex = $index
         // 向父组件派发事件
-        this.$dispatch('chapterSelected', chapter, $index, 'common')
+        this.$dispatch('chapterSelectedExpense', chapter, $index, 'common')
       },
 
       /**
        * 点击选择题
        */
       onHomeworkChoiceTap () {
-        this.$dispatch('chapterSelected', null, 0, 'choice')
+        this.$dispatch('chapterSelectedExpense', null, 0, 'choice')
       },
 
       /**
        * 点击问答题
        */
       onHomeworkEssayTap () {
-        this.$dispatch('chapterSelected', null, 0, 'essay')
+        this.$dispatch('chapterSelectedExpense', null, 0, 'essay')
       },
 
       /**

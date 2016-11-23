@@ -134,6 +134,7 @@
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {setSessionCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -159,6 +160,7 @@
      */
     data () {
       return {
+        isResponsive: true, // 当前页面是否处于可响应状态 ((响应 音频播放完成,全屏 事件))
         scrollerHeight: '480px',
 
         isLoadedFail: false, //数据是否加载完毕
@@ -192,28 +194,44 @@
        * @param subjectId
        * @returns {{type: string}}
        */
-      data ({to: {params: {subjectId}}}) {
-        this.resetView()
+      data ({to: {params: {subjectId}}, from}) {
+        // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        if (from.path && from.path.indexOf('landscape/') > -1) {
+          // do nothing
+        } else {
+          this.resetView()
 
-        let tasks = [this.loadfreeSubject(subjectId)]
-        if (this.isUserLogin) {
-          tasks.push(this.loadfreeRecord(subjectId))
-        }
-
-        return Promise.all(tasks).then(
-            () => {
-            return {subjectId: subjectId, isLoadedFail: false}
-          },
-            () => {
-            return {isLoaded: false, isLoadedFail: true}
+          const tasks = [this.loadfreeSubject(subjectId)]
+          if (this.isUserLogin) {
+            tasks.push(this.loadfreeRecord(subjectId))
           }
-        )
+
+          return Promise.all(tasks).then(
+            () => {
+              return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
+            },
+            () => {
+              return {isLoaded: false, isLoadedFail: true, isResponsive: true}
+            }
+          )
+        }
       },
 
       /**
        * 页面隐藏时
        */
-      deactivate () {
+      deactivate ({to, next}) {
+        // 如果是跳转到横屏页面, 不打断音频
+        if (to.path && to.path.indexOf('landscape/') > -1) {
+          next()
+        } else {
+          // 跳转到非横屏页面
+          // 停止音频播放
+          // 设置不可响应
+          this.pause()
+          this.isResponsive = false
+          next()
+        }
         this.pause()
       }
     },
@@ -268,15 +286,28 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter) {
-        //显示ppt,音频
-        this.hasVaildChapterCicked = true
-        this.currAudioSrc = chapter.audio
-        this.currPpts = chapter.ppts
+      'chapterSelectedFree': function (chapter) {
+        this.playChapter(chapter)
+      },
 
-        //登录并且在读状态下, 更新课程进度
-        if (this.isUserLogin && this.currStatus === 'N') {
-          this.updateRecord()
+      /**
+       * 当全屏被点击
+       */
+      'fullScreenTap' () {
+        if (this.isResponsive) {
+          this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+        }
+      },
+
+      /**
+       * 音频播放结束
+       * 继续播放下一节可用的音频
+       */
+      'audioPlayEnd' () {
+        if (this.isResponsive) {
+          // 尝试播放下一个章节
+          // 由子组件接收事件控制
+          this.$broadcast('playNextCapterFree')
         }
       }
     },
@@ -366,19 +397,40 @@
           me.$route.router.go('/entry')
         }
 
-        const cancelHandler = function () {
-        }
-
         const msg = '<p>您尚未登录,无法同步你的学习进度,请登录之后参加课程</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
-          title: '',
-          msg: msg,
-          confirmText: '立即登录',
+          okText: '立即登录',
           cancelText: '暂不登录',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
+          title: '',
+          msg: msg
         })
+      },
+
+      /**
+       * 跳转到横屏
+       */
+      goToFullScreen (subjectId, lesson, chapterIndex) {
+        setSessionCache('landscapeSrc', {lesson, chapterIndex, currChapter: this.selectedChapter})
+        this.$route.router.go(`/landscape/${subjectId}/${lesson.lessonId}`)
+      },
+
+      /**
+       *  播放
+       * @param chapter
+       */
+      playChapter (chapter) {
+        //显示ppt,音频
+        this.hasVaildChapterCicked = true
+        this.currAudioSrc = chapter.audio
+        this.currPpts = chapter.ppts
+
+        //登录并且在读状态下, 更新课程进度
+        if (this.isUserLogin && this.currStatus === 'N') {
+          this.updateRecord()
+        }
+        this.$dispatch('chapterPlay', chapter)
       }
     },
 

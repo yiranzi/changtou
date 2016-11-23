@@ -13,16 +13,16 @@ const events = {
   play: 'play',
   pause: 'pause',
   playing: 'playing',
+  ended: 'ended', //播放结束
   loadMediaDuration: 'loadedmetadata', //成功换取音频长度
-  loadEnd: 'canplaythrough', //全部加载完毕
-  playEnd: 'ended' //播放结束
+  loadEnd: 'canplaythrough' //全部加载完毕
 }
 
 /**
  * 媒体对象
  * @type {window.Audio}
  */
-let $media = new window.Audio()
+const $media = new window.Audio()
 
 /**
  *
@@ -107,6 +107,23 @@ const unAll = (media = $media, handlers = $handlers) => {
   handlers = []
 }
 
+/**
+ * 当前音频状态
+ * @type {string}
+ */
+//const statusMap = {
+//  play: 'play',
+//  pause: 'pause',
+//  playing: 'playing',
+//  ended: 'ended', //播放结束
+//  loadMediaDuration: 'loadedmetadata', //成功换取音频长度
+//  loadEnd: 'canplaythrough' //全部加载完毕
+//}
+//
+//let status = ''
+//
+//$media.addEventListener()
+
 export const webAudio = {
   media: $media,
   play,
@@ -117,6 +134,7 @@ export const webAudio = {
   unAll,
   create,
   events,
+
   /**
    * 获取缓冲进度
    * @returns {number}
