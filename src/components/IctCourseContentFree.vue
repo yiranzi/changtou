@@ -1,6 +1,6 @@
 <template>
   <div class="lesson-content">
-    <div v-for="lesson in lessons" v-touch:tap="updateSelectedLesson(lesson, $event)"
+    <div v-for="lesson in lessons" v-touch:tap="updateSelectedLesson(lesson, $index, $event)"
          class="chapter-title" v-bind:class="{'active': lesson.title === (selectedLesson && selectedLesson.title)}">
         <!--<div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter)"-->
              <!--class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">-->
@@ -126,7 +126,8 @@
 
     data () {
       return {
-        lessonListType: []
+        lessonListType: [],
+        currSelectedIndex: -1
       }
     },
 
@@ -134,10 +135,20 @@
       this.selectedLesson = this.lessons[0]
     },
 
+    events: {
+      'playNextCapterFree': function () {
+        if (this.currSelecteLessonIndex + 1 < this.lessons.length) {
+          this.updateSelectedLesson(
+            this.lessons[this.currSelecteLessonIndex + 1], this.currSelecteLessonIndex + 1)
+        }
+      }
+    },
+
     methods: {
-      updateSelectedLesson (lesson, $event) {
+      updateSelectedLesson (lesson, index) {
         this.selectedLesson = lesson
-        this.updateSelectedChapter(lesson.lessonDetailsList[0]) //这里更新chapter, 是为了预留二级空间,与付费可结构一致,以后好修改
+        this.currSelecteLessonIndex = index
+        this.updateSelectedChapter(lesson.lessonDetailsList[0]) //这里更新chapter, 是为了预留二级空间,与付费课结构一致,以后好修改
 //        // 则设置开关列表状态
 //        if ($event.target.className.includes('lesson-title')) { // 若是选中的是 lesson 而不是 chapter
 //          let index = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
@@ -156,8 +167,8 @@
 
       updateSelectedChapter (chapter) {
         this.selectedChapter = chapter
-        // 向父组件派发事件
-        this.$dispatch('chapterSelected', chapter)
+        // 向父组件派发事件 (注意这里的事件名称和付费课不一致)
+        this.$dispatch('chapterSelectedFree', chapter)
       }
     }
   }

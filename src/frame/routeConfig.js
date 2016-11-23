@@ -36,8 +36,8 @@ export function configRouter (router) {
     '/mycourse': {    //我的课程
       component: require('../views/course/MyCourse.vue')
     },
-    '/full/screen/:subjectId/:lessonId/:chapterIndex': { //横屏
-      component: require('../views/course/FullScreen.vue')
+    '/landscape/:subjectId/:lessonId': { //横屏
+      component: require('../views/course/Landscape.vue')
     },
     /**
      * 登录模块
