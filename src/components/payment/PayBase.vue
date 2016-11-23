@@ -10,6 +10,7 @@
         <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange"></pay-coupons>
         <pay-total>{{total}}</pay-total>
         <pay-toubi :value="toubi"></pay-toubi>
+        <fast-login @login-tap="onLoginTap" @code-confirm="onCodeConfirm"></fast-login>
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
       <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns></pay-button>
@@ -23,6 +24,7 @@
   import PayTotal from '../../components/payment/PayTotal.vue'
   import PayToubi from '../../components/payment/PayToubi.vue'
   import PayButton from '../../components/payment/PayButtons.vue'
+  import FastLogin from '../../components/payment/PayFastLogin.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
 
 export default {
@@ -77,6 +79,12 @@ export default {
     },
     onPayChannelChange (payWay) {
       this.$dispatch('payChannelChange', payWay)
+    },
+    onCodeConfirm () {
+      this.$dispatch('codeConfirm')
+    },
+    onLoginTap () {
+      this.$dispatch('loginTap')
     }
   },
   components: {
@@ -86,7 +94,8 @@ export default {
     PayTotal,
     PayToubi,
     PayButton,
-    PayActionSheet
+    PayActionSheet,
+    FastLogin
   }
 }
 </script>

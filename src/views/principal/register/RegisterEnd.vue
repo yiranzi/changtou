@@ -143,9 +143,9 @@
               this.$dispatch(eventMap.REGISTER_SUCCESS, user)
               window.history.go(-2)
               me.isDisabled = false
-            },
-            (err) => {
-              me.showAlert(err.message)
+            }).catch(
+            () => {
+            clearInterval(me.timer)
               me.isDisabled = false
             }
           )

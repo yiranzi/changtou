@@ -104,7 +104,6 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
-      console.log('./components/' + component)
       let MyComponent = Vue.extend({
         template: `<div><div class="ict-float-mask" v-touch:tap="onFloatMaskTap"><div class="ict-float-component"><mask-component></mask-component></div></div></div>`,
         components: {

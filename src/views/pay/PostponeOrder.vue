@@ -109,6 +109,13 @@
         }
 
         this.currPostponeIndex = postponeIndex
+      },
+      'codeConfirm' () {
+        const me = this
+        getPostponeOrder(this.type, this.subjectId).then(order => me.arrangeOrder(order))
+      },
+      'loginTap' () {
+        this.$route.router.go('/entry')
       }
     },
     methods: {

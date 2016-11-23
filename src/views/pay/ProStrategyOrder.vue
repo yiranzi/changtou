@@ -96,6 +96,13 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+      },
+      'codeConfirm' () {
+        const me = this
+        getStrategyOrder(goodsType.PRO_STRATEGY).then(order => me.arrangeOrder(order))
+      },
+      'loginTap' () {
+        this.$route.router.go('/entry')
       }
     },
     methods: {

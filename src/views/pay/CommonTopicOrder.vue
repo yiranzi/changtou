@@ -93,6 +93,13 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+      },
+      'codeConfirm' () {
+        const me = this
+        getOrder(this.type, this.ctpId).then(order => me.arrangeOrder(order))
+      },
+      'loginTap' () {
+        this.$route.router.go('/entry')
       }
     },
     methods: {

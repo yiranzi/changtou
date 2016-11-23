@@ -91,9 +91,7 @@ export default {
                 clearInterval(me.timer)
               }
             }, 1000)
-        },
-        err => me.showAlert(err)
-      )
+        })
     },
     /**
      * 点击下一步
