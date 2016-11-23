@@ -40,13 +40,12 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../../components/IctTitlebar.vue'
-  import IctButton from '../../../components/IctButton.vue'
+  import IctButton from '../IctButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
-  import {userActions, globalActions} from '../../../vuex/actions'
-  import {eventMap} from '../../../frame/eventConfig'
+  import {userActions} from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
 export default {
   vuex: {
     actions: {
@@ -142,7 +141,6 @@ export default {
     }
   },
   components: {
-    IctTitlebar,
     Flexbox,
     FlexboxItem,
     Group,
