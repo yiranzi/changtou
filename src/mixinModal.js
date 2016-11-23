@@ -24,8 +24,8 @@ Vue.mixin({
       this.$dispatch(eventMap.SHOW_ALERT, {message, btnText})
     },
 
-    showToast: function ({message = ''}) {
-      this.$dispatch(eventMap.SHOW_TOAST, {message})
+    showToast: function ({message = '', type = text}) {
+      this.$dispatch(eventMap.SHOW_TOAST, {message, type})
     },
 
     showMask: function ({component, hideOnMaskTap = true, callbackName, callbackFn}) {
