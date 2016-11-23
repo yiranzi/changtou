@@ -400,11 +400,11 @@
         const msg = '<p>您尚未登录,无法同步你的学习进度,请登录之后参加课程</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
+          title: '',
+          msg: msg,
           okText: '立即登录',
           cancelText: '暂不登录',
           okCallback: activeHandler
-          title: '',
-          msg: msg
         })
       },
 
