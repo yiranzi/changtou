@@ -100,6 +100,8 @@
       verifyCode () {
         if (/^\d{6}$/.test(this.validationCode)) {
           this.isDisabled = false
+          return true
+        } else {
           return false
         }
       },
