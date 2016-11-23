@@ -19,8 +19,8 @@
           </div>
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="goToCourseDetail($index)" :src=myCourseList[$index].pic>
-            <div class="course-list-info" v-touch:tap="goToCourseDetail($index)">
+            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=myCourseList[$index].pic>
+            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state">{{course.status}}</p>
@@ -168,9 +168,8 @@ export default {
      * 进入课程详情
      * @param index
        */
-    goToCourseDetail (index) {
-      const myCourseList = this.myCourseList
-      const path = `/subject/detail/${myCourseList[index].type}/${myCourseList[index].subjectId}/0`
+    goToCourseDetail (type, subjectId) {
+      const path = `/subject/detail/${type}/${subjectId}/0`
       this.$route.router.go(path)
     },
 
