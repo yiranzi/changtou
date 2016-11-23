@@ -42,7 +42,7 @@ export const loadDefaultCourses = ({ dispatch }) => {
         }
       ).then(
         myCourses => {
-          resolve()
+          resolve(myCourses)
           dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {

@@ -11,7 +11,7 @@
             <p>累计学习时间</p>
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
-          <div class="changtou-card" v-if="hasCard">
+          <div class="changtou-card" v-if="card">
             <span class="left-round"></span>
             长投VIP卡 有效日期至{{validity}}
             <span class="right-round"></span>
@@ -27,7 +27,6 @@
             </div>
           </div>
           <div style="height: 4.8rem; background-color: transparent"></div>
-          <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
           <div class="changtou-card-tip" v-show="isCardTipShow">
             <div class="changtou-card-tip-mask" v-touch:tap="onCardMaskTap"></div>
             <div class="changtou-card-tip-content">
@@ -45,7 +44,6 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import Alert from 'vux/alert'
   import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
 
@@ -56,7 +54,7 @@ export default {
       recommend: myCoursesGetters.recommend, //推荐信息
       myCourseList: myCoursesGetters.myCourseList, //我的课程列表
       isLogin: userGetters.isLogin, //是否登录
-      hasCard: userGetters.card, //长投卡信息
+      card: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
       freeRecords: courseRecordsGetters.freeRecords //免费课程记录
     },
@@ -74,58 +72,30 @@ export default {
         '2.超过有效期后，长投卡将无法继续使用，需要再次购买；',
         '3.长投卡一年仅售两次，年初售卖一年卡、年中售卖半年卡；'
       ],
-      isAlert: false,
-      alertMsg: '',
+      courseList: [], //课程列表
       isCardTipShow: false //显示 长投卡说明
     }
   },
   computed: {
     // 截止日期
     validity () {
-      const createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
-      const newYear = createTime.getFullYear() + 1
-      const expireTimeValue = new Date(createTime.setFullYear(newYear))
-      return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
+      if (this.card) {
+        const createTime = new Date(this.card.createTime.replace(/-/g, '/'))
+        const newYear = createTime.getFullYear() + 1
+        const expireTimeValue = new Date(createTime.setFullYear(newYear))
+        return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
+      }
     },
     // 累计学习时间
     accumulatedTime () {
       let accumulatedTime = 0
       this.expenseRecords.map(
-        record => {
+        function (record) {
           accumulatedTime = accumulatedTime + record.accumulatedTime
           return record.accumulatedTime
         }
       )
       return accumulatedTime
-    },
-    // 我的课程 列表
-    courseList () {
-      let courseList = []
-      this.myCourseList.map(
-        course => {
-          if (course.type === 'P') {
-          this.expenseRecords.map(
-            record => {
-              if (course.subjectId === record.subjectId) {
-                course.status = this.graduatedType[record.status]
-                courseList.push(course)
-              }
-              return course
-            }
-          )
-        } else {
-          this.freeRecords.map(
-            record => {
-              if (course.subjectId === record.subjectId) {
-                course.status = '已学习到' + record.sequence + '/' + record.count + '课'
-                courseList.push(course)
-              }
-            }
-          )
-        }
-      }
-    )
-    return courseList
     }
   },
   route: {
@@ -140,19 +110,53 @@ export default {
       }
 
       return Promise.all(promiseArray).then(
-        () => {
+        function () {
           setTimeout(
-            () => {
+            function () {
+              me.arrangeList()
               me.resetScroller()
-            },
-            300
-          )
-        },
-        err => this.showAlert(err.message)
+            }, 300)
+        }
       )
     }
   },
   methods: {
+    arrangeList () {
+      const me = this
+      let courseList = []
+      if (me.isLogin) {
+        me.myCourseList.map(
+          function (course) {
+            if (course.type === 'P') {
+              me.expenseRecords.map(
+                function (record) {
+                  if (course.subjectId === record.subjectId) {
+                    course.status = me.graduatedType[record.status]
+                    courseList.push(course)
+                  }
+                  return course
+                })
+            } else {
+              me.freeRecords.map(
+                function (record) {
+                  if (course.subjectId === record.subjectId) {
+                    course.status = '已学习到' + record.sequence + '/' + record.count + '课'
+                    courseList.push(course)
+                  }
+                })
+            }
+          })
+        me.courseList = courseList
+      } else {
+        me.courseList = me.myCourseList.map(
+          function (course) {
+            course.status = course.studentCount + '人学过'
+            return course
+          }
+        )
+      }
+    },
+
     /**
      * 点击 草稿箱
      */
@@ -199,22 +203,12 @@ export default {
           this.$route.router.go('/entry')
         }
       }
-    },
-    /**
-     * 显示提示框
-     * @param err
-       */
-    showAlert (err) {
-      this.alertMsg = err
-      this.isAlert = true
     }
-
   },
   components: {
     IctTitlebar,
     IctButton,
-    Scroller,
-    Alert
+    Scroller
   }
 }
 </script>
