@@ -102,7 +102,7 @@
   }
 </style>
 <script>
-    import IctTitlebar from '../../components/IctTitlebar.vue'
+    import IctTitlebar from '../../components/IctTitleBar.vue'
     export default {
       components: {
         IctTitlebar

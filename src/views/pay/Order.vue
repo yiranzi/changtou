@@ -31,7 +31,7 @@
 
 <script>
   import Scroller from 'vux/scroller'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PayPostpone from '../../components/payment/Postpone.vue'

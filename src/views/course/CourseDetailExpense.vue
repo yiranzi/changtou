@@ -142,7 +142,7 @@
 
 </style>
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'

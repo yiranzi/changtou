@@ -55,10 +55,10 @@
 </template>
 
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
 

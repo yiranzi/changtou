@@ -122,7 +122,7 @@
 </style>
 
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Specific from '../../components/IctCouserSpecificFree.vue'
   import Content from '../../components/IctCourseContentFree.vue'
   import IctButton from '../../components/IctButton.vue'

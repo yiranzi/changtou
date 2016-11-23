@@ -18,7 +18,7 @@
 </template>
 <script>
   import Scroller from 'vux/scroller'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import PayCoupons from '../../components/payment/PayCoupons.vue'
   import PayTotal from '../../components/payment/PayTotal.vue'
   import PayToubi from '../../components/payment/PayToubi.vue'

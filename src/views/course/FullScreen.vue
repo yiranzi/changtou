@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import { courseDetailGetters } from '../../vuex/getters'

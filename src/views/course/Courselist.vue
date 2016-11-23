@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'

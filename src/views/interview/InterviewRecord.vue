@@ -177,7 +177,7 @@
 <script>
   import Scroller from 'vux/scroller'
   import Actionsheet from 'vux/actionsheet'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions, globalActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   export default {

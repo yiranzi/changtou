@@ -51,7 +51,7 @@
 </style>
 <script>
   import Scroller from 'vux/scroller'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   export default {

@@ -40,7 +40,7 @@
 <script>
   import Cell from 'vux/cell'
   import Rater from 'vux/rater'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import { choiceGetters, userGetters } from '../../vuex/getters'
   export default {
   vuex: {

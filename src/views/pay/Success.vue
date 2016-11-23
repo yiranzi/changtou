@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import IctTitlebar from '../../components/IctTitlebar.vue'
+import IctTitlebar from '../../components/IctTitleBar.vue'
 import IctButton from '../../components/IctButton.vue'
 import { goodsType } from '../../util/pay/dealHelper'
   const messages = {

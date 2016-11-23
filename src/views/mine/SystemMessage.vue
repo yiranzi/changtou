@@ -68,7 +68,7 @@
   }
 </style>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {messageGetters} from '../../vuex/getters'
   import {messageActions} from '../../vuex/actions'
