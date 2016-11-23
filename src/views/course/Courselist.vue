@@ -22,7 +22,7 @@
                  v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.description}}</p>
-              <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="courseList[$index].price">￥{{course.price}}</span></p>
+              <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="course.price">￥{{course.price}}</span></p>
             </div>
           </div>
         </div>
@@ -36,7 +36,6 @@
   import Scroller from 'vux/scroller'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
-
   export default {
     vuex: {
       getters: {

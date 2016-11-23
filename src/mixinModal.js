@@ -24,7 +24,7 @@ Vue.mixin({
       this.$dispatch(eventMap.SHOW_ALERT, {message, btnText})
     },
 
-    showToast: function ({message = '', type = text}) {
+    showToast: function ({message = '', type = 'text'}) {
       this.$dispatch(eventMap.SHOW_TOAST, {message, type})
     },
 
