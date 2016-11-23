@@ -3,7 +3,7 @@
     <div class="manual_service">
       <ict-titlebar v-el:titlebar>你问我答</ict-titlebar>
 
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
+      <scroller :lock-x="true" :lock-y="isScroll" scrollbar-y v-ref:scroller :height="scrollerHeight"  v-touch:tap="allowScroll" v-ref:scroller>
         <div class="conversation" v-el:conversation>
           <div class="answer">
             <img class="answer_avatar" src="../../assets/styles/image/help/answerImg.png">
@@ -176,7 +176,8 @@
       return {
         scrollerHeight: '530px',
         isShowConfirm: false,
-        userQuestion: ''
+        userQuestion: '',
+        isScroll: true
       }
     },
 
@@ -230,7 +231,28 @@
     },
 
     methods: {
-      /**
+    /**
+     *
+     */
+    allowScroll () {
+      // 允许 y轴可以滚动，( 不允许滚动是因为为了解决对话跑到下面的原因 )
+      this.isScroll = false
+      const me = this
+      setTimeout(function () {
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+            top: 0,
+            lockY: false,
+            isScroll: false,
+            'lock-y': false
+          })
+        })
+      }, 150)
+
+   //   console.log(233)
+     },
+
+    /**
        * 编辑问题
        */
       editQuestion () {

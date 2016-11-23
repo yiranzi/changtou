@@ -8,7 +8,8 @@
 */
 <template>
   <div class="strategy-vip-product">
-    <ict-titlebar v-el:titlebar>长投宝专业版</ict-titlebar>
+    <ict-titlebar v-el:titlebar>长投宝专业版0000</ict-titlebar>
+fdfdsfsdfds
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <zhi-shubao :zhishubao="professionalProduct.zhiShuBao"></zhi-shubao>

@@ -4,7 +4,8 @@
  */
 <template>
   <div class="strategy-vip-product">
-    <ict-titlebar v-el:titlebar>长投宝VIP版</ict-titlebar>
+    <ict-titlebar v-el:titlebar>长投宝VIP4646413</ict-titlebar>
+    <scroll-bar> {{ scrollText }}</scroll-bar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <duo-yinzi :duoyizi="vipProduct.duoYinZi"></duo-yinzi>
@@ -22,8 +23,10 @@
   import ZhiShubao from '../../components/strategy/StrategyZhiShuBao.vue'
   import DingToubao from '../../components/strategy/StrategyDingTouBao.vue'
   import FenJibao from '../../components/strategy/StrategyFenJiBao.vue'
+  import ScrollBar from '../../components/strategy/StrategyScroll.vue'
   import {strategyProductGetters} from '../../vuex/getters'
   import {strategyProductActions} from '../../vuex/actions'
+
 export default {
   vuex: {
     getters: {
@@ -64,7 +67,8 @@ export default {
     DuoYinzi,
     ZhiShubao,
     DingToubao,
-    FenJibao
+    FenJibao,
+    ScrollBar
   }
 }
 </script>

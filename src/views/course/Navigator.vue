@@ -1,6 +1,6 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
-    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
+    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂222222</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
@@ -8,11 +8,17 @@
                 :auto="true" :interval="3000"
                 :show-desc-mask="false" dots-class="dots-class"></swiper>
         <div class="financial-interview">
-          <span v-touch:tap="goToNewertestStart">理财揭秘</span>
-          <span v-touch:tap="goToInterviewList">院生访谈</span>
+          <span v-touch:tap="goToNewertestStart">
+            <i class="finan-icon finan-icon-jiemi"></i>
+            理财揭秘</span>
+          <i class="vertical-line-yan"></i>
+          <span v-touch:tap="goToInterviewList">
+            <i class="finan-icon finan-icon-fangtan"></i>
+            院生访谈</span>
         </div>
         <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          每日一题 积攒你的财商
+          <p> 每日一题 积攒你的财商 </p>
+          <p class="daily-subtext">财富自由之路第一步</p>
         </div>
         <div class="expenselist-area">
           <p class="area-label">
@@ -246,13 +252,8 @@
         text-align: center;
       }
     }
-    /*每日一题*/
-    .daily-question{
-      width: 325/375;
-      height: 3rem;
-      padding: 1.5rem 1.25rem;
-      background-color: #fff;
-    }
+
+
     .expenselist-area{
       text-align: center;
       .expense-course{
@@ -362,4 +363,51 @@
       }
     }
   }
+
+
+  /*                                                      The  icon add  by  Ritsu Yan                                    */
+  /*每日一题*/
+  .daily-question{
+    width: 325/375;
+    height: 3rem;
+    padding: 1.5rem 5.5rem;
+    background-color: #eee;
+    font-size: .75rem;
+    color:#444;
+    line-height: 1.2rem;
+    background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
+    url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
+
+
+  }
+  .daily-subtext {
+    color: #898989;
+    font-size: .65rem;
+
+  }
+
+  .finan-icon{
+    width : 3.05rem;  // 1 rem === 20 px
+    height : 3.05rem;
+    display: inline-block;
+    margin-bottom: -1rem;
+    zoom:.5;
+
+  }
+  .finan-icon.finan-icon-jiemi{
+    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
+  }
+  .finan-icon.finan-icon-fangtan{
+    background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+  }
+
+  .vertical-line-yan{
+    display: inline-block;
+    width:.08rem;
+    height:1.5rem;
+    background: #eee;
+  }
+
+
+  /*                                                       The icon add   by  Ritsu Yan                                    */
 </style>
