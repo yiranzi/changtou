@@ -7,7 +7,7 @@
 
 */
 <template>
-  <div class="pay-toubi" v-if="isShow">
+  <div class="pay-toubi" v-if="show">
     使用投币{{value}}抵用￥{{value}}
   </div>
 </template>
@@ -17,7 +17,7 @@
       value: Number
     },
     computed: {
-      isShow () {
+      show () {
         if (this.value > 0) {
           return true
         } else {

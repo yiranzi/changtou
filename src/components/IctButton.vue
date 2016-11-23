@@ -33,7 +33,7 @@
   }
 </script>
 <style lang="less">
-  @height-ict-button: 2.1rem;
+  @height-ict-button: 2.2rem;
   @font-ict-button: 0.9rem;
   @radius-ict-border: 5px;
 

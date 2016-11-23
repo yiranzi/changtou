@@ -21,9 +21,15 @@ const user = store.state.user
  * 交易类型
  * @type {{WX_CODE: string, ALI_BROWSER: string}}
  */
-const dealType = {
+const transactionChannel = {
   WX_CODE: 'wx_code',
   ALI_BROWSER: 'ali_browser'
+}
+
+const dealType = {
+  BUY: 1,
+  POSTPONE: 2,
+  UPDATE: 3
 }
 
 /**
@@ -40,6 +46,8 @@ const errorType = {
  * @type {{SUBJECT: string, COMMON_TOPIC: string, SPEC_TOPIC: string, POSTPONE: string}}
  */
 const goodsType = {
+  PRO_STRATEGY: 'PS',  //专业版长投宝
+  VIP_STRATEGY: 'VS',   //vip长投宝
   SUBJECT: 'S',       // 课程
   COMMON_TOPIC: 'CT',  // 通用专题
   SPEC_TOPIC: 'ST',    // 打包课专题
@@ -76,7 +84,9 @@ const getOrder = (type, id) => {
 const orderUrl = {
   'S': 'order_subject',
   'CT': 'order_common_topic',
-  'ST': 'order_spec_topic'
+  'ST': 'order_spec_topic',
+  'PS': 'order_pro_strategy',
+  'VS': 'order_vip_strategy'
 }
 
 /**
@@ -111,6 +121,57 @@ const getCommonOrder = (type, id) => {
       )
     }
   )
+}
+
+/**
+ * 获取策略订单
+ * @param type
+ * @returns {Promise}
+ */
+const getStrategyOrder = (type) => {
+  const orderGet = user.isLogin ? getWithinAuth : getWithoutAuth
+  return new Promise(
+    (resolve, reject) => {
+      orderGet(
+        {
+          url: getUrl(orderUrl[type])
+        }
+      ).then(
+        order => {
+          resolve(order)
+        }
+      ).catch(
+        err => {
+          reject({
+            type: errorType.FAIL,
+            reason: err
+          })
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 整理优惠列表
+ * @param order
+ * @returns {Array}
+ */
+const getCoupons = (order) => {
+  let coupons = []
+
+  if (order.coupons) {
+    coupons = order.coupons
+  }
+
+  if (order.card) {
+    coupons.push({
+      name: '长投卡(7折)',
+      userBene: 0
+    })
+  }
+
+  return coupons
 }
 
 /**
@@ -251,7 +312,7 @@ const arrangePostponeOrder = (is90DayAvailable, currentBalance, subjectId) => {
       items: [
         {
           coupon: null,
-          dealType: 2,
+          dealType: dealType.POSTPONE,
           itemId: subjectId,
           mchantType: 1,
           misc: '90',
@@ -298,7 +359,7 @@ const arrangeOrderFromServer = ({type, id, order}) => {
       dealItems = [
         {
           coupon: null,
-          dealType: 1,
+          dealType: dealType.BUY,
           itemId: id,
           mchantType: 1,
           misc: '',
@@ -314,7 +375,7 @@ const arrangeOrderFromServer = ({type, id, order}) => {
       dealItems = order.courseItems.map(item => {
         return {
           coupon: null,
-          dealType: 1,
+          dealType: dealType.BUY,
           itemId: item.subjectId,
           mchantType: 1,
           misc: '',
@@ -338,7 +399,7 @@ const arrangeOrderFromServer = ({type, id, order}) => {
       dealItems = [
         {
           coupon: null,
-          dealType: 1,
+          dealType: dealType.BUY,
           itemId: id,
           mchantType: order.mchantType,
           misc: '',
@@ -486,7 +547,10 @@ export {
   payChannel,
   goodsType,
   dealType,
+  transactionChannel,
   errorType,
   getOrder,
+  getStrategyOrder,
+  getCoupons,
   pay
 }

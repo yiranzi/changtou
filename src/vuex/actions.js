@@ -18,6 +18,8 @@ import * as newertestActions from './newertest/actions'
 import * as essayActions from './homework/essay/actions'
 import * as choiceActions from './homework/choice/actions'
 import * as helpActions from './help/actions'
+import * as strategyIntroActions from './strategy/intro/actions'
+import * as strategyProductActions from './strategy/product/actions'
 
 export {
   userActions,
@@ -36,5 +38,7 @@ export {
   newertestActions, //新手测试
   essayActions, // 问答题
   choiceActions, // 选择题
-  helpActions //小投答疑
+  helpActions, //小投答疑
+  strategyIntroActions, // 策略产品 宣传
+  strategyProductActions // 策略产品 数据
 }

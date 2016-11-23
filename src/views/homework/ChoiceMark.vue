@@ -14,7 +14,7 @@
         <p class="tip-down">{{{choiceScoreTip}}}</p>
       </div>
       <div class="point-score">
-        <p class="knowledge-tip">此次作业小测试设计知识点{{report.kpScore.length}}个</p>
+        <p class="knowledge-tip">此次作业小测试设计知识点{{pointNum}}个</p>
         <div v-for="point in report.kpScore" class="item">
           <cell :title="pointContent($index)">
             <rater :class="point-score" :value="pointScore($index)" slot="value" active-color="#04BE02" :font-size="20" disabled></rater>
@@ -61,6 +61,10 @@
     }
   },
   computed: {
+    //知识点个数
+    pointNum () {
+      return this.report.kpScore ? this.report.kpScore.length : 0
+    },
     // 通过 | 未通过 提示
     choiceScoreTip () {
       if (this.score >= 3) {

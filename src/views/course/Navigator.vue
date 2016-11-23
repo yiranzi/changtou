@@ -18,7 +18,7 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">热门畅销</span>
-            <span class="subtitle" v-touch:tap="onExpenseListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
                v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
@@ -34,7 +34,7 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">免费好课</span>
-            <span class="subtitle" v-touch:tap="onFreeListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="course in freeList"
                v-touch:tap="goToCourseDetail('F',$index)"
@@ -43,10 +43,14 @@
             <p class="free-course-title">{{course.title}}</p>
           </div>
         </div>
+
+        <div class="strategy-entry">
+          <img src="../../../static/image/strategy/home-strategy.jpg" v-touch:tap="goToStrategy">
+          <p>－让金钱为你而工作－</p>
+        </div>
         <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
-
   </div>
 </template>
 
@@ -140,11 +144,8 @@
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)
       },
-      onExpenseListTap () {
-        this.$route.router.go('/totalList/P')
-      },
-      onFreeListTap () {
-        this.$route.router.go('/totalList/F')
+      onListTap () {
+        this.$route.router.go('/totalList')
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {
@@ -168,9 +169,9 @@
         const me = this
         me.loadDailyQuestion().then(function (dailyQuestion) {
           if (dailyQuestion.selectedOption) {
-            me.$route.router.go('daily/answer')
+            me.$route.router.go('/daily/answer')
           } else {
-            me.$route.router.go('daily/quiz')
+            me.$route.router.go('/daily/quiz')
           }
         }).catch(function () {
           me.showAlert('信息加载失败，请重试！')
@@ -178,6 +179,12 @@
       },
       backHandler () {
         window.alert('main')
+      },
+      /**
+       * 跳转到专业版 策略 宣传
+       */
+      goToStrategy () {
+        this.$route.router.go('/strategy/professional/intro')
       }
     },
     components: {
@@ -349,6 +356,20 @@
       .vux-icon-dot.active{
         background-color: #fff!important;
         opacity: 1;
+      }
+    }
+    .strategy-entry{
+      width: 100%;
+      margin-top: 1.25rem;
+      text-align: center;
+      img{
+        width: 100%;
+        height: 6.75rem;
+      }
+      p{
+        font-size: 0.65rem;
+        color: #aaa;
+        margin: 1rem 0 1.25rem;
       }
     }
   }
