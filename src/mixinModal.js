@@ -20,12 +20,16 @@ Vue.mixin({
         {title, message, okText, okCallback, cancelText, cancelCallback})
     },
 
-    showAlert: function ({message = '', btnText = ''}) {
+    showAlert: function ({message = '', btnText = '确定'}) {
       this.$dispatch(eventMap.SHOW_ALERT, {message, btnText})
     },
 
     showToast: function ({message = ''}) {
-      this.$dispatch(eventMap.SHOW_FLOAT, {message})
+      this.$dispatch(eventMap.SHOW_TOAST, {message})
+    },
+
+    showMask: function ({component, hideOnMaskTap = true, callbackName, callbackFn}) {
+      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, callbackName, callbackFn})
     }
   }
 })
@@ -38,13 +42,17 @@ const mixin = {
       toast: {},
       confirmBox: {
         title: ''
-      }
+      },
+      floatBox: {
+        component: '',
+        hideOnMaskTap: true
+      },
+      onFloatMaskTap: null
     }
   },
 
   events: {
     [eventMap.SHOW_CONFIRM]: function ({title = '', message, okText, okCallback, cancelText, cancelCallback}) {
-      //
       const me = this
       me.isMaskShow = true
       const okAction = function () {
@@ -71,8 +79,8 @@ const mixin = {
       }, 150)
     },
 
-    [eventMap.SHOW_ALERT]: function ({message, btnText = '确定'}) {
-      // todo  这里缺少全局的 设置 isMaskShow
+    [eventMap.SHOW_ALERT]: function ({message, btnText}) {
+      this.isMaskShow = true
       this.alertBox = {
         show: true,
         message: message,
@@ -81,12 +89,55 @@ const mixin = {
     },
 
     [eventMap.SHOW_FLOAT]: function ({message, type}) {
-      // todo  这里也是
-      this.toast = {
+      const me = this
+      me.isMaskShow = true
+      setTimeout(function () {
+        me.isMaskShow = false
+      })
+      me.toast = {
         show: true,
         type: type, // success,text
         message: message
       }
+    },
+
+    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, callbackName, callbackFn}) {
+      const me = this
+      me.isMaskShow = true
+      console.log('./components/' + component)
+      let MyComponent = Vue.extend({
+        template: `<div><div class="ict-float-mask" v-touch:tap="onFloatMaskTap"><div class="ict-float-component"><mask-component></mask-component></div></div></div>`,
+        components: {
+          'mask-component': require('./components/' + component)
+        },
+        events: {
+          [callbackName]: callbackFn
+        },
+        methods: {
+          onFloatMaskTap: function () {
+            if (hideOnMaskTap) {
+              const me = this
+              let MyComponent = Vue.extend({
+                template: `<div></div>`
+              })
+              new MyComponent({ el: '#mask' })
+              me.isMaskShow = false
+            }
+          }
+        }
+      })
+      new MyComponent({ el: '#mask' })
+    }
+  },
+  methods: {
+    hideMask () {
+      const me = this
+      let MyComponent = Vue.extend({
+        template: `<div></div>`
+      })
+      new MyComponent({ el: '#mask' })
+      me.isMaskShow = false
+      me.isMaskShow = false
     }
   }
 }

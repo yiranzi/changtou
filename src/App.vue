@@ -24,7 +24,8 @@
     <toast class="ict-toast"
            :show.sync="toast.show"
            :type="toast.type">{{toast.message}}</toast>
-    <confirm :show.sync="confirmBox.show"
+    <confirm
+             :show.sync="confirmBox.show"
              :title="confirmBox.title"
              :confirm-text="confirmBox.okText"
              :cancel-text="confirmBox.cancelText"
@@ -32,6 +33,9 @@
              @on-cancel="confirmBox.cancelCallback">
       <p style="text-align:center;">{{{confirmBox.message}}}</p>
     </confirm>
+
+    <div id="mask"></div>
+
 
     <!--新手测试-->
     <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
@@ -286,7 +290,6 @@
     }
   }
 
-
   .ict-tabber{
     &-icon{
       display: block;
@@ -294,6 +297,7 @@
       height: 1.4rem;
     }
   }
+
   .home-icon:before{
     color: #7a7a7a;
     font-family: 'myicon';
@@ -301,6 +305,7 @@
     line-height: 1.4rem;
     content: '\e900';
   }
+
   .weui_tabbar_item.weui_bar_item_on .home-icon:before {
     content: '\e901';
     color: #409af4;
@@ -328,4 +333,30 @@
     color: #409af4;
   }
 
+  .ict-alert{
+
+  }
+  .ict-confirm{
+
+  }
+  .ict-toast{
+
+  }
+  .ict-float-mask{
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.6);
+  }
+  .ict-float-component{
+    position: fixed;
+    z-index: 5000;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 </style>

@@ -92,15 +92,24 @@
       goToVip () {
         this.$route.router.replace('/strategy/vip/intro')
       },
+
+      onAgreeTap () {
+        this.$route.router.on(`/pay-PS-0`, {
+          component: require('../pay/ProStrategyOrder.vue')
+        })
+        this.$route.router.go(`/pay-PS-0`)
+      },
       /**
        * 立即购买
        */
       buyNow () {
         if (!this.disabled) {
-          this.$route.router.on(`/pay-PS-0`, {
-            component: require('../pay/ProStrategyOrder.vue')
+          this.showMask({
+            component: 'strategy/StrategyAgreement.vue',
+            hideOnMaskTap: true,
+            callbackName: 'onAgreeTap',
+            callbackFn: this.onAgreeTap.bind(this) //组件上的
           })
-          this.$route.router.replace(`/pay-PS-0`)
         }
       }
     },
