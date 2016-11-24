@@ -43,6 +43,7 @@ export default {
       default: function () {
         return {
           show: false,
+          state: '',
           leftOptions: {},
           rightOptions: {}
         }

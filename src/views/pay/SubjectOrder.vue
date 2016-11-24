@@ -15,12 +15,13 @@
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
-  import {userGetters} from '../../vuex/getters'
+  import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
     vuex: {
       getters: {
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        expenseRecords: courseRecordsGetters.expenseRecords
       }
     },
     data () {
@@ -57,12 +58,15 @@
       // 支付按钮 信息
       btnOptions () {
         return {
+          state: 'exception',
           leftOptions: {
+            text: (this.isLogin && this.expenseRecords.indexOf(this.subjectId)) ? '此前您已购买过该课程' : '',
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin, // todo 购买过课程
-            callback: this.onConfirmTap
+            text: '去听课',
+            disabled: !this.isLogin,
+            callback: (this.isLogin && this.expenseRecords.indexOf(this.subjectId)) ? this.goToCourse : this.onConfirmBuy
           }
         }
       }
@@ -131,13 +135,21 @@
       /**
        * 点击确认订单
        */
-      onConfirmTap () {
+      onConfirmBuy () {
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
           this.payByChannel(payChannel.TOUBI)
         }
       },
+
+      /**
+       * 跳转去课程
+       */
+      goToCourse () {
+        this.$route.router.go(`/subject/detail/P/${this.subjectId}/1`)
+      },
+
       /**
        * 支付
        * @param channel
