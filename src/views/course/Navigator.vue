@@ -1,6 +1,6 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
-    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂222222</ict-titlebar>
+    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
