@@ -95,7 +95,7 @@ export default {
         color: #ff5b45;
       }
       &-exception{
-        line-height: 1rem;
+        line-height: 2rem;
         text-align: center;
         vertical-align: middle;
         color: #007aff;

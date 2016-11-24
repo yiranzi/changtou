@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div>
+  <div class="spec-topic-order">
     <pay-base :coupons="coupons" :toubi="toubi"
               :total="total" :sum="sum"
               :btn-options="btnOptions" :tip="tip"
@@ -76,7 +76,7 @@
         return {
           state: this.isLogin ? this.canUserBuy ? '' : 'exception' : '',
           leftOptions: {
-            text: this.isLogin ? this.canUserBuy ? '' : '<span>已购买过专题中任意一课，不再享受打包购买优惠价</span>' : '',
+            text: this.isLogin ? this.canUserBuy ? '' : '已购买过专题中任意一课，不再享受打包购买优惠价' : '',
             price: this.sum
           },
           rightOptions: {
@@ -233,4 +233,11 @@
   }
 </script>
 <style lang="less">
+  .spec-topic-order{
+    .pay-button{
+      .left-exception{
+        line-height: 1rem;
+      }
+    }
+  }
 </style>
