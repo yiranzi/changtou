@@ -1,6 +1,6 @@
 <template>
     <div class="spec-topic">
-      <div class="top-back-btn" v-touch:tap="back"></div>
+      <div class="top-back-btn" v-touch:tap="back" v-el:titlebar></div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="content">
           <div class="spec-description">
@@ -48,7 +48,8 @@
 <style lang="less">
   .spec-topic{
     position: relative;
-
+    width: 100%;
+    height: 100%;
     .top-back-btn {
       position: absolute;
       height: 2rem;
@@ -173,6 +174,8 @@
     }
     .bottom-area{
       .buttom-btn{
+        position: absolute;
+        bottom: 0;
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
@@ -242,7 +245,7 @@
     data () {
       return {
         stpId: '',
-        scrollerHeight: '590px',
+        scrollerHeight: '0px',
         isBuySubject: false,
         isLoadedFail: false //数据是否加载完毕
       }
@@ -263,17 +266,15 @@
     watch: {
       'specTopicInfo': function () {
         var me = this
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
 //              top: 0
           })
         })
-        }, 9000)
+        }, 300)
       }
-    },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
     },
     methods: {
       back () {
