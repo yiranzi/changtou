@@ -82,6 +82,17 @@
         showAlert: globalActions.showAlert
       }
     },
+
+    route: {
+      data () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+          top: 0
+          })
+        })
+      }
+    },
+
     data () {
       return {
         scrollerHeight: '0px',

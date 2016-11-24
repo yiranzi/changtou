@@ -14,7 +14,7 @@
         <!--<swiper-item class="black"><h2 class="title fadeInUp animated">不是它可恶</h2></swiper-item>-->
       </swiper>
 
-        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc" :is-show.sync="hasVaildChapterCicked"></web-audio>
+        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc"></web-audio>
 
         <!--没有获取到课程内容时显示-->
         <div v-show="0">没有内容</div>
@@ -151,11 +151,11 @@
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
-  import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {setSessionCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -186,6 +186,7 @@
      */
     data () {
       return {
+        isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
 
         isLoadedFail: false, //数据是否加载完毕
@@ -228,36 +229,45 @@
        * @param subjectId
        * @returns {{type: string}}
        */
-      data ({to: {params: {subjectId}}}) {
-        this.resetView()
+      data ({to: {params: {subjectId}}, from}) {
+        // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        if (from.path && from.path.indexOf('landscape/') > -1) {
+          // do nothing
+        } else {
+          this.resetView()
 
-        const tasks = [this.loadExpenseSubject(subjectId)]
-        if (this.isUserLogin) {
-          tasks.push(this.loadExpenseRecord(subjectId))
-        }
-
-        return Promise.all(tasks).then(
-          () => {
-            return {subjectId: subjectId, isLoadedFail: false}
-          },
-          () => {
-            return {isLoaded: false, isLoadedFail: true}
+          const tasks = [this.loadExpenseSubject(subjectId)]
+          if (this.isUserLogin) {
+            tasks.push(this.loadExpenseRecord(subjectId))
           }
-        )
+
+          return Promise.all(tasks).then(
+            () => {
+              return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
+            },
+            () => {
+              return {isLoaded: false, isLoadedFail: true, isResponsive: true}
+            }
+          )
+        }
       },
 
       /**
        * 页面隐藏时
        */
-      deactivate () {
-        this.pause()
+      deactivate ({to, next}) {
+        // 如果是跳转到横屏页面, 不打断音频
+        if (to.path && to.path.indexOf('landscape/') > -1) {
+          next()
+        } else {
+          // 跳转到非横屏页面
+          // 停止音频播放
+          // 设置不可响应
+          this.pause()
+          this.isResponsive = false
+          next()
+        }
       }
-    },
-
-    ready () {
-//      console.log('this.$els', this.$els, this.$els.bottomBtn.offsetHeight)
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-//      console.log(this.scrollerHeight)
     },
 
     watch: {
@@ -277,7 +287,6 @@
         if (lesson && lesson.type === 'C') {
           this.isSelectdLessonLimited = false
         } else {
-//          console.log('this.currUseabLessonArr', this.currUseabLessonArr)
           this.isSelectdLessonLimited =
             this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === lesson.lessonId) === -1
         }
@@ -344,6 +353,10 @@
       }
     },
 
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+    },
+
     /**
      * 设置监听事件
      */
@@ -351,7 +364,7 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter, index, type) {
+      'chapterSelectedExpense': function (chapter, index, type) {
         this.currChapterIndex = index // 用于横屏
         if (this.isSelectdLessonLimited) { //课程受限
           if (this.isUserLogin) {
@@ -387,8 +400,7 @@
           }
         } else if (type === 'common') { //当前课程可以听
           this.hasVaildChapterCicked = true
-          this.currAudioSrc = chapter.audio
-          this.currPpts = chapter.ppts
+          this.playChapter(chapter)
         } else if (type === 'choice') {
           this.onChoiceTap()
         } else if (type === 'essay') {
@@ -400,8 +412,25 @@
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
 
+      /**
+       * 当全屏被点击
+       */
       'fullScreenTap' () {
-        this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+        if (this.isResponsive) {
+          this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+        }
+      },
+
+      /**
+       * 音频播放结束
+       * 继续播放下一节可用的音频
+       */
+      'audioPlayEnd' () {
+        if (this.isResponsive) {
+          // 尝试播放下一个章节
+          // 由子组件接收事件控制
+          this.$broadcast('playNextCapterExpense')
+        }
       }
     },
 
@@ -509,6 +538,7 @@
       back () {
         window.history.back()
       },
+
       /**
        * 重置页面
        */
@@ -561,8 +591,8 @@
         let confirmText = '确认'
         let confirmHandler = null
 
-        let lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-        let essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
+        const lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
+        const essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
@@ -741,8 +771,19 @@
         /**
          * 跳转到横屏
          */
-      goToFullScreen (subjectId, lessonId, index) {
-        this.$route.router.go(`/full/screen/${subjectId}/${lessonId}/${index}`)
+      goToFullScreen (subjectId, lesson, chapterIndex) {
+        setSessionCache('landscapeSrc', {lesson, chapterIndex, currChapter: this.selectedChapter})
+        this.$route.router.go(`/landscape/${subjectId}/${lesson.lessonId}`)
+      },
+
+      /**
+       * 播放选中的chapter
+       * @param chapter
+       */
+      playChapter (chapter) {
+        this.currAudioSrc = chapter.audio
+        this.currPpts = chapter.ppts
+        this.$dispatch('chapterPlay', chapter)
       }
     },
 
@@ -752,7 +793,6 @@
       SwiperItem,
       Tab,
       TabItem,
-      Confirm,
       Scroller,
       Sticky,
       Specific,

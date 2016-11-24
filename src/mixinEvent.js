@@ -45,7 +45,7 @@ const mixin = {
      * app 启动的全局事件
      */
     [eventMap.APP_START]: function () {
-      console.log('APP_START')
+      console.info('APP_START')
 
       // 设置推送配置
       this.jpushInit()
@@ -86,6 +86,14 @@ const mixin = {
     [eventMap.LOGOUT]: function (user) {
       console.info('LOGOUT', user)
       this.doWhenUserNotValid(user)
+    },
+
+    /**
+     * 章节播放,这里做中转,供横屏页面监听同步
+     * @param chapter
+     */
+    chapterPlay (chapter) {
+      this.$broadcast('vaildChapterPlay', chapter)
     }
   },
 
