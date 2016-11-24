@@ -55,18 +55,21 @@
       sum () {
         return this.total - this.toubi
       },
+      canUserBuy () {
+        return !(this.isLogin && this.expenseRecords.indexOf(this.subjectId))
+      },
       // 支付按钮 信息
       btnOptions () {
         return {
-          state: 'exception',
+          state: this.isLogin ? this.canUserBuy ? '' : 'exception' : '',
           leftOptions: {
-            text: (this.isLogin && this.expenseRecords.indexOf(this.subjectId)) ? '此前您已购买过该课程' : '',
+            text: this.isLogin ? this.canUserBuy ? '' : '此前您已购买过该课程' : '',
             price: this.sum
           },
           rightOptions: {
-            text: '去听课',
+            text: this.isLogin ? this.canUserBuy ? '' : '去听课' : '',
             disabled: !this.isLogin,
-            callback: (this.isLogin && this.expenseRecords.indexOf(this.subjectId)) ? this.goToCourse : this.onConfirmBuy
+            callback: this.isLogin ? this.canUserBuy ? this.onConfirmBuy : this.goToCourse : this.onConfirmBuy
           }
         }
       }

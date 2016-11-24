@@ -18,12 +18,13 @@
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
-  import {userGetters} from '../../vuex/getters'
+  import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
     vuex: {
       getters: {
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        expenseRecords: courseRecordsGetters.expenseRecords
       }
     },
     data () {
@@ -47,7 +48,7 @@
         return this.price - this.selectedCouponUserBene
       },
       tip () {
-        return '' //todo 不能购买的情况
+        return ''
       },
       // 使用的投币金额
       toubi () {
@@ -57,15 +58,31 @@
       sum () {
         return this.total - this.toubi
       },
+      canUserBuy () {
+        let subjectIds = this.courseList.map(
+          function (course) {
+            return course.subjectId
+          }
+        )
+        for (let i = 0, length = subjectIds.length; i < length; i++) {
+          if (this.expenseRecords.indexOf(subjectIds[i])) {
+            return false
+          }
+        }
+        return true
+      },
       // 支付按钮 信息
       btnOptions () {
         return {
+          state: this.isLogin ? this.canUserBuy ? '' : 'exception' : '',
           leftOptions: {
+            text: this.isLogin ? this.canUserBuy ? '' : '<span>已购买过专题中任意一课，不再享受打包购买优惠价</span>' : '',
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin, // todo 购买过其中一门课
-            callback: this.onConfirmTap
+            text: this.isLogin ? this.canUserBuy ? '' : '重新选课' : '',
+            disabled: !this.isLogin,
+            callback: this.isLogin ? this.canUserBuy ? this.onConfirmTap : this.goToCourseList : this.onConfirmTap
           }
         }
       }
@@ -199,6 +216,13 @@
        */
       goToPaySuccess () {
         this.$route.router.replace(`/pay/success/ST/${this.stpId}`)
+      },
+
+      /**
+       * 跳转到 全部课程列表
+       */
+      goToCourseList () {
+        this.$route.router.go('/totalList')
       }
     },
     components: {
