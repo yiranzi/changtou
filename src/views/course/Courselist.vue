@@ -9,8 +9,8 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller>
       <div>
         <div class="promote-panel" v-show="promoteShow">
-          <img src="../../../static/image/subject/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
-          <img src="../../../static/image/subject/courseList/total-list-strategy.png" class="promote-img">
+          <img src="../../assets/styles/image/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
+          <img src="../../assets/styles/image/courseList/total-list-strategy.png" class="promote-img">
         </div>
         <div class="course-group" v-for="group in courseList">
           <p class="course-group-title">{{group.categoryName}}</p>

@@ -31,9 +31,9 @@
       <div class="choice-mark-mask" v-touch:tap="onMaskTap" v-show="isFloatShow"></div>
       <div class="choice-mark-float" v-show="isFloatShow">
         <div class="title">{{100 - score * 20}}%错误</div>
-        <img class="rate" src="/static/image/homework/notPassed/failRate.png">
-        <img class="backImg" src="/static/image/homework/notPassed/failBg.png">
-        <img class="btn" src="/static/image/homework/notPassed/reTestBtn.png" v-touch:tap="reTest">
+        <img class="rate" src="../../assets/styles/image/homework/notPassed/failRate.png">
+        <img class="backImg" src="../../assets/styles/image/homework/notPassed/failBg.png">
+        <img class="btn" src="../../assets/styles/image/homework/notPassed/reTestBtn.png" v-touch:tap="reTest">
       </div>
     </div>
 </template>
@@ -92,7 +92,7 @@
   },
   watch: {
     score (newScore) {
-      if (newScore && newScore < 3) {
+      if (newScore >= 0 && newScore < 3) {
         this.isFloatShow = true
       }
     }

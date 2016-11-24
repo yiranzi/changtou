@@ -45,7 +45,7 @@
         </div>
 
         <div class="strategy-entry">
-          <img src="../../../static/image/strategy/home-strategy.jpg" v-touch:tap="goToStrategy">
+          <img src="../../assets/styles/image/home/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
         <!--<div style="height: 4.8rem; background-color: transparent"></div>-->

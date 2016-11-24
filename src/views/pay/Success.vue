@@ -6,7 +6,7 @@
     <div class="pay-success">
       <ict-titlebar :left-options="{showBack: false}">成功提示</ict-titlebar>
       <div class="tip">
-        <img src="/static/image/pay/success-icon.png">
+        <img src="../../assets/styles/image/pay/success-icon.png">
         <p>恭喜您</p>
         <p>{{message.name}}购买成功</p>
       </div>
@@ -23,6 +23,7 @@
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import IctButton from '../../components/IctButton.vue'
 import { goodsType } from '../../util/pay/dealHelper'
+
   const messages = {
     'S': {
       name: '课程',
