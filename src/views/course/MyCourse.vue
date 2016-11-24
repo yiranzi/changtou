@@ -19,7 +19,7 @@
           </div>
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=myCourseList[$index].pic>
+            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
