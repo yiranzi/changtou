@@ -105,7 +105,7 @@
     },
 
     events: {
-      'playNextCapterSen': function () {
+      'playNextCapterSeminar': function () {
         if (this.currSelecteLessonIndex + 1 < this.lessons.length) {
           this.updateSelectedLesson(
             this.lessons[this.currSelecteLessonIndex + 1], this.currSelecteLessonIndex + 1)

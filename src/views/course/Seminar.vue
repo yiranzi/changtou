@@ -129,7 +129,7 @@
        * @param seminarId
        */
       data ({to: {params: {seminarId}}, from}) {
-        // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        // todo 2.4 横屏
         this.resetView()
         this.seminarId = seminarId
         const me = this
@@ -146,8 +146,7 @@
        * 页面隐藏时
        */
       deactivate ({to, next}) {
-          // 停止音频播放
-          // 设置不可响应
+        // todo 2.4 横屏
         this.pause()
         this.isResponsive = false
         next()
@@ -177,7 +176,7 @@
         if (this.isResponsive) {
           // 尝试播放下一个章节
           // 由子组件接收事件控制
-          this.$broadcast('playNextCapterSen')
+          this.$broadcast('playNextCapterSeminar')
         }
       }
     },
