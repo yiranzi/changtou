@@ -3,7 +3,7 @@
     <div class="manual_service">
       <ict-titlebar v-el:titlebar>你问我答</ict-titlebar>
 
-      <scroller :lock-x="true" :lock-y="isScroll" scrollbar-y v-ref:scroller :height="scrollerHeight"  v-touch:tap="allowScroll" v-ref:scroller>
+      <scroller :lock-x="true"  scrollbar-y v-ref:scroller :height="scrollerHeight"  v-ref:scroller>
         <div class="conversation" v-el:conversation>
           <div class="answer">
             <img class="answer_avatar" src="../../assets/styles/image/help/answerImg.png">
@@ -174,10 +174,9 @@
 
     data () {
       return {
-        scrollerHeight: '530px',
+        scrollerHeight: '0px',
         isShowConfirm: false,
-        userQuestion: '',
-        isScrollerYLock: true
+        userQuestion: ''
       }
     },
 
@@ -194,11 +193,11 @@
     watch: {
       'records': function () {
         const me = this
+        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
-            const offsetHeight = me.$els.conversation.offsetHeight - parseInt(me.scrollerHeight.replace('px', ''))
             me.$refs.scroller.reset({
-                top: offsetHeight
+              top: 0
             })
           })
         }, 200)
@@ -231,23 +230,6 @@
     },
 
     methods: {
-    /**
-     *
-     */
-    allowScroll () {
-      // 允许 y轴可以滚动，( 不允许滚动是因为为了解决对话跑到下面的原因 )
-      this.isScroll = false
-      const me = this
-      setTimeout(function () {
-        me.$nextTick(() => {
-          me.$refs.scroller.reset({
-            top: 0,
-            YLock: false
-          })
-        })
-      }, 150)
-     },
-
     /**
        * 编辑问题
        */

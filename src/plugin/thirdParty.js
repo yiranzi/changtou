@@ -30,13 +30,32 @@
       if (insValWX === 1) {
         window.Wechat.auth(scope, state, function (response) {
           // you may use response.code to get the access token.
-          window.alert('233333333 enteringgg')
-          console.log(JSON.stringify(response))
-          console.log('wxrespon' + JSON.stringify(response))
+          window.alert(' enteringgg')
+          window.alert(JSON.stringify(response))
+          loginByWX(response)
         }, function (reason) {
           window.alert('failed' + reason)
         })
       }
+  }
+
+  const loginByWX = (response) => {
+    postWithoutAuth(
+      {
+        url: getUrl('wx_app_login'),
+        data: {
+          code: response.code
+        }
+      }).then(
+      user => {
+        window.alert('kk')
+        window.alert(JSON.stringify(user))
+      },
+      err => {
+        window.alert(JSON.stringify(err))
+        console.warn(err)
+      }
+    )
   }
 /*
 *   QQ module

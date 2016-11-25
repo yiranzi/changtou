@@ -28,7 +28,8 @@ const apiUrl = {
   'reset_password_post_code': '/principal/users/reset-password-verificaiton', // 重置密码 发送验证码
   // 第三方登录
   'qq_login': '/3rdparty//qq/login/info', // qq登录
-  //  /3rdparty//qq/login/info
+  'wx_app_login': '/wx/app/authorization/user-info',
+
   /**
    * 课程模块
    */
