@@ -54,7 +54,7 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import {messageGetters, userGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
-
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       actions: {
@@ -96,11 +96,11 @@
         this.$route.router.go('/register/start')
       },
       onStrategyTap () {
-        if (!this.strategy || this.strategy.strategyLevel === 'C') {
+        if (!this.strategy || this.strategy.strategyLevel === strategyLevel.COMMON) {
           this.$route.router.go('/strategy/professional/intro')
-        } else if (this.strategy.strategyLevel === 'A') {
+        } else if (this.strategy.strategyLevel === strategyLevel.VIP) {
           this.$route.router.go('/strategy/vip/product')
-        } else if (this.strategy.strategyLevel === 'B') {
+        } else if (this.strategy.strategyLevel === strategyLevel.PRO) {
           this.$route.router.go('/strategy/professional/product')
         }
       }

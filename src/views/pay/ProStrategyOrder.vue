@@ -17,6 +17,7 @@
   import {getStrategyOrder, goodsType, dealType, pay, payChannel} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       getters: {
@@ -52,7 +53,7 @@
       },
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy.strategyLevel === strategyLevel.PRO) ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 实付金额
       sum () {
@@ -65,7 +66,7 @@
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A'),
+            disabled: !this.isLogin || (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP),
             callback: this.onConfirmTap
           }
         }
@@ -166,7 +167,7 @@
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
             items: [{
               coupon: null,
-              dealType: this.strategy.strategyLevel === 'C' ? dealType.BUY : dealType.POSTPONE,
+              dealType: this.strategy.strategyLevel === strategyLevel.COMMON ? dealType.BUY : dealType.POSTPONE,
               itemId: this.itemId,
               mchantType: 6,
               misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,

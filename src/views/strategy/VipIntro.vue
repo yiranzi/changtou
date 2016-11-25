@@ -34,6 +34,7 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import {strategyIntroActions} from '../../vuex/actions'
   import {strategyIntroGetters, userGetters} from '../../vuex/getters'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       getters: {
@@ -53,7 +54,7 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       }
     },
     route: {

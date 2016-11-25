@@ -128,23 +128,27 @@ export default {
         me.myCourseList.map(
           function (course) {
             if (course.type === 'P') {
-              me.expenseRecords.map(
-                function (record) {
-                  if (course.subjectId === record.subjectId) {
-                    course.status = me.graduatedType[record.status]
-                    courseList.push(course)
+              let expenseIndex = me.expenseRecords.indexOf(
+                function (expenseRecords) {
+                  if (course.subjectId === expenseRecords.subjectId) {
+                    return true
                   }
-                  return course
-                })
+                }
+              )
+              course.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+              courseList.push(course)
             } else {
-              me.freeRecords.map(
-                function (record) {
-                  if (course.subjectId === record.subjectId) {
-                    course.status = '已学习到' + record.sequence + '/' + record.count + '课'
-                    courseList.push(course)
+              let freeIndex = me.freeRecords.indexOf(
+                function (freeRecords) {
+                  if (course.subjectId === freeRecords.subjectId) {
+                    return true
                   }
-                })
+                }
+              )
+              course.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+              courseList.push(course)
             }
+            return course
           })
         me.courseList = courseList
       } else {

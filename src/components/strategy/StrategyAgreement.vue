@@ -29,15 +29,6 @@
         ]
       }
     },
-    computed: {
-
-    },
-    watch: {
-
-    },
-    route: {
-
-    },
     ready () {
       this.setScrollerHeight()
     },

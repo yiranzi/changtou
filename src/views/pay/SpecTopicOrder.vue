@@ -96,9 +96,10 @@
         return Promise.all([getOrder(this.type, this.stpId)]).then(
             ([order]) => {
             me.arrangeOrder(order)
-      }).catch(
-          (err) => console.log(err)
-      ) }
+        }).catch(
+            (err) => console.log(err)
+        )
+      }
     },
     events: {
       // 优惠信息 选择
@@ -171,6 +172,8 @@
             itemId: courseList[i].subjectId,
             mchantType: 1,
             misc: '',
+            // items.price 为优惠后的价格
+            // 在有长投卡的情况下, 前N-1门课的价格为 原价*0.7, 第N门课的价格为 总价-前N门课的items.price的和
             price: this.selectedCoupon ? (i === length - 1) ? (Math.ceil(this.price * 0.7) - priceSum) : Math.floor(courseList[i].price * 0.7) : courseList[i].price
           })
           priceSum += this.selectedCoupon ? Math.floor(courseList[i].price * 0.7) : courseList[i].price

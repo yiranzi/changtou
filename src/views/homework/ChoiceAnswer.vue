@@ -159,7 +159,7 @@ export default {
      */
     onNextTap () {
       // 未选中任何选项
-      if (this.optionTaped === false) {
+      if (!this.optionTaped) {
         return
       }
 

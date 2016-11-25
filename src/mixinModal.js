@@ -91,9 +91,6 @@ const mixin = {
     [eventMap.SHOW_FLOAT]: function ({message, type}) {
       const me = this
       me.isMaskShow = true
-      setTimeout(function () {
-        me.isMaskShow = false
-      })
       me.toast = {
         show: true,
         type: type, // success,text
@@ -116,10 +113,10 @@ const mixin = {
           onFloatMaskTap: function () {
             if (hideOnMaskTap) {
               const me = this
-              let MyComponent = Vue.extend({
+              let EmptyComponent = Vue.extend({
                 template: `<div></div>`
               })
-              new MyComponent({ el: '#mask' })
+              new EmptyComponent({ el: '#mask' })
               me.isMaskShow = false
             }
           }
