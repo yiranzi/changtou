@@ -29,6 +29,15 @@
           <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
         </flexbox>
 
+         <div class="third-party-container">
+           <div class="third-text-container">
+             <i class="horizon-line"></i>
+             <p class="third-text">第三方登录</p>
+             <i class="horizon-line"></i>
+           </div>
+              <div class="third-icon icon-qq" v-touch:tap='isInstalledQQ'>QQ登录</div>
+              <div class="third-icon icon-wx" v-touch:tap='isInstalledWX'>微信登录</div>
+         </div>
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
@@ -36,6 +45,29 @@
   </div>
 </template>
 <style>
+         .third-party-container{
+            width:100%;
+            margin-top: 6rem;
+            font-size: 80%;
+         }
+         .horizon-line{
+           display: inline-block;
+           width: 30%;
+           background:#BFB3B3;
+           height: .1rem;
+           vertical-align: middle;
+         }
+         .third-text{
+           display: inline-block;
+           margin-left: .5rem;
+           margin-right: .5rem;
+         }
+         .third-icon{
+             display: inline-block;
+         }
+         .icon-qq{
+           margin-right: 8rem;
+         }
 </style>
 <script>
   import IctTitlebar from '../../components/IctTitlebar.vue'
@@ -47,6 +79,7 @@
   import {userActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import Alert from 'vux/alert'
+  import { testFun, isInstalledWX, authSerWX, isInstalledQQ, authSerQQ } from '../../plugin/thirdParty'
   export default{
     vuex: {
       getters: {
@@ -92,6 +125,7 @@
     },
 
     methods: {
+      testFun, isInstalledWX, authSerWX, isInstalledQQ, authSerQQ,
       doLogin () {
         this.disabled = true
         const me = this

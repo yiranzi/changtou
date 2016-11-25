@@ -10,14 +10,16 @@
         <div class="financial-interview">
           <span v-touch:tap="goToNewertestStart">
             <i class="finan-icon finan-icon-jiemi"></i>
-            理财揭秘</span>
+            理财揭秘
+          </span>
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-fangtan"></i>
-            院生访谈</span>
+            院生访谈
+          </span>
         </div>
         <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          <p> 每日一题 积攒你的财商 </p>
+          <p>每日一题 积攒你的财商</p>
           <p class="daily-subtext">财富自由之路第一步</p>
         </div>
         <div class="expenselist-area">
@@ -388,13 +390,11 @@
     line-height: 1.2rem;
     background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
     url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
-
-
   }
+
   .daily-subtext {
     color: #898989;
     font-size: .65rem;
-
   }
 
   .finan-icon{
@@ -403,11 +403,12 @@
     display: inline-block;
     margin-bottom: -1rem;
     zoom:.5;
-
   }
+
   .finan-icon.finan-icon-jiemi{
     background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
   }
+
   .finan-icon.finan-icon-fangtan{
     background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
   }
@@ -418,7 +419,6 @@
     height:1.5rem;
     background: #eee;
   }
-
 
   /*                                                       The icon add   by  Ritsu Yan                                    */
 </style>

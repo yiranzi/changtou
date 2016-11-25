@@ -9,7 +9,7 @@
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
       <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
-        <span class="my-icon" slot="icon" ></span>
+        <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
       <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
@@ -58,10 +58,10 @@
   import mixinAjax from './mixinAjax'
   import mixinModal from './mixinModal'
   import mixinBackHandler from './mixinBackHandler'
-  import mixinNetWork from './mixinNetwork'
+  import mixinNetwork from './mixinNetwork'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetWork],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork],
 
     store,
 

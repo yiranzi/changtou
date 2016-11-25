@@ -48,7 +48,7 @@ export const login = ({ dispatch }, identity, plainPassword) => {
       user => {
         updateAppUser(dispatch, user)
         resolve(user)
-      },
+      }).catch(
       err => {
         reject(err)
       }

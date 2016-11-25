@@ -14,7 +14,7 @@ const mixin = {
     offlineHandler () {
       const networkState = window.navigator.connection.type
       // ('无网络')
-      if (networkState === 'Connection.NONE' || 'Connection.UNKNOWN') {
+      if (networkState === 'Connection.NONE' || networkState === 'Connection.UNKNOWN') {
         this.showToast({message: '您已断开网络连接'})       // point to the window ,we must bind(this) then point to Vue and find the method.
       //  console.log('this is none ', networkState)
       }
@@ -22,14 +22,8 @@ const mixin = {
     onlineHandler () {
       const networkState = window.navigator.connection.type
       //  判断当前为什么网络
-        this.showToast({message: '您已连接上网络'})
-       // console.log('23333', networkState)
-      if (networkState.indexOf('cell') >= 0) {
+      if (networkState === 'cell_4g' || networkState === 'cell_3g' || networkState === 'cell_2g') {
         this.showToast({message: '您当前为 4G/3G/2G ,请注意流量使用情况或可使用WIFI'})
-      // console.log('23333', networkState)
-      } else if (networkState.indexOf('wifi') >= 0) {
-      // console.log(networkState)
-        this.showToast({message: '您当前正在使用WiFi'})
       }
     }
   }

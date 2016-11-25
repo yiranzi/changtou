@@ -177,7 +177,7 @@
         scrollerHeight: '530px',
         isShowConfirm: false,
         userQuestion: '',
-        isScroll: true
+        isScrollerYLock: true
       }
     },
 
@@ -242,14 +242,10 @@
         me.$nextTick(() => {
           me.$refs.scroller.reset({
             top: 0,
-            lockY: false,
-            isScroll: false,
-            'lock-y': false
+            YLock: false
           })
         })
       }, 150)
-
-   //   console.log(233)
      },
 
     /**

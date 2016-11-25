@@ -2,7 +2,7 @@
   <div>
     <div class="newertest-end">
       <div class="top" v-el:titlebar>
-        <div class="cancel" v-touch:tap="onCancel"></div>
+v        <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="newertest-end-content">
@@ -31,7 +31,7 @@
               </div>
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
-                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="onTurn">
+                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过</div>
               </div>
             </div>
@@ -237,8 +237,10 @@
       notSave () {
         this.$route.router.go('/main')
       },
-      // turn to the course page
-      onTurn  () {
+      /**
+       *  去对应的课程页
+       */
+      gotoSubjectDetail  () {
         this.$route.router.go('/subject/detail/P/1/0')
       }
     },

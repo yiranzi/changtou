@@ -1,5 +1,5 @@
 <template>
-    <div class="contact-us" @load="getVersion">
+    <div class="contact-us">
       <div>
         <ict-titlebar>关于我们</ict-titlebar>
       </div>
@@ -17,7 +17,7 @@
       </div>
       <div class="item">
         <span>版本信息</span>
-        <span> {{ code }} </span>
+        <span> {{ versionNum }} </span>
       </div>
 
       <div class="copyright">
@@ -104,18 +104,14 @@
 <script>
 import IctTitlebar from '../../components/IctTitlebar.vue'
 import {versionNum} from '../../plugin/version'
-
-export default {
-  data () {
-    return {
-      code: versionNum
+      export default {
+          data () {
+          return {
+            versionNum
+         }
+      },
+         components: {
+         IctTitlebar
+      }
    }
- },
-  methods: {
-
-},
-  components: {
-    IctTitlebar
-}
-}
 </script>
