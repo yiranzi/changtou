@@ -68,9 +68,9 @@
     },
     data () {
       return {
-        phone: this.$route.params.phone,
+        phone: '',
         validationCode: '',
-        plainPassword: this.$route.params.plainPassword,
+        plainPassword: '',
         isPhoneReadonly: true,
         isPlainPasswordShow: false,
         validationBtnText: '获取验证码',
@@ -81,18 +81,22 @@
       }
     },
 
-    watch: {
-      validationCode () {
-        this.verifyCode()
-      }
-    },
-
     computed: {
       isDisabled () {
         return !(/^\d{6}$/.test(this.validationCode))
       }
     },
-
+    route: {
+      data ({to: {params}}) {
+        this.phone = params.phone
+        this.plainPassword = params.plainPassword
+      }
+    },
+    watch: {
+      validationCode () {
+        this.verifyCode()
+      }
+    },
     methods: {
       /**
        * 验证验证码
