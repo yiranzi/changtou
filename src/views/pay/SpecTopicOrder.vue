@@ -82,7 +82,7 @@
           rightOptions: {
             text: this.isLogin ? this.canUserBuy ? '' : '重新选课' : '',
             disabled: !this.isLogin,
-            callback: this.isLogin ? this.canUserBuy ? this.onConfirmTap : this.goToCourseList : this.onConfirmTap
+            callback: this.isLogin ? this.canUserBuy ? this.onConfirmTap : this.goBack : this.onConfirmTap
           }
         }
       }
@@ -215,14 +215,14 @@
        * 跳转到 支付成功页
        */
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/ST/${this.stpId}`)
+        this.$route.router.go(`/pay/success/ST/${this.stpId}`)
       },
 
       /**
        * 跳转到 全部课程列表
        */
-      goToCourseList () {
-        this.$route.router.go('/totalList')
+      goBack () {
+        window.history.go(-2)
       }
     },
     components: {

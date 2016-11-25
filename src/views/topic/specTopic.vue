@@ -220,6 +220,12 @@
     },
 
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/ST\//.test(transition.from.path)) {
+          transition.redirect('/mycourse')
+        }
+        transition.next()
+      },
       data ({to: {params: {stpId}}}) {
         this.stpId = stpId
 
@@ -304,7 +310,7 @@
         this.$route.router.on(path, {
           component: require('../pay/SpecTopicOrder.vue')
         })
-        this.$route.router.replace(path)
+        this.$route.router.go(path)
       }
     },
     components: {

@@ -67,7 +67,7 @@
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin, //todo  不能购买的情况
+            disabled: !this.isLogin,
             callback: this.onConfirmTap
           }
         }
@@ -180,7 +180,7 @@
       )
       },
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/CT/${this.ctpId}`)
+        this.$route.router.go(`/pay/success/CT/${this.ctpId}`)
       }
     },
     components: {

@@ -196,7 +196,7 @@
        * 跳转到 支付成功
        */
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/PS/0`)
+        this.$route.router.go(`/pay/success/PS/0`)
       }
     },
     components: {

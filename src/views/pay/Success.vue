@@ -22,7 +22,6 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import IctButton from '../../components/IctButton.vue'
-import { goodsType } from '../../util/pay/dealHelper'
 
   const messages = {
     'S': {
@@ -94,31 +93,7 @@ export default {
       this.message = messages[type]
     },
     onConfirm () {
-      let path
-      switch (this.type) {
-        case goodsType.SUBJECT:
-          path = `/subject/detail/P/${this.id}/0`
-          break
-        case goodsType.SPEC_TOPIC:
-          path = '/mycourse'
-          break
-        case goodsType.COMMON_TOPIC:
-          path = '/main'
-          break
-        case goodsType.POSTPONE:
-          path = `/subject/detail/P/${this.id}/0`
-          break
-        case goodsType.PRO_STRATEGY:
-          path = '/strategy/professional/product'
-          break
-        case goodsType.VIP_STRATEGY:
-          path = '/strategy/vip/product'
-          break
-        default:
-          path = '/main'
-          break
-      }
-      this.$route.router.replace(path)
+      window.history.go(-2)
     }
   },
   components: {

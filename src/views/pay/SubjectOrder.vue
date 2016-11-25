@@ -56,7 +56,7 @@
         return this.total - this.toubi
       },
       canUserBuy () {
-        return !(this.isLogin && this.expenseRecords.indexOf(this.subjectId))
+        return !(this.isLogin && !this.expenseRecords.indexOf(this.subjectId))
       },
       // 支付按钮 信息
       btnOptions () {
@@ -69,7 +69,7 @@
           rightOptions: {
             text: this.isLogin ? this.canUserBuy ? '' : '去听课' : '',
             disabled: !this.isLogin,
-            callback: this.isLogin ? this.canUserBuy ? this.onConfirmBuy : this.goToCourse : this.onConfirmBuy
+            callback: this.isLogin ? this.canUserBuy ? this.onConfirmBuy : this.goBack : this.onConfirmBuy
           }
         }
       }
@@ -149,8 +149,8 @@
       /**
        * 跳转去课程
        */
-      goToCourse () {
-        this.$route.router.go(`/subject/detail/P/${this.subjectId}/1`)
+      goBack () {
+        window.history.go(-1)
       },
 
       /**
@@ -197,7 +197,7 @@
        * 跳转到 支付成功
        */
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/S/${this.subjectId}`)
+        this.$route.router.go(`/pay/success/S/${this.subjectId}`)
       }
     },
     components: {

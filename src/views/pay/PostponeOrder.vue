@@ -188,7 +188,7 @@
       )
       },
       goToPaySuccess () {
-        this.$route.router.replace(`/subject/detail/P/${this.subjectId}/0`)
+        this.$route.router.go(`/subject/detail/P/${this.subjectId}/0`)
       }
     },
     components: {

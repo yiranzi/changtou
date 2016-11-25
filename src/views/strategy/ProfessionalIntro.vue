@@ -55,14 +55,20 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 支付按钮 信息
       disabled () {
-        return (this.isLogin && this.strategy.strategyLevel === 'A')
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === 'A')
       }
     },
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/PS\//.test(transition.from.path)) {
+          transition.redirect('/main')
+        }
+        transition.next()
+      },
       data () {
         this.getProfessionalIntro()
       }
@@ -90,7 +96,7 @@
        * 跳转到vip宣传
        */
       goToVip () {
-        this.$route.router.replace('/strategy/vip/intro')
+        this.$route.router.go('/strategy/vip/intro')
       },
 
       onAgreeTap () {

@@ -53,10 +53,16 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       }
     },
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/VS\//.test(transition.from.path)) {
+          transition.redirect('/strategy/vip/product')
+        }
+        transition.next()
+      },
       data () {
         this.getVipIntro()
       }
@@ -86,7 +92,7 @@
         this.$route.router.on(`/pay-VS-0`, {
           component: require('../pay/VipStrategyOrder.vue')
         })
-        this.$route.router.replace(`/pay-VS-0`)
+        this.$route.router.go(`/pay-VS-0`)
       }
     },
     components: {

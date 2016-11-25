@@ -94,6 +94,12 @@
       }
     },
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/CT\//.test(transition.from.path)) {
+          window.history.go(-1)
+        }
+        transition.next()
+      },
       data (transition) {
         const ctpId = transition.to.params.ctpId
         this.loadCommonTopic(ctpId).then(
@@ -124,7 +130,7 @@
         this.$route.router.on(path, {
           component: require('../pay/CommonTopicOrder.vue')
         })
-        this.$route.router.replace(path)
+        this.$route.router.go(path)
       }
     },
     components: {

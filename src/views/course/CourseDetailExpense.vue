@@ -705,7 +705,7 @@
         this.$route.router.on(path, {
           component: require('../pay/PostponeOrder.vue')
         })
-        this.$route.router.replace(path)
+        this.$route.router.go(path)
       },
 
       /**
@@ -765,7 +765,7 @@
         this.$route.router.on(path, {
           component: require('../pay/SubjectOrder.vue')
         })
-        this.$route.router.replace(path)
+        this.$route.router.go(path)
       },
 
         /**
