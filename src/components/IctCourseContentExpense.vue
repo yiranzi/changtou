@@ -10,7 +10,7 @@
       <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false): false"
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
-           (lesson.choiceQuestion.length > 0 ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' ? 1 : 0)) * 11/4 + 'rem'}" >
+           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C' ? 1 : 0)) * 11/4 + 'rem'}" >
         <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
           <span style="width: 85%">
@@ -22,7 +22,7 @@
         </div>
 
         <!--选择题作业-->
-        <div v-if="lesson.choiceQuestion.length > 0" class="chapter-title"
+        <div v-if="lesson.choiceQuestion.length > 0 && lesson.type !== 'C'" class="chapter-title"
              v-touch:tap="onHomeworkChoiceTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
           <span class="chioce-icon"></span>
@@ -30,7 +30,7 @@
         </div>
 
         <!--问答题作业-->
-        <div v-if="lesson.essayQuestion.assigmentType !== 'N'" class="chapter-title"
+        <div v-if="lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C'" class="chapter-title"
              v-touch:tap="onHomeworkEssayTap()">
           <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
           <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
