@@ -49,7 +49,7 @@
   }
 </style>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Toast from 'vux/toast'
   import {mineActions, globalActions} from '../../vuex/actions'
   export default {

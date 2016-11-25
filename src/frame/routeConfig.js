@@ -33,6 +33,9 @@ export function configRouter (router) {
     'subject/detail/P/:subjectId/:position': { //课程详情页
       component: require('../views/course/CourseDetailExpense.vue')
     },
+    'seminar/:seminarId': { //课程详情页
+      component: require('../views/course/Seminar.vue')
+    },
     '/mycourse': {    //我的课程
       component: require('../views/course/MyCourse.vue')
     },
@@ -219,6 +222,9 @@ export function configRouter (router) {
     //策略 专业版 数据
     '/strategy/professional/product': {
       component: require('../views/strategy/ProfessionalProduct.vue')
+    },
+    '/strategy/duoyizi/faq': {
+      component: require('../views/strategy/DuoYinZiFaq.vue')
     }
   })
 

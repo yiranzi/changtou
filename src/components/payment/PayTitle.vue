@@ -6,7 +6,7 @@
 
  */
 <template>
-    <div class="pay-title" v-if="show">
+    <div class="pay-title">
       <slot>{{title}}</slot>
       <span class="price-span">价格：<span>￥{{price}}</span></span>
     </div>
@@ -14,10 +14,6 @@
 <script>
 export default {
   props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
     title: String,
     price: Number
   }

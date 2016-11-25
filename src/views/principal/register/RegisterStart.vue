@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'

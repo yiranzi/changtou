@@ -141,7 +141,7 @@
 <script>
   import Scroller from 'vux/scroller'
   import Confirm from 'vux/confirm'
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import {helpActions, globalActions} from '../../vuex/actions'
   import {helpGetters, userGetters} from '../../vuex/getters'
 

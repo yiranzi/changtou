@@ -1,10 +1,11 @@
+/**
+ * Created by jun on 2016/11/24.
+ *
+ */
 <template>
   <div class="help_self_service">
     <ict-titlebar v-el:titlebar>
-      小投答疑
-      <div slot="right" v-touch:tap="goToManualService">
-        <img class="msg_pic" src='../../assets/styles/image/help/MSG.png'>
-      </div>
+      策略使用FAQ
     </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div class="help_self_service_content">
@@ -16,13 +17,8 @@
             <div class="answer" v-show="$index === currQuestionIndex">A  :  {{questionArr.a}}</div>
           </div>
         </div>
-        <!--<div style="height: 1rem; width: 100%"></div>-->
       </div>
     </scroller>
-    <div class="ask_more_questions" v-el:helpBottom>
-      <span>还有其他问题</span>
-      <span v-touch:tap="goToManualService">向我提问</span>
-    </div>
   </div>
 </template>
 <style lang="less">
@@ -94,21 +90,34 @@
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import {helpActions, globalActions} from '../../vuex/actions'
-  import {helpGetters} from '../../vuex/getters'
   export default {
-    vuex: {
-      actions: {
-        loadQAList: helpActions.loadQAList,
-        showAlert: globalActions.showAlert
-      },
-      getters: {
-        helpList: helpGetters.QAList
-      }
-    },
-
     data () {
       return {
+        helpList: [
+        {
+          q: '什么是多因子策略？',
+          a: '多因子模型是根据诺贝尔经济奖得主尤金•法玛（EugeneF.Fama）教授和麻省理工学院的肯尼斯•弗伦奇(KennethFrench)教授提出的经典量化策略，对A股2700多只股票每周进行量化排名的模型。'
+        },
+        {
+          q: '在A股多因子策略情况如何？',
+          a: '多因子策略是利用多因子数据排名得出的策略方案。为了降低风险，我们剔除了ST、新股、绝大部分的创业板股票，根据多因子数据整合的多因子策略，从2006年到2015年，每年保持12%以上收益，10年增长了77倍，历史最大回撤仅18.9%。'
+        },
+        {
+          q: '如何使用多因子策略数据？',
+          a: '1、多因子策略每周五收盘晚上或周六数据处理后,公布本周排名前10只股票，VIP用户自行选择其中5~10支在第二周周一开盘后买入，或卖出历史排名股票，再换入新的排名股票，每周轮动操作。2、风险宝会根据风险每天上午开盘前（暂定6点）给出持仓或者空仓的建议，风险宝会在市场风险高的时候提示空仓；如果当日风险宝提示空仓，则当日集合竞价卖出所有股票，直到再次提示持仓时买入。'
+        },
+        {
+          q: '如何使用每日多空提示？',
+          a: '提示“今日建议空仓”时一定要空仓，按风险宝提示才能减少最大回撤！！从历史数据看，多因子策略每年持仓时间大约在4个月左右，“截断亏损，才能让赢利奔跑！”。'
+        },
+        {
+          q: '多因子仓位如何分配？',
+          a: '多因子策略仓位建议不要超过总资金的20%,后续长投会推出更多策略,请不要在单一策略上投入全部资金。另外如果选择5支股票的话，资金也至少要在3万以上。建议用户按自己的资金来选择策略。'
+        },
+        {	q: '换仓时会不会有市场冲击?',
+          a: '从9: 30分,10点,11点,13点,14点,14点45分的模拟时点交易数据来看,下午换仓的收益比总体要减少25%~35%,建议上午换仓。'
+        }
+      ],
         scrollerHeight: '500px',
         currQuestionIndex: -1 //当前查看的问题集合
       }
@@ -127,41 +136,16 @@
       }
     },
 
-    route: {
-      data (transition) {
-        const me = this
-        me.loadQAList().then(
-          function () {
-            transition.next()
-          },
-          function () {
-//            me.showAlert('加载信息失败，请重试！')
-          }
-        )
-      }
-    },
     ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
     },
     methods: {
       lookAnswer (index) {
         if (this.currQuestionIndex !== index) {
           this.currQuestionIndex = index
-          // todo 如果是最后一题， 页面滚动
-//          if (index === (this.helpList.length - 1)) {
-//            console.log('xxxx')
-//            this.$nextTick(() => {
-//              setTimeout(() => {
-//                this.$refs.scroller._xscroll.resetSize()
-//              }, 50)
-//            })
-//          }
         } else {
           this.currQuestionIndex = -1
         }
-      },
-      goToManualService () {
-        this.$route.router.go('/manual/service')
       }
     },
     components: {

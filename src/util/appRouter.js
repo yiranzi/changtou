@@ -31,19 +31,19 @@ if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
     })
   } else if (type === goodsType.SUBJECT) {
     appRouter.on(path, {
-      component: require('../views/pay/ProStrategyOrder.vue')
+      component: require('../views/pay/SubjectOrder.vue')
     })
   } else if (type === goodsType.COMMON_TOPIC) {
     appRouter.on(path, {
-      component: require('../views/pay/ProStrategyOrder.vue')
+      component: require('../views/pay/CommonTopicOrder.vue')
     })
   } else if (type === goodsType.SPEC_TOPIC) {
     appRouter.on(path, {
-      component: require('../views/pay/ProStrategyOrder.vue')
+      component: require('../views/pay/SpecTopicOrder.vue')
     })
   } else if (type === goodsType.POSTPONE) {
     appRouter.on(path, {
-      component: require('../views/pay/ProStrategyOrder.vue')
+      component: require('../views/pay/PostponeOrder.vue')
     })
   }
 }

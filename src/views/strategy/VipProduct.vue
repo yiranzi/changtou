@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import DuoYinzi from '../../components/strategy/StrategyDuoYinZi.vue'
   import ZhiShubao from '../../components/strategy/StrategyZhiShuBao.vue'
@@ -38,8 +38,12 @@ export default {
       scrollerHeight: '0px'
     }
   },
+  route: {
+    data () {
+      this.getVipProduct()
+    }
+  },
   ready () {
-    this.getVipProduct()
     this.setScrollerHeight()
   },
   methods: {

@@ -9,20 +9,20 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller>
       <div>
         <div class="promote-panel" v-show="promoteShow">
-          <img src="../../../static/image/subject/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
-          <img src="../../../static/image/subject/courseList/total-list-strategy.png" class="promote-img">
+          <img src="../../assets/styles/image/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
+          <img src="../../assets/styles/image/courseList/total-list-strategy.png" class="promote-img">
         </div>
         <div class="course-group" v-for="group in courseList">
           <p class="course-group-title">{{group.categoryName}}</p>
           <div class="course-list" v-for="course in group.subjectList">
             <img class="course-list-img"
-                 v-touch:tap="goToCourseDetail($index)"
+                 v-touch:tap="goToCourseDetail(course.type, course.subjectId)"
                  v-bind:src=course.pic>
             <div class="course-list-info"
-                 v-touch:tap="goToCourseDetail($index)">
+                 v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.description}}</p>
-              <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="courseList[$index].price">￥{{course.price}}</span></p>
+              <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="course.price">￥{{course.price}}</span></p>
             </div>
           </div>
         </div>
@@ -32,11 +32,10 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
-
   export default {
     vuex: {
       getters: {
@@ -68,9 +67,8 @@
       onPromoteCloseTap () {
         this.promoteShow = false
       },
-      goToCourseDetail (index) {
-        let courseList = this.courseList
-        let path = `/subject/detail/${courseList[index].type}/${courseList[index].subjectId}/0`
+      goToCourseDetail (type, subjectId) {
+        const path = `/subject/detail/${type}/${subjectId}/0`
         this.$route.router.go(path)
       }
     },

@@ -26,7 +26,7 @@ export default {
   },
   watch: {
     value (newVal) {
-      this.$emit('postpone-change', newVal)
+      this.$dispatch('postponeChange', newVal)
     }
   },
   methods: {

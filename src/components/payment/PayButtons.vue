@@ -27,7 +27,7 @@
 <template>
     <div class="pay-button">
       <div class="left" :class="{'left-exception' : (state === 'exception')}">
-        {{{leftText}}}
+        <span>{{{leftText}}}</span>
       </div>
       <ict-button class="right"
                   :class="{'right-exception' : (state === 'exception')}"
@@ -95,7 +95,9 @@ export default {
         color: #ff5b45;
       }
       &-exception{
+        line-height: 2rem;
         text-align: center;
+        vertical-align: middle;
         color: #007aff;
       }
     }
