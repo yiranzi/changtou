@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Swiper from 'vue-swiper'
   import {getSessionCache, clearSessionCache} from '../../util/cache'
 //  import { courseDetailGetters } from '../../vuex/getters'
