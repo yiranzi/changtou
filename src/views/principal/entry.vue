@@ -108,7 +108,6 @@
         loginByWx: userActions.loginByWx
       }
     },
-
     data () {
       return {
         plainPassword: '',
@@ -118,7 +117,6 @@
         wxInstalled: false //是否安装微信
       }
     },
-
     watch: {
       identity (newVal) {
         if (/\S/.test(newVal) && /\S/.test(this.plainPassword)) {
@@ -135,14 +133,6 @@
         }
       }
     },
-
-    route: {
-      data () {
-        // 这里初始化 前一个用户的 user 信息
-//        console.log('exe')
-      }
-    },
-
     ready () {
       const me = this
       qqAuth.checkQQInstalled().then(function () {
