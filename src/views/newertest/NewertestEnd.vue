@@ -2,7 +2,7 @@
   <div>
     <div class="newertest-end">
       <div class="top" v-el:titlebar>
-v        <div class="cancel" v-touch:tap="onCancel"></div>
+        <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="newertest-end-content">

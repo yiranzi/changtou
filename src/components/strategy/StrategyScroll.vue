@@ -1,18 +1,15 @@
 <template>
-    <div class="scroll-Container">
-      <marquee class="scroll-Text"> {{ scrollText }}</marquee>
+    <div class="scroll-Container" v-if="text">
+      <marquee class="scroll-Text">{{text}}</marquee>
     </div>
 </template>
-<style>
-</style>
+
 <script>
-    export default {
-      data () {
-        return {
-          scrollText: '[公告] : 这是一条测试滚动公告 '
-        }
-      }
+  export default {
+    props: {
+      text: String
     }
+  }
 </script>
 
 <style>

@@ -104,14 +104,14 @@
 <script>
 import IctTitlebar from '../../components/IctTitlebar.vue'
 import {versionNum} from '../../plugin/version'
-      export default {
-          data () {
-          return {
-            versionNum
-         }
-      },
-         components: {
-         IctTitlebar
-      }
-   }
+  export default {
+  data () {
+    return {
+      versionNum
+    }
+  },
+  components: {
+    IctTitlebar
+  }
+}
 </script>

@@ -9,6 +9,7 @@
 <template>
   <div class="strategy-vip-product">
     <ict-titlebar v-el:titlebar>长投宝专业版</ict-titlebar>
+    <scroll-text  :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <zhi-shubao :zhishubao="professionalProduct.zhiShuBao"></zhi-shubao>
@@ -25,15 +26,18 @@
   import ZhiShubao from '../../components/strategy/StrategyZhiShuBao.vue'
   import DingToubao from '../../components/strategy/StrategyDingTouBao.vue'
   import FenJibao from '../../components/strategy/StrategyFenJiBao.vue'
-  import {strategyProductActions} from '../../vuex/actions'
-  import {strategyProductGetters} from '../../vuex/getters'
+  import ScrollText from '../../components/strategy/StrategyScroll.vue'
+  import {strategyProductActions, strategyNoticeActions} from '../../vuex/actions'
+  import {strategyProductGetters, strategyNoticeGetters} from '../../vuex/getters'
   export default {
     vuex: {
       getters: {
-        professionalProduct: strategyProductGetters.professionalProduct
+        professionalProduct: strategyProductGetters.professionalProduct,
+        notice: strategyNoticeGetters.strategyNotice
       },
       actions: {
-        getProfessionalProduct: strategyProductActions.getProfessionalProduct
+        getProfessionalProduct: strategyProductActions.getProfessionalProduct,
+        getProNotice: strategyNoticeActions.getProNotice
       }
     },
     data () {
@@ -41,8 +45,13 @@
         scrollerHeight: '0px'
       }
     },
+    route: {
+        data () {
+            this.getProNotice()
+            this.getProfessionalProduct()
+        }
+    },
     ready () {
-      this.getProfessionalProduct()
       this.setScrollerHeight()
     },
     methods: {
@@ -67,7 +76,8 @@
       DuoYinzi,
       ZhiShubao,
       DingToubao,
-      FenJibao
+      FenJibao,
+      ScrollText
     }
   }
 </script>

@@ -5,7 +5,7 @@
 <template>
   <div class="strategy-vip-product">
     <ict-titlebar v-el:titlebar>长投宝VIP</ict-titlebar>
-    <scroll-text> {{scrollText}} </scroll-text>
+    <scroll-text :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <duo-yinzi :duoyizi="vipProduct.duoYinZi"></duo-yinzi>
@@ -24,16 +24,17 @@
   import DingToubao from '../../components/strategy/StrategyDingTouBao.vue'
   import FenJibao from '../../components/strategy/StrategyFenJiBao.vue'
   import ScrollText from '../../components/strategy/StrategyScroll.vue'
-  import {strategyProductGetters} from '../../vuex/getters'
-  import {strategyProductActions} from '../../vuex/actions'
-
+  import {strategyProductGetters, strategyNoticeGetters} from '../../vuex/getters'
+  import {strategyProductActions, strategyNoticeActions} from '../../vuex/actions'
 export default {
   vuex: {
     getters: {
-      vipProduct: strategyProductGetters.vipProduct
+      vipProduct: strategyProductGetters.vipProduct,
+      notice: strategyNoticeGetters.strategyNotice
     },
     actions: {
-      getVipProduct: strategyProductActions.getVipProduct
+      getVipProduct: strategyProductActions.getVipProduct,
+      getVipNotice: strategyNoticeActions.getVipNotice
     }
   },
   data () {
@@ -41,8 +42,13 @@ export default {
       scrollerHeight: '0px'
     }
   },
+  router: {
+      data () {
+        this.getVipProduct()
+        this.getVipNotice()
+      }
+  },
   ready () {
-    this.getVipProduct()
     this.setScrollerHeight()
   },
   methods: {

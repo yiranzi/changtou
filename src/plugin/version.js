@@ -14,7 +14,7 @@ let versionNum = '0'                             //  返回值必须是一个 st
 
 const initVerNum = function () {
   if (platformMap.WEB === 'web') {     // 如果当前为网页直接返回设置版本号
-    return versionNum
+    return
   }
   window.cordova.getAppVersion.getVersionNumber().then(function (number) {
     versionNum = number

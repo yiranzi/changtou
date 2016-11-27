@@ -127,3 +127,4 @@ export const getProfessionalProduct = ({dispatch}) => {
       )
     })
 }
+
