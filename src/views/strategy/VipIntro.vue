@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import StrategyIntro from '../../components/strategy/StrategyIntro.vue'
@@ -34,6 +34,7 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import {strategyIntroActions} from '../../vuex/actions'
   import {strategyIntroGetters, userGetters} from '../../vuex/getters'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       getters: {
@@ -53,11 +54,21 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+      }
+    },
+    route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/VS\//.test(transition.from.path)) {
+          transition.redirect('/strategy/vip/product')
+        }
+        transition.next()
+      },
+      data () {
+        this.getVipIntro()
       }
     },
     ready () {
-      this.getVipIntro()
       this.setScrollerHeight()
     },
     methods: {

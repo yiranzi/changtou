@@ -24,7 +24,7 @@
     </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import StrategyIntro from '../../components/strategy/StrategyIntro.vue'
@@ -36,6 +36,7 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import {strategyIntroActions} from '../../vuex/actions'
   import {strategyIntroGetters, userGetters} from '../../vuex/getters'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       getters: {
@@ -55,15 +56,25 @@
     computed: {
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.PRO) ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 支付按钮 信息
       disabled () {
-        return !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A')
+        return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP)
+      }
+    },
+    route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/PS\//.test(transition.from.path)) {
+          transition.redirect('/main')
+        }
+        transition.next()
+      },
+      data () {
+        this.getProfessionalIntro()
       }
     },
     ready () {
-      this.getProfessionalIntro()
       this.setScrollerHeight()
     },
     methods: {
@@ -88,15 +99,24 @@
       goToVip () {
         this.$route.router.go('/strategy/vip/intro')
       },
+
+      onAgreeTap () {
+        this.$route.router.on(`/pay-PS-0`, {
+          component: require('../pay/ProStrategyOrder.vue')
+        })
+        this.$route.router.go(`/pay-PS-0`)
+      },
       /**
        * 立即购买
        */
       buyNow () {
         if (!this.disabled) {
-          this.$route.router.on(`/pay-PS-0`, {
-            component: require('../pay/ProStrategyOrder.vue')
+          this.showMask({
+            component: 'strategy/StrategyAgreement.vue',
+            hideOnMaskTap: true,
+            callbackName: 'onAgreeTap',
+            callbackFn: this.onAgreeTap.bind(this) //组件上的
           })
-          this.$route.router.go(`/pay-PS-0`)
         }
       }
     },

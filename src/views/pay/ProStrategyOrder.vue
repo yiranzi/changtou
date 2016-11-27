@@ -4,7 +4,7 @@
 */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
     </pay-base>
@@ -14,9 +14,10 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, getCoupons, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
       getters: {
@@ -52,7 +53,7 @@
       },
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === 'B') ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === 'A') ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy.strategyLevel === strategyLevel.PRO) ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 实付金额
       sum () {
@@ -65,7 +66,7 @@
             price: this.sum
           },
           rightOptions: {
-            disabled: !this.isLogin || (this.isLogin && this.strategy.strategyLevel === 'A'),
+            disabled: !this.isLogin || (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP),
             callback: this.onConfirmTap
           }
         }
@@ -77,11 +78,9 @@
         return Promise.all([getStrategyOrder(goodsType.PRO_STRATEGY)]).then(
           ([order]) => {
             me.arrangeOrder(order)
-          }
-        ).catch(
-          (err) => { me.showAlert(err.message) }
-        )
-      }
+      }).catch(
+          (err) => console.log(err)
+      ) }
     },
     events: {
       // 服务期限 更改
@@ -98,9 +97,19 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+      },
+      'codeConfirm' () {
+        const me = this
+        getStrategyOrder(goodsType.PRO_STRATEGY).then(order => me.arrangeOrder(order))
+      },
+      'loginTap' () {
+        this.$route.router.go('/entry')
       }
     },
     methods: {
+      /**
+       * 整理显示数据
+       */
       arrangeOrder (order) {
         this.pic = order.pic
         this.periods = [
@@ -115,9 +124,28 @@
           }
         ]
         this.proLeftDays = order.proLeftDays
-        this.coupons = getCoupons(order)
+        this.coupons = this.getCoupons(order)
         this.currentBalance = order.currentBalance
       },
+      /**
+       *  生成 优惠列表
+       */
+      getCoupons (order) {
+        let coupons = []
+        if (order.coupons) {
+          coupons = order.coupons
+        }
+        if (order.card) {
+          coupons.push({
+            name: '长投卡(7折)',
+            userBene: 0
+          })
+        }
+        return coupons
+      },
+      /**
+       * 点击确认订单
+       */
       onConfirmTap () {
         if (this.sum > 0) {
           this.sheetShow = true
@@ -139,7 +167,7 @@
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
             items: [{
               coupon: null,
-              dealType: this.strategy.strategyLevel === 'C' ? dealType.BUY : dealType.POSTPONE,
+              dealType: this.strategy.strategyLevel === strategyLevel.COMMON ? dealType.BUY : dealType.POSTPONE,
               itemId: this.itemId,
               mchantType: 6,
               misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,
@@ -165,8 +193,11 @@
         err => me.showAlert(err.reason)
       )
       },
+      /**
+       * 跳转到 支付成功
+       */
       goToPaySuccess () {
-        this.$route.router.replace(`/pay/success/PS/0`)
+        this.$route.router.go(`/pay/success/PS/0`)
       }
     },
     components: {

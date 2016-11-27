@@ -130,6 +130,10 @@
 
   //disabled
   .ict-btn-disabled {
+    &.ict-btn-mini{
+      color: @color-default-disabled-text-color;
+      background-color: @color-default-disabled-background;
+    }
     &.ict-btn-default{
       color: @color-default-disabled-text-color;
       background-color: @color-default-disabled-background;

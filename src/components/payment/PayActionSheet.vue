@@ -83,14 +83,6 @@
         this.$emit('pay-way-selected', this.payWay)
       },
       /**
-       * iOS兼容处理
-       */
-      fixIos (zIndex) {
-        if (this.$tabbar && /iphone/i.test(navigator.userAgent)) {
-          this.$tabbar.style.zIndex = zIndex
-        }
-      },
-      /**
        * 获取支付方式图片
        */
       getCellSrc (key) {
@@ -98,22 +90,9 @@
       }
     },
     watch: {
-      show (val) {
-        if (val) {
-          this.fixIos(-1)
-        } else {
-          var me = this
-          setTimeout(() => {
-            me.fixIos(100)
-          }, 200)
-        }
-      },
       value (newVal) {
         this.payWay = newVal
       }
-    },
-    beforeDestroy () {
-      this.fixIos(100)
     }
   }
 </script>

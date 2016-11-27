@@ -4,7 +4,7 @@
  */
 <template>
   <div class="strategy-vip-product">
-    <ict-titlebar v-el:titlebar>长投宝VIP</ict-titlebar>
+    <ict-titlebar v-el:titlebar>长投宝VIP版</ict-titlebar>
     <scroll-text :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import DuoYinzi from '../../components/strategy/StrategyDuoYinZi.vue'
   import ZhiShubao from '../../components/strategy/StrategyZhiShuBao.vue'

@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import { essayActions } from '../../vuex/actions'
 export default {

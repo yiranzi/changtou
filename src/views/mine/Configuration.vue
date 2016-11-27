@@ -56,7 +56,7 @@
   }
 </style>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Switch from 'vux/switch'
   import Group from 'vux/group'
   import {mineActions} from '../../vuex/actions'

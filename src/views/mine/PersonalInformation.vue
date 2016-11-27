@@ -63,7 +63,7 @@
     }
 </style>
 <script>
-import IctTitlebar from '../../components/IctTitlebar.vue'
+import IctTitlebar from '../../components/IctTitleBar.vue'
 import Cell from 'vux/cell'
 import Group from 'vux/group'
 import XButton from 'vux/x-button'

@@ -158,26 +158,34 @@ export default {
      * 点击 下一题
      */
     onNextTap () {
-      if (this.optionTaped === false) {
-        // 未选中任何选项
+      // 未选中任何选项
+      if (!this.optionTaped) {
         return
       }
+
       this.optionTaped = false
       this.selectedOptionIndex = -1
       this.isBtnDisabled = true
       this.explain = ''
 
       if (this.currIndex === this.totalNum - 1) {
-        //最后一题
         this.updateReport(this.report)
-        this.$route.router.replace('/choice/mark')
-        if (this.isLogin && parseInt(this.rightNum / this.totalNum) >= 6) {
+        const me = this
+        //登录 并且 分数>6
+        if (this.isLogin && parseInt(this.rightNum / this.totalNum * 10) >= 6) {
           this.submitReport(this.report).then(
-            () => {}
+            function () {
+              me.$route.router.replace('/choice/mark')
+            }
           ).catch(
-            err => console.warn(err.message)
+            function (err) {
+              console.warn(err.message)
+            }
           )
+        } else {
+          this.$route.router.replace('/choice/mark')
         }
+
         this.resetView()
       } else {
         this.goToNextQuestion()

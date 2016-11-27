@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
@@ -68,9 +68,9 @@
     },
     data () {
       return {
-        phone: this.$route.params.phone,
+        phone: '',
         validationCode: '',
-        plainPassword: this.$route.params.plainPassword,
+        plainPassword: '',
         isPhoneReadonly: true,
         isPlainPasswordShow: false,
         validationBtnText: '获取验证码',
@@ -81,18 +81,22 @@
       }
     },
 
-    watch: {
-      validationCode () {
-        this.verifyCode()
-      }
-    },
-
     computed: {
       isDisabled () {
         return !(/^\d{6}$/.test(this.validationCode))
       }
     },
-
+    route: {
+      data ({to: {params}}) {
+        this.phone = params.phone
+        this.plainPassword = params.plainPassword
+      }
+    },
+    watch: {
+      validationCode () {
+        this.verifyCode()
+      }
+    },
     methods: {
       /**
        * 验证验证码
@@ -100,6 +104,8 @@
       verifyCode () {
         if (/^\d{6}$/.test(this.validationCode)) {
           this.isDisabled = false
+          return true
+        } else {
           return false
         }
       },
@@ -143,9 +149,9 @@
               this.$dispatch(eventMap.REGISTER_SUCCESS, user)
               window.history.go(-2)
               me.isDisabled = false
-            },
-            (err) => {
-              me.showAlert(err.message)
+            }).catch(
+            () => {
+            clearInterval(me.timer)
               me.isDisabled = false
             }
           )

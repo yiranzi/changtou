@@ -13,7 +13,7 @@
 </template>
 <script>
   import Scroller from 'vux/scroller'
-  import IctTitlebar from '../../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../../components/IctTitleBar.vue'
   var agreement = [
     {
       'contents': [

@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
   import Alert from 'vux/alert'

@@ -33,12 +33,13 @@ export default {
     strategyOptions: Array
   },
   methods: {
-    goToCourse (courseType, id, subjectType) {
-      console.log(courseType, id, subjectType)
+    goToCourse (courseType, subjectType, id) {
       if (courseType === 'seminar') {
-        //todo
+        this.$route.router.go(`/seminar/${id}`)
       } else if (courseType === 'subject') {
-        //todo
+        this.$route.router.go(`/subject/detail/${subjectType}/${id}/0`)
+      } else if (courseType === 'FAQ') {
+        this.$route.router.go(`/strategy/duoyizi/faq`)
       }
     }
   },

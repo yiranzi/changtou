@@ -142,7 +142,7 @@
 
 </style>
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
@@ -703,7 +703,7 @@
         //前去支付页面购买延期服务
         const path = `/pay-P-${this.subjectId}`
         this.$route.router.on(path, {
-          component: require('../pay/Order.vue')
+          component: require('../pay/PostponeOrder.vue')
         })
         this.$route.router.go(path)
       },
@@ -763,7 +763,7 @@
       goToPay: function () {
         const path = `/pay-S-${this.subjectId}`
         this.$route.router.on(path, {
-          component: require('../pay/Order.vue')
+          component: require('../pay/SubjectOrder.vue')
         })
         this.$route.router.go(path)
       },

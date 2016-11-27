@@ -102,7 +102,7 @@
   }
 </style>
 <script>
-import IctTitlebar from '../../components/IctTitlebar.vue'
+import IctTitlebar from '../../components/IctTitleBar.vue'
 import {versionNum} from '../../plugin/version'
   export default {
   data () {
@@ -114,4 +114,5 @@ import {versionNum} from '../../plugin/version'
     IctTitlebar
   }
 }
+
 </script>

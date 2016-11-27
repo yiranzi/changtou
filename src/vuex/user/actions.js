@@ -149,26 +149,54 @@ export const syncUser = ({ dispatch }) => {
 }
 
 /**
+ * 快速登录 手机号
+ * @param dispatch
+ * @param phone
+ */
+export const fastLoginStart = ({ dispatch }, phone) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('fast_login_post_pone'),
+          data: {
+            phone
+          }
+        }
+      ).then(
+        () => {
+          resolve()
+        },
+        err => console.warn(err)
+      )
+    }
+  )
+}
+/**
  * 快速登录
  * @param dispatch
  * @param phone
  * @param validationCode
  */
-export const fastLogin = ({ dispatch }, phone, validationCode) => {
-  postWithoutAuth(
-    {
-      url: getUrl('principal_login'),
-      data: {
-        phone,
-        validationCode
-      }
+export const fastLoginEnd = ({ dispatch }, phone, validationCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('fast_login_post_code'),
+          data: {
+            phone,
+            validationCode
+          }
+        }
+      ).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        },
+        err => console.warn(err)
+      )
     }
-  ).then(
-    user => {
-      updateAppUser(dispatch, user)
-      //resolve(user)
-    },
-    err => console.warn(err)
   )
 }
 
