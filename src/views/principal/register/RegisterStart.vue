@@ -71,9 +71,9 @@
        * 点击注册
        */
       doRegister () {
-        const me = this
-        this.buttonDisable = true
         if (this.verifyPhoneAndPassword()) {
+          const me = this
+          this.buttonDisable = true
           this.registerStart(this.phone, this.plainPassword).then(
             () => {
               me.$route.router.go(`/register/end/${this.phone}/${this.plainPassword}`)
@@ -84,8 +84,6 @@
               me.buttonDisable = false
             }
           )
-        } else {
-          me.buttonDisable = false
         }
       },
       /**
