@@ -175,7 +175,7 @@ export default {
         if (this.isLogin && parseInt(this.rightNum / this.totalNum * 10) >= 6) {
           this.submitReport(this.report).then(
             function () {
-              me.$route.router.replace('/choice/mark')
+              me.goToMark()
             }
           ).catch(
             function (err) {
@@ -183,13 +183,23 @@ export default {
             }
           )
         } else {
-          this.$route.router.replace('/choice/mark')
+          me.goToMark()
         }
-
-        this.resetView()
       } else {
         this.goToNextQuestion()
       }
+    },
+
+    /**
+     * 跳转到结果页
+     */
+    goToMark () {
+      this.$route.router.replace('/choice/mark')
+      setTimeout(
+        () => {
+          this.resetView()
+        }, 300
+      )
     },
     /**
      * 关闭 错误提示

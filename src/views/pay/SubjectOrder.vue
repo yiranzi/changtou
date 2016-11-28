@@ -140,8 +140,6 @@
        * 点击确认订单
        */
       onConfirmBuy () {
-        console.log('onConfirmTap', this.sum, this.sheetShow)
-
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
