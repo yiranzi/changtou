@@ -22,6 +22,7 @@ import homeworkChoice from './homework/choice/store'
 import help from './help/store'
 import strategyIntro from './strategy/intro/store'
 import strategyProduct from './strategy/product/store'
+import strategyNotice from './strategy/notice/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -43,6 +44,7 @@ export default new Vuex.Store({
     homeworkChoice, // 选择题
     help, //小投答疑
     strategyIntro, // 策略产品 宣传
-    strategyProduct // 策略产品 数据
+    strategyProduct, // 策略产品 数据
+    strategyNotice // 滚动通知文字
   }
 })

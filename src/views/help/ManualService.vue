@@ -3,7 +3,7 @@
     <div class="manual_service">
       <ict-titlebar v-el:titlebar>你问我答</ict-titlebar>
 
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
+      <scroller :lock-x="true"  scrollbar-y v-ref:scroller :height="scrollerHeight"  v-ref:scroller>
         <div class="conversation" v-el:conversation>
           <div class="answer">
             <img class="answer_avatar" src="../../assets/styles/image/help/answerImg.png">
@@ -174,7 +174,7 @@
 
     data () {
       return {
-        scrollerHeight: '530px',
+        scrollerHeight: '0px',
         isShowConfirm: false,
         userQuestion: ''
       }
@@ -193,11 +193,11 @@
     watch: {
       'records': function () {
         const me = this
+        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
-            const offsetHeight = me.$els.conversation.offsetHeight - parseInt(me.scrollerHeight.replace('px', ''))
             me.$refs.scroller.reset({
-                top: offsetHeight
+              top: 0
             })
           })
         }, 200)
@@ -230,7 +230,7 @@
     },
 
     methods: {
-      /**
+    /**
        * 编辑问题
        */
       editQuestion () {

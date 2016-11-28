@@ -31,7 +31,7 @@
               </div>
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
-                <img class="pic" v-bind:src="subjectArr.pic">
+                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过</div>
               </div>
             </div>
@@ -236,6 +236,12 @@
       //不登录
       notSave () {
         this.$route.router.go('/main')
+      },
+      /**
+       *  去对应的课程页
+       */
+      gotoSubjectDetail  () {
+        this.$route.router.go('/subject/detail/P/1/0')
       }
     },
     components: {

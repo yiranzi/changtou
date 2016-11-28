@@ -27,6 +27,56 @@ const updateAppUser = (dispatch, user) => {
   }
 }
 
+export const loginByQQ = ({dispatch}, qqCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('qq_login'),
+          data: {
+            accessToken: qqCode.access_token,
+            openId: qqCode.userid
+          }
+        }).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        }).catch(
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ *
+ * @param dispatch
+ * @param wxCode
+ * @returns {Promise}
+ */
+export const loginByWx = ({dispatch}, wxCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('wx_app_login'),
+          data: {
+            code: wxCode.code
+          }
+        }).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        }).catch(
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
 /**
  * 登录
  * @param dispatch

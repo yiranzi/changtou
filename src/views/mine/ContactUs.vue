@@ -17,7 +17,7 @@
       </div>
       <div class="item">
         <span>版本信息</span>
-        <span>1.6.1</span>
+        <span> {{ versionNum }} </span>
       </div>
 
       <div class="copyright">
@@ -102,10 +102,17 @@
   }
 </style>
 <script>
-    import IctTitlebar from '../../components/IctTitleBar.vue'
-    export default {
-      components: {
-        IctTitlebar
-      }
+import IctTitlebar from '../../components/IctTitleBar.vue'
+import {versionNum} from '../../plugin/version'
+  export default {
+  data () {
+    return {
+      versionNum
     }
+  },
+  components: {
+    IctTitlebar
+  }
+}
+
 </script>
