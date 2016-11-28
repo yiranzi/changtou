@@ -4,7 +4,13 @@
 */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
+    <pay-base :coupons="coupons"
+              :toubi="toubi"
+              :total="total"
+              :sum="sum"
+              :btn-options="btnOptions"
+              :tip="tip"
+              :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
     </pay-base>

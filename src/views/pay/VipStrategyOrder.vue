@@ -4,7 +4,7 @@
 */
 <template>
   <div class="order-vip-strategy">
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
       <div v-if="proLeftDays" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>

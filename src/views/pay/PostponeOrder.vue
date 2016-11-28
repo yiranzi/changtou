@@ -4,7 +4,13 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :coupons="coupons"
+              :toubi="toubi"
+              :total="total"
+              :sum="sum"
+              :btn-options="btnOptions"
+              :tip="tip"
+              :sheet-show="sheetShow">
       <pay-postpone :postpone-list="postponeList"></pay-postpone>
     </pay-base>
   </div>
@@ -140,6 +146,7 @@
         this.currentBalance = currentBalance
       },
       onConfirmTap () {
+        console.log('onConfirmTap')
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
