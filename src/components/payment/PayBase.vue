@@ -56,7 +56,7 @@ export default {
       scrollerHeight: '0px',
       actionSheet: {
         menus: {
-          wechat: '微信支付',
+          weChat: '微信支付',
           ali: '支付宝支付'
         }
       }
