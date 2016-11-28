@@ -3,15 +3,14 @@
  */
 
 /*
- *   QQ module
+ *   QQ 第三方登录模块
  */
 let _isInstalled = false
-/**
- *   检测是否安装QQ客户端，若安装即进行授权操作
- */
-// const setInstalledWxIf = () => {
-// }
 
+/**
+ * 检测是否安装QQ客户端，若安装即进行授权操作
+ * @returns {Promise}
+ */
 const checkQQInstalled = () => {
   return new Promise(
     (resolve, reject) => {
@@ -28,10 +27,11 @@ const checkQQInstalled = () => {
 }
 
 /**
- *   授权操作并向后台发送标识数据，若成功则进行登录操作
+ * 授权操作并向后台发送标识数据，若成功则进行登录操作
+ * @returns {Promise}
+ * @constructor
  */
 const QQAuth = () => {
-  // let checkClientIsInstalled = 1   //默认值是 0,仅仅针对 iOS平台有效!
   return new Promise(
       (resolve, reject) => {
         if (_isInstalled) {

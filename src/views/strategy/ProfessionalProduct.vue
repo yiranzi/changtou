@@ -9,7 +9,7 @@
 <template>
   <div class="strategy-vip-product">
     <ict-titlebar v-el:titlebar>长投宝专业版</ict-titlebar>
-    <scroll-text  :text="notice"></scroll-text>
+    <scroll-text :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <zhi-shubao :zhishubao="professionalProduct.zhiShuBao"></zhi-shubao>
@@ -37,7 +37,7 @@
       },
       actions: {
         getProfessionalProduct: strategyProductActions.getProfessionalProduct,
-        getProNotice: strategyNoticeActions.getProNotice
+        getProfessionalNotice: strategyNoticeActions.getProfessionalNotice
       }
     },
     data () {
@@ -47,7 +47,7 @@
     },
     route: {
         data () {
-            this.getProNotice()
+            this.getProfessionalNotice()
             this.getProfessionalProduct()
         }
     },

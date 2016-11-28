@@ -2,13 +2,14 @@
  * Created by Administrator on 2016/11/25.
  */
 /*
- *    wechat module
+ *    微信第三方登录模块
  *
  * */
 let _isInstalled = false                //  如果值为 1, 则已安装
 
 /**
- *   检测是否安装微信客户端
+ * 检测是否安装微信客户端
+ * @returns {Promise}
  */
 const checkWxInstalled = () => {
   return new Promise(
@@ -29,7 +30,9 @@ const checkWxInstalled = () => {
 }
 
 /**
- *   授权操作并登录操作
+ * 授权操作并登录操作
+ * @returns {Promise}
+ * @constructor
  */
 const WxAuth = () => {
   let scope = 'snsapi_userinfo'

@@ -44,7 +44,6 @@ export const loginByQQ = ({dispatch}, qqCode) => {
         }).catch(
         err => {
           reject(err)
-          console.dir(err)
         }
       )
     }
@@ -73,7 +72,6 @@ export const loginByWx = ({dispatch}, wxCode) => {
         }).catch(
         err => {
           reject(err)
-          console.dir(err)
         }
       )
     }

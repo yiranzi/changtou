@@ -7,7 +7,7 @@ import {getWithinAuth} from '../../../frame/ajax'
 import {getUrl} from '../../../frame/apiConfig'
 
 /**
- * 获取通知数据
+ * 获取通知数据 Vip版
  * @param dispatch
  * @param strategy_notice
  */
@@ -23,10 +23,14 @@ export const getVipNotice = ({dispatch}) => {
   )
 }
 
-export const getProNotice = ({dispatch}) => {
+/**
+ *  获取通知数据 专业版
+ * @param dispatch
+ */
+export const getProfessionalNotice = ({dispatch}) => {
    getNotice('PRO').then(
      function (res) {
-       dispatch('NEWER_SCROLL_TEXT', res.message)   // not sure the res is a String OR Object
+       dispatch('NEWER_SCROLL_TEXT', res.message)
      }
    ).catch(
      function (err) {
@@ -35,8 +39,13 @@ export const getProNotice = ({dispatch}) => {
    )
 }
 
+/**
+ *  获取通知数据
+ * @param type
+ * @returns {Promise}
+ */
 const getNotice = (type) => {
-  let authority = type === 'VIP' ? 'vip' : 'prof'
+  const authority = type === 'VIP' ? 'vip' : 'prof'
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(

@@ -1,10 +1,10 @@
 /**
  * Created by zl on 2016/8/27.
- * 滚动文字
+ *  通知数据
  */
 
 const state = {
-  text: null //滚动文字
+  text: '' //通知文本
 }
 
 const mutations = {
