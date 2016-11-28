@@ -126,36 +126,36 @@ export default {
       let courseList = []
       if (me.isLogin) {
         me.myCourseList.map(
-          function (course) {
-            if (course.type === 'P') {
-              let expenseIndex = me.expenseRecords.indexOf(
-                function (expenseRecords) {
-                  if (course.subjectId === expenseRecords.subjectId) {
+          function (myCourse) {
+            if (myCourse.type === 'P') {
+              let expenseIndex = me.expenseRecords.findIndex(
+                function (expenseRecord) {
+                  if (myCourse.subjectId === expenseRecord.subjectId) {
                     return true
                   }
                 }
               )
-              course.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
-              courseList.push(course)
+              myCourse.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+              courseList.push(myCourse)
             } else {
-              let freeIndex = me.freeRecords.indexOf(
+              let freeIndex = me.freeRecords.findIndex(
                 function (freeRecords) {
-                  if (course.subjectId === freeRecords.subjectId) {
+                  if (myCourse.subjectId === freeRecords.subjectId) {
                     return true
                   }
                 }
               )
-              course.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
-              courseList.push(course)
+              myCourse.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+              courseList.push(myCourse)
             }
-            return course
+            return myCourse
           })
         me.courseList = courseList
       } else {
         me.courseList = me.myCourseList.map(
-          function (course) {
-            course.status = course.studentCount + '人学过'
-            return course
+          function (myCourse) {
+            myCourse.status = myCourse.studentCount + '人学过'
+            return myCourse
           }
         )
       }

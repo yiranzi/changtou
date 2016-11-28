@@ -15,7 +15,7 @@
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-fangtan"></i>
-            院生访谈
+            院生故事
           </span>
         </div>
         <div class="daily-question" v-touch:tap="goToDailyQuestion">
@@ -25,7 +25,7 @@
         <div class="expenselist-area">
           <p class="area-label">
             <span class="color-span"> </span>
-            <span class="title">热门畅销</span>
+            <span class="title">优质好课</span>
             <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
