@@ -375,50 +375,49 @@
         margin: 1rem 0 1.25rem;
       }
     }
+    /*                                                      The  icon add  by  Ritsu Yan                                    */
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 5.5rem;
+      background-color: #eee;
+      font-size: .75rem;
+      color:#444;
+      line-height: 1.2rem;
+      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
+      url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
+    }
+
+    .daily-subtext {
+      color: #898989;
+      font-size: .65rem;
+    }
+
+    .finan-icon{
+      width : 3.05rem;  // 1 rem === 20 px
+      height : 3.05rem;
+      display: inline-block;
+      margin-bottom: -1rem;
+      zoom:.5;
+    }
+
+    .finan-icon.finan-icon-jiemi{
+      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
+    }
+
+    .finan-icon.finan-icon-fangtan{
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+    }
+
+    .vertical-line-yan{
+      display: inline-block;
+      width:.08rem;
+      height:1.5rem;
+      background: #eee;
+    }
+
+    /*                                                       The icon add   by  Ritsu Yan                                    */
   }
 
-
-  /*                                                      The  icon add  by  Ritsu Yan                                    */
-  /*每日一题*/
-  .daily-question{
-    width: 325/375;
-    height: 3rem;
-    padding: 1.5rem 5.5rem;
-    background-color: #eee;
-    font-size: .75rem;
-    color:#444;
-    line-height: 1.2rem;
-    background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
-    url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
-  }
-
-  .daily-subtext {
-    color: #898989;
-    font-size: .65rem;
-  }
-
-  .finan-icon{
-    width : 3.05rem;  // 1 rem === 20 px
-    height : 3.05rem;
-    display: inline-block;
-    margin-bottom: -1rem;
-    zoom:.5;
-  }
-
-  .finan-icon.finan-icon-jiemi{
-    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
-  }
-
-  .finan-icon.finan-icon-fangtan{
-    background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
-  }
-
-  .vertical-line-yan{
-    display: inline-block;
-    width:.08rem;
-    height:1.5rem;
-    background: #eee;
-  }
-
-  /*                                                       The icon add   by  Ritsu Yan                                    */
 </style>
