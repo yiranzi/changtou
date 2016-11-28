@@ -94,6 +94,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this

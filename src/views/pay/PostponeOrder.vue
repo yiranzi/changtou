@@ -88,6 +88,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {

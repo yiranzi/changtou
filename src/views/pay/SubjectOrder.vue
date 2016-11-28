@@ -94,6 +94,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
@@ -139,6 +140,8 @@
        * 点击确认订单
        */
       onConfirmBuy () {
+        console.log('onConfirmTap', this.sum, this.sheetShow)
+
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
