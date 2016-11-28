@@ -62,9 +62,10 @@
   import mixinAjax from './mixinAjax'
   import mixinModal from './mixinModal'
   import mixinBackHandler from './mixinBackHandler'
+  import mixinNetwork from './mixinNetwork'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork],
 
     store,
 

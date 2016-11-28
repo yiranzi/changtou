@@ -20,6 +20,8 @@ import * as choiceGetters from './homework/choice/getters'
 import * as helpGetters from './help/getters'
 import * as strategyIntroGetters from './strategy/intro/getters'
 import * as strategyProductGetters from './strategy/product/getters'
+import * as strategyNoticeGetters from './strategy/notice/getters'
+
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -39,5 +41,6 @@ export {
   choiceGetters, // 选择题
   helpGetters, //小投答疑
   strategyIntroGetters, // 策略产品 宣传
-  strategyProductGetters // 策略产品 数据
+  strategyProductGetters, // 策略产品 数据
+  strategyNoticeGetters  //策略产品 通知
 }

@@ -29,13 +29,62 @@
           <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
         </flexbox>
 
+         <div class="third-party-container">
+           <div class="third-text-container">
+             <i class="horizon-line"></i>
+             <p class="third-text">第三方登录</p>
+             <i class="horizon-line"></i>
+           </div>
+              <div class="third-icon icon-qq" >
+                <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
+                QQ登录
+              </div>
+              <div class="third-icon icon-wx" >
+                <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
+                微信登录
+              </div>
+         </div>
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
-    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
   </div>
 </template>
 <style>
+         .third-party-container{
+            width:100%;
+            margin-top: 8rem;
+            font-size: 70%;
+            margin-left: .8rem;
+         }
+         .horizon-line{
+           display: inline-block;
+           width: 30%;
+           background:#BFB3B3;
+           height: .05rem;
+           vertical-align: middle;
+         }
+         .third-text{
+           display: inline-block;
+           margin-left: .5rem;
+           margin-right: .5rem;
+         }
+         .third-icon{
+           display: inline-block;
+         }
+         .third-icon span{
+           display: block;
+           width:2.4rem;
+           height:2.4rem;
+         }
+         .third-icon-qq{
+           background: url("../../assets/styles/image/loginView/QQ.png") no-repeat center center/90%;
+         }
+         .third-icon-wx{
+           background: url("../../assets/styles/image/loginView/weixin.png") no-repeat center center/90%;
+         }
+         .icon-qq{
+           margin-right: 8rem;
+         }
 </style>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
@@ -46,27 +95,28 @@
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
-  import Alert from 'vux/alert'
+  import qqAuth from '../../plugin/thirdPartyQQ'
+  import wxAuth from '../../plugin/thirdPartyWX'
   export default{
     vuex: {
       getters: {
         userName: userGetters.userName
       },
       actions: {
-        login: userActions.login
+        login: userActions.login,
+        loginByQQ: userActions.loginByQQ,
+        loginByWx: userActions.loginByWx
       }
     },
-
     data () {
       return {
-        isAlert: false,
-        alertMsg: '',
         plainPassword: '',
         identity: '',
-        disabled: true
+        disabled: true,
+        qqInstalled: false, //是否安装QQ
+        wxInstalled: false //是否安装微信
       }
     },
-
     watch: {
       identity (newVal) {
         if (/\S/.test(newVal) && /\S/.test(this.plainPassword)) {
@@ -83,15 +133,55 @@
         }
       }
     },
-
-    route: {
-      data () {
-        // 这里初始化 前一个用户的 user 信息
-//        console.log('exe')
-      }
+    ready () {
+      const me = this
+      qqAuth.checkQQInstalled().then(function () {
+        me.qqInstalled = true
+      }).catch(function () {
+        me.qqInstalled = false
+      })
+      wxAuth.checkWxInstalled().then(function () {
+        me.wxInstalled = true
+        }).catch(function () {
+        me.wxInstalled = false
+      })
     },
-
     methods: {
+//     isInstalledWX, isInstalledQQ,
+      onQQLoginTap () {
+        const me = this
+        qqAuth.QQAuth().then(
+            function (qqCode) {
+              me.loginByQQ(qqCode).then(
+                  function (user) {
+                    me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                    window.history.back()
+                  }
+              )
+            }
+        ).catch(
+            function (err) {
+              console.dir(err)
+            }
+        )
+      },
+      onWxLoginTap () {
+        const me = this
+        wxAuth.WxAuth().then(
+          function (wxCode) {
+            me.loginByWx(wxCode).then(
+                function (user) {
+                  me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                  window.history.back()
+                }
+            )
+          }
+        ).catch(
+          function (err) {
+            console.dir(err)
+          }
+        )
+      },
       doLogin () {
         this.disabled = true
         const me = this
@@ -101,12 +191,12 @@
             me.disabled = true
             me.$dispatch(eventMap.LOGIN_SUCCESS, user)
             window.history.back()
-        }).catch(
-            err => {
-            me.showAlert(err.message)
-          me.disabled = true
-        }
-        )
+          }).catch(
+              err => {
+                  console.dir(err)
+                me.disabled = false
+            }
+          )
         } else {
           me.disabled = true
         }
@@ -116,21 +206,15 @@
       },
       doResetPassword () {
         this.$route.router.go('/reset/password/start')
-      },
-      showAlert (err) {
-        this.alertMsg = err
-        this.isAlert = true
       }
     },
-
     components: {
       IctTitlebar,
       IctButton,
       Flexbox,
       FlexboxItem,
       Group,
-      XInput,
-      Alert
+      XInput
     }
   }
 </script>

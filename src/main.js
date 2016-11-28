@@ -44,13 +44,13 @@ Vue.config.debug = process.env.NODE_ENV === 'dev'
       //eventBus.emit(eventMap.APP_START)
 
 // =====手机=====
-//const onDeviceReady = function () {
+// const onDeviceReady = function () {
 //  appRouter.start(App, 'app')
 //  setTimeout(function () {
 //    appRouter.app.$emit(eventMap.APP_START)
 //  }, 50)
-//}
-//document.addEventListener('deviceready', onDeviceReady, false)
+// }
+// document.addEventListener('deviceready', onDeviceReady, false)
 
 // =====网页=====
 appRouter.start(App, 'app')
