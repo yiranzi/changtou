@@ -109,7 +109,7 @@
             userBene: Math.ceil(this.postponeList[1].price * 0.3),
             holderBene: 0
           }]
-          this.selectedCoupon = this.coupons[1]
+          this.selectedCoupon = this.coupons[0]
         } else {
           this.coupons = []
           this.selectedCoupon = null
@@ -146,7 +146,6 @@
         this.currentBalance = currentBalance
       },
       onConfirmTap () {
-        console.log('onConfirmTap')
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
