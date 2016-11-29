@@ -73,6 +73,13 @@ const mixin = {
     },
 
     /**
+     * 同步用户信息
+     */
+    [eventMap.SYNC_USER]: function () {
+      this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
+    },
+
+    /**
      * 注册成功事件
      */
     [eventMap.REGISTER_SUCCESS]: function (user) {

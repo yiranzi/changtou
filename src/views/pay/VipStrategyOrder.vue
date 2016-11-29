@@ -19,6 +19,7 @@
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       getters: {
@@ -207,6 +208,7 @@
        */
       goToPaySuccess () {
         this.$route.router.go(`/pay/success/VS/0`)
+        this.$dispatch(eventMap.SYNC_USER)
       },
       onPayFail (err) {
         if (err.type === errorType.FAIL) {
