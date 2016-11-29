@@ -49,6 +49,7 @@
         position: absolute;
         bottom: 0;
         padding: 0.5rem 1rem;
+        box-sizing: border-box;
       }
     }
     .content{
