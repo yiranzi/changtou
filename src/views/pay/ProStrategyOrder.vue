@@ -91,7 +91,7 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        this.itemId = periodIndex ? 2 : 1 // 交易用到的itemId //1 一年专业版 2 两年专业版
+        this.itemId = periodIndex === '1' ? 2 : 1 // 交易用到的itemId //1 一年专业版 2 两年专业版
         this.price = this.periods[ periodIndex ].price
         if (this.coupons.length > 0 && !this.coupons[ this.coupons.length - 1 ].couponNo) {
           this.coupons[ this.coupons.length - 1 ].userBene = Math.floor(this.periods[ periodIndex ].price * 0.3)
@@ -168,7 +168,7 @@
         const me = this
         const trade = {
           sum: this.sum,
-          body: this.selectedPeriod,
+          body: '长投课程',
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
@@ -177,7 +177,7 @@
               dealType: this.strategy.strategyLevel === strategyLevel.COMMON ? dealType.BUY : dealType.POSTPONE,
               itemId: this.itemId,
               mchantType: 6,
-              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,
+              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene + '' : '',
               price: this.total
             }]
           }
