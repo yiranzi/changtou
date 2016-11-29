@@ -31,7 +31,7 @@
         </div>
       </scroller>
 
-      <div class="send_message">
+      <div class="send_message" v-el:btns>
         <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion">
         <span class="send_box" :class="isDisabled ? 'notSend' : 'send'" v-touch:tap="sendUserQuestion">发送</span>
       </div>
