@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ict-titlebar>修改手机号</ict-titlebar>
+    <ict-titlebar>绑定手机号</ict-titlebar>
     <flexbox>
       <flexbox-item :span="1/20"></flexbox-item>
       <flexbox-item>
