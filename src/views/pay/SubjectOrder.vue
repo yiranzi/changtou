@@ -26,6 +26,8 @@
     },
     data () {
       return {
+        tyep: '',
+        subjectId: 0,
         courseList: [], //课程列表
         price: 0, // 价格
         coupons: [],  // 优惠列表
@@ -56,7 +58,11 @@
         return this.total - this.toubi
       },
       canUserBuy () {
-        return !(this.isLogin && !this.expenseRecords.indexOf(this.subjectId))
+        return !(this.isLogin && !this.expenseRecords.findIndex(function (record) {
+          if (this.subjectId === record.subjectId) {
+            return true
+          }
+        }))
       },
       // 支付按钮 信息
       btnOptions () {
