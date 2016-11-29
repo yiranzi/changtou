@@ -9,8 +9,8 @@
         <div class="subtitle">{{currQuestion ? currQuestion.subtitle : ''}}</div>
       </div>
       <div class="question">
-        <div class="option" v-for="optionArr in options">
-          <div class="content" v-touch:tap="isSelected($index)" v-bind:class="{'selected' : $index === currOpsIndex}">{{optionArr.content}}</div>
+        <div class="option" v-for="optionArr in options" v-touch:tap="isSelected($index)" v-bind:class="{'selected' : $index === currOpsIndex}">
+          <div class="content" >{{optionArr.content}}</div>
         </div>
         <div class="question-tip" :class="isClicked ? 'btn-enable': 'btn-disabled'" v-touch:tap="updateCurrQuIndex(this.currQuIndex)">
           <div class="box">{{btnObj}}</div>
@@ -71,27 +71,32 @@
       height: 222/20rem;
       padding: 1.25rem 1.75rem;
       position: relative;
+
       .option{
         display: inline-block;
         vertical-align: top;
         margin-right: 0.7rem;
+        width: 9.7rem;
+        height: 3.2rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: #e2af04;
+        line-height: 3.2rem;
+        text-align: center;
+        background-size: 100% 100%;
+        background-image: url("../../assets/styles/image/newertest/option.png");
         .content{
-          width: 6.7rem;
-          height: 2rem;
-          margin-bottom: 0.5rem;
-          padding:0.6rem 1.5rem;
-          font-size: 0.8rem;
-          font-weight: bold;
-          text-align: center;
-          color: #e2af04;
-          background-image: url("../../assets/styles/image/newertest/option.png");
-          background-size: 100%;
+          display: inline-block;
+          padding: 0 1.5rem;
+          vertical-align: middle;
+          line-height: 1rem;
         }
-        .selected{
-          color: #333;
-          background-image: url("../../assets/styles/image/newertest/selected.png");
-          background-size: 100%;
-        }
+      }
+      .selected{
+        color: #333;
+        background: url("../../assets/styles/image/newertest/selected.png") center center no-repeat;
+        background-size: 100%;
       }
       .question-tip{
         position: absolute;
