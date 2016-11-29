@@ -120,7 +120,15 @@
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-//              top: 0
+          })
+        })
+        }, 300)
+      },
+      'currQuestionIndex': function () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
           })
         })
         }, 300)
