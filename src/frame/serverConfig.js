@@ -14,7 +14,7 @@ const CONTENT_TYPE = 'application/json; charset=utf-8'
 
 const D_PLUS_ID = debug ? 'da168f4458633q92c79b' : 'ea16565d66171ebe26f4'
 
-const WX_APPID = debug ? 'wxd6c823882698f217' : 'wx8cc2299282e864f8'
+const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wxd6c823882698f217'
 
 export {
   SEVER_URL,

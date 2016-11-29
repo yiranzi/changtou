@@ -66,7 +66,7 @@
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/PS\//.test(transition.from.path)) {
-          transition.redirect('/main')
+          transition.redirect('/strategy/professional/product')
         }
         transition.next()
       },
