@@ -18,13 +18,13 @@ const checkWxInstalled = () => {
       (installed) => {
         if (installed) {
           _isInstalled = true
-          resolve(installed)
+          resolve(true)
         } else {
-          reject()
+          resolve(false)
         }
       },
       (reason) => {
-        reject(reason)
+        resolve(false)
       })
   })
 }

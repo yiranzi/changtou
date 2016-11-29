@@ -21,6 +21,7 @@
         <div class="daily-question" v-touch:tap="goToDailyQuestion">
           <p>每日一题 积攒你的财商</p>
           <p class="daily-subtext">财富自由之路第一步</p>
+          <span class="daily-anpic-container"></span>
         </div>
         <div class="expenselist-area">
           <p class="area-label">
@@ -220,8 +221,8 @@
         vertical-align: middle;
       }
       .color-span{
-        width: 2%;
-        height: 1rem;
+        width: .125rem;
+        height: .8rem;
         background-color: #00b0f0;
       }
       .title{
@@ -235,6 +236,7 @@
         font-size: 0.7rem;
         color: #aaa;
         text-align: right;
+        margin-left: -.5rem;
       }
       .subtitle:after{
         content: '';
@@ -259,6 +261,8 @@
       align-items: center;
       background-color: #fff;
       border-bottom: 0.5rem #f0eff5 solid;
+      font-size: 0.75rem;
+      color: #444;
 
       span{
         width: 50%;
@@ -268,6 +272,7 @@
 
 
     .expenselist-area{
+      background: white;
       text-align: center;
       .expense-course{
         position: relative;
@@ -375,50 +380,56 @@
         margin: 1rem 0 1.25rem;
       }
     }
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 5.5rem;
+      background-color: #f2f2f2;
+      font-size: .75rem;
+      color:#444;
+      line-height: 1.2rem;
+      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      position: relative;
+    }
+
+    .daily-subtext {
+      color: #898989;
+      font-size: .65rem;
+    }
+
+    .daily-anpic-container {
+      width: 1.725rem;
+      height: 1.05rem;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  center  center / 90%;
+      display: inline-block;
+      position: absolute;
+      left: 80%;
+      top: 40%;
+    }
+
+    .finan-icon{
+      width: 1.525rem;
+      height: 1.525rem;
+      display: inline-block;
+      margin-bottom: -.5rem;
+      zoom: .5;
+    }
+
+    .finan-icon.finan-icon-jiemi{
+      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
+    }
+
+    .finan-icon.finan-icon-fangtan{
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+    }
+
+    .vertical-line-yan{
+      display: inline-block;
+      width:.08rem;
+      height:1.5rem;
+      background: #eee;
+    }
   }
 
-
-  /*                                                      The  icon add  by  Ritsu Yan                                    */
-  /*每日一题*/
-  .daily-question{
-    width: 325/375;
-    height: 3rem;
-    padding: 1.5rem 5.5rem;
-    background-color: #eee;
-    font-size: .75rem;
-    color:#444;
-    line-height: 1.2rem;
-    background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
-    url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
-  }
-
-  .daily-subtext {
-    color: #898989;
-    font-size: .65rem;
-  }
-
-  .finan-icon{
-    width : 3.05rem;  // 1 rem === 20 px
-    height : 3.05rem;
-    display: inline-block;
-    margin-bottom: -1rem;
-    zoom:.5;
-  }
-
-  .finan-icon.finan-icon-jiemi{
-    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
-  }
-
-  .finan-icon.finan-icon-fangtan{
-    background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
-  }
-
-  .vertical-line-yan{
-    display: inline-block;
-    width:.08rem;
-    height:1.5rem;
-    background: #eee;
-  }
-
-  /*                                                       The icon add   by  Ritsu Yan                                    */
 </style>
