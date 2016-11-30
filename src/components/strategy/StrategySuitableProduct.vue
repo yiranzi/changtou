@@ -39,7 +39,7 @@ export default {
       } else if (courseType === 'subject') {
         this.$route.router.go(`/subject/detail/${subjectType}/${id}/0`)
       } else if (courseType === 'FAQ') {
-        this.$route.router.go(`/strategy/duoyizi/faq`)
+        this.$route.router.go(`/strategy/duoyinzi/faq`)
       }
     }
   },
