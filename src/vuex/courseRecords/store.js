@@ -70,6 +70,8 @@ const mutations = {
       record.isSuspendUsed = !!record.lessonSet.suspendDate
       // 设置是否已经使用过90天暂停期限的标识
       record.is90daysPostponeUsed = record.lessonSet.postponeType === 'Y'
+      // 设置延期次数
+      record.postponeCount = record.lessonSet.postponeCount
       // 设置课程的学习时间
       record.accumulatedTime = record.lessonSet.finishDate ? parseInt((new Date(record.lessonSet.finishDate.replace(/-/g, '/')) - new Date(record.lessonSet.initDate.replace(/-/g, '/'))) / 1000 / 60) : 0
     })
@@ -92,6 +94,10 @@ const mutations = {
     record.isSuspendUsed = !!record.lessonSet.suspendDate
     // 设置是否已经使用过90天暂停期限的标识
     record.is90daysPostponeUsed = record.lessonSet.postponeType === 'Y'
+    // 设置延期次数
+    record.postponeCount = record.lessonSet.postponeCount
+    // 设置课程的学习时间
+    record.accumulatedTime = record.lessonSet.finishDate ? parseInt((new Date(record.lessonSet.finishDate.replace(/-/g, '/')) - new Date(record.lessonSet.initDate.replace(/-/g, '/'))) / 1000 / 60) : 0
 
     const index = state.expenseRecords.findIndex((item) => {
       return item.subjectId === record.subjectId

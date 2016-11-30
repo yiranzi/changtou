@@ -66,7 +66,7 @@
 
       <div v-if="currStatus === 'N'" class="btn-box">
         <ict-button class="left" v-if="!isSuspendUsed" v-touch:tap="suspend">暂停课程</ict-button>
-        <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
+        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
       <div v-if="currStatus === 'P'" class="btn-box">
@@ -74,7 +74,7 @@
       </div>
 
       <div v-if="currStatus === 'Y' || currStatus === 'E'" class="btn-box">
-        <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
+        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
     <essay-float :show="showEssay" @close="resumeHomework" @confirm="resumeHomework"></essay-float>
@@ -200,7 +200,7 @@
         currStatus: 'L', //当前课程状态 {N：在读 | E：过期 | Y：毕业 | P：暂停 | I ：未激活 | W : 没有进度} 默认L: 加载中
         lastSubmitlessonId: 0, //最后一次提交作业的lesson
         isAssignmentSubmitted: false,
-        is90daysPostponeUsed: false,
+        postponeCount: 0,
         isSuspendUsed: false,
 
         currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
@@ -215,6 +215,15 @@
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
         showChoice: false
+      }
+    },
+
+    computed: {
+      /**
+       * 延期的文本
+       */
+      postText () {
+        return this.postponeCount ? '再次延期' : '延期'
       }
     },
 
@@ -562,8 +571,8 @@
         //设置是否已经暂停过
         this.isSuspendUsed = currSubjectRecord.isSuspendUsed
 
-        //设置是否已经使用过990天延期
-        this.is90daysPostponeUsed = currSubjectRecord.is90daysPostponeUsed
+        //设置是否已经延期过
+        this.postponeCount = currSubjectRecord.postponeCount
 
         //设置可用课程列表
         this.currUseabLessonArr = (currSubjectRecord && currSubjectRecord.lessonSet && currSubjectRecord.lessonSet.lessonIds) ? currSubjectRecord.lessonSet.lessonIds : []
