@@ -31,19 +31,6 @@
                    :selected-chapter.sync="selectedChapter">
           </content>
 
-          <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
-          <!--<swiper-item>-->
-          <!--<specific :subject="currSubject"></specific>-->
-          <!--</swiper-item>-->
-
-          <!--<swiper-item>-->
-          <!--<content :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"-->
-          <!--:selected-chapter.sync="selectedChapter">-->
-          <!--</content>-->
-          <!--</swiper-item>-->
-
-          <!--</swiper>-->
-          <!--<div style="height: 1000px;background: #00b0f0"></div>-->
         </div>
       </div>
     </scroller>
@@ -232,7 +219,6 @@
           this.isResponsive = false
           next()
         }
-        this.pause()
       }
     },
 
