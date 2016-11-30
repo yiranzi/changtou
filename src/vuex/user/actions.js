@@ -4,8 +4,6 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache, clearLocalCache} from '../../util/cache'
-//import {getLocalCache, setLocalCache} from '../../util/cache'
-//import {setIconBadgeNumber} from '../../plugin/jpush'
 
 //export const loadUserFromCache = ({ dispatch }) => {
 //  const user = getLocalCache('frame-user')
@@ -111,7 +109,9 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  * @param dispatch
  */
 export const logout = ({ dispatch }) => {
-  dispatch('USER_LOGOUT')
+  return Promise.resolve().then(function () {
+    dispatch('USER_LOGOUT')
+  })
 }
 
 /**
