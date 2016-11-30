@@ -4,7 +4,7 @@
     <div class="ict-user-info">
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
       <p class="ict-user-name">{{name}}</p>
-      <div v-if="!isLogin" style="height: 1rem" class="spacer"></div>
+      <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
       <flexbox v-if="!isLogin">
         <flexbox-item :span="1/10"></flexbox-item>
         <ict-button text="登录"
@@ -31,6 +31,7 @@
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
+              :disabled="!isLogin"
               link="/system/message">
       <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
     </ict-item>
@@ -42,6 +43,7 @@
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="设置"
+              :disabled="!isLogin"
               link="/configuration">
     </ict-item>
   </div>
@@ -81,7 +83,7 @@
 
       },
       name () {
-        return this.userName ? this.userName : '未登录'
+        return this.userName ? this.userName : ''
       },
       avatarUrl () {
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
@@ -123,10 +125,10 @@
     }
     .ict-user-info {
       text-align: center;
-      margin: 1rem;
+      margin: 30/20rem 0 1rem;
       .ict-user-avatar {
-        width: 3.4rem;
-        height: 3.4rem;
+        width: 3.5rem;
+        height: 3.5rem;
         border-radius: 50%;
       }
     }
@@ -136,7 +138,15 @@
       color: #898989;
     }
     .ict-btn{
+      width: 6.5rem;
       height: 1.8rem;
+      border: 1px solid #00b0f0;
+      border-radius: 5px;
+      background: #fff;
+      min-height: 0;
+      padding: 0;
+      color: #00b0f0;
+      font-size: 0.85rem;
     }
   }
 </style>
