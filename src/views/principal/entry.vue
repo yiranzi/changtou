@@ -110,7 +110,6 @@
     route: {
       data () {
         this.plainPassword = ''
-        this.identity = ''
       }
     },
     ready () {
