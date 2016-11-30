@@ -61,7 +61,7 @@
       </div>
 
       <div v-if="currStatus === 'I'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active">激活</ict-button>
+        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
       <div v-if="currStatus === 'N'" class="btn-box">
@@ -713,10 +713,12 @@
        */
       active () {
         const me = this
+
         const activeHandler = function () {
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
+              me.showToast('已激活课程')
             },
             function () {
               me.showAlert('激活失败,请重试')
