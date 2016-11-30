@@ -107,6 +107,12 @@
         }
       }
     },
+    route: {
+      data () {
+        this.plainPassword = ''
+        this.identity = ''
+      }
+    },
     ready () {
       const me = this
       qqAuth.checkQQInstalled().then(function () {

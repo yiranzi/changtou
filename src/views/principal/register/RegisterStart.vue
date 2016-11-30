@@ -65,6 +65,12 @@
         this.verifyPhoneAndPassword()
       }
     },
+    route: {
+      data () {
+        this.phone = ''
+        this.plainPassword = ''
+      }
+    },
     methods: {
       /**
        * 验证手机号和密码是否合法
