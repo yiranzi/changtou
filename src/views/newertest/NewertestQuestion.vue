@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="newertest-question" v-bind:class="{'layout-card' : isFloat}">
+  <div class="newertest-question">
+    <div v-bind:class="{'layout-card' : isFloat}">
       <div class="top">
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
@@ -68,8 +68,7 @@
       }
     }
     .question{
-      height: 222/20rem;
-      padding: 1.25rem 1.75rem;
+      padding: 1.25rem 1.75rem 0 1.25rem;
       position: relative;
       .option{
         display: inline-block;

@@ -4,7 +4,7 @@
       <div class="top" v-el:titlebar>
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div class="newertest-end-content">
           <div>
             <div class="bulb-box">
@@ -45,6 +45,78 @@
     </confirm>
   </div>
 </template>
+<script>
+  import Confirm from 'vux/confirm'
+  import Scroller from 'vux/scroller'
+  import {newertestGetters, userGetters} from '../../vuex/getters'
+  const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
+
+  export default {
+    vuex: {
+      getters: {
+        testReport: newertestGetters.newertestReport,
+        isLogin: userGetters.isLogin
+      }
+    },
+    data () {
+      return {
+        scrollerHeight: '560px',
+        remindLogin: false
+      }
+    },
+    watch: {
+      'testReport': function () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+              top: 0
+            })
+          })
+        }, 300)
+      }
+    },
+
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+    },
+
+    methods: {
+      onCancel () {
+        if (this.isLogin) {
+          this.$route.router.go('/main')
+        } else {
+          this.remindLogin = true
+        }
+      },
+      getLevel (level) {
+        return financialLevel.get(level)
+      },
+      tryAgain () {
+        this.$route.router.go('/newertest/question')
+      },
+      //去登录
+      toSave () {
+        this.$route.router.go('/entry')
+      },
+      //不登录
+      notSave () {
+        this.$route.router.go('/main')
+      },
+      /**
+       *  去对应的课程页
+       */
+      gotoSubjectDetail  () {
+        this.$route.router.go('/subject/detail/P/1/0')
+      }
+    },
+    components: {
+      Confirm,
+      Scroller
+    }
+  }
+</script>
+
 <style lang="less">
   .newertest-end{
     width: 100%;
@@ -179,74 +251,3 @@
     }
   }
 </style>
-<script>
-  import Confirm from 'vux/confirm'
-  import Scroller from 'vux/scroller'
-  import {newertestGetters, userGetters} from '../../vuex/getters'
-  const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
-
-  export default {
-    vuex: {
-      getters: {
-        testReport: newertestGetters.newertestReport,
-        isLogin: userGetters.isLogin
-      }
-    },
-    data () {
-      return {
-        scrollerHeight: '560px',
-        remindLogin: false
-      }
-    },
-    watch: {
-      'testReport': function () {
-        const me = this
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-              top: 0
-            })
-          })
-        }, 300)
-      }
-    },
-
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-    },
-
-    methods: {
-      onCancel () {
-        if (this.isLogin) {
-          this.$route.router.go('/main')
-        } else {
-          this.remindLogin = true
-        }
-      },
-      getLevel (level) {
-        return financialLevel.get(level)
-      },
-      tryAgain () {
-        this.$route.router.go('/newertest/question')
-      },
-      //去登录
-      toSave () {
-        this.$route.router.go('/entry')
-      },
-      //不登录
-      notSave () {
-        this.$route.router.go('/main')
-      },
-      /**
-       *  去对应的课程页
-       */
-      gotoSubjectDetail  () {
-        this.$route.router.go('/subject/detail/P/1/0')
-      }
-    },
-    components: {
-      Confirm,
-      Scroller
-    }
-  }
-</script>
