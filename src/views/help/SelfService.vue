@@ -155,15 +155,6 @@
       lookAnswer (index) {
         if (this.currQuestionIndex !== index) {
           this.currQuestionIndex = index
-          // todo 如果是最后一题， 页面滚动
-//          if (index === (this.helpList.length - 1)) {
-//            console.log('xxxx')
-//            this.$nextTick(() => {
-//              setTimeout(() => {
-//                this.$refs.scroller._xscroll.resetSize()
-//              }, 50)
-//            })
-//          }
         } else {
           this.currQuestionIndex = -1
         }
