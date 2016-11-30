@@ -23,6 +23,7 @@
           </div>
           <img class="pic" v-bind:src="paragraph.image">
         </div>
+          <p class="end">-END-</p>
       </div>
       <div class="load-fail" v-show="!isLoadSuccess">
         <div>信息加载失败</div>
@@ -134,9 +135,9 @@
         .wechat{
           width: 2rem;
           height: 2rem;
-          background-color: #fff;
           border-radius: 0.5rem;
           padding: 0.75rem;
+          background: #fff url("../../../static/image/interview/wechat.png") no-repeat center center / 50%;
         }
       }
       .share-picture-right{
@@ -149,9 +150,9 @@
         .timeline{
           width: 2rem;
           height: 2rem;
-          background-color: #fff;
           border-radius: 0.5rem;
           padding: 0.75rem;
+          background: #fff url("../../../static/image/interview/timeline.png") no-repeat center center / 50%;
         }
       }
       img {
@@ -162,6 +163,7 @@
       .pic-bottom{
         text-align: center;
         margin-left: -0.7rem;
+        margin-top: .5rem;
       }
     }
     @media all and (max-width: 320px){
@@ -171,6 +173,11 @@
         margin: 2rem 4.17rem;
         position: relative;
       }
+    }
+    .end{
+      font-size: 0.7rem;
+      color: #aaa;
+      text-align: center;
     }
   }
 </style>
@@ -201,11 +208,11 @@
         channelConfig: { //分享浮层内容
           menu1: '<div class="share-picture">' +
                     '<div class="share-picture-left">' +
-                      '<div class="wechat"><img src="./static/image/interview/wechat.png"></div>' +
+                      '<div class="wechat"></div>' +
                       '<div class="pic-bottom">微信好友</div>' +
                     '</div>' +
                     '<div class="share-picture-right">' +
-                      '<div class="timeline"><img src="./static/image/interview/timeline.png"></div>' +
+                      '<div class="timeline"></div>' +
                       '<div class="pic-bottom">微信朋友圈</div>' +
                     '</div>' +
                   '</div>'

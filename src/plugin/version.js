@@ -6,11 +6,10 @@
 * 获取当前手机版本号
 * @returns {*|null|string}
 */
-//const version = null
-
 import { platformMap } from './device'
 
 let versionNum = '0'                             //  返回值必须是一个 string
+let jsVersion = '2.4.0'
 
 const initVerNum = function () {
   if (platformMap.WEB === 'web') {     // 如果当前为网页直接返回设置版本号
@@ -23,5 +22,6 @@ const initVerNum = function () {
 
 export {
   initVerNum,
-  versionNum
+  versionNum,
+  jsVersion
 }
