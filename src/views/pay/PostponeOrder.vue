@@ -4,7 +4,8 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons"
+    <pay-base :bar-right-options="barRightOption"
+              :coupons="coupons"
               :toubi="toubi"
               :total="total"
               :sum="sum"
@@ -30,6 +31,11 @@
     },
     data () {
       return {
+        barRightOption: {
+          text: '延期说明',
+          callback: this.goToPostponeExplain.bind(this),
+          disabled: false
+        },
         price: 0, // 价格
         postponeList: [], //延期列表
         coupons: [],  // 优惠列表
@@ -201,6 +207,9 @@
         if (err.type === errorType.FAIL) {
           this.showAlert({message: err.reason})
         }
+      },
+      goToPostponeExplain () {
+        this.$route.router.go('/postpone/explain')
       }
     },
     components: {
