@@ -30,6 +30,7 @@
       currentLessonId: 3
       sequence: 2
       subjectId: 1
+      status: 'N' //有进度, 默认为N
  *
  *
  */
@@ -40,7 +41,16 @@ const state = {
 
 const mutations = {
   UPDATE_FREE_RECORDS (state, records) {
-    state.freeRecords = records
+    records.forEach(record => {
+      record.status = 'N'
+
+      const index = state.freeRecords.findIndex(item => item.subjectId === record.subjectId)
+      if (index > -1) {
+        state.freeRecords.$set(index, record)
+      } else {
+        state.freeRecords.push(record)
+      }
+    })
   },
 
   /**

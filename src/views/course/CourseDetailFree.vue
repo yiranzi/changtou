@@ -119,7 +119,7 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
 
@@ -135,10 +135,7 @@
         loadfreeRecord: courseRecordActions.loadOneSubjectFreeRecord,
 
         joinSubject: courseRecordActions.joinSubject,
-        updateSubject: courseRecordActions.updateSubjectRecord,
-
-        showAlert: globalActions.showAlert,
-        showConfirm: globalActions.showConfirm
+        updateSubject: courseRecordActions.updateSubjectRecord
       }
     },
 
@@ -170,6 +167,53 @@
       }
     },
 
+    watch: {
+      // 当按钮消失,滚动条高度重置
+      'currStatus': function (val) {
+        if (val === 'N') {
+          this.scrollerHeight = window.document.body.offsetHeight + 'px'
+        } else {
+          // do nothing
+        }
+      },
+
+      'currTabIndex': function () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+//              top: 0
+          })
+        })
+      },
+
+      /**
+       * 设置课程id时, 获取课程信息, 获取进度信息
+       */
+      'subjectId': function (newSubjectId, oldSubjectId) {
+        //设置课程信息
+        this.currSubject = this.freeSubjectArr.find(subject => subject.subjectId === newSubjectId)
+
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+          top: 0
+        })
+      })
+
+        //获取进度信息
+        let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+        this.setSubjectRecordStatus(currSubjectRecord)
+      },
+
+      /**
+       *进度改变
+       */
+      'freeRecordsArr': function (newRecords, oldRecords) {
+        if (this.subjectId !== '') {
+          //获取进度信息
+          let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === this.subjectId)
+          this.setSubjectRecordStatus(currSubjectRecord)
+        }
+      }
+    },
     /**
      * 路由函数
      */
@@ -224,45 +268,6 @@
 
     ready () {
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-    },
-
-    watch: {
-      'currTabIndex': function () {
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-//              top: 0
-          })
-        })
-      },
-
-      /**
-       * 设置课程id时, 获取课程信息, 获取进度信息
-       */
-      'subjectId': function (newSubjectId, oldSubjectId) {
-        //设置课程信息
-        this.currSubject = this.freeSubjectArr.find(subject => subject.subjectId === newSubjectId)
-
-        this.$nextTick(() => {
-            this.$refs.scroller.reset({
-              top: 0
-          })
-        })
-
-        //获取进度信息
-        let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
-        this.setSubjectRecordStatus(currSubjectRecord)
-      },
-
-      /**
-       *进度改变
-       */
-      'freeRecordsArr': function (newRecords, oldRecords) {
-        if (this.subjectId !== '') {
-          //获取进度信息
-          let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === this.subjectId)
-          this.setSubjectRecordStatus(currSubjectRecord)
-        }
-      }
     },
 
     /**
@@ -348,7 +353,7 @@
             me.syncRecord()
           },
           function () {
-            me.showAlert('激活失败,请重试')
+            me.showToast('激活失败,请重试')
           }
         )
       },
@@ -357,15 +362,14 @@
        * 参加课程
        */
       join () {
-        const me = this
-
         if (this.isUserLogin) {
+          const me = this
           me.joinSubject(me.subjectId).then(
             function () {
               me.syncRecord()
             },
             function () {
-              me.showAlert('参加课程失败,请重试')
+              me.showToast('参加课程失败,请重试')
             }
           )
         } else {
@@ -385,13 +389,15 @@
 
         const msg = '<p>您尚未登录,无法同步你的学习进度,请登录之后参加课程</p>'
         // 这里加入延迟是防止出现msg被点透的情况
-        me.showConfirm({
-          title: '',
-          msg: msg,
-          okText: '立即登录',
-          cancelText: '暂不登录',
-          okCallback: activeHandler
-        })
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '立即登录',
+            cancelText: '暂不登录',
+            okCallback: activeHandler
+          })
+        }, 200)
       },
 
       /**
