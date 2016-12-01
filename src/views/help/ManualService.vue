@@ -33,7 +33,7 @@
 
       <div class="send_message">
         <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion">
-        <span class="send_box" :class="isDisabled ? 'notSend' : 'send'" v-touch:tap="sendUserQuestion">发送</span>
+        <span class="send_box" :class='[myClass]' v-touch:tap="sendUserQuestion">发送</span>
       </div>
     </div>
 
@@ -128,6 +128,8 @@
       .send_box{
         line-height: 1.95rem;
         font-size: 0.75rem;
+        display: inline-block;
+        margin-left: .7rem;
       }
       .send{
         color: #007aff;
@@ -186,13 +188,17 @@
 
       avatarUrl () {
         return this.avatar ? this.avatar : './static/image/defaultUserImg.png'
+      },
+
+      myClass () {
+        console.log('this.userQuestion', this.userQuestion, this.userQuestion !== '' ? 'send' : 'notSend')
+        return this.userQuestion !== '' ? 'send' : 'notSend'
       }
     },
 
     watch: {
       'records': function () {
         const me = this
-        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({

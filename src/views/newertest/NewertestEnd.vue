@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-touch:tap="alertReport">
     <div class="newertest-end">
       <div class="top" v-el:titlebar>
         <div class="cancel" v-touch:tap="onCancel"></div>
@@ -9,8 +9,8 @@
           <div>
             <div class="bulb-box">
               <span class="bulb-light"></span>
-              <span :class="(testReport.level-1) ? 'bulb-light': 'bulb'"></span>
-              <span :class="(testReport.level-2) ? 'bulb-light': 'bulb'"></span>
+              <span :class='isBulb2'></span>
+              <span :class='isBulb3'></span>
             </div>
           </div>
           <div class="title">理财技能等级</div>
@@ -32,7 +32,9 @@
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
                 <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
-                <div class="purchase">{{subjectArr.purchaseCount}}人学过</div>
+                <div class="purchase">{{subjectArr.purchaseCount}}人学过
+                  <span class="play-icon"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -177,6 +179,17 @@
       text-align: center;
       color: #fff;
     }
+    .play-icon{
+
+    }
+    .play-icon:after{
+      top: 1px;
+      left: 4px;
+      position: relative;
+      font-family: 'myicon';
+      content: '\e907';
+      font-size: 0.7rem !important;
+    }
   }
 </style>
 <script>
@@ -210,43 +223,56 @@
         }, 300)
       }
     },
-
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-    },
-
-    methods: {
-      onCancel () {
-        if (this.isLogin) {
-          this.$route.router.go('/main')
-        } else {
-          this.remindLogin = true
+    computed: {
+      isBulb2: function () {
+        if (this.testReport.level === 2 || this.testReport.level === 3) {
+          return 'bulb-light'
         }
+          return 'bulb'
       },
-      getLevel (level) {
-        return financialLevel.get(level)
-      },
-      tryAgain () {
-        this.$route.router.go('/newertest/question')
-      },
-      //去登录
-      toSave () {
-        this.$route.router.go('/entry')
-      },
-      //不登录
-      notSave () {
-        this.$route.router.go('/main')
-      },
-      /**
-       *  去对应的课程页
-       */
-      gotoSubjectDetail  () {
-        this.$route.router.go('/subject/detail/P/1/0')
+      isBulb3: function () {
+        if (this.testReport.level === 3) {
+          return 'bulb-light'
+        }
+          return 'bulb'
       }
     },
-    components: {
-      Confirm,
-      Scroller
-    }
+      ready () {
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+      },
+
+      methods: {
+        onCancel () {
+          if (this.isLogin) {
+            this.$route.router.go('/main')
+          } else {
+            this.remindLogin = true
+          }
+        },
+        getLevel (level) {
+          return financialLevel.get(level)
+        },
+        tryAgain () {
+          this.$route.router.go('/newertest/question')
+        },
+        //去登录
+        toSave () {
+          this.$route.router.go('/entry')
+        },
+        //不登录
+        notSave () {
+          this.$route.router.go('/main')
+        },
+        /**
+         *  去对应的课程页
+         */
+        gotoSubjectDetail  () {
+          this.$route.router.go('/subject/detail/P/1/0')
+        }
+      },
+      components: {
+        Confirm,
+        Scroller
+      }
   }
 </script>
