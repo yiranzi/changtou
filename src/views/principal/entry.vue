@@ -68,6 +68,7 @@
   import {eventMap} from '../../frame/eventConfig'
   import qqAuth from '../../plugin/thirdPartyQQ'
   import wxAuth from '../../plugin/thirdPartyWX'
+  import {Device, platformMap} from '../../plugin/device'
   export default{
     vuex: {
       getters: {
