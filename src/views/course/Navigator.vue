@@ -1,5 +1,5 @@
 <template>
-  <div class="course-navigator" style="height: 100%;">
+  <div class="course-navigator" style="height: 100%;" v-touch:tap='testExpen'>
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
@@ -17,6 +17,21 @@
             <i class="finan-icon finan-icon-fangtan"></i>
             院生访谈
           </span>
+        </div>
+        <div class="expenselist-area">
+          <p class="area-label">
+            <span class="color-span"> </span>
+            <span class="title">人气必备</span>
+          </p>
+          <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
+            <div class="box-container" >
+                <div class="box-item" v-for="item in  recommends">
+                  <img src="{{item.imgUrl}}">
+                  <p class="sub-title">{{item.title}}</p>
+                  <p class="sub-price">￥ {{item.price}}</p>
+                </div>
+            </div>
+          </scroller>
         </div>
         <div class="daily-question" v-touch:tap="goToDailyQuestion">
           <p>每日一题 积攒你的财商</p>
@@ -76,7 +91,8 @@
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList
+        expenseList: navigatorGetters.expenseCourseList,
+        recommends: navigatorGetters.recommends
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
@@ -108,9 +124,6 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
-        },
-        function () {
-
         }
       )
     },
@@ -207,6 +220,46 @@
 
 <style lang="less">
   .course-navigator{
+    .expenselist-area{
+      padding-bottom: 1rem;
+      .box-container{
+        width: 45rem;
+        .box-item {
+          float: left;
+          text-align: center;
+          line-height: 5rem;
+          width: 6.8rem;
+          height: 8.5rem;
+          margin-right: .5rem;
+          img {
+            width: 6.8rem;
+            height: 8.5rem;
+            border-radius: .8rem;
+          }
+          .sub-title {
+            position: absolute;
+            bottom: 1.2rem;
+            padding: 0 0.5rem;
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            bottom: -9.8rem;
+          }
+          .sub-price {
+            position: absolute;
+            bottom: -11rem;
+            padding: 0 0.5rem 0.5rem 0.5rem;
+            font-size: 0.6rem;
+            color: #ff9800;
+          }
+          .box-item:first-child {
+            margin-left: 1rem;
+          }
+        }
+      }
+    }
     p{
       margin: 0;
     }
