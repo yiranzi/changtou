@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; width: 100%; background-color: #f6cf3f;">
     <div class="newertest-question" v-bind:class="{'layout-card' : isFloat}">
       <div class="top">
         <div class="cancel" v-touch:tap="onCancel"></div>
@@ -27,8 +27,8 @@
 <style lang="less">
   .newertest-question{
     width: 100%;
-    height: 100%;
-    background-color: #f6cf3f;
+    background-color: inherit;
+    /*height: 100%;*/
     .top{
       width: 100%;
       height: 2.2rem;
