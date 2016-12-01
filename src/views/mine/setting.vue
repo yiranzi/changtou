@@ -37,6 +37,7 @@
     </ict-item>
     <ict-item title="小投答疑"
               link="/self/service">
+      <badge :text="badgeSuggestionNum" slot="badge" v-show="badgeSuggestionNum"></badge>
     </ict-item>
     <ict-item title="关于我们"
               link="/contact/us">
@@ -54,7 +55,7 @@
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import {messageGetters, userGetters} from '../../vuex/getters'
+  import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
@@ -67,7 +68,8 @@
         avatar: userGetters.avatar,
         userName: userGetters.userName,
         strategy: userGetters.strategy,
-        newMessageNum: messageGetters.newMsgNum
+        newMessageNum: messageGetters.newMsgNum,
+        newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
     computed: {
@@ -79,8 +81,16 @@
         return number
       },
 
-      isSpire () {
+      badgeSuggestionNum () {
+        let number = this.newSuggestionNum + ''
+        if (this.newSuggestionNum === 0) {
+          number = ''
+        }
+        return number
+      },
 
+      isSpire () {
+        //todo 鼓励师逻辑
       },
       name () {
         return this.userName ? this.userName : ''

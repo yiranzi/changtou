@@ -51,7 +51,7 @@
   import Scroller from 'vux/scroller'
   import Confirm from 'vux/confirm'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import {helpActions, globalActions} from '../../vuex/actions'
+  import {helpActions} from '../../vuex/actions'
   import {helpGetters, userGetters} from '../../vuex/getters'
 
   const hrefTag = {
@@ -70,8 +70,7 @@
       actions: {
         loadRecords: helpActions.loadRecords,
         resetRecords: helpActions.resetRecords,
-        submitQuestion: helpActions.submitQuestion,
-        showAlert: globalActions.showAlert
+        submitQuestion: helpActions.submitQuestion
       },
 
       getters: {

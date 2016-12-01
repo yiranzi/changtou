@@ -17,11 +17,11 @@ const checkQQInstalled = () => {
     window.YCQQ.checkClientInstalled(
       () => {
         _isInstalled = true
-        resolve()
+        resolve(true)
     },
     () => {
       // 如果安装的QQ客户端版本太低，不支持SSO登录也会返回没有安装客户端的错误
-      reject()
+      resolve(false)
     })
   })
 }

@@ -45,7 +45,7 @@ export default {
   router: {
       data () {
         this.getVipProduct()
-        this.getVipNotice()
+        this.getVipNotice()   // 每一次进入页面都能获取实时的通知文本
       }
   },
   ready () {
