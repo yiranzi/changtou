@@ -27,7 +27,7 @@
             <div class="box-container" >
                 <div class="box-item" v-for="item in recommends"
                      v-touch:tap="goToRecommendDetail('P',$index)">
-                  <img src="{{item.imgUrl}}">
+                  <img :src="item.imgUrl">
                   <p class="sub-title">{{item.title}}</p>
                   <p class="sub-price">￥{{item.price}}</p>
                 </div>
@@ -168,8 +168,8 @@
         this.$route.router.go(path)
       },
       goToRecommendDetail (type, index) {
-        let recommends = type === 'P' ? this.recommends : this.freeList
-        let path = `/subject/detail/${type}/${recommends[index].subjectId}/0`
+        const recommends = type === 'P' ? this.recommends : this.freeList
+        const path = `/subject/detail/${type}/${recommends[index].subjectId}/0`
         this.$route.router.go(path)
       },
       onListTap () {
@@ -213,10 +213,7 @@
        */
       goToStrategy () {
         this.$route.router.go('/strategy/professional/intro')
-      },
-      testExpen () {
-       console.log(JSON.stringify(this.recommends))
-       }
+      }
     },
     components: {
       IctTitlebar,
