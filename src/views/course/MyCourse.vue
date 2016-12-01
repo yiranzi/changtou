@@ -4,7 +4,7 @@
  */
 <template>
     <div class="my-course">
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="time-box">
             <ict-button class="my-course-drfts" type="string" text="草稿箱" v-touch:tap="onDraftsTap"></ict-button>
@@ -67,6 +67,7 @@ export default {
   },
   data () {
     return {
+      scrollerHeight: '0px',
       cardExplain: [
         '1.长投卡是专为长投用户提供的VIP优惠卡，在有效期内使用，全场付费商品均可7折；',
         '2.超过有效期后，长投卡将无法继续使用，需要再次购买；',
@@ -114,13 +115,30 @@ export default {
           setTimeout(
             function () {
               me.arrangeList()
-              me.resetScroller()
+              me.setScrollerHeight()
             }, 300)
         }
       )
     }
   },
   methods: {
+    /**
+     * 设置滚动高度
+     */
+    setScrollerHeight () {
+      const me = this
+      me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+      setTimeout(function () {
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+          top: 0
+        })
+      })
+      }, 200)
+    },
+    /**
+     * 整理课程列表
+     */
     arrangeList () {
       const me = this
       let courseList = []
@@ -188,14 +206,6 @@ export default {
       this.isCardTipShow = false
     },
 
-    resetScroller () {
-      const me = this
-      me.$nextTick(() => {
-        me.$refs.scroller.reset({
-          top: 0
-        })
-      })
-    },
     /**
      * 点击登录
      * @param e
