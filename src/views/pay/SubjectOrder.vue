@@ -58,11 +58,12 @@
         return this.total - this.toubi
       },
       canUserBuy () {
-        return !(this.isLogin && !this.expenseRecords.findIndex(function (record) {
+        let subjectIndex = this.expenseRecords.findIndex(function (record) {
           if (this.subjectId === record.subjectId) {
             return true
           }
-        }))
+        })
+        return !(this.isLogin && (subjectIndex > 0))
       },
       // 支付按钮 信息
       btnOptions () {
