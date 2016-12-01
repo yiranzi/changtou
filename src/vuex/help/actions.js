@@ -31,7 +31,6 @@ export const loadQAList = ({ dispatch }) => {
  * 用户提交问题
  */
 export const submitQuestion = ({ dispatch }, content) => {
-  console.log('xxxx', content)
   return new Promise(
     (resolve, reject) => {
       postWithinAuth({

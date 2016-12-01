@@ -20,8 +20,8 @@ const updateAppUser = (dispatch, user) => {
   if (user) {
     dispatch('USER_UPDATE', user)
     dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', user.newMessageNum)
-    console.log('user.newSuggestionReplyNum', user.newSuggestionReplyNum)
-    dispatch('HELP_UPDATE_NEW_SUGGESTION_NUM', 1)
+    //console.log('user.newSuggestionReplyNum', user.newSuggestionReplyNum)
+    dispatch('HELP_UPDATE_NEW_SUGGESTION_NUM', user.newSuggestionReplyNum)
     // todo 设置鼓励师权限
     // todo 设置产品策略类权限
   }
