@@ -47,15 +47,14 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
-  import {userActions, globalActions} from '../../../vuex/actions'
+  import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
 
   export default {
     vuex: {
       actions: {
         registerStart: userActions.registerStart,
-        registerEnd: userActions.registerEnd,
-        showAlert: globalActions.showAlert
+        registerEnd: userActions.registerEnd
       }
     },
     components: {

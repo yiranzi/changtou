@@ -68,7 +68,7 @@
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, globalActions} from '../../vuex/actions'
+  import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
 
   export default {
     vuex: {
@@ -80,8 +80,7 @@
       actions: {
         loadData: navigatorActions.loadNavigatorData,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        loadNewertestReport: newertestActions.loadNewertestReport,
-        showAlert: globalActions.showAlert
+        loadNewertestReport: newertestActions.loadNewertestReport
       }
     },
 

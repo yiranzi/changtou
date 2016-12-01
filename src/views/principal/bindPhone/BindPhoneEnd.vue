@@ -45,13 +45,12 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
-  import {userActions, globalActions} from '../../../vuex/actions'
+  import {userActions} from '../../../vuex/actions'
   export default {
     vuex: {
       actions: {
         bindPhone: userActions.bindPhone,
-        bindPhoneEnd: userActions.bindPhoneEnd,
-        showAlert: globalActions.showAlert
+        bindPhoneEnd: userActions.bindPhoneEnd
       }
     },
     data () {

@@ -46,13 +46,12 @@ import IctButton from '../../../components/IctButton.vue'
 import {Flexbox, FlexboxItem} from 'vux/flexbox'
 import Group from 'vux/group'
 import XInput from 'vux/x-input'
-import {userActions, globalActions} from '../../../vuex/actions'
+import {userActions} from '../../../vuex/actions'
 export default {
   vuex: {
     actions: {
       resetPasswordStart: userActions.resetPasswordStart,
-      resetPassword: userActions.resetPassword,
-      showAlert: globalActions.showAlert
+      resetPassword: userActions.resetPassword
     }
   },
   data () {

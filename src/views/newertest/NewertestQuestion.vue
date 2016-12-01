@@ -161,15 +161,14 @@
   }
 </style>
 <script>
-  import {newertestActions, globalActions} from '../../vuex/actions'
+  import {newertestActions} from '../../vuex/actions'
 //  import {newertestGetters} from '../../vuex/getters'
 
   export default {
     vuex: {
       actions: {
         loadQuestion: newertestActions.loadQuestion,
-        postReport: newertestActions.postReport,
-        showAlert: globalActions.showAlert
+        postReport: newertestActions.postReport
       },
       getters: {
 //        questionArr: newertestGetters.questionArr

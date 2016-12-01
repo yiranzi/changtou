@@ -6,7 +6,7 @@ import * as navigatorActions from './courseNavigator/actions'
 import * as courselistActions from './courselist/actions'
 import * as courseRecordActions from './courseRecords/actions'
 import * as courseDetailActions from './courseDetail/actions'
-import * as globalActions from './global/actions'
+//import * as globalActions from './global/actions'
 import * as myCoursesActions from './myCourse/actions'
 import * as mineActions from './mine/actions'
 import * as messageActions from './message/actions'
@@ -28,7 +28,7 @@ export {
   courselistActions,
   courseRecordActions,
   courseDetailActions,
-  globalActions,
+  //globalActions,
   myCoursesActions,
   mineActions,
   messageActions, //系统消息提醒
