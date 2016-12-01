@@ -1,5 +1,5 @@
 <template>
-  <div v-touch:tap="alertReport">
+  <div>
     <div class="newertest-end">
       <div class="top" v-el:titlebar>
         <div class="cancel" v-touch:tap="onCancel"></div>

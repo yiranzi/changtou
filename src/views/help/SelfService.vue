@@ -144,22 +144,10 @@
 
     watch: {
       'helpList': function () {
-        const me = this
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-          })
-        })
-        }, 300)
+        this.refreshScroller()
       },
       'currQuestionIndex': function () {
-        const me = this
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-          })
-        })
-        }, 300)
+        this.refreshScroller()
       }
     },
 
@@ -189,6 +177,16 @@
       },
       goToManualService () {
         this.$route.router.go('/manual/service')
+      },
+      refreshScroller () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 300)
       }
     },
     components: {

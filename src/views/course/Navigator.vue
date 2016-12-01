@@ -167,9 +167,7 @@
         this.$route.router.go(path)
       },
       goToRecommendDetail (type, index) {
-        const recommends = type === 'P' ? this.recommends : this.freeList
-        const path = `/subject/detail/${type}/${recommends[index].subjectId}/0`
-        this.$route.router.go(path)
+        this.$route.router.go(`/subject/detail/${type}/${this.recommends[index].subjectId}/0`)
       },
       onListTap () {
         this.$route.router.go('/totalList')

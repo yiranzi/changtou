@@ -206,7 +206,7 @@
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-              top: 0
+              top: me.scrollerHeight
           })
         })
         }, 200)
