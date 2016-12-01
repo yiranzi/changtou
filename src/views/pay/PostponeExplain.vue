@@ -18,11 +18,11 @@
 </template>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
-export default {
-  components: {
-    IctTitlebar
+  export default {
+    components: {
+      IctTitlebar
+    }
   }
-}
 </script>
 <style lang="less">
   .postpone-explain{

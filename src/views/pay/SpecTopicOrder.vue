@@ -65,11 +65,12 @@
           }
         )
         for (let i = 0, length = subjectIds.length; i < length; i++) {
-          if (this.expenseRecords.findIndex(function (records) {
-              if (subjectIds[i] === records.subjectId) {
-                return true
-              }
-            })) {
+          let subjectIndex = this.expenseRecords.findIndex(function (records) {
+            if (subjectIds[i] === records.subjectId) {
+              return true
+            }
+          })
+          if (subjectIndex > 0) {
             return false
           }
         }

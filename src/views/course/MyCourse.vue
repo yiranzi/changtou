@@ -27,15 +27,6 @@
             </div>
           </div>
           <div style="height: 4.8rem; background-color: transparent"></div>
-          <div class="changtou-card-tip" v-show="isCardTipShow">
-            <div class="changtou-card-tip-mask" v-touch:tap="onCardMaskTap"></div>
-            <div class="changtou-card-tip-content">
-              <div class="changtou-card-tip-title">长投卡说明<span class="close-icon" v-touch:tap="onCardMaskTap"></span></div>
-              <div class="changtou-card-tip-explain">
-                <p v-for="explain in cardExplain">{{explain}}</p>
-              </div>
-            </div>
-          </div>
         </div>
       </scroller>
     </div>
@@ -44,7 +35,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
+  import {myCoursesActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
 
 export default {
@@ -59,8 +50,6 @@ export default {
       freeRecords: courseRecordsGetters.freeRecords //免费课程记录
     },
     actions: {
-      loadAllFreeRecords: courseRecordActions.loadAllFreeRecords, // 下载全部免费课进度
-      loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords, // 下载全部付费课进度
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
       loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
     }
@@ -68,13 +57,7 @@ export default {
   data () {
     return {
       scrollerHeight: '0px',
-      cardExplain: [
-        '1.长投卡是专为长投用户提供的VIP优惠卡，在有效期内使用，全场付费商品均可7折；',
-        '2.超过有效期后，长投卡将无法继续使用，需要再次购买；',
-        '3.长投卡一年仅售两次，年初售卖一年卡、年中售卖半年卡；'
-      ],
-      courseList: [], //课程列表
-      isCardTipShow: false //显示 长投卡说明
+      courseList: [] //课程列表
     }
   },
   computed: {
@@ -105,7 +88,7 @@ export default {
       const me = this
 
       if (this.isLogin) {
-        promiseArray = [this.loadUserCourses(), this.loadAllFreeRecords(), this.loadAllExpenseRecords()]
+        promiseArray = [this.loadUserCourses()]
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
@@ -143,31 +126,31 @@ export default {
       const me = this
       let courseList = []
       if (me.isLogin) {
-        me.myCourseList.map(
-          function (myCourse) {
-            if (myCourse.type === 'P') {
-              let expenseIndex = me.expenseRecords.findIndex(
-                function (expenseRecord) {
-                  if (myCourse.subjectId === expenseRecord.subjectId) {
-                    return true
-                  }
+        for (let i = 0, length = me.myCourseList.length; i < length; i++) {
+          if (me.myCourseList[i].type === 'P') {
+            let myCourserItem = me.myCourseList[i]
+            let expenseIndex = me.expenseRecords.findIndex(
+              function (expenseRecord) {
+                if (me.myCourseList[i].subjectId === expenseRecord.subjectId) {
+                  return true
                 }
-              )
-              myCourse.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
-              courseList.push(myCourse)
-            } else {
-              let freeIndex = me.freeRecords.findIndex(
-                function (freeRecords) {
-                  if (myCourse.subjectId === freeRecords.subjectId) {
-                    return true
-                  }
+              }
+            )
+            myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+            courseList.push(myCourserItem)
+          } else {
+            let myCourserItem = me.myCourseList[i]
+            let freeIndex = me.freeRecords.findIndex(
+              function (freeRecords) {
+                if (me.myCourseList[i].subjectId === freeRecords.subjectId) {
+                  return true
                 }
-              )
-              myCourse.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
-              courseList.push(myCourse)
-            }
-            return myCourse
-          })
+              }
+            )
+            myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+            courseList.push(myCourserItem)
+          }
+        }
         me.courseList = courseList
       } else {
         me.courseList = me.myCourseList.map(
@@ -199,11 +182,12 @@ export default {
      * 点击长投卡帮助
      */
     onCardHelpIconTap () {
-      this.isCardTipShow = true
-    },
-
-    onCardMaskTap () {
-      this.isCardTipShow = false
+      this.showMask({
+        component: 'mycourse/CardExplain.vue',
+        hideOnMaskTap: true,
+        callbackName: '',
+        callbackFn: null //组件上的
+      })
     },
 
     /**
@@ -351,48 +335,6 @@ export default {
           font-size: 0.7rem !important;
           vertical-align: bottom;
         }
-      }
-    }
-    .changtou-card-tip{
-      p{
-        margin: 0;
-      }
-      &-mask{
-        position: absolute;
-        z-index: 1000;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background: rgba(0,0,0,.6);
-      }
-      &-content{
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1001;
-        width: 80%;
-        height: 6rem;
-        margin: auto;
-        background: #fff;
-      }
-      &-title{
-        position: relative;
-        padding: 0 0.75rem;
-        line-height: 2.5rem;
-        font-size: 0.8rem;
-        color: #222;
-        text-align: center;
-        border-bottom: 1px solid #f0eff5;
-        background: #fff;
-      }
-      &-explain{
-        padding: 1rem 1.25rem 1.5rem;
-        font-size: 0.7rem;
-        color: #666;
-        background: #fff;
       }
     }
 
