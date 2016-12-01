@@ -69,7 +69,7 @@
         this.show = false
         this.$emit('confirm')
         if (this.essayType === 'S') {
-          this.$route.router.go('/essay/answer')
+          this.$route.router.go('/homework/essay/answer')
         }
       }
     },

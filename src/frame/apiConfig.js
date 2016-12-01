@@ -124,6 +124,7 @@ const apiUrl = {
   /**
    * 作业
    */
+  'homework_mine_list': '/student/expense/my/articles', // 我的作业 列表
   'homework_drafts_list': '/student/article/draft-box', //草稿箱列表
   'homework_delete_drafts': '/student/article/draft-box/:articleId', //删除草稿
   'homework_get_article': '/student/expense/lesson/article/:lessonId', //获取作业或草稿

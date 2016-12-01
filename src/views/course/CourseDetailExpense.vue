@@ -447,7 +447,7 @@
           report => {
             if (report.kpScore) {
               // 做过选择题
-              me.$route.router.go('/choice/mark')
+              me.$route.router.go('homework/choice/mark')
             } else {
               // 没做过
               me.showChoice = true
@@ -502,7 +502,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-            () => me.$route.router.go('/essay/answer')
+            () => me.$route.router.go('/homework/essay/answer')
         ).catch(
             err => console.warn(err)
         )
@@ -522,7 +522,7 @@
         const me = this
         const lessonId = LimitedLessonId || this.selectedLesson
         this.getArticle(lessonId).then(
-            () => me.$route.router.go('/essay/mark')
+            () => me.$route.router.go('/homework/essay/mark')
         ).catch(
             err => console.warn(err)
         )

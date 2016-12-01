@@ -11,6 +11,16 @@
             <p>累计学习时间</p>
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
+          <div>
+            <span v-touch:tap="goToMyHomework">
+              <img>
+              <p>我的作业</p>
+            </span>
+            <span v-touch:tap="goToMyDiploma">
+              <img>
+              <p>毕业证书</p>
+            </span>
+          </div>
           <div class="changtou-card" v-if="card">
             <span class="left-round"></span>
             长投VIP卡 有效日期至{{validity}}
@@ -183,7 +193,7 @@ export default {
      * 点击 草稿箱
      */
     onDraftsTap () {
-      this.$route.router.go('/drafts')
+      this.$route.router.go('/homework/drafts')
     },
 
     /**
@@ -216,6 +226,19 @@ export default {
           this.$route.router.go('/entry')
         }
       }
+    },
+    /**
+     * 点击我的作业
+     */
+    goToMyHomework () {
+      console.log('goToMyHomework')
+      this.$route.router.go('/homework/mine')
+    },
+    /**
+     * 点击我的毕业证书
+     */
+    goToMyDiploma () {
+      console.log('goToMyDiploma')
     }
   },
   components: {

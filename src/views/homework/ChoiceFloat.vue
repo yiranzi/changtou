@@ -31,7 +31,7 @@ export default {
     onConfirmTap () {
       this.show = false
       this.$emit('confirm')
-      this.$route.router.go('/choice/answer')
+      this.$route.router.go('/homework/choice/answer')
     }
   },
   components: {

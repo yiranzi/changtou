@@ -194,7 +194,7 @@ export default {
      * 跳转到结果页
      */
     goToMark () {
-      this.$route.router.replace('/choice/mark')
+      this.$route.router.replace('homework/choice/mark')
       setTimeout(
         () => {
           this.resetView()
