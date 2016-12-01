@@ -4,6 +4,7 @@
       小投答疑
       <div slot="right" v-touch:tap="goToManualService">
         <img class="msg_pic" src='../../assets/styles/image/help/MSG.png'>
+        <span class="badge offset-position" v-if="badgeNum">{{badgeNum}}</span>
       </div>
     </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
@@ -37,6 +38,22 @@
       height: 1.5rem;
       vertical-align: middle;
       color: #fff;
+    }
+    .badge {
+      display: inline-block;
+      text-align: center;
+      background: #f74c31;
+      color: #fff;
+      font-size: 12px;
+      height: 16px;
+      line-height: 16px;
+      border-radius: 8px;
+      padding: 0 6px;
+      background-clip: padding-box;
+    }
+    .offset-position {
+      position: relative;
+      right: 14px;
     }
     .help_self_service_content{
       background-color: #f0eff5;
@@ -94,16 +111,17 @@
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import {helpActions, globalActions} from '../../vuex/actions'
+  import {helpActions} from '../../vuex/actions'
   import {helpGetters} from '../../vuex/getters'
+
   export default {
     vuex: {
       actions: {
-        loadQAList: helpActions.loadQAList,
-        showAlert: globalActions.showAlert
+        loadQAList: helpActions.loadQAList
       },
       getters: {
-        helpList: helpGetters.QAList
+        helpList: helpGetters.QAList,
+        newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
 
@@ -111,6 +129,16 @@
       return {
         scrollerHeight: '500px',
         currQuestionIndex: -1 //当前查看的问题集合
+      }
+    },
+
+    computed: {
+      /**
+       * 小红点
+       * @returns {string}
+       */
+      badgeNum () {
+        return this.newSuggestionNum ? this.newSuggestionNum + '' : ''
       }
     },
 
