@@ -5,34 +5,40 @@
 <template>
   <div class="my-homework">
     <ict-titlebar v-el:titlebar>我的作业</ict-titlebar>
-    <!--<scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">-->
-      <!--<div class="subject-item" v-for="(subject, $index) in homeworkList">-->
-        <!--<div class="subject-info" v-touch:tap="onSubjectTap(subject, $index)">-->
-          <!--<p>{{subject.title}} <span>{{subjectStatus[subject.status]}}</span></p>-->
-          <!--<p v-if="subject.hasChoice">课后测试进度{{subject.completeChoiceNum}}/{{subject.choiceTotal}}</p>-->
-          <!--<p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度{{subject.completeEssayNum}}/{{subject.essayTotal}}</p>-->
-        <!--</div>-->
-        <!--<div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">-->
-          <!--<div class="latest-notice">-->
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <div>
+      <div class="subject-item" v-for="subject in homeworkList">
+        <div class="subject-info" v-touch:tap="onSubjectTap($index, subject)">
+          <p>{{subject.title}} <span>{{subjectStatus[subject.status]}}</span></p>
+        </div>
 
-          <!--</div>-->
+        <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
+          <div class="subject-progress">
+            <p v-if="subject.hasChoice">课后测试进度{{subject.completeChoiceNum}}/{{subject.choiceTotal}}</p>
+            <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度{{subject.completeEssayNum}}/{{subject.essayTotal}}</p>
+          </div>
 
-          <!--<div class="choice-item"  v-if="subject.hasChoice">-->
-            <!--<p>课后测试</p>-->
-          <!--<span v-for="choice in subject.choice">-->
-            <!--<span v-if="choice.hasChoice" v-touch:tap="onChoiceTap(choice)">第{{chinaNum[$index]}}课</span>-->
-          <!--</span>-->
-          <!--</div>-->
+          <div class="latest-notice">
 
-          <!--<div class="essay-item">-->
-            <!--<p>{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>-->
-            <!--<p v-for="essay in subject.essay">-->
-              <!--<span v-if="essay.hasEssay" v-touch:tap="onEssayTap(essay)">{{essay.title}}<span>{{essayStatus[essay.status]}}</span></span>-->
-            <!--</p>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</scroller>-->
+          </div>
+
+          <div class="choice-item"  v-if="subject.hasChoice">
+            <p>课后测试</p>
+          <span v-for="choice in subject.choice">
+            <span v-if="choice.hasChoice" v-touch:tap="onChoiceTap(choice)">第{{chinaNum[$index]}}课</span>
+          </span>
+          </div>
+
+          <div class="essay-item">
+            <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+            <p v-for="essay in subject.essay">
+              <span v-if="essay.hasEssay" v-touch:tap="onEssayTap(essay)">{{essay.title}}<span>{{essayStatus[essay.status]}}</span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </scroller>
   </div>
 </template>
 <script>
@@ -130,6 +136,7 @@
             } else {
               item.isUnfold = false
             }
+            console.log(item)
             return item
           }
         )
@@ -143,7 +150,7 @@
         const me = this
         setTimeout(
           function () {
-//            me.setScrollerHeight()
+            me.setScrollerHeight()
           }, 300
         )
 
@@ -179,7 +186,6 @@
        * 点击课程
        */
       onSubjectTap (index, subject) {
-        console.log('onSubjectTap', index)
         if (subject.status !== 'P') {
           let item = this.clsList[index]
           item.isUnfold = !item.isUnfold
