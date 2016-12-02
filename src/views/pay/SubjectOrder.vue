@@ -63,7 +63,7 @@
             return true
           }
         })
-        return !(this.isLogin && (subjectIndex > 0))
+        return !(this.isLogin && (subjectIndex >= 0))
       },
       // 支付按钮 信息
       btnOptions () {

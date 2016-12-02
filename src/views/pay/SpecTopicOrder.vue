@@ -70,7 +70,7 @@
               return true
             }
           })
-          if (subjectIndex > 0) {
+          if (subjectIndex >= 0) {
             return false
           }
         }
