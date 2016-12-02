@@ -80,6 +80,8 @@
 </script>
 <style lang="less">
 .bind-phone{
-
+  .ict-btn {
+    width: 84%;
+  }
 }
 </style>
