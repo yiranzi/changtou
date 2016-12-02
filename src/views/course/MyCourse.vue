@@ -7,7 +7,6 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="time-box">
-            <ict-button class="my-course-drfts" type="string" text="草稿箱" v-touch:tap="onDraftsTap"></ict-button>
             <p>累计学习时间</p>
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
@@ -170,13 +169,6 @@ export default {
           }
         )
       }
-    },
-
-    /**
-     * 点击 草稿箱
-     */
-    onDraftsTap () {
-      this.$route.router.go('/homework/drafts')
     },
 
     /**

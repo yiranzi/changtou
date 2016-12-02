@@ -4,49 +4,52 @@
 */
 <template>
   <div class="my-homework">
-    <ict-titlebar v-el:titlebar>我的作业</ict-titlebar>
+    <ict-titlebar v-el:titlebar :right-options="rightOptions">我的作业
+      <a slot="right">草稿箱</a>
+    </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-      <div class="subject-panel" v-for="subject in homeworkList">
-        <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
-          <p>{{subject.title}}
-            <span class="subject-status">{{subjectStatus[subject.status]}}</span>
-            <span class="subject-info">{{subjectInfo[subject.status]}}</span>
-          </p>
-        </div>
-
-        <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
-          <div class="subject-progress">
-            <p class="modules-title">进度</p>
-            <p v-if="subject.hasChoice">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
-            <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
-          </div>
-
-          <div class="latest-notice">
-
-          </div>
-
-          <div class="choice-panel"  v-if="subject.hasChoice">
-            <p class="modules-title">课后测试</p>
-            <span v-for="choice in subject.choice"
-                  v-touch:tap="onChoiceTap(choice)"
-                  class="choice-item">
-              <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index+1]}}课</span>
-              <img v-if="choice.status" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
-            </span>
-          </div>
-
-          <div class="essay-panel">
-            <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
-            <p v-for="essay in subject.essay"
-               v-touch:tap="onEssayTap(essay)"
-               class="essay-item">
-                <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
-              <span class="essay-status">{{essayStatus[essay.status]}}</span>
+        <div class="subject-panel" v-for="subject in homeworkList">
+          <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
+            <p>{{subject.title}}
+              <span class="subject-status">{{subjectStatus[subject.status]}}</span>
+              <span class="subject-info">{{subjectInfo[subject.status]}}</span>
             </p>
           </div>
+
+          <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
+            <div class="subject-progress">
+              <p class="modules-title">进度</p>
+              <p v-if="subject.hasChoice">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
+              <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
+            </div>
+
+            <div class="latest-notice">
+
+            </div>
+
+            <div class="choice-panel"  v-if="subject.hasChoice">
+              <p class="modules-title">课后测试</p>
+              <span v-for="choice in subject.choice"
+                    v-touch:tap="onChoiceTap(choice)"
+                    class="choice-item">
+                <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index+1]}}课</span>
+                <img v-if="choice.status" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+              </span>
+            </div>
+
+            <div class="essay-panel">
+              <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+              <p v-for="essay in subject.essay"
+                 v-touch:tap="onEssayTap(essay)"
+                 class="essay-item">
+                  <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
+                <span class="essay-status">{{essayStatus[essay.status]}}</span>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+        <div style="height: 2rem"></div>
       </div>
     </scroller>
   </div>
@@ -72,6 +75,10 @@
     },
     data () {
       return {
+        rightOptions: { //titlebar
+          callback: this.onDraftsTap,
+          disabled: false
+        },
         subjectStatus: {
           'N': '在读中',
           'E': '已过期',
@@ -194,6 +201,13 @@
 
     },
     methods: {
+      /**
+       * 点击 草稿箱
+       */
+      onDraftsTap () {
+        this.$route.router.go('/homework/drafts')
+      },
+
       setScrollerHeight () {
         const me = this
         me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
