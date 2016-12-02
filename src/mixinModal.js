@@ -88,7 +88,7 @@ const mixin = {
       }
     },
 
-    [eventMap.SHOW_FLOAT]: function ({message, type}) {
+    [eventMap.SHOW_TOAST]: function ({message, type}) {
       const me = this
       me.isMaskShow = true
       me.toast = {

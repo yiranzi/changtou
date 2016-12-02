@@ -220,15 +220,7 @@ export const joinSubject = ({ dispatch }, subjectId) => {
         }
       }
     ).then(
-      (success) => {
-        if (success) {
-          //成功
-          resolve()
-        } else {
-          //失败
-          reject('参加课程失败,一会再试!')
-        }
-      },
+      () => resolve(),
       err => {
         console.warn(err)
         reject(err.Msg)
@@ -271,24 +263,6 @@ export const updateSubjectRecord = ({ dispatch }, {lessonId, prevLessonId}) => {
     )
   })
 }
-
-/**
- * 延期课程
- * @param dispatch
- * @param subjectId
- */
-/*export const postponeSubject = ({ dispatch }, subjectId) => {
-  //todo
-}*/
-
-/**
- * 购买课程
- * @param dispatch
- * @param subjectId
- */
-//export const buySubject = ({ dispatch }, subjectId) => {
-//  //todo
-//}
 
 /**
  * 清空课程进度
