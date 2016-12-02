@@ -353,7 +353,7 @@ export const bindPhone = ({ dispatch }, phone) => {
           resolve()
         },
         err => {
-          reject(err.message)
+          reject(err)
         }
       )
     })
@@ -379,7 +379,7 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
           resolve()
         },
         err => {
-          reject(err.message)
+          reject(err)
         }
       )
     })
