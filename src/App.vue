@@ -267,7 +267,9 @@
   }
 
   .weui_tabbar{
-    &_item{
+    height: 2.45rem;
+    & &_item{
+      padding-top: 2px;
       text-decoration: initial;
       .weui_tabbar_icon{
         display: block;

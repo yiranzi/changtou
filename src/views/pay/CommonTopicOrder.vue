@@ -17,7 +17,7 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
@@ -80,11 +80,12 @@
         this.type = pathArr[1]
         this.ctpId = parseInt(pathArr[2])
         return Promise.all([getOrder(this.type, this.ctpId)]).then(
-            ([order]) => {
+          ([order]) => {
             me.arrangeOrder(order)
-      }).catch(
-          (err) => console.log(err)
-      ) }
+        }).catch(
+            (err) => console.log(err)
+        )
+      }
     },
     events: {
       // 优惠信息 选择
@@ -93,6 +94,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
@@ -176,11 +178,16 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       goToPaySuccess () {
         this.$route.router.go(`/pay/success/CT/${this.ctpId}`)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
       }
     },
     components: {

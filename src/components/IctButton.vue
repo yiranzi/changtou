@@ -81,6 +81,8 @@
   }
 
   &.ict-btn-mini {
+    width: 5rem;
+    min-width: 5rem;
     display: inline-block;
   }
 
@@ -131,8 +133,8 @@
   //disabled
   .ict-btn-disabled {
     &.ict-btn-mini{
-      color: @color-default-disabled-text-color;
-      background-color: @color-default-disabled-background;
+      color: #fff;
+      background-color: #bbb;
     }
     &.ict-btn-default{
       color: @color-default-disabled-text-color;

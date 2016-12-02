@@ -1,5 +1,5 @@
 <template>
-  <div class="course-navigator" style="height: 100%;" v-touch:tap='testExpen'>
+  <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
@@ -15,7 +15,7 @@
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-fangtan"></i>
-            院生访谈
+            院生故事
           </span>
         </div>
         <div class="expenselist-area">
@@ -42,7 +42,7 @@
         <div class="expenselist-area">
           <p class="area-label">
             <span class="color-span"> </span>
-            <span class="title">热门畅销</span>
+            <span class="title">优质好课</span>
             <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
@@ -167,9 +167,7 @@
         this.$route.router.go(path)
       },
       goToRecommendDetail (type, index) {
-        const recommends = type === 'P' ? this.recommends : this.freeList
-        const path = `/subject/detail/${type}/${recommends[index].subjectId}/0`
-        this.$route.router.go(path)
+        this.$route.router.go(`/subject/detail/${type}/${this.recommends[index].subjectId}/0`)
       },
       onListTap () {
         this.$route.router.go('/totalList')
@@ -474,9 +472,9 @@
       zoom: .5;
     }
 
-    .finan-icon.finan-icon-jiemi{
-      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
-    }
+  .finan-icon.finan-icon-jiemi{
+    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
+  }
 
     .finan-icon.finan-icon-fangtan{
       background: url("../../assets/styles/image/fangtan.png") no-repeat center right;

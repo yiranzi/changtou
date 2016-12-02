@@ -94,6 +94,8 @@
     score (newScore) {
       if (newScore >= 0 && newScore < 3) {
         this.isFloatShow = true
+      } else {
+        this.isFloatShow = false
       }
     }
   },

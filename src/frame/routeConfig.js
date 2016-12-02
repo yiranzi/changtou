@@ -225,6 +225,10 @@ export function configRouter (router) {
     },
     '/strategy/duoyinzi/faq': {
       component: require('../views/strategy/DuoYinZiFaq.vue')
+    },
+    //延期说明
+    '/postpone/explain': {
+      component: require('../views/pay/PostponeExplain.vue')
     }
   })
 

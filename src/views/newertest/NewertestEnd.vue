@@ -1,10 +1,10 @@
 <template>
-  <div v-touch:tap="alertReport">
+  <div>
     <div class="newertest-end">
       <div class="top" v-el:titlebar>
         <div class="cancel" v-touch:tap="onCancel"></div>
       </div>
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div class="newertest-end-content">
           <div>
             <div class="bulb-box">

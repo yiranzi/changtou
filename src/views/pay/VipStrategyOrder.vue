@@ -4,7 +4,7 @@
 */
 <template>
   <div class="order-vip-strategy">
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
       <div v-if="proLeftDays" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
@@ -15,10 +15,11 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       getters: {
@@ -92,7 +93,7 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        this.itemId = periodIndex ? 4 : 3 // 交易用到的itemId //3 一年VIP版 4 两年VIP版
+        this.itemId = periodIndex === '1' ? 4 : 3 // 交易用到的itemId //3 一年VIP版 4 两年VIP版
         this.price = this.periods[ periodIndex ].price
         this.selectedDeduction = this.deduction[ periodIndex ] ? this.deduction[ periodIndex ] : this.deduction[0]
         if (this.coupons.length > 0 && !this.coupons[ this.coupons.length - 1 ].couponNo) {
@@ -105,6 +106,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
@@ -170,7 +172,7 @@
         const me = this
         const trade = {
           sum: this.sum,
-          body: this.selectedPeriod,
+          body: '长投课程',
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
@@ -179,7 +181,7 @@
               dealType: this.strategy.strategyLevel === strategyLevel.COMMON ? dealType.BUY : this.strategy.strategyLevel === strategyLevel.PRO ? dealType.UPDATE : dealType.POSTPONE,
               itemId: this.itemId,
               mchantType: 6,
-              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,
+              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene + '' : '',
               price: this.total
             }]
           }
@@ -198,7 +200,7 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       /**
@@ -206,6 +208,12 @@
        */
       goToPaySuccess () {
         this.$route.router.go(`/pay/success/VS/0`)
+        this.$dispatch(eventMap.SYNC_USER)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
       }
     },
     components: {

@@ -4,7 +4,14 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :bar-right-options="barRightOption"
+              :coupons="coupons"
+              :toubi="toubi"
+              :total="total"
+              :sum="sum"
+              :btn-options="btnOptions"
+              :tip="tip"
+              :sheet-show="sheetShow">
       <pay-postpone :postpone-list="postponeList"></pay-postpone>
     </pay-base>
   </div>
@@ -12,7 +19,7 @@
 <script>
   import PayPostpone from '../../components/payment/Postpone.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getPostponeOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getPostponeOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
@@ -24,6 +31,11 @@
     },
     data () {
       return {
+        barRightOption: {
+          text: '延期说明',
+          callback: this.goToPostponeExplain.bind(this),
+          disabled: false
+        },
         price: 0, // 价格
         postponeList: [], //延期列表
         coupons: [],  // 优惠列表
@@ -88,6 +100,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
@@ -102,7 +115,7 @@
             userBene: Math.ceil(this.postponeList[1].price * 0.3),
             holderBene: 0
           }]
-          this.selectedCoupon = this.coupons[1]
+          this.selectedCoupon = this.coupons[0]
         } else {
           this.coupons = []
           this.selectedCoupon = null
@@ -184,11 +197,19 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       goToPaySuccess () {
         this.$route.router.go(`/subject/detail/P/${this.subjectId}/0`)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
+      },
+      goToPostponeExplain () {
+        this.$route.router.go('/postpone/explain')
       }
     },
     components: {

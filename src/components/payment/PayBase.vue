@@ -4,7 +4,9 @@
  */
 <template>
     <div class="order-base">
-      <ict-titlebar v-el:titlebar >确认订单</ict-titlebar>
+      <ict-titlebar v-el:titlebar :right-options="rightOptions">确认订单
+        <a slot="right">{{barRightOptions.text}}</a>
+      </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <slot></slot>
         <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange"></pay-coupons>
@@ -38,6 +40,7 @@ export default {
     tip: String,
     total: Number,
     toubi: Number,
+    barRightOptions: Object,
     btnOptions: {
       type: Object,
       default: function () {
@@ -59,6 +62,14 @@ export default {
           wechat: '微信支付',
           ali: '支付宝支付'
         }
+      }
+    }
+  },
+  computed: {
+    rightOptions () {
+      return {
+        callback: this.barRightOptions.callback,
+        disabled: this.barRightOptions.disabled
       }
     }
   },

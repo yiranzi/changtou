@@ -22,24 +22,25 @@ const prepay = (prepayData) => {
           type: errorType.FAIL,
           reason: '用户信息获取失败，请重新登录后重试'
         })
+      } else {
+        postWithinAuth(
+          {
+            url: getUrl('pay_weChat_browser'),
+            data: prepayData
+          }
+        ).then(
+          prepayResponse => {
+            resolve(prepayResponse)
+          }
+        ).catch(
+          err => {
+            reject({
+              type: errorType.FAIL,
+              reason: err.message
+            })
+          }
+        )
       }
-      postWithinAuth(
-        {
-          url: getUrl('pay_weChat_browser'),
-          data: prepayData
-        }
-      ).then(
-        prepayResponse => {
-          resolve(prepayResponse)
-        }
-      ).catch(
-        err => {
-          reject({
-            type: errorType.FAIL,
-            reason: err.message
-          })
-        }
-      )
     }
   )
 }
