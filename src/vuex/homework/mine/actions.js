@@ -21,7 +21,99 @@ export const getMyHomework = ({dispatch}) => {
           let homeworkList = [
             {
               'subjectId': 4,
-              'status': 'N',
+              'status': 'P',
+              'title': '股票投资初级课',
+              'lessons': [
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第零课 长投学堂引言（免费）',
+                  'hasEssay': 'N',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'N',
+                  'type': 'C',
+                  'sequence': 16,
+                  'lessonId': 16
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'Y',
+                  'title': '初级第壹课 公司分析的基础 - 年报三表（上）',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'F',
+                  'sequence': 17,
+                  'lessonId': 17
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第贰课 公司分析的基础 - 年报三表（下）',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'N',
+                  'sequence': 18,
+                  'lessonId': 18
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第叁课 公司盈利的源泉',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'N',
+                  'sequence': 19,
+                  'lessonId': 19
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第肆课 步入量化投资（上）',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'N',
+                  'sequence': 20,
+                  'lessonId': 20
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第伍课 步入量化投资（下）',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'N',
+                  'sequence': 21,
+                  'lessonId': 21
+                },
+                {
+                  'subjectId': 4,
+                  'isChoicePassed': 'N',
+                  'title': '初级第陆课 有没有一劳永逸的神奇公式？',
+                  'hasEssay': 'Y',
+                  'essayType': 'N',
+                  'essayStatus': -1,
+                  'hasChoice': 'Y',
+                  'type': 'L',
+                  'sequence': 22,
+                  'lessonId': 22
+                }
+              ]
+            },
+
+            {
+              'subjectId': 4,
+              'status': 'Y',
               'title': '股票投资初级课',
               'lessons': [
                 {
