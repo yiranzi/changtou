@@ -68,6 +68,7 @@
   import {eventMap} from '../../frame/eventConfig'
   import qqAuth from '../../plugin/thirdPartyQQ'
   import wxAuth from '../../plugin/thirdPartyWX'
+  import {Device, platformMap} from '../../plugin/device'
   export default{
     vuex: {
       getters: {
@@ -85,8 +86,11 @@
         plainPassword: '',
         identity: '',
         disabled: true,
-        qqInstalled: false, //是否安装QQ
-        wxInstalled: false //是否安装微信
+        qqIcon: '',               // 是否居中
+        wxIcon: '',                // 是否居中
+        showQQ: true,               // 是否显示qq
+        showWx: true,        //  是否显示微信
+        IconPosCen: ''
       }
     },
     watch: {
@@ -108,35 +112,53 @@
       }
     },
     route: {
-      data () {
+      data (transition) {
         this.plainPassword = ''
-      }
+        if (Device.platform === platformMap.IOS) {
+          const checkList = []
+          const me = this
+          checkList.push(qqAuth.checkQQInstalled())
+          checkList.push(wxAuth.checkWxInstalled())
+          return Promise.all(checkList).then(function (reArr) {
+            if (reArr[0] && reArr[1]) {
+              me.IconPosCen = ''
+            } else if (reArr[0] || reArr[1]) {
+              me.IconPosCen = 'icon-poscen'
+            } else {
+              me.IconPosCen = ''
+            }
+            return {
+              showQQ: reArr[0],
+              showWx: reArr[1],
+              IconPosCen: me.IconPosCen
+            }
+          })
+        }
+        }
     },
-    ready () {
-      const me = this
-      qqAuth.checkQQInstalled().then(function () {
-        me.qqInstalled = true
-      }).catch(function () {
-        me.qqInstalled = false
-      })
-      wxAuth.checkWxInstalled().then(function () {
-        me.wxInstalled = true
-        }).catch(function () {
-        me.wxInstalled = false
-      })
+    computed: {
+      isAuthPanelShow () {
+        return this.showQQ || this.showWx
+      },
+      qqIcon () {
+        return this.showQQ
+      },
+      wxIcon () {
+        return this.showWx
+      }
     },
     methods: {
 //     isInstalledWX, isInstalledQQ,
       onQQLoginTap () {
         const me = this
         qqAuth.QQAuth().then(
-            (qqCode) => {
-              me.loginByQQ(qqCode).then(
-                  (user) => {
-                    me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-                    window.history.back()
-                  }
-              )
+            qqCode => {
+                me.loginByQQ(qqCode).then(
+                    user => {
+                        me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                        window.history.back()
+                    }
+                )
             }
         ).catch(
             err => { me.errTip = err }
@@ -145,12 +167,12 @@
       onWxLoginTap () {
         const me = this
         wxAuth.WxAuth().then(
-          function (wxCode) {
+          wxCode => {
             me.loginByWx(wxCode).then(
-                (user) => {
-                  me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-                  window.history.back()
-                }
+              user => {
+                me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                window.history.back()
+              }
             )
           }
         ).catch(

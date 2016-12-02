@@ -4,8 +4,6 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache, clearLocalCache} from '../../util/cache'
-//import {getLocalCache, setLocalCache} from '../../util/cache'
-//import {setIconBadgeNumber} from '../../plugin/jpush'
 
 //export const loadUserFromCache = ({ dispatch }) => {
 //  const user = getLocalCache('frame-user')
@@ -18,10 +16,12 @@ import {getLocalCache, clearLocalCache} from '../../util/cache'
  * @param user
  */
 const updateAppUser = (dispatch, user) => {
-  // 分别设置  user，系统消息，策略产品权限，鼓励师权限信息
+  // 分别设置  user，系统消息，小投答疑新消息数目, 策略产品权限，鼓励师权限信息
   if (user) {
     dispatch('USER_UPDATE', user)
     dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', user.newMessageNum)
+    //console.log('user.newSuggestionReplyNum', user.newSuggestionReplyNum)
+    dispatch('HELP_UPDATE_NEW_SUGGESTION_NUM', user.newSuggestionReplyNum)
     // todo 设置鼓励师权限
     // todo 设置产品策略类权限
   }
@@ -111,7 +111,9 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  * @param dispatch
  */
 export const logout = ({ dispatch }) => {
-  dispatch('USER_LOGOUT')
+  return Promise.resolve().then(function () {
+    dispatch('USER_LOGOUT')
+  })
 }
 
 /**

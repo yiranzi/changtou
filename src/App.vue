@@ -51,7 +51,7 @@
 <script>
   import store from './vuex/store'
   import {messageActions} from './vuex/actions'
-  import {messageGetters} from './vuex/getters'
+  import {messageGetters, helpGetters} from './vuex/getters'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
@@ -73,7 +73,8 @@
       getters: {
         route: (state) => state.route,
         direction: (state) => state.global.direction,
-        newMsgNum: messageGetters.newMsgNum
+        newMsgNum: messageGetters.newMsgNum,
+        newSuggestionNum: helpGetters.newSuggestionNum
       },
 
       actions: {
@@ -89,7 +90,8 @@
 
     computed: {
       badgeNewMsgNum () {
-        return this.newMsgNum ? (this.newMsgNum + '') : ''
+        let num = this.newSuggestionNum + this.newMsgNum
+        return num ? (num + '') : ''
       },
 
       isTabbarView () {

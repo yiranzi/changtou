@@ -51,12 +51,11 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Toast from 'vux/toast'
-  import {mineActions, globalActions} from '../../vuex/actions'
+  import {mineActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        updateContent: mineActions.updateContent,
-        showAlert: globalActions.showAlert
+        updateContent: mineActions.updateContent
       }
     },
 

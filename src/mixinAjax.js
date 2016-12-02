@@ -4,9 +4,18 @@
  * 全局的ajax 拦截 处理
  */
 import {setAjaxInterceptors, responseCodeMap} from './frame/ajax'
+import {jpushSetAlias} from './vuex/jpush/actions'
+import {userActions} from './vuex/actions'
 //import {eventMap} from './frame/eventConfig'
 
 const mixin = {
+  vuex: {
+    actions: {
+      logout: userActions.logout,
+      jpushSetAlias
+    }
+  },
+
   created () {
     // 配置ajax拦截请求
     setAjaxInterceptors(this.requestIntercepter, this.responIntercepter)
@@ -44,6 +53,11 @@ const mixin = {
       } else if (res.status === responseCodeMap.UNAUTHORIZED) {
         // todo 未授权,转去授权页面
         // 账户过期,请重新登录
+        const me = this
+        this.logout().then(function () {
+          me.jpushSetAlias('00')
+        })
+        this.showToast({message: '账户过期,请重新登录'})
         this.$route.router.go('/entry')
       }
     }

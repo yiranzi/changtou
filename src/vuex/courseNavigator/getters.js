@@ -15,3 +15,8 @@ export const expenseCourseList = (state) => {
 export const freeCourseList = (state) => {
   return state.navigator.freeCourseList
 }
+
+// 推荐课程
+export const recommends = (state) => {
+   return state.navigator.recommends
+}

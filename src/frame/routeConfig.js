@@ -226,7 +226,7 @@ export function configRouter (router) {
     '/strategy/professional/product': {
       component: require('../views/strategy/ProfessionalProduct.vue')
     },
-    '/strategy/duoyizi/faq': {
+    '/strategy/duoyinzi/faq': {
       component: require('../views/strategy/DuoYinZiFaq.vue')
     },
     //延期说明

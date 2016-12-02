@@ -90,14 +90,13 @@
 </style>
 <script>
   import Alert from 'vux/alert'
-  import {dailyQuestionActions, globalActions} from '../../vuex/actions'
+  import {dailyQuestionActions} from '../../vuex/actions'
   import {dailyQuestionGetters, userGetters} from '../../vuex/getters'
   export default {
     vuex: {
       actions: {
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        submitAnswer: dailyQuestionActions.submitAnswer,
-        showAlert: globalActions.showAlert
+        submitAnswer: dailyQuestionActions.submitAnswer
       },
       getters: {
         dailyQuestion: dailyQuestionGetters.question,
