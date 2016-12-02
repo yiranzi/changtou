@@ -10,22 +10,25 @@
             <p>累计学习时间</p>
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
-          <div>
-            <span v-touch:tap="goToMyHomework">
-              <img>
+
+          <div class="homework-panel">
+            <span v-touch:tap="goToMyHomework" class="homework-item">
+              <img src="../../assets/styles/image/myCourse/homework.png">
               <p>我的作业</p>
             </span>
-            <span v-touch:tap="goToMyDiploma">
-              <img>
+            <span v-touch:tap="goToMyDiploma" class="homework-item">
+              <img src="../../assets/styles/image/myCourse/diploma.png">
               <p>毕业证书</p>
             </span>
           </div>
+
           <div class="changtou-card" v-if="card">
             <span class="left-round"></span>
             长投VIP卡 有效日期至{{validity}}
             <span class="right-round"></span>
             <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
+
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
             <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
@@ -245,6 +248,29 @@ export default {
       color: #fff;
       .time{
         font-size: 90/40rem;
+      }
+    }
+    .homework-panel{
+      width: 100%;
+      height: 160/40rem;
+      padding: 24/40rem 0;
+      box-sizing: border-box;
+      background: #fff;
+      border-bottom: 20/40rem solid #f0eff5;
+      font-size: 0;
+      .homework-item{
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        img{
+          width: 68/40rem;
+          height: 60/40rem;
+        }
+        p{
+          margin-top: 10/40rem;
+          font-size: 22/40rem;
+          color: #444;
+        }
       }
     }
     .changtou-card{
