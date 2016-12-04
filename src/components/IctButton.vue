@@ -33,7 +33,7 @@
   }
 </script>
 <style lang="less">
-  @height-ict-button: 2.1rem;
+  @height-ict-button: 2.2rem;
   @font-ict-button: 0.9rem;
   @radius-ict-border: 5px;
 
@@ -81,6 +81,8 @@
   }
 
   &.ict-btn-mini {
+    width: 5rem;
+    min-width: 5rem;
     display: inline-block;
   }
 
@@ -130,6 +132,10 @@
 
   //disabled
   .ict-btn-disabled {
+    &.ict-btn-mini{
+      color: #fff;
+      background-color: #bbb;
+    }
     &.ict-btn-default{
       color: @color-default-disabled-text-color;
       background-color: @color-default-disabled-background;

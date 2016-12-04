@@ -1,6 +1,6 @@
 <template>
     <div class="spec-topic">
-      <div class="top-back-btn" v-touch:tap="back"></div>
+      <div class="top-back-btn" v-touch:tap="back" v-el:titlebar></div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="content">
           <div class="spec-description">
@@ -35,7 +35,7 @@
         </div>
       </scroller>
       <div class="bottom-area" v-el:bottom-btn >
-        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}">
+        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
           <span class="disPrice">￥{{ priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
@@ -48,7 +48,8 @@
 <style lang="less">
   .spec-topic{
     position: relative;
-
+    width: 100%;
+    height: 100%;
     .top-back-btn {
       position: absolute;
       height: 2rem;
@@ -173,6 +174,8 @@
     }
     .bottom-area{
       .buttom-btn{
+        position: absolute;
+        bottom: 0;
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
@@ -217,7 +220,15 @@
     },
 
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/ST\//.test(transition.from.path)) {
+          transition.redirect('/mycourse')
+        }
+        transition.next()
+      },
       data ({to: {params: {stpId}}}) {
+        this.stpId = stpId
+
         let taskArr = []
         taskArr.push(this.loadSpecTopic(stpId))
 
@@ -239,7 +250,8 @@
 
     data () {
       return {
-        scrollerHeight: '590px',
+        stpId: '',
+        scrollerHeight: '0px',
         isBuySubject: false,
         isLoadedFail: false //数据是否加载完毕
       }
@@ -260,17 +272,15 @@
     watch: {
       'specTopicInfo': function () {
         var me = this
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
 //              top: 0
           })
         })
-        }, 9000)
+        }, 300)
       }
-    },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
     },
     methods: {
       back () {
@@ -293,6 +303,14 @@
           }
         }
         return ret
+      },
+      toBuy () {
+        //跳转到订单页面
+        const path = '/pay-ST-' + this.$route.params.stpId
+        this.$route.router.on(path, {
+          component: require('../pay/SpecTopicOrder.vue')
+        })
+        this.$route.router.go(path)
       }
     },
     components: {

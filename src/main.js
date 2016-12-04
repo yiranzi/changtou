@@ -1,63 +1,76 @@
-//import 'babel-polyfill'
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
-import VueRouter from 'vue-router'
 import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
-import {configRouter} from './frame/routeConfig'
+import {appRouter} from './util/appRouter'
+import {eventMap} from './frame/eventConfig'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
 Vue.use(VueResource)
-Vue.use(VueRouter)
-
-const appRouter = new VueRouter({
-  hashbang: true
-})
-
-configRouter(appRouter)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
 
 // start run app
-if (process.env.NODE_ENV === 'development') {
+//if ((Device.platform === platformMap.WEB)) {
   // on develop environment
-  appRouter.start(App, 'app')
-} else {
+//  appRouter.start(App, 'app')
+//  eventBus.emit(eventMap.APP_START)
+//} else {
   // on production environment
 
-  const app = {
+  //const app = {
     // Application Constructor
-    initialize: function () {
-      this.bindEvents()
-    },
+    //initialize: function () {
+    //  this.bindEvents()
+    //},
+
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function () {
-      document.addEventListener('deviceready', this.onDeviceReady, false)
-    },
+    //bindEvents: function () {
+    //  document.addEventListener('deviceready', this.onDeviceReady, false)
+    //},
+
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function () {
+    //onDeviceReady: function () {
       //app.receivedEvent('deviceready');
-      appRouter.start(App, 'app')
-      window.navigator.splashscreen.hide()
-    },
+
+      //eventBus.emit(eventMap.APP_START)
+
+// =====手机=====
+// const onDeviceReady = function () {
+//  appRouter.start(App, 'app')
+//  setTimeout(function () {
+//    appRouter.app.$emit(eventMap.APP_START)
+//  }, 50)
+// }
+// document.addEventListener('deviceready', onDeviceReady, false)
+
+// =====网页=====
+appRouter.start(App, 'app')
+setTimeout(function () {
+  appRouter.app.$emit(eventMap.APP_START)
+}, 50)
+
+    //},
     // Update DOM on a Received Event
-    receivedEvent: function (id) {
-      var parentElement = document.getElementById(id)
-      var listeningElement = parentElement.querySelector('.listening')
-      var receivedElement = parentElement.querySelector('.received')
+    //receivedEvent: function (id) {
+    //  var parentElement = document.getElementById(id)
+    //  var listeningElement = parentElement.querySelector('.listening')
+    //  var receivedElement = parentElement.querySelector('.received')
+    //
+    //  listeningElement.setAttribute('style', 'display:none;')
+    //  receivedElement.setAttribute('style', 'display:block;')
+    //
+    //  console.log('Received Event: ' + id)
+    //}
+  //}
 
-      listeningElement.setAttribute('style', 'display:none;')
-      receivedElement.setAttribute('style', 'display:block;')
-
-      console.log('Received Event: ' + id)
-    }
-  }
-  app.initialize()
-}
+  //app.initialize()
+//}

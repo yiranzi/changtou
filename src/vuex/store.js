@@ -11,11 +11,19 @@ import courseRecords from './courseRecords/store'
 import courseDetail from './courseDetail/store'
 import myCourses from './myCourse/store'
 import mine from './mine/store'
-import systemMessageList from './systemMessageList/store'
-import specTopic from './topicSpec/store'
-import commonTopic from './topicCommon/store'
-
-  Vue.use(Vuex)
+import message from './message/store'
+import topicSpec from './topicSpec/store'
+import topicCommon from './topicCommon/store'
+import interview from './interview/store'
+import dailyQuestion from './dailyQuestion/store'
+import newertest from './newertest/store'
+import homeworkEssay from './homework/essay/store'
+import homeworkChoice from './homework/choice/store'
+import help from './help/store'
+import strategyIntro from './strategy/intro/store'
+import strategyProduct from './strategy/product/store'
+import strategyNotice from './strategy/notice/store'
+Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     mine, //个人中心
@@ -26,8 +34,17 @@ export default new Vuex.Store({
     navigator, //首页信息
     courselist, //课程列表
     myCourses, //我的课程
-    systemMessageList, //系统消息
-    specTopic,
-    commonTopic
+    message, //系统消息
+    topicSpec, //打包课专题
+    topicCommon, //通用专题
+    interview, //院生访谈
+    dailyQuestion, //每日一题
+    newertest, //新手测试
+    homeworkEssay, // 问答题
+    homeworkChoice, // 选择题
+    help, //小投答疑
+    strategyIntro, // 策略产品 宣传
+    strategyProduct, // 策略产品 数据
+    strategyNotice // 滚动通知文字
   }
 })

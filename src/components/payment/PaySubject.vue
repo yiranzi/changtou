@@ -1,34 +1,35 @@
 /**
  * Created by jun on 2016/9/29.
+  订单 课程列表
 
-@example
-<pay-subject :course-list="courseList"></pay-subject>
-courseList: [
-  {
-    img: '图片',
-    title: '主标题',
-    description: '副标题',
-    price: 100
-  },
-  {
-    img: '图片',
-    title: '主标题',
-    description: '副标题',
-    price: 0
-  }
-],
+  @example
+  <!--<pay-subject :course-list="courseList"></pay-subject>-->
+  courseList: [
+    {
+      pic: '图片',
+      title: '主标题',
+      description: '副标题',
+      price: 100
+    },
+    {
+pic: '图片',
+      title: '主标题',
+      description: '副标题',
+      price: 0
+    }
+  ]
 
  */
 <template>
-  <div class="pay-course-list" v-for="course in courseList">
-    <img class="pay-course-list-img"
-         v-touch:tap="gotoCourseDetail(myCourses[$index].type,$index)"
-         v-bind:src=courseList[$index].pic>
-    <div class="pay-course-list-info"
-         v-touch:tap="gotoCourseDetail($index)">
-      <p class="pay-course-list-title">{{course.title}}</p>
-      <p class="pay-course-list-subtitle">{{course.description}}</p>
-      <p class="pay-course-list-price"><span v-if="courseList[$index].price">￥{{course.price}}</span></p>
+  <div v-if="isShow()">
+    <div class="pay-course-list" v-for="course in courseList">
+      <img class="pay-course-list-img"
+           v-bind:src=course.pic>
+      <div class="pay-course-list-info">
+        <p class="pay-course-list-title">{{course.title}}</p>
+        <p class="pay-course-list-subtitle">{{course.subtitle}}</p>
+        <p class="pay-course-list-price"><span v-if="course.price">￥{{course.price}}</span></p>
+      </div>
     </div>
   </div>
 </template>
@@ -36,8 +37,12 @@ courseList: [
 export default {
   props: {
     courseList: {
-      type: Array,
-      required: true
+      type: Array
+    }
+  },
+  methods: {
+    isShow () {
+      return this.courseList && this.courseList.length > 0
     }
   }
 }

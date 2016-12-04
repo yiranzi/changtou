@@ -68,22 +68,22 @@
   }
 </style>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
-  import {systemMessageListGetters} from '../../vuex/getters'
-  import {systemMessageListActions} from '../../vuex/actions'
+  import {messageGetters} from '../../vuex/getters'
+  import {messageActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        loadMessageList: systemMessageListActions.loadMessageList
+        loadMsgArr: messageActions.loadMsgArr
       },
       getters: {
-        msgArr: systemMessageListGetters.msgArr
+        msgArr: messageGetters.msgArr
       }
     },
     route: {
       data (transition) {
-        this.loadMessageList().then(
+        this.loadMsgArr().then(
           function () {
             transition.next()
           },

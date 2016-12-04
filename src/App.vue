@@ -8,80 +8,129 @@
         <span class="home-icon" slot="icon"></span>
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" badge="9">
+      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
         <span class="my-icon" slot="icon"></span>
-        <span slot="label"><span v-if="componentName" class="vux-demo-tabbar-component">{{componentName}}</span><span v-else>我的课程</span></span>
+        <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" show-dot>
+      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
     </tabbar>
 
-    <!--global-->
-    <alert :show.sync="isAlert" button-text="知道了" class="ict-alert">{{alertMsg}}</alert>
-    <toast :show.sync="isToast" class="ict-toast" :type="toastType">{{toastMsg}}</toast>
-    <confirm :show.sync="isConfirm"
-             :title="confirmTitle"
-             :confirm-text="confirmText"
-             :cancel-text="cancelText"
-             @on-confirm="onAction('confirm')"
-             @on-cancel="onAction('cancel')">
-      <p style="text-align:center;">{{{confirmMsg}}}</p>
+    <alert :show.sync="alertBox.show"
+           :button-text="alertBox.btnText"
+           class="ict-alert">{{alertBox.message}}</alert>
+    <toast class="ict-toast"
+           :show.sync="toast.show"
+           :type="toast.type">{{toast.message}}</toast>
+    <confirm
+             :show.sync="confirmBox.show"
+             :title="confirmBox.title"
+             :confirm-text="confirmBox.okText"
+             :cancel-text="confirmBox.cancelText"
+             @on-confirm="confirmBox.okCallback"
+             @on-cancel="confirmBox.cancelCallback">
+      <p style="text-align:center;">{{{confirmBox.message}}}</p>
     </confirm>
+
+    <div id="mask"></div>
+
+
+    <!--新手测试-->
+    <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
+      <!--<div class="newertest-pop-close" v-touch:tap="closeNewerTestPop"></div>-->
+      <!--<div class="newertest-pop-img">-->
+        <!--<img src="./assets/styles/image/newertest/tip/tipImg.png" style=" width: 16.7rem; height: 10.4rem;">-->
+      <!--</div>-->
+    <!--</div>-->
+
   </div>
 </template>
 
 <script>
   import store from './vuex/store'
-  import {userActions, courseRecordActions} from './vuex/actions'
+  import {messageActions} from './vuex/actions'
+  import {messageGetters, helpGetters} from './vuex/getters'
   import Alert from 'vux/alert'
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
+  import {setLocalCache, getLocalCache} from './util/cache'
+
+  import mixinEvent from './mixinEvent'
+  import mixinAjax from './mixinAjax'
+  import mixinModal from './mixinModal'
+  import mixinBackHandler from './mixinBackHandler'
+  import mixinNetwork from './mixinNetwork'
 
   export default {
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork],
+
     store,
 
     vuex: {
       getters: {
         route: (state) => state.route,
-        direction: (state) => state.direction
+        direction: (state) => state.global.direction,
+        newMsgNum: messageGetters.newMsgNum,
+        newSuggestionNum: helpGetters.newSuggestionNum
       },
 
       actions: {
-        initUser: userActions.initUser,
-        loadFreeRecords: courseRecordActions.loadAllFreeRecords,
-        loadExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        addNewMessageNum: messageActions.addNewMessageNum
       }
     },
 
     data () {
-      return store.state.global
-    },
-
-    created () {
-      //初始化，加载用户
-      this.initUser()
-
-      //加载课程进度
-      this.loadFreeRecords()
-      this.loadExpenseRecords()
+      return {
+        isShowNewTestPop: false
+      }
     },
 
     computed: {
+      badgeNewMsgNum () {
+        let num = this.newSuggestionNum + this.newMsgNum
+        return num ? (num + '') : ''
+      },
+
       isTabbarView () {
         return this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse'
       }
     },
 
+    created () {
+      this.showNewTestPopIf()
+    },
+
     methods: {
+      /**
+       * 接收消息, 显示消息提示
+       */
+      onReceiveNotification () {
+        this.addNewMessageNum()
+      },
+
       onAction (type) {
         if (type === 'confirm') {
           this.confirmHandler()
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
+      },
+
+      //判断是否显示新手测试弹框
+      showNewTestPopIf () {
+        if (getLocalCache('first-test')) {
+          this.isShowNewTestPop = false
+        } else {
+          this.isShowNewTestPop = true
+        }
+      },
+      //关闭新手测试弹框
+      closeNewerTestPop () {
+        this.isShowNewTestPop = false
+        setLocalCache('first-test', true)
       }
     },
 
@@ -118,14 +167,13 @@
     height: 100%;
   }
 
-
   /**
   * vue-router transition
   */
   .vux-pop-out-transition,
   .vux-pop-in-transition {
     width: 100%;
-    animation-duration: 0.5s;
+    animation-duration: 0.3s;
     animation-fill-mode: both;
     backface-visibility: hidden;
   }
@@ -219,7 +267,9 @@
   }
 
   .weui_tabbar{
-    &_item{
+    height: 2.45rem;
+    & &_item{
+      padding-top: 2px;
       text-decoration: initial;
       .weui_tabbar_icon{
         display: block;
@@ -245,7 +295,6 @@
     }
   }
 
-
   .ict-tabber{
     &-icon{
       display: block;
@@ -253,6 +302,7 @@
       height: 1.4rem;
     }
   }
+
   .home-icon:before{
     color: #7a7a7a;
     font-family: 'myicon';
@@ -260,6 +310,7 @@
     line-height: 1.4rem;
     content: '\e900';
   }
+
   .weui_tabbar_item.weui_bar_item_on .home-icon:before {
     content: '\e901';
     color: #409af4;
@@ -287,4 +338,30 @@
     color: #409af4;
   }
 
+  .ict-alert{
+
+  }
+  .ict-confirm{
+
+  }
+  .ict-toast{
+
+  }
+  .ict-float-mask{
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.6);
+  }
+  .ict-float-component{
+    position: fixed;
+    z-index: 5000;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 </style>

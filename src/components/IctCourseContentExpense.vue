@@ -3,14 +3,15 @@
     <div v-for="lesson in lessons" v-touch:tap="updateSelectedLesson(lesson, $event)">
       <div class="lesson-title">
         <span class="lesson-title-title">{{lesson.title}}</span>
-        <span v-bind:class="[(lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false) : false) ? 'lesson-title-roll-up' : 'lesson-title-roll-down']"></span>
+        <span v-bind:class="[(lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false) : false) ? 'lesson-title-roll-up' : 'lesson-title-roll-down']"></span>
       </div>
 
       <!--<div v-show="lesson.lessonId === (selectedLesson ? selectedLesson.lessonId : 0)"-->
-      <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isRollUp : false): false"
+      <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false): false"
            transition="expand"
-           v-bind:style="{height: (lesson.lessonDetailsList.length) * 11/4 + 'rem'}" >
-        <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter)"
+           v-bind:style="{height: (lesson.lessonDetailsList.length +
+           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C' ? 1 : 0)) * 11/4 + 'rem'}" >
+        <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
           <span style="width: 85%">
             <span class="number">{{$index+1}}</span>
@@ -19,6 +20,22 @@
           </span>
           <span v-if="lesson.type === 'C'" style="color: #00b0f0; font-size:0.6rem">可试听</span>
         </div>
+
+        <!--选择题作业-->
+        <div v-if="lesson.choiceQuestion.length > 0 && lesson.type !== 'C'" class="chapter-title"
+             v-touch:tap="onHomeworkChoiceTap()">
+          <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
+          <span class="chioce-icon"></span>
+          &nbsp;&nbsp;课后作业
+        </div>
+
+        <!--问答题作业-->
+        <div v-if="lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C'" class="chapter-title"
+             v-touch:tap="onHomeworkEssayTap()">
+          <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
+          <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
+        </div>
+
       </div>
     </div>
 
@@ -36,6 +53,18 @@
     /*.lesson-title:first-child {*/
       /*margin-top: 0;*/
     /*}*/
+
+    .chioce-icon:before{
+      font-family: 'myicon';
+      content: '\e916';
+      font-size: 0.7rem !important;
+    }
+
+    .homework-icon:before{
+      font-family: 'myicon';
+      content: '\e91f';
+      font-size: 0.7rem !important;
+    }
 
     .lesson-title {
       display: flex;
@@ -134,22 +163,52 @@
       'selectedChapter'
     ],
 
-    watch: {
-      'lessons': function (newlessons, oldLessons) {
-        this.lessonListType = newlessons.map(({lessonId}) => {
-          return {lessonId: lessonId, isRollUp: false}
-        })
+    data () {
+      return {
+        lessonListType: [],
+        selectChapterIndex: -1
       }
     },
 
-    data () {
-      return {
-        lessonListType: []
+    watch: {
+      'lessons': function (newlessons, oldLessons) {
+        this.lessonListType = newlessons.map(({lessonId}) => {
+            return {lessonId: lessonId, isUnfold: false}
+          })
       }
     },
 
     ready () {
       this.selectedLesson = this.lessons[0]
+    },
+
+    events: {
+      /**
+       * 试听事件
+       */
+      'audition': function (lesson) {
+        //  展开某(第)一个lesson
+        this.selectedLesson = lesson
+
+        const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+        if (this.isLessonUnfold(lessonIndex)) {
+          // to do nothing
+        } else {
+          this.unfoldLesson(lessonIndex)
+        }
+
+        this.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
+      },
+
+      /**
+       * 播放下一章节
+       */
+      'playNextCapterExpense': function () {
+        // 如何合理, 自动播放下一章节
+        if (this.selectChapterIndex + 1 < this.selectedLesson.lessonDetailsList.length) {
+          this.updateSelectedChapter(this.selectedLesson.lessonDetailsList[this.selectChapterIndex + 1], this.selectChapterIndex + 1)
+        }
+      }
     },
 
     methods: {
@@ -158,23 +217,74 @@
 
         // 则设置开关列表状态
         if ($event.target.className.includes('lesson-title')) { // 若是选中的是 lesson 而不是 chapter
-          let index = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
-          if (index > -1) {
+          const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+          if (this.isLessonUnfold(lessonIndex)) {
+            this.rollupLesson(lessonIndex)
+          } else {
+            this.unfoldLesson(lessonIndex)
+          }
+        }
+      },
+
+      updateSelectedChapter (chapter, $index) {
+        this.selectedChapter = chapter
+        this.selectChapterIndex = $index
+        // 向父组件派发事件
+        this.$dispatch('chapterSelectedExpense', chapter, $index, 'common')
+      },
+
+      /**
+       * 点击选择题
+       */
+      onHomeworkChoiceTap () {
+        this.$dispatch('chapterSelectedExpense', null, 0, 'choice')
+      },
+
+      /**
+       * 点击问答题
+       */
+      onHomeworkEssayTap () {
+        this.$dispatch('chapterSelectedExpense', null, 0, 'essay')
+      },
+
+      /**
+       * 展开某个lesson
+       * (自动卷起 其他lesson)
+       **/
+      unfoldLesson: function (lessonIndex) {
+//        const index = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lesson.lessonId)
+        if (lessonIndex > -1) {
+          if (!this.lessonListType[lessonIndex].isUnfold) {
             this.lessonListType = this.lessonListType.map(function (item, itemIndex) {
-              if (index !== itemIndex) {
-                item.isRollUp = false
+              if (lessonIndex === itemIndex) {
+                item.isUnfold = true
               } else {
-                item.isRollUp = !item.isRollUp
+                item.isUnfold = false
               }
               return item
             })
           }
         }
       },
-      updateSelectedChapter (chapter) {
-        this.selectedChapter = chapter
-        // 向父组件派发事件
-        this.$dispatch('chapterSelected', chapter)
+
+      /**
+       *  卷起某个lesson
+       **/
+      rollupLesson: function (lessonIndex) {
+        if (lessonIndex > -1) {
+          this.lessonListType[lessonIndex].isUnfold = false
+        }
+      },
+
+      /**
+       * lesson 是否处于展开状态
+       */
+      isLessonUnfold: function (lessonIndex) {
+        if (lessonIndex > -1) {
+          return this.lessonListType[lessonIndex].isUnfold
+        } else {
+          return true
+        }
       }
     }
   }

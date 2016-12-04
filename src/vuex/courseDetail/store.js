@@ -76,8 +76,9 @@ const mutations = {
    */
   DETAIL_UPDATE_EXPENSE_SUBJECT (state, {subjectId, subject}) {
     //查找元素是否存在
-    let index = findSubjectIndexInDetailArr(subjectId, state.expenseDetailArr)
-    if (index > 0) { // 若存在,更新
+    const index = findSubjectIndexInDetailArr(subjectId, state.expenseDetailArr)
+
+    if (index > -1) { // 若存在,更新
       subject['subjectId'] = subjectId
       state.expenseDetailArr.$set(index, Object.assign({}, subject))
     } else { //不存在,插入
@@ -93,9 +94,9 @@ const mutations = {
    */
   DETAIL_UPDATE_EXPENSE_LESSIONS (state, {subjectId, lessons}) {
     //查找元素是否存在
-    let index = findSubjectIndexInDetailArr(subjectId, state.expenseDetailArr)
+    const index = findSubjectIndexInDetailArr(subjectId, state.expenseDetailArr)
 
-    if (index > 0) { // 若存在,更新
+    if (index > -1) { // 若存在,更新
       state.expenseDetailArr.$set(index, Object.assign(state.expenseDetailArr[index], {lessons: lessons}))
     } else { //不存在,插入
       let subject = {subjectId, lessons: lessons}

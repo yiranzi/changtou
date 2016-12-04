@@ -8,6 +8,7 @@
       <p>
         {{title}}
         <slot name="after-title"></slot>
+        <slot name="badge"></slot>
       </p>
     </div>
     <div class="ict-item-value with-arrow" >
@@ -58,7 +59,7 @@ export default {
     display: flex;
     align-items: center;
     line-height: @height-ict-item;
-    padding: 0 0.6rem 0 1.2rem;
+    padding: 0 1rem;
     background: @color-ict-item-normal-background;
     .ict-item-title{
       flex: 1;
@@ -69,6 +70,7 @@ export default {
     .ict-item-value{
       flex: 1;
       text-align: right;
+      padding-right: 1.5rem;
       font-size: @size-ict-item-value-font;
       color: @color-ict-item-value-font;
     }
@@ -79,10 +81,8 @@ export default {
       bottom: 0;
       width: 100%;
       height: 1px;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid #f0eff5;
       color: #ccc;
-      transform-origin: 0 100%;
-      transform: translate3d(1rem, 0, 0) scaleY(0.5);
     }
   }
 
@@ -90,13 +90,14 @@ export default {
     content: " ";
     display: inline-block;
     transform: rotate(45deg);
-    height: 6px;
-    width: 6px;
-    border-width: 2px 2px 0 0;
+    height: 12px;
+    width: 12px;
+    border-width: 1px 1px 0 0;
     border-color: @color-ict-item-value-font;
     border-style: solid;
     position: absolute;
-    right: 1rem;
+    right: 1.5rem;
+    top: 0.7rem;
     margin-left: .3em;
   }
 

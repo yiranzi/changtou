@@ -14,10 +14,11 @@
            v-bind:style="{ transform: ctrTranslate}"></div>
 
       <div class="progress-box" v-el:progress>
-        <div class="progress" v-bind:style="{ width: ctrOffsetX + 'px' }"></div>
+        <div class="progress" v-bind:style="{ width: ctrOffset + 'px' }"></div>
         <div class="cache"></div>
       </div>
       <div class="timer">&nbsp; {{currentTime}}/{{totalTime}}</div>
+      <div v-touch:tap="onFullScreenTap" v-show="isFullScreen" class="full-screen-icon"></div>
     </div>
   </div>
 </template>
@@ -92,6 +93,16 @@
     color: #fff
     /*felx: none;*/
   }
+
+  .full-screen-icon{
+    line-height: 40px;
+    padding: 0 15px;
+    &:before{
+      font-family: 'myicon';
+      content: '\e918';
+      font-size: 1rem;
+    }
+  }
 </style>
 
 <script>
@@ -99,10 +110,14 @@
   import {webAudio} from '../util/audio/web'
 //  import HeaderComponent from './components/header.vue'
   export default {
-    props: [
-      'src',
-      'isShow'
-    ],
+    props: {
+      direction: {
+        default: 'horizon'
+      },
+      src: {
+        default: ''
+      }
+    },
 
     data () {
       return {
@@ -110,20 +125,32 @@
         intervalId: 0,
         currentTime: '00:00',
         totalTime: '00:00',
-        ctrOffsetX: 0, //控制器移动的距离
-        maxOffextX: 0, //最远移动距离
+        ctrOffset: 0, //控制器移动的距离
         ctrTranslate: '',
         status: 'pause' // {'play' | 'pause' | 'stop'}
       }
     },
 
+    computed: {
+      isFullScreen () {
+        return this.direction === 'horizon'
+      }
+    },
+
     watch: {
       'src': function (val, oldVal) {
-//        console.log('新消息', val)
+        if (val && !this.isInitListeners) {
+          this.isInitListeners = true
+          this.addDragEvents()
+          this.addAudioListens()
+          this.startTimerTask()
+        }
+
         webAudio.create(val)
         //设置音频地址后, 200毫秒开始自动播放
         setTimeout(() => webAudio.play(), 200)
       },
+
       'status': function (val, oldVal) {
         if (val === 'play') {
           this.startTimerTask()
@@ -131,21 +158,9 @@
           this.stopTimerTask()
         }
       },
-      'ctrOffsetX': function (val, oldVal) {
-//        const {ctr} = this.$els
-        //设置控制器的位移
-//        const transformStyleName = 'webkitTransform' in document.createElement('div').style ? 'webkitTransform' : 'transform'
-////        console.log('前', ctr, ctr.attributes[1])
-//        ctr.style[transformStyleName] = 'translate3d(' + (val || 0) + 'px, 0px, 0px'
-//        ctr.style['transform'] = 'translate3d(' + (val || 0) + 'px, 0px, 0px'
+
+      'ctrOffset': function (val, oldVal) {
         this.ctrTranslate = 'translate3d(' + (val || 0) + 'px, 0px, 0px)'
-      },
-      'isShow': function (newVal) {
-        if (newVal && !this.isInitListeners) {
-          this.isInitListeners = true
-          this.addDragEvents()
-          this.addAudioListens()
-        }
       }
     },
 
@@ -173,19 +188,19 @@
        */
       ctrTranslateXByAmplitude (amplitude) {
         const {progress: {clientWidth: maxOffsetX}} = this.$els
-        this.ctrOffsetX = maxOffsetX * amplitude
+        this.ctrOffset = maxOffsetX * amplitude
       },
 
       /**
        * 根据移动相对距离设置控制器位移
        */
-      ctrTranslateXByDeltaX (deltaX) {
-        this.ctrOffsetX = deltaX
+      ctrTranslateXByDelta (delta) {
+        this.ctrOffset = delta
       },
 
       reset () {
         this.stopTimerTask()
-        this.ctrTranslateXByDeltaX(0)
+        this.ctrTranslateXByDelta(0)
         this.currentTime = '00:00'
       },
 
@@ -194,13 +209,9 @@
        */
       addDragEvents () {
         const {ctr, progress} = this.$els
-//        console.log('progress', progress, progress.clientWidth)
-//        setTimeout(function () {
-//          console.log('xxxx', progress.clientWidth)
-//        }, 1000)
 
-        let originX = ctr.offsetLeft
-        let maxOffsetX = progress.clientWidth
+        const origin = ctr.offsetLeft
+        const maxOffset = progress.clientWidth
         let amplitude = 0 //当前进度(小数 0-1)
 
         ctr.addEventListener('touchstart', ({changedTouches}) => {
@@ -208,26 +219,23 @@
         })
 
         ctr.addEventListener('touchmove', ({changedTouches, target}) => {
-          let deltaX = changedTouches[0].clientX - originX
-          if (deltaX < 0) {
-            deltaX = 0
-          } else if (deltaX > maxOffsetX) {
-            deltaX = maxOffsetX
+          let delta = this.direction === 'horizon' ? (changedTouches[0].clientX - origin) : (changedTouches[0].clientY - origin)
+          if (delta < 0) {
+            delta = 0
+          } else if (delta > maxOffset) {
+            delta = maxOffset
           }
 
-          this.ctrTranslateXByDeltaX(deltaX)
-//          console.log('deltaX', deltaX, 'maxOffsetX', maxOffsetX)
+          this.ctrTranslateXByDelta(delta)
           //获得进度
-          amplitude = deltaX / maxOffsetX
+          amplitude = delta / maxOffset
           //设置时间轴
-//          console.log('amplitude', amplitude)
           this.setTimeByAmplitude(amplitude)
         })
 
         ctr.addEventListener('touchend', ({changedTouches, target}) => {
           this.startTimerTask()
           webAudio.seekToAmplitude(amplitude)
-//          console.log('touchend', originX)
         })
       },
 
@@ -245,9 +253,10 @@
           me.status = 'pause'
         })
 
-        webAudio.on(webAudio.events.playEnd, () => {
+        webAudio.on(webAudio.events.ended, () => {
           me.status = 'pause'
           me.reset()
+          me.$dispatch('audioPlayEnd')
         })
 
         webAudio.on(webAudio.events.loadMediaDuration, () => {
@@ -283,8 +292,11 @@
        */
       setTimeByAmplitude (amplitude) {
         this.currentTime = convertAudioTimeToString(webAudio.duration * amplitude)
-      }
+      },
 
+      onFullScreenTap () {
+        this.$dispatch('fullScreenTap')
+      }
     },
 
     events: {
@@ -296,16 +308,10 @@
       }
     },
 
-//    active () {
-//      //初始化一些
-//      //添加按钮拖动事件
-//      this.addDragEvents()
-//      this.addAudioListens()
-//    },
-
     beforeDestroy () {
+      // 注意, 这里逻辑暂时注释, 因为所有的音频控件只可能挂在同一个 audio 上, 不影响操作
       //解绑页面和音频关联的所有事件
-      webAudio.unAll()
+//      webAudio.unAll()
     }
   }
 </script>

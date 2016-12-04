@@ -1,6 +1,6 @@
 <template>
   <div class="common-topic">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <div class="top-back-btn" v-touch:tap="back" v-el:titlebar></div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <div v-for="commonContent in commonTopicInfo.content">
@@ -76,13 +76,14 @@
     },
     data () {
       return {
-        scrollerHeight: '560px',
+        scrollerHeight: '0px',
         ctpId: this.$route.params.ctpId
       }
     },
     watch: {
       'commonTopicInfo.content': function () {
         var me = this
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
@@ -93,6 +94,12 @@
       }
     },
     route: {
+      canActivate: function (transition) {
+        if (/\/pay\/success\/CT\//.test(transition.from.path)) {
+          window.history.go(-1)
+        }
+        transition.next()
+      },
       data (transition) {
         const ctpId = transition.to.params.ctpId
         this.loadCommonTopic(ctpId).then(
@@ -113,16 +120,17 @@
         )
       }
     },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-    },
     methods: {
       back () {
         window.history.back()
       },
       toBuy () {
         //跳转到订单页面
-        this.$route.router.go('/common/topic/order/' + this.ctpId)
+        const path = '/pay-CT-' + this.ctpId
+        this.$route.router.on(path, {
+          component: require('../pay/CommonTopicOrder.vue')
+        })
+        this.$route.router.go(path)
       }
     },
     components: {

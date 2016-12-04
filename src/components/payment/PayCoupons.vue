@@ -3,7 +3,7 @@
  *  订单 优惠选择
 
   @example
-  <pay-coupons :coupons="coupons" @on-change="change"></pay-coupons>
+  <!--<pay-coupons :coupons="coupons" @on-change="change"></pay-coupons>-->
   coupons: [
     {
       name: '长投卡'
@@ -15,10 +15,10 @@
 
  */
 <template>
-    <div class="order-coupons">
+    <div class="order-coupons" v-if="show">
       <p class="coupons-label">长投卡/优惠券（不可叠加使用）</p>
       <label v-for="coupon in coupons" for="coupons_{{$index}}" class="coupon-item">
-        <span>{{coupon.name}}</span>
+        <span>{{coupon.name}}</span><span v-if="!coupons.couponNo">省{{coupon.userBene}}元</span>
         <input class="coupon-item-check" type="radio" value="{{$index}}" checked="{{!$index}}" v-model="value" id="coupons_{{$index}}">
         <span class="coupon-item-checked"></span>
       </label>
@@ -27,22 +27,18 @@
 <script>
 export default {
   props: {
-    required: {
-      type: Boolean,
-      default: true
-    },
-    coupons: {
-      type: Array,
-      required: true
-    },
-    value: {
-      type: Array,
-      default: () => []
+    coupons: Array,
+    value: Array
+  },
+  computed: {
+    show () {
+      return (this.coupons && this.coupons.length > 0)
     }
   },
   watch: {
     value (newVal) {
-      this.$emit('on-change', JSON.parse(JSON.stringify(newVal)))
+      this.$dispatch('couponChange', newVal)
+      this.$emit('pay-coupons-change', newVal)
     }
   }
 }
@@ -114,23 +110,23 @@ export default {
     }
     .coupon-item-check{
       position: absolute;
-      left: -999em;
-        &:checked {
-          & + .coupon-item-checked {
-            border: 0;
-            &:before {
-              position: absolute;
-              display: block;
-              width: 1rem;
-              height: 1rem;
-              line-height: 1rem;
-              font-family: 'myicon';
-              content: '\e90c';
-              color: #00b0f0;
-              font-size: 1rem !important;
-            }
+      left: -1rem;
+      &:checked {
+        & + .coupon-item-checked {
+          border: 0;
+          &:before {
+            position: absolute;
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            line-height: 1rem;
+            font-family: 'myicon';
+            content: '\e90c';
+            color: #00b0f0;
+            font-size: 1rem !important;
           }
         }
+      }
     }
   }
 </style>

@@ -4,7 +4,7 @@
  */
 
 /**
- * 设置缓存
+ * 设置本地缓存
  * @param itemName
  * @param jsonData
  */
@@ -13,7 +13,7 @@ const setLocalCache = (itemName, jsonData) => {
 }
 
 /**
- * 获取缓存
+ * 获取本地缓存
  * @param itemName
  */
 const getLocalCache = (itemName) => {
@@ -21,15 +21,43 @@ const getLocalCache = (itemName) => {
 }
 
 /**
- * 清除缓存
+ * 清除本地缓存
  * @param itemName
  */
 const clearLocalCache = (itemName) => {
   window.localStorage.removeItem(`cache-${itemName}`)
 }
 
+/**
+ * 设置session缓存
+ * @param itemName
+ * @param jsonData
+ */
+const setSessionCache = (itemName, jsonData) => {
+  window.sessionStorage.setItem(`cache-${itemName}`, JSON.stringify(jsonData))
+}
+
+/**
+ * 获取session缓存
+ * @param itemName
+ */
+const getSessionCache = (itemName) => {
+  return JSON.parse(window.sessionStorage.getItem(`cache-${itemName}`))
+}
+
+/**
+ * 清除sesson缓存
+ * @param itemName
+ */
+const clearSessionCache = (itemName) => {
+  window.sessionStorage.removeItem(`cache-${itemName}`)
+}
+
 export {
   setLocalCache,
   getLocalCache,
-  clearLocalCache
+  clearLocalCache,
+  setSessionCache,
+  getSessionCache,
+  clearSessionCache
 }

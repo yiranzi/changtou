@@ -1,15 +1,82 @@
 /**
  * Created by jun on 2016/8/23.
  */
-import {postWithoutAuth, getWithinAuth} from '../../frame/ajax'
+import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-import {getLocalCache} from '../../util/cache'
+import {getLocalCache, clearLocalCache} from '../../util/cache'
 
-export const initUser = ({ dispatch }) => {
-  const user = getLocalCache('frame-user')
-  user && dispatch('UPDATE_USER', user)
+//export const loadUserFromCache = ({ dispatch }) => {
+//  const user = getLocalCache('frame-user')
+//  user && dispatch('UPDATE_USER', user)
+//}
+
+/**
+ * 全局更新 账户信息
+ * @param dispatch
+ * @param user
+ */
+const updateAppUser = (dispatch, user) => {
+  // 分别设置  user，系统消息，小投答疑新消息数目, 策略产品权限，鼓励师权限信息
+  if (user) {
+    dispatch('USER_UPDATE', user)
+    dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', user.newMessageNum)
+    //console.log('user.newSuggestionReplyNum', user.newSuggestionReplyNum)
+    dispatch('HELP_UPDATE_NEW_SUGGESTION_NUM', user.newSuggestionReplyNum)
+    // todo 设置鼓励师权限
+    // todo 设置产品策略类权限
+  }
 }
 
+export const loginByQQ = ({dispatch}, qqCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('qq_login'),
+          data: {
+            accessToken: qqCode.access_token,
+            openId: qqCode.userid
+          }
+        }).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        }).catch(
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ *
+ * @param dispatch
+ * @param wxCode
+ * @returns {Promise}
+ */
+export const loginByWx = ({dispatch}, wxCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('wx_app_login'),
+          data: {
+            code: wxCode.code
+          }
+        }).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        }).catch(
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
 /**
  * 登录
  * @param dispatch
@@ -29,11 +96,10 @@ export const login = ({ dispatch }, identity, plainPassword) => {
       }
     ).then(
       user => {
-        dispatch('UPDATE_USER', user)
-        resolve()
+        updateAppUser(dispatch, user)
+        resolve(user)
       },
       err => {
-        console.warn(err)
         reject(err)
       }
     )
@@ -45,7 +111,9 @@ export const login = ({ dispatch }, identity, plainPassword) => {
  * @param dispatch
  */
 export const logout = ({ dispatch }) => {
-  dispatch('LOGOUT_USER')
+  return Promise.resolve().then(function () {
+    dispatch('USER_LOGOUT')
+  })
 }
 
 /**
@@ -53,38 +121,82 @@ export const logout = ({ dispatch }) => {
  * @param dispatch
  */
 export const syncUser = ({ dispatch }) => {
-  getWithinAuth(
-    {
-      url: getUrl('sync_user')
+  const localUser = getLocalCache('frame-user')
+  return new Promise(
+    (resolve, reject) => {
+      // 如果本地没有记录, 直接返回
+      if (!localUser) {
+        reject(null)
+      } else {
+        getWithinAuth(
+          {
+            url: getUrl('sync_user'),
+            user: localUser
+          }
+        ).then(
+          user => {
+            updateAppUser(dispatch, user)
+            resolve(user)
+          },
+          err => {
+            clearLocalCache('frame-user')
+            reject(err)
+          }
+        )
+      }
     }
-  ).then(
-    user => {
-      dispatch('UPDATE_USER', user)
-    },
-    err => console.warn(err)
   )
 }
 
+/**
+ * 快速登录 手机号
+ * @param dispatch
+ * @param phone
+ */
+export const fastLoginStart = ({ dispatch }, phone) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('fast_login_post_pone'),
+          data: {
+            phone
+          }
+        }
+      ).then(
+        () => {
+          resolve()
+        },
+        err => console.warn(err)
+      )
+    }
+  )
+}
 /**
  * 快速登录
  * @param dispatch
  * @param phone
  * @param validationCode
  */
-export const fastLogin = ({ dispatch }, phone, validationCode) => {
-  postWithoutAuth(
-    {
-      url: getUrl('principal_login'),
-      data: {
-        phone,
-        validationCode
-      }
+export const fastLoginEnd = ({ dispatch }, phone, validationCode) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('fast_login_post_code'),
+          data: {
+            phone,
+            validationCode
+          }
+        }
+      ).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        },
+        err => console.warn(err)
+      )
     }
-  ).then(
-    user => {
-      dispatch('UPDATE_USER', user)
-    },
-    err => console.warn(err)
   )
 }
 
@@ -108,8 +220,7 @@ export const registerStart = ({ dispatch }, phone, plainPassword) => {
       ).then(
         () => resolve(),
         err => {
-          console.warn(err)
-          reject(err.message)
+          reject(err)
         }
       )
     })
@@ -136,12 +247,11 @@ export const registerEnd = ({ dispatch }, phone, plainPassword, validationCode) 
       }
     ).then(
       user => {
-        dispatch('UPDATE_USER', user)
-        resolve()
+        updateAppUser(dispatch, user)
+        resolve(user)
       },
       err => {
-        console.warn(err)
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -165,11 +275,10 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
       }
     ).then(
       res => {
-        return resolve()
+        resolve()
       },
       err => {
-        console.warn(err)
-        return reject(err.message)
+        reject(err)
       }
     )
   })
@@ -198,8 +307,7 @@ export const resetPassword = ({ dispatch }, phone, validationCode) => {
         resolve()
       },
       (err) => {
-        console.warn(err)
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -221,8 +329,7 @@ export const resetPasswordEnd = ({ dispatch }, phone, newPlainPassword) => {
         resolve()
       },
       err => {
-        console.warn(err)
-        reject(err.message)
+        reject(err)
       }
     )
   })
@@ -246,7 +353,6 @@ export const bindPhone = ({ dispatch }, phone) => {
           resolve()
         },
         err => {
-          console.warn(err)
           reject(err.message)
         }
       )
@@ -259,7 +365,7 @@ export const bindPhone = ({ dispatch }, phone) => {
 export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
   return new Promise(
     (resolve, reject) => {
-      postWithoutAuth(
+      postWithinAuth(
         {
           url: getUrl('bind_phone_post_code'),
           data: {
@@ -269,13 +375,12 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
         }
       ).then(
         () => {
+          dispatch('UPDATE_PHONE', phone)
           resolve()
         },
         err => {
-          console.warn(err)
           reject(err.message)
         }
       )
     })
 }
-

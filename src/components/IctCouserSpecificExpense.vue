@@ -50,7 +50,7 @@
           </div>
       </div>
 
-      <div class="acquisition-box">
+      <div class="acquisition-box" v-if="subject.acquisitions && subject.acquisitions.length > 0">
         <div class="title-babel">
           <span>学习收获</span>
         </div>
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="subject.studentFeedbackUrl">
         <div class="title-babel" style="margin-top: 1.25rem">
           <span>学员评价</span>
         </div>
@@ -73,7 +73,7 @@
         </div>
       </div>
 
-        <div class="notice-box">
+        <div class="notice-box" v-if="subject.notice && subject.notice.length > 0">
           <div class="title-babel">
             <span>注意事项</span>
           </div>
@@ -82,19 +82,19 @@
         </div>
       </div>
 
-        <div class="custom-divider">
+        <div class="custom-divider" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
           <div class="left"><hr class="line"/></div>
           <div>发现好课</div>
           <div class="right"><hr class="line"/></div>
         </div>
 
-        <div class="lessons-box">
-        <div v-for="item in subject.similarSubjects" class="lesson-item" v-touch:tap="goTolesson(item)">
-          <div><img v-bind:src="item.pic" alt="" class="l-img"></div>
-          <div class="l-title">{{item.title}}</div>
-          <div class="l-price">￥{{item.price}}</div>
+        <div class="lessons-box" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
+          <div v-for="item in subject.similarSubjects" class="lesson-item" v-touch:tap="goTolesson(item)">
+            <div><img v-bind:src="item.pic" alt="" class="l-img"></div>
+            <div class="l-title">{{item.title}}</div>
+            <div class="l-price">￥{{item.price}}</div>
+          </div>
         </div>
-      </div>
     </div>
   </div>
     <div style="height:1rem; background-color: #fff"></div>

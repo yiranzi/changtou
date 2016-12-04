@@ -1,101 +1,147 @@
 <template>
-    <div class="course-navigator" style="height: 100%;">
-      <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-        <div>
-          <swiper :aspect-ratio="120/375" :list="banners" stop-propagation ></swiper>
-          <div class="expenselist-area">
-            <p class="area-label">
-              <span class="color-span"> </span>
-              <span class="title">热门畅销</span>
-              <span class="subtitle" v-touch:tap="onExpenseListTap">全部课程</span>
-            </p>
-            <div v-for="(index, course) in expenseList"
-                 v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
-                 v-touch:tap="gotoCourseDetail('P',$index)">
-              <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
-              <p class="expense-course-promotion">{{course.promotion}}</p>
-              <p class="expense-course-title">{{course.title}}</p>
-              <p class="expense-course-price">￥{{course.price}}</p>
-            </div>
-          </div>
-
-          <div class="freelist-area">
-            <p class="area-label">
-              <span class="color-span"> </span>
-              <span class="title">免费好课</span>
-              <span class="subtitle" v-touch:tap="onFreeListTap">全部课程</span>
-            </p>
-            <div v-for="course in freeList"
-                 v-touch:tap="gotoCourseDetail('F',$index)"
-                 class="free-course">
-              <img v-bind:src=freeList[$index].pic class="free-course-img"/>
-              <p class="free-course-title">{{course.title}}</p>
-            </div>
-          </div>
-          <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
+  <div class="course-navigator" style="height: 100%;">
+    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <div>
+        <swiper :aspect-ratio="120/375" :list="banners"
+                stop-propagation dots-position="center"
+                :auto="true" :interval="3000"
+                :show-desc-mask="false" dots-class="dots-class"></swiper>
+        <div class="financial-interview">
+          <span v-touch:tap="goToNewertestStart">
+            <i class="finan-icon finan-icon-jiemi"></i>
+            理财揭秘
+          </span>
+          <i class="vertical-line-yan"></i>
+          <span v-touch:tap="goToInterviewList">
+            <i class="finan-icon finan-icon-fangtan"></i>
+            院生故事
+          </span>
         </div>
-      </scroller>
-    </div>
+        <div class="expenselist-area">
+          <p class="area-label">
+            <span class="color-span"> </span>
+            <span class="title">人气必备</span>
+          </p>
+          <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
+            <div class="box-container" >
+                <div class="box-item" v-for="item in recommends"
+                     v-touch:tap="goToRecommendDetail('P',$index)">
+                  <img :src="item.imgUrl">
+                  <p class="sub-title">{{item.title}}</p>
+                  <p class="sub-price">￥{{item.price}}</p>
+                </div>
+            </div>
+          </scroller>
+        </div>
+        <div class="daily-question" v-touch:tap="goToDailyQuestion">
+          <p>每日一题 积攒你的财商</p>
+          <p class="daily-subtext">财富自由之路第一步</p>
+          <span class="daily-anpic-container"></span>
+        </div>
+        <div class="expenselist-area">
+          <p class="area-label">
+            <span class="color-span"> </span>
+            <span class="title">优质好课</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
+          </p>
+          <div v-for="(index, course) in expenseList"
+               v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
+               v-touch:tap="goToCourseDetail('P',$index)">
+            <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
+            <p class="expense-course-promotion">{{course.promotion}}</p>
+            <p class="expense-course-title">{{course.title}}</p>
+            <p class="expense-course-price">￥{{course.price}}</p>
+          </div>
+        </div>
+
+        <div class="freelist-area">
+          <p class="area-label">
+            <span class="color-span"> </span>
+            <span class="title">免费好课</span>
+            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
+          </p>
+          <div v-for="course in freeList"
+               v-touch:tap="goToCourseDetail('F',$index)"
+               class="free-course">
+            <img v-bind:src=freeList[$index].pic class="free-course-img"/>
+            <p class="free-course-title">{{course.title}}</p>
+          </div>
+        </div>
+
+        <div class="strategy-entry">
+          <img src="../../assets/styles/image/home/home-strategy.jpg" v-touch:tap="goToStrategy">
+          <p>－让金钱为你而工作－</p>
+        </div>
+        <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
+      </div>
+    </scroller>
+  </div>
 </template>
 
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
-  import {navigatorActions} from '../../vuex/actions'
+  import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
 
   export default {
     vuex: {
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList
+        expenseList: navigatorGetters.expenseCourseList,
+        recommends: navigatorGetters.recommends
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData
+        loadData: navigatorActions.loadNavigatorData,
+        loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
+        loadNewertestReport: newertestActions.loadNewertestReport
+      }
+    },
+
+    route: {
+      data () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+          top: 0
+          })
+        })
       }
     },
 
     data () {
       return {
-        scrollerHeight: '0px'
+        scrollerHeight: '0px',
+        isShowNewTestPop: false
       }
     },
-
     ready () {
       const me = this
       this.loadData().then(
         function () {
           // 设置滚动条高度
-         me.setScrollerHeight()
-        },
-        function () {
-
+          me.setScrollerHeight()
         }
       )
-    },
-
-    created () {
     },
 
     computed: {
       banners () {
         let banners = this.originBanners
         let newBanners = banners.map(
-          banner => {
+            banner => {
             return {
               img: banner.pic || '/static/image/subject/banner/banner.png',
               url: (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId
             }
           }
-        )
+      )
         return newBanners
       }
     },
-
     methods: {
       /**
        * 设置滚动条高度
@@ -115,20 +161,57 @@
         })
         }, 150)
       },
-
-      gotoCourseDetail (type, index) {
+      goToCourseDetail (type, index) {
         let courseList = type === 'P' ? this.expenseList : this.freeList
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)
       },
-      onExpenseListTap () {
-        this.$route.router.go('/totalList/P')
+      goToRecommendDetail (type, index) {
+        this.$route.router.go(`/subject/detail/${type}/${this.recommends[index].subjectId}/0`)
       },
-      onFreeListTap () {
-        this.$route.router.go('/totalList/F')
+      onListTap () {
+        this.$route.router.go('/totalList')
+      },
+      //跳转到理财揭秘起始页
+      goToNewertestStart () {
+        const me = this
+        me.loadNewertestReport().then(function (newertestReport) {
+          if (newertestReport) {
+            me.$route.router.go('/newertest/ending')
+          } else {
+            me.$route.router.go('/newertest/start')
+          }
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
+      },
+      //跳转到院生访谈列表页面
+      goToInterviewList () {
+        this.$route.router.go('/interview/interview-list')
+      },
+      //跳转到每日一题
+      goToDailyQuestion () {
+        const me = this
+        me.loadDailyQuestion().then(function (dailyQuestion) {
+          if (dailyQuestion.selectedOption) {
+            me.$route.router.go('/daily/answer')
+          } else {
+            me.$route.router.go('/daily/quiz')
+          }
+        }).catch(function () {
+          me.showAlert('信息加载失败，请重试！')
+        })
+      },
+      backHandler () {
+        window.alert('main')
+      },
+      /**
+       * 跳转到专业版 策略 宣传
+       */
+      goToStrategy () {
+        this.$route.router.go('/strategy/professional/intro')
       }
     },
-
     components: {
       IctTitlebar,
       WebAudio,
@@ -140,6 +223,46 @@
 
 <style lang="less">
   .course-navigator{
+    .expenselist-area{
+      padding-bottom: 1rem;
+      .box-container{
+        width: 45rem;
+        .box-item {
+          float: left;
+          text-align: center;
+          line-height: 5rem;
+          width: 6.8rem;
+          height: 8.5rem;
+          margin-right: .5rem;
+          img {
+            width: 6.8rem;
+            height: 8.5rem;
+            border-radius: .8rem;
+          }
+          .sub-title {
+            position: absolute;
+            bottom: 1.2rem;
+            padding: 0 0.5rem;
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            bottom: -9.2rem;
+          }
+          .sub-price {
+            position: absolute;
+            bottom: -10.5rem;
+            padding: 0 0.5rem 0.5rem 0.5rem;
+            font-size: 0.6rem;
+            color: #ff9800;
+          }
+          .box-item:first-child {
+            margin-left: 1rem;
+          }
+        }
+      }
+    }
     p{
       margin: 0;
     }
@@ -154,8 +277,8 @@
         vertical-align: middle;
       }
       .color-span{
-        width: 2%;
-        height: 1rem;
+        width: .125rem;
+        height: .8rem;
         background-color: #00b0f0;
       }
       .title{
@@ -169,6 +292,7 @@
         font-size: 0.7rem;
         color: #aaa;
         text-align: right;
+        margin-left: -.5rem;
       }
       .subtitle:after{
         content: '';
@@ -183,7 +307,28 @@
         -webkit-transform: rotate(45deg);
       }
     }
+    /*新增理财揭秘，院生访谈的样式*/
+    .financial-interview{
+      width: 100%;
+      line-height: 4rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      border-bottom: 0.5rem #f0eff5 solid;
+      font-size: 0.75rem;
+      color: #444;
+
+      span{
+        width: 50%;
+        text-align: center;
+      }
+    }
+
+
     .expenselist-area{
+      background: white;
       text-align: center;
       .expense-course{
         position: relative;
@@ -258,5 +403,89 @@
         }
       }
     }
+
+    @media all and (max-width: 320px) {
+      .newertest-pop-img{
+        width: 10.7rem;
+        height: 8.5rem;
+        background: transparent url("../../assets/styles/image/newertest/tip/tipImg.png") center center no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+    .dots-class{
+      .vux-icon-dot {
+        background-color: #fff!important;
+        opacity: 0.5;
+      }
+      .vux-icon-dot.active{
+        background-color: #fff!important;
+        opacity: 1;
+      }
+    }
+    .strategy-entry{
+      width: 100%;
+      margin-top: 1.25rem;
+      text-align: center;
+      img{
+        width: 100%;
+        height: 6.75rem;
+      }
+      p{
+        font-size: 0.65rem;
+        color: #aaa;
+        margin: 1rem 0 1.25rem;
+      }
+    }
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 5.5rem;
+      background-color: #f2f2f2;
+      font-size: .75rem;
+      color:#444;
+      line-height: 1.2rem;
+      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      position: relative;
+    }
+
+    .daily-subtext {
+      color: #898989;
+      font-size: .65rem;
+    }
+
+    .daily-anpic-container {
+      width: 1.725rem;
+      height: 1.05rem;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  center  center / 90%;
+      display: inline-block;
+      position: absolute;
+      left: 80%;
+      top: 40%;
+    }
+
+    .finan-icon{
+      width: 1.525rem;
+      height: 1.525rem;
+      display: inline-block;
+      margin-bottom: -.5rem;
+      zoom: .5;
+    }
+
+  .finan-icon.finan-icon-jiemi{
+    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
   }
+
+    .finan-icon.finan-icon-fangtan{
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+    }
+
+    .vertical-line-yan{
+      display: inline-block;
+      width:.08rem;
+      height:1.5rem;
+      background: #eee;
+    }
+  }
+
 </style>

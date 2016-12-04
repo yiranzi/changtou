@@ -3,16 +3,12 @@
  * 所有课程页面
  */
 const state = {
-  freelist: [],
-  expenselist: []
+  totalList: []
 }
 
 const mutations = {
-  DISPLAY_UPDATE_FREE_LIST (state, freelist) {
-    state.freelist = freelist
-  },
-  DISPLAY_UPDATE_EXPENCE_LIST (state, expenselist) {
-    state.expenselist = expenselist
+  DISPLAY_UPDATE_TOTAL_LIST (state, list) {
+    state.totalList = list
   }
 }
 

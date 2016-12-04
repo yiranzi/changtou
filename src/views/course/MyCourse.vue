@@ -4,29 +4,23 @@
  */
 <template>
     <div class="my-course">
-      <scroller :lock-x="true" scrollbar-y v-ref:scroller>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="time-box">
             <ict-button class="my-course-drfts" type="string" text="草稿箱" v-touch:tap="onDraftsTap"></ict-button>
             <p>累计学习时间</p>
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
-          <div class="changtou-card" v-if="hasCard">
+          <div class="changtou-card" v-if="card">
             <span class="left-round"></span>
             长投VIP卡 有效日期至{{validity}}
             <span class="right-round"></span>
-            <span class="help-icon"
-                  v-touch:tap="onHelpIconTap"></span>
+            <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
-          <div class="information"
-               v-el:information
-               v-if="information">{{{information}}}</div>
+          <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img"
-                 v-touch:tap="gotoCourseDetail($index)"
-                 v-bind:src=myCourses[$index].pic>
-            <div class="course-list-info"
-                 v-touch:tap="gotoCourseDetail($index)">
+            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
+            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state">{{course.status}}</p>
@@ -38,153 +32,173 @@
     </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import {myCoursesActions, courseRecordActions} from '../../vuex/actions'
+  import {myCoursesActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
 
 export default {
   vuex: {
     getters: {
-      information: myCoursesGetters.information, //推荐信息
-      myCourses: myCoursesGetters.myCourses, //我的课程列表
+      graduatedType: myCoursesGetters.graduatedType, //课程状态类型
+      recommend: myCoursesGetters.recommend, //推荐信息
+      myCourseList: myCoursesGetters.myCourseList, //我的课程列表
       isLogin: userGetters.isLogin, //是否登录
-      hasCard: userGetters.card, //长投卡信息
+      card: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
       freeRecords: courseRecordsGetters.freeRecords //免费课程记录
     },
     actions: {
-      loadAllFreeRecords: courseRecordActions.loadAllFreeRecords, // 下载全部免费课进度
-      loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords, // 下载全部付费课进度
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
       loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
     }
   },
   data () {
     return {
-
-    }
-  },
-  ready () {
-
-  },
-  route: {
-    data () {
-      this.loadMyCourses()
+      scrollerHeight: '0px',
+      courseList: [] //课程列表
     }
   },
   computed: {
+    // 截止日期
     validity () {
-      let createTime = new Date(this.hasCard.createTime.replace(/-/g, '/'))
-      let newYear = createTime.getFullYear() + 1
-      let expireTimeValue = new Date(createTime.setFullYear(newYear))
-      return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
+      if (this.card) {
+        const createTime = new Date(this.card.createTime.replace(/-/g, '/'))
+        const newYear = createTime.getFullYear() + 1
+        const expireTimeValue = new Date(createTime.setFullYear(newYear))
+        return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
+      }
     },
+    // 累计学习时间
     accumulatedTime () {
       let accumulatedTime = 0
       this.expenseRecords.map(
-        record => {
+        function (record) {
           accumulatedTime = accumulatedTime + record.accumulatedTime
           return record.accumulatedTime
         }
       )
       return accumulatedTime
-    },
-    courseList () {
-      let graduatedType = {
-        N: '在读中',
-        E: '课程过期',
-        Y: '已毕业',
-        I: '未激活',
-        P: '暂停'
-      }
-      let courseList = []
-      this.myCourses.map(
-        course => {
-          if (course.type === 'P') {
-            this.expenseRecords.map(
-              record => {
-                if (course.subjectId === record.subjectId) {
-                  course.status = graduatedType[record.status]
-                  courseList.push(course)
-                }
-                return course
-              }
-            )
-          } else {
-            this.freeRecords.map(
-              record => {
-                if (course.subjectId === record.subjectId) {
-                  course.status = '已学习到' + record.sequence + '/' + record.count + '课'
-                  courseList.push(course)
-                }
-              }
-            )
-          }
-        }
-      )
-      return courseList
     }
   },
-  methods: {
-    onDraftsTap () {
-      console.log('进入草稿箱')
-    },
-
-    gotoCourseDetail (index) {
-      let myCourses = this.myCourses
-      let path = `/subject/detail/${myCourses[index].type}/${myCourses[index].subjectId}/0`
-      this.$route.router.go(path)
-    },
-
-    onHelpIconTap () {
-      console.log('弹出提示框')
-    },
-
-    loadMyCourses () {
+  route: {
+    data () {
       let promiseArray = []
-      let me = this
+      const me = this
 
       if (this.isLogin) {
-        promiseArray = [this.loadUserCourses(), this.loadAllFreeRecords(), this.loadAllExpenseRecords()]
+        promiseArray = [this.loadUserCourses()]
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
 
-      Promise.all(promiseArray).then(
-        () => {
+      return Promise.all(promiseArray).then(
+        function () {
           setTimeout(
-            () => {
-              me.resetScroller()
-              me.addLoginTapEvent()
-            },
-            300
-          )
-        },
-        () => {}
+            function () {
+              me.arrangeList()
+              me.setScrollerHeight()
+            }, 300)
+        }
       )
-    },
-
-    resetScroller () {
-      let me = this
-      me.$nextTick(() => {
-        me.$refs.scroller.reset({
+    }
+  },
+  methods: {
+    /**
+     * 设置滚动高度
+     */
+    setScrollerHeight () {
+      const me = this
+      me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+      setTimeout(function () {
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
           top: 0
         })
       })
+      }, 200)
+    },
+    /**
+     * 整理课程列表
+     */
+    arrangeList () {
+      const me = this
+      let courseList = []
+      if (me.isLogin) {
+        for (let i = 0, length = me.myCourseList.length; i < length; i++) {
+          if (me.myCourseList[i].type === 'P') {
+            let myCourserItem = me.myCourseList[i]
+            let expenseIndex = me.expenseRecords.findIndex(
+              function (expenseRecord) {
+                if (me.myCourseList[i].subjectId === expenseRecord.subjectId) {
+                  return true
+                }
+              }
+            )
+            myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+            courseList.push(myCourserItem)
+          } else {
+            let myCourserItem = me.myCourseList[i]
+            let freeIndex = me.freeRecords.findIndex(
+              function (freeRecords) {
+                if (me.myCourseList[i].subjectId === freeRecords.subjectId) {
+                  return true
+                }
+              }
+            )
+            myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+            courseList.push(myCourserItem)
+          }
+        }
+        me.courseList = courseList
+      } else {
+        me.courseList = me.myCourseList.map(
+          function (myCourse) {
+            myCourse.status = myCourse.studentCount + '人学过'
+            return myCourse
+          }
+        )
+      }
     },
 
-    addLoginTapEvent () {
-      let {information} = this.$els
-      if (information) {
-        information.addEventListener('touchstart', ({target}) => {
-          if (target.tagName === 'SPAN') {
-            if (!this.isLogin) {
-              this.$route.router.go('/entry')
-            }
-          }
-        })
+    /**
+     * 点击 草稿箱
+     */
+    onDraftsTap () {
+      this.$route.router.go('/drafts')
+    },
+
+    /**
+     * 进入课程详情
+     * @param index
+       */
+    goToCourseDetail (type, subjectId) {
+      const path = `/subject/detail/${type}/${subjectId}/0`
+      this.$route.router.go(path)
+    },
+
+    /**
+     * 点击长投卡帮助
+     */
+    onCardHelpIconTap () {
+      this.showMask({
+        component: 'mycourse/CardExplain.vue',
+        hideOnMaskTap: true,
+        callbackName: '',
+        callbackFn: null //组件上的
+      })
+    },
+
+    /**
+     * 点击登录
+     * @param e
+       */
+    onRecommendTap (e) {
+      if (e.target.nodeName === 'SPAN') {
+        if (!this.isLogin) {
+          this.$route.router.go('/entry')
+        }
       }
     }
   },
@@ -263,7 +277,7 @@ export default {
         }
       }
     }
-    .information{
+    .recommend{
       background: #f0eff5;
       margin: 0.75rem;
       height: 5rem;

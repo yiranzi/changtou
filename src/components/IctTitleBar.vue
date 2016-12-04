@@ -1,3 +1,16 @@
+/**
+titlebar
+@example
+  <!--<ict-titlebar :right-options="rightOptions">
+    意见反馈
+    <a slot="right" v-touch:tap="isShow">提交</a>
+  </ict-titlebar>-->
+
+  rightOptions: {
+    disabled: true,
+    callback: this.doSave
+  }
+**/
 <template>
   <div class="ict-titlebar"  v-el:titlebar>
     <div class="ict-titlebar-left" v-touch:tap="leftTapCallback">
@@ -5,7 +18,7 @@
       <slot name="left" ></slot>
     </div>
 
-    <h1 class="ict-titlebar-title" ><span v-show="title" :transition="transition">{{title}}</span><slot></slot></h1>
+    <h1 class="ict-titlebar-title" ><span v-show="title" :transition="transition">{{ title }}</span><slot></slot></h1>
 
     <div class="ict-titlebar-right" v-touch:tap="rightTapCallback" v-bind:class="{'disabled': isRightDisabled}">
       <slot name="right" ></slot>
@@ -14,7 +27,7 @@
 </template>
 
 <script>
-  import {Device} from '../plugin/Device'
+  import { Device, platformMap } from '../plugin/device'
   export default {
     props: {
       title: String,
@@ -47,7 +60,7 @@
        */
       setTitlebarHeight () {
         let titlebar = this.$els.titlebar
-        let height = Device.platformName === Device.platformMap.IOS ? (44 + 20) : 44
+        let height = Device.platform === platformMap.IOS ? (44 + 20) : 44
         titlebar.style.height = height + 'px'
         titlebar.style.lineHeight = height + 'px'
       },

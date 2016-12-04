@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <ict-titlebar>重置密码</ict-titlebar>
+  <div class="principal-base bind-phone-end">
+    <ict-titlebar>绑定手机号</ict-titlebar>
+    <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
+      {{errTip}}
+    </div>
     <flexbox>
       <flexbox-item :span="1/20"></flexbox-item>
       <flexbox-item>
         <group>
+          <div style="height: 1rem"></div>
           <x-input title="手机号"
                    placeholder="输入手机号"
                    :readonly=true
                    :value.sync="phone">
           </x-input>
           <flexbox>
+            <div style="height: 1rem"></div>
             <flexbox-item>
               <x-input title="验证码"
                        placeholder="输入验证码"
@@ -25,13 +30,12 @@
             </ict-button>
           </flexbox>
         </group>
-        <div style="height: 4rem" class="spacer"></div>
+        <div style="height: 3rem" class="spacer"></div>
         <ict-button type="default"
                     :disabled="isDisabled"
                     @click="sendIdentity"
                     text="提交">
         </ict-button>
-        <div style="height: 4rem" class="spacer"></div>
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
@@ -40,25 +44,24 @@
 <style>
 </style>
 <script>
-  import IctTitlebar from '../../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
-  import {userActions, globalActions} from '../../../vuex/actions'
+  import {userActions} from '../../../vuex/actions'
   export default {
     vuex: {
-      action: {
-        bindPhone: userActions.bindPhone,
-        bindPhoneEnd: userActions.bindPhoneEnd,
-        showAlert: globalActions.showAlert
+      actions: {
+        bindPhoneEnd: userActions.bindPhoneEnd
       }
     },
     data () {
       return {
-        phone: this.$route.params.phone,
+        errTip: '',
+        phone: '',
         validationCode: '',
-        validationBtnText: '获取验证码',
+        validationBtnText: '再次发送',
         isValidationBtnDisable: false,
         leftTime: 120,
         timer: null
@@ -69,31 +72,48 @@
         return !(/^\d{6}$/.test(this.validationCode))
       }
     },
+    watch: {
+      validationCode () {
+        this.errTip = ''
+      }
+    },
+    route: {
+      data ({to: {params: {phone}}}) {
+        const me = this
+        me.phone = phone
+        me.countdown()
+      }
+    },
     methods: {
+      /**
+       * 倒计时
+       */
+      countdown () {
+        const me = this
+        me.timer = setInterval(
+          () => {
+            if (me.leftTime > 0) {
+              me.leftTime--
+              me.validationBtnText = me.leftTime + 's后重发'
+              me.isValidationBtnDisable = true
+            } else {
+              me.leftTime = 120
+              me.validationBtnText = '再次发送'
+              me.isValidationBtnDisable = false
+              clearInterval(me.timer)
+            }
+          }, 1000)
+      },
+
       /**
        * 点击获取验证码
        */
       getValidationCode () {
-        var me = this
-        console.log('Phone', this.phone)
-        console.log('bindPhone', this.bindPhone)
-        this.bindPhone(this.phone).then(
-          res => {
-            me.timer = setInterval(
-              () => {
-                if (me.leftTime > 0) {
-                  me.leftTime--
-                  me.validationBtnText = me.leftTime + 's后重发'
-                  me.isValidationBtnDisable = true
-                } else {
-                  me.leftTime = 120
-                  me.validationBtnText = '获取验证码'
-                  me.isValidationBtnDisable = false
-                  clearInterval(me.timer)
-                }
-              }, 1000)
-          },
-          err => me.showAlert(err)
+        const me = this
+        me.bindPhone(me.phone).then(
+          () => me.countdown()
+        ).catch(
+          err => { me.errTip = err.message }
         )
       },
 
@@ -101,14 +121,11 @@
        * 点击提交
        */
       sendIdentity () {
-        var me = this
-        this.bindPhoneEnd(this.phone, this.validationCode).then(
-          function () {
-            me.$route.router.go('/setting')
-          },
-          function (err) {
-            me.showAlert(err)
-          }
+        const me = this
+        me.bindPhoneEnd(me.phone, me.validationCode).then(
+          () => window.history.go(-3)
+        ).catch(
+          err => { me.errTip = err.message }
         )
       }
     },
@@ -122,3 +139,8 @@
     }
   }
 </script>
+<style lang="less">
+.bind-phone-end{
+
+}
+</style>

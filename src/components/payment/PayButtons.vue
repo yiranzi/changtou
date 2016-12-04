@@ -1,10 +1,11 @@
 /**
  * Created by jun on 2016/9/29.
+  订单 下方 确认支付按钮
 
   @example
-  <pay-button :state="normal"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="normal"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     price: 100
   },
@@ -12,25 +13,26 @@
     callback: this.callback
   },
 
-  <pay-button :state="exception"
-              :left-options="leftOptions"
-              :right-options="rightOptions"></pay-button>
+  <!--<pay-button :state="exception"-->
+              <!--:left-options="leftOptions"-->
+              <!--:right-options="rightOptions"></pay-button>-->
   leftOptions: {
     text: '您已经购买过长投2016年会，XXXXXXXXX'
   },
   rightOptions: {
     callback: this.callback
-  },
+  }
 
  */
 <template>
     <div class="pay-button">
       <div class="left" :class="{'left-exception' : (state === 'exception')}">
-        {{{leftText}}}
+        <span>{{{leftText}}}</span>
       </div>
       <ict-button class="right"
                   :class="{'right-exception' : (state === 'exception')}"
-                  v-touch:tap="rightOptions.callback">立即购买</ict-button>
+                  v-touch:tap="onRightTap"
+                  :disabled="rightOptions.disabled">{{rightText}}</ict-button>
     </div>
 </template>
 <script>
@@ -46,6 +48,7 @@ export default {
     rightOptions: {
       type: Object,
       text: String,
+      disabled: Boolean,
       callback: {
         type: Function,
         required: true
@@ -54,8 +57,17 @@ export default {
   },
   computed: {
     leftText () {
-      console.log(this.state)
       return this.state === 'exception' ? this.leftOptions.text : ('实付金额<span class="price">￥' + this.leftOptions.price + '</span>')
+    },
+    rightText () {
+      return this.state === 'exception' ? this.rightOptions.text : '确认订单'
+    }
+  },
+  methods: {
+    onRightTap () {
+      if (!this.rightOptions.disabled) {
+        this.rightOptions.callback()
+      }
     }
   },
   components: {
@@ -68,8 +80,8 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 98/40rem;
-    line-height: 98/40rem;
+    height: 88/40rem;
+    line-height: 88/40rem;
     display: flex;
     .left{
       padding: 0 30/40rem;
@@ -83,7 +95,9 @@ export default {
         color: #ff5b45;
       }
       &-exception{
+        line-height: 2rem;
         text-align: center;
+        vertical-align: middle;
         color: #007aff;
       }
     }

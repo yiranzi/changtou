@@ -14,7 +14,7 @@
         <!--<swiper-item class="black"><h2 class="title fadeInUp animated">不是它可恶</h2></swiper-item>-->
       </swiper>
 
-        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc" :is-show.sync="hasVaildChapterCicked"></web-audio>
+        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc"></web-audio>
 
         <!--没有获取到课程内容时显示-->
         <div v-show="0">没有内容</div>
@@ -32,7 +32,6 @@
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-
         <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
           <!--<swiper-item>-->
             <!--<specific :subject="currSubject"></specific>-->
@@ -62,12 +61,12 @@
       </div>
 
       <div v-if="currStatus === 'I'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active">激活</ict-button>
+        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
       <div v-if="currStatus === 'N'" class="btn-box">
         <ict-button class="left" v-if="!isSuspendUsed" v-touch:tap="suspend">暂停课程</ict-button>
-        <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
+        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
       <div v-if="currStatus === 'P'" class="btn-box">
@@ -75,9 +74,11 @@
       </div>
 
       <div v-if="currStatus === 'Y' || currStatus === 'E'" class="btn-box">
-        <ict-button class="right" v-touch:tap="postpone">{{is90daysPostponeUsed ? '再次延期' : '延期'}}</ict-button>
+        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
+    <essay-float :show="showEssay" @close="resumeHomework" @confirm="resumeHomework"></essay-float>
+    <choice-float :show="showChoice"  @close="resumeHomework" @confirm="resumeHomework"></choice-float>
   </div>
 </template>
 <style lang="less">
@@ -141,18 +142,20 @@
 
 </style>
 <script>
-  import WebAudio from '../../components/webAudio.vue'
+  import WebAudio from '../../components/WebAudio.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
+  import essayFloat from '../homework/essayFloat.vue'
+  import choiceFloat from '../homework/ChoiceFloat.vue'
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
-  import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, globalActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {setSessionCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -170,8 +173,11 @@
         resumeSubject: courseRecordActions.resumeSubject,
 //        postonSubject: courseRecordActions.postponeSubject,
 
-        showAlert: globalActions.showAlert,
-        showConfirm: globalActions.showConfirm
+        setEssayQuestion: essayActions.setEssay,
+        getArticle: essayActions.getArticle,
+
+        setChoiceQuestion: choiceActions.setChoice,
+        getReport: choiceActions.getReport
       }
     },
 
@@ -180,19 +186,21 @@
      */
     data () {
       return {
+        isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
 
         isLoadedFail: false, //数据是否加载完毕
         subjectId: '', //课程Id
         hasVaildChapterCicked: false,
 
+        isSubjectBranch: false, // 当前课程是否为选修课
         currSubject: null, // 当前课程
         currRecord: null, //当起进度
         currUseabLessonArr: [], //当前可用lessonId集合
         currStatus: 'L', //当前课程状态 {N：在读 | E：过期 | Y：毕业 | P：暂停 | I ：未激活 | W : 没有进度} 默认L: 加载中
         lastSubmitlessonId: 0, //最后一次提交作业的lesson
         isAssignmentSubmitted: false,
-        is90daysPostponeUsed: false,
+        postponeCount: 0,
         isSuspendUsed: false,
 
         currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
@@ -200,10 +208,22 @@
 
         selectedLesson: null, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
+        currChapterIndex: -1, //当前选中的chater index
         currAudioSrc: null, //当前音频地址
         currPpts: [], //当前ppt地址集合
 
-        isSelectdLessonLimited: true //当前选中lesson是否受限
+        isSelectdLessonLimited: true, //当前选中lesson是否受限
+        showEssay: false,
+        showChoice: false
+      }
+    },
+
+    computed: {
+      /**
+       * 延期的文本
+       */
+      postText () {
+        return this.postponeCount ? '再次延期' : '延期'
       }
     },
 
@@ -218,36 +238,45 @@
        * @param subjectId
        * @returns {{type: string}}
        */
-      data ({to: {params: {subjectId}}}) {
-        this.resetView()
+      data ({to: {params: {subjectId}}, from}) {
+        // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        if (from.path && from.path.indexOf('landscape/') > -1) {
+          // do nothing
+        } else {
+          this.resetView()
 
-        let tasks = [this.loadExpenseSubject(subjectId)]
-        if (this.isUserLogin) {
-          tasks.push(this.loadExpenseRecord(subjectId))
-        }
-
-        return Promise.all(tasks).then(
-          () => {
-            return {subjectId: subjectId, isLoadedFail: false}
-          },
-          () => {
-            return {isLoaded: false, isLoadedFail: true}
+          const tasks = [this.loadExpenseSubject(subjectId)]
+          if (this.isUserLogin) {
+            tasks.push(this.loadExpenseRecord(subjectId))
           }
-        )
+
+          return Promise.all(tasks).then(
+            () => {
+              return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
+            },
+            () => {
+              return {isLoaded: false, isLoadedFail: true, isResponsive: true}
+            }
+          )
+        }
       },
 
       /**
        * 页面隐藏时
        */
-      deactivate () {
-        this.pause()
+      deactivate ({to, next}) {
+        // 如果是跳转到横屏页面, 不打断音频
+        if (to.path && to.path.indexOf('landscape/') > -1) {
+          next()
+        } else {
+          // 跳转到非横屏页面
+          // 停止音频播放
+          // 设置不可响应
+          this.pause()
+          this.isResponsive = false
+          next()
+        }
       }
-    },
-
-    ready () {
-//      console.log('this.$els', this.$els, this.$els.bottomBtn.offsetHeight)
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-//      console.log(this.scrollerHeight)
     },
 
     watch: {
@@ -267,7 +296,6 @@
         if (lesson && lesson.type === 'C') {
           this.isSelectdLessonLimited = false
         } else {
-//          console.log('this.currUseabLessonArr', this.currUseabLessonArr)
           this.isSelectdLessonLimited =
             this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === lesson.lessonId) === -1
         }
@@ -290,6 +318,9 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         //设置课程信息
         this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
+
+        //设置是否为选修课
+        this.isSubjectBranch = this.currSubject.type === 'B'
 
         this.$nextTick(() => {
           this.$refs.scroller.reset({
@@ -331,6 +362,10 @@
       }
     },
 
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+    },
+
     /**
      * 设置监听事件
      */
@@ -338,7 +373,8 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'chapterSelected': function (chapter) {
+      'chapterSelectedExpense': function (chapter, index, type) {
+        this.currChapterIndex = index // 用于横屏
         if (this.isSelectdLessonLimited) { //课程受限
           if (this.isUserLogin) {
             // 用户登录的情况下,判断状态
@@ -351,7 +387,7 @@
                 this.active()
                 break
               case 'N':
-                this.showTipWhenLessonLimitedAndOnLine()
+                this.showTipWhenLessonLimitedAndOnLine(type)
                 break
               case 'P':
                 this.resume()
@@ -371,22 +407,147 @@
             // 用户在未登录的情况下, 直接跳转前去购买
             this.buy()
           }
-        } else { //当前课程可以听
+        } else if (type === 'common') { //当前课程可以听
           this.hasVaildChapterCicked = true
-          this.currAudioSrc = chapter.audio
-          this.currPpts = chapter.ppts
+          this.playChapter(chapter)
+        } else if (type === 'choice') {
+          this.onChoiceTap()
+        } else if (type === 'essay') {
+          this.onEssayTap()
         }
       },
 
       'goToSubject': function (subject) {
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+      },
+
+      /**
+       * 当全屏被点击
+       */
+      'fullScreenTap' () {
+        if (this.isResponsive) {
+          this.goToFullScreen(this.subjectId, this.selectedLesson, this.currChapterIndex)
+        }
+      },
+
+      /**
+       * 音频播放结束
+       * 继续播放下一节可用的音频
+       */
+      'audioPlayEnd' () {
+        if (this.isResponsive) {
+          // 尝试播放下一个章节
+          // 由子组件接收事件控制
+          this.$broadcast('playNextCapterExpense')
+        }
       }
     },
 
     methods: {
+      /**
+       * 选择题被点击
+       **/
+      onChoiceTap () {
+        const me = this
+        const lessonId = this.selectedLesson.lessonId
+        const choiceQuestionArr = this.selectedLesson.choiceQuestion
+        me.setChoiceQuestion(choiceQuestionArr)
+        me.getReport(lessonId).then(
+          report => {
+            if (report.kpScore) {
+              // 做过选择题
+              me.$route.router.go('/choice/mark')
+            } else {
+              // 没做过
+              me.showChoice = true
+            }
+          }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
+      },
+
+      /**
+       * 问答题被点击
+       * */
+      onEssayTap (limitedLessonId, limitedEssayQuestion) {
+        const me = this
+        const lessonId = limitedLessonId || this.selectedLesson.lessonId
+        const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
+        me.setEssayQuestion(essayQuestion)
+        me.getArticle(lessonId).then(
+          evaluation => {
+            if (evaluation && evaluation.status !== null) {
+              switch (evaluation.status) {
+                case 0://作业已提交
+                  me.goEssayMark(lessonId)
+                  break
+                case 1://草稿已提交 写作业
+                  me.goEssayAnswer(lessonId)
+                  break
+                case 2://已批改 未通过 查看作业
+                  me.goEssayMark(lessonId)
+                  break
+                case 3://已批改 通过 查看作业
+                  me.goEssayMark(lessonId)
+                  break
+                default:
+                  me.goEssayMark(lessonId)
+                  break
+              }
+            } else {
+              me.showEssayFloat()
+            }
+        }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
+      },
+      /**
+       * 跳转到问答题 编辑页
+       */
+      goEssayAnswer (lessonId) {
+        const me = this
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/answer')
+        ).catch(
+            err => console.warn(err)
+        )
+      },
+
+      /**
+       * 显示 作业提示框
+       */
+      showEssayFloat () {
+        this.showEssay = true
+      },
+
+      /**
+       * 跳转到问答题 查看页
+       */
+      goEssayMark (LimitedLessonId) {
+        const me = this
+        const lessonId = LimitedLessonId || this.selectedLesson
+        this.getArticle(lessonId).then(
+            () => me.$route.router.go('/essay/mark')
+        ).catch(
+            err => console.warn(err)
+        )
+      },
+      /**
+       * 重置 作业浮层
+       */
+      resumeHomework () {
+        this.showChoice = false
+        this.showEssay = false
+      },
+
       back () {
         window.history.back()
       },
+
       /**
        * 重置页面
        */
@@ -410,8 +571,8 @@
         //设置是否已经暂停过
         this.isSuspendUsed = currSubjectRecord.isSuspendUsed
 
-        //设置是否已经使用过990天延期
-        this.is90daysPostponeUsed = currSubjectRecord.is90daysPostponeUsed
+        //设置是否已经延期过
+        this.postponeCount = currSubjectRecord.postponeCount
 
         //设置可用课程列表
         this.currUseabLessonArr = (currSubjectRecord && currSubjectRecord.lessonSet && currSubjectRecord.lessonSet.lessonIds) ? currSubjectRecord.lessonSet.lessonIds : []
@@ -437,38 +598,34 @@
 
         let msg = ''
         let confirmText = '确认'
-        let cancelHandler = () => {}
         let confirmHandler = null
 
-        let lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-
+        const lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
+        const essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            // todo 跳转到查看作业页面
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
           confirmText = '去写作业'
           confirmHandler = function () {
-            // todo 跳转到写作业页面
+            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
 
         // 加入延迟,防止出现msg被点透的情况
-        setTimeout(function () {
-          me.showConfirm({
-            title: '',
-            msg: msg,
-            confirmText: confirmText,
-            cancelText: '继续听课',
-            confirmHandler: confirmHandler,
-            cancelHandler: cancelHandler
-          })
-        }, 150)
+        me.showConfirm({
+          title: '',
+          message: msg,
+          okText: confirmText,
+          cancelText: '继续听课',
+          okCallback: confirmHandler
+        })
       },
 
       /**
@@ -490,8 +647,10 @@
        */
       audition () {
         this.currTabIndex = 1
-        this.selectedLesson = this.currSubject.lessonList[0]
-        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
+        // 交给子控件统一处理
+        this.$broadcast('audition', this.currSubject.lessonList[0])
+//        this.selectedLesson = this.currSubject.lessonList[0]
+//        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
       },
 
       /**
@@ -509,17 +668,15 @@
             }
           )
         }
-        const cancelHandler = function () {}
         const msg = '<p style="text-align: left">课程暂停功能为在短时间内无法继续学习的院生提供临时性免费停课机会，暂停功能只在课程有效期内使用；</p>' +
             '<p style="text-align: left">仅有一次暂停30天机会，中途支持提前开启课程；</p>' +
             '<p style="text-align: left">您是否想暂停课程？</p>'
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认暂停',
+          message: msg,
+          okText: '确认暂停',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 
@@ -538,16 +695,13 @@
             }
           )
         }
-        const cancelHandler = function () {}
         const msg = '<p>仅有一次暂停30天机会,</p><p>您是否想提前开启课程?</p>'
-        // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认开启',
+          message: msg,
+          okText: '确认开启',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 
@@ -556,7 +710,11 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        this.$route.router.go('/pay/subject')
+        const path = `/pay-P-${this.subjectId}`
+        this.$route.router.on(path, {
+          component: require('../pay/PostponeOrder.vue')
+        })
+        this.$route.router.go(path)
       },
 
       /**
@@ -564,26 +722,26 @@
        */
       active () {
         const me = this
+
         const activeHandler = function () {
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
+              me.showToast('已激活课程')
             },
             function () {
               me.showAlert('激活失败,请重试')
             }
           )
         }
-        const cancelHandler = function () {}
+
         const msg = '<p>该课程尚未激活</p><p>您是否想现在激活此课程?</p>'
-        // 这里加入延迟是防止出现msg被点透的情况
         me.showConfirm({
           title: '',
-          msg: msg,
-          confirmText: '确认激活',
+          message: msg,
+          okText: '确认激活',
           cancelText: '我再想想',
-          confirmHandler: activeHandler,
-          cancelHandler: cancelHandler
+          okCallback: activeHandler
         })
       },
 
@@ -591,7 +749,52 @@
        * 购买
        */
       buy () {
-        this.$route.router.go('/pay/subject')
+        // 如果是选修课
+        if (this.isSubjectBranch) {
+          // 先判断主线课程是否购买
+           const originSubject = this.expenseRecordsArr.find(subject =>
+            subject.subjectId === this.currSubject.relatedMajorSubjectId)
+
+          const isOrignSubjectVaildBought = !!(originSubject && originSubject.status === 'N')
+          if (isOrignSubjectVaildBought) {
+            // 若主线课程已经购买并且是在读, 直接转去购买页面
+            this.goToPay()
+          } else {
+            this.showConfirm({message: `仅支持在"${this.currSubject.relatedMajorSubjectTitle}"有效学习时间内购买该选修课`})
+          }
+        } else {
+          // 不是选修课, 直接转去订单页面
+          this.goToPay()
+        }
+      },
+
+      /**
+       * 前去支付页面
+       */
+      goToPay: function () {
+        const path = `/pay-S-${this.subjectId}`
+        this.$route.router.on(path, {
+          component: require('../pay/SubjectOrder.vue')
+        })
+        this.$route.router.go(path)
+      },
+
+        /**
+         * 跳转到横屏
+         */
+      goToFullScreen (subjectId, lesson, chapterIndex) {
+        setSessionCache('landscapeSrc', {lesson, chapterIndex, currChapter: this.selectedChapter})
+        this.$route.router.go(`/landscape/${subjectId}/${lesson.lessonId}`)
+      },
+
+      /**
+       * 播放选中的chapter
+       * @param chapter
+       */
+      playChapter (chapter) {
+        this.currAudioSrc = chapter.audio
+        this.currPpts = chapter.ppts
+        this.$dispatch('chapterPlay', chapter)
       }
     },
 
@@ -601,12 +804,13 @@
       SwiperItem,
       Tab,
       TabItem,
-      Confirm,
       Scroller,
       Sticky,
       Specific,
       Content,
-      IctButton
+      IctButton,
+      choiceFloat,
+      essayFloat
     }
   }
 </script>

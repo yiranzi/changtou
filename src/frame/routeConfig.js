@@ -3,42 +3,13 @@
  * 路由
  */
 import { sync } from 'vuex-router-sync'
+import {setRouterHook} from './pageTransAnimation'
 import store from '../vuex/store'
 
 /**
- * 清除路由
- * @type {Storage}
+ *
+ * @param router
  */
-let history = window.sessionStorage
-history.clear()
-let historyCount = history.getItem('count') * 1 || 0
-history.setItem('/', 0)
-
-const setRouterHook = (router, commit) => {
-  router.beforeEach(({ to, from, next }) => {
-    const toIndex = history.getItem(to.path)
-    const fromIndex = history.getItem(from.path)
-    if (toIndex) {
-      if (toIndex > fromIndex) {
-        commit('UPDATE_DIRECTION', 'forward')
-      } else {
-        commit('UPDATE_DIRECTION', 'reverse')
-      }
-    } else {
-      ++historyCount
-      history.setItem('count', historyCount)
-      to.path !== '/' && history.setItem(to.path, historyCount)
-      commit('UPDATE_DIRECTION', 'forward')
-    }
-    commit('UPDATE_LOADING', true)
-    setTimeout(next, 50)
-  })
-
-  router.afterEach(() => {
-    commit('UPDATE_LOADING', false)
-  })
-}
-
 export function configRouter (router) {
   const commit = store.commit || store.dispatch
   setRouterHook(router, commit)
@@ -53,7 +24,7 @@ export function configRouter (router) {
     '/main': { //主页面课程导航页
       component: require('../views/course/Navigator.vue')
     },
-    '/totalList/:type': { //查看所有课程列表页
+    '/totalList': { //查看所有课程列表页
       component: require('../views/course/Courselist.vue')
     },
     'subject/detail/F/:subjectId/:position': { //课程详情页
@@ -62,7 +33,15 @@ export function configRouter (router) {
     'subject/detail/P/:subjectId/:position': { //课程详情页
       component: require('../views/course/CourseDetailExpense.vue')
     },
-
+    'seminar/:seminarId': { //课程详情页
+      component: require('../views/course/Seminar.vue')
+    },
+    '/mycourse': {    //我的课程
+      component: require('../views/course/MyCourse.vue')
+    },
+    '/landscape/:subjectId/:lessonId': { //横屏
+      component: require('../views/course/Landscape.vue')
+    },
     /**
      * 登录模块
      */
@@ -133,15 +112,23 @@ export function configRouter (router) {
     },
 
     /**
-     * 支付模块
+     * 小投答疑
      */
-    '/pay/subject': {
-      component: require('../views/pay/SubjectOrder.vue')
+    //自助答疑
+    '/self/service': {
+      component: require('../views/help/SelfService.vue')
+    },
+    //人工解答
+    '/manual/service': {
+      component: require('../views/help/ManualService.vue')
     },
 
-    //我的课程
-    '/mycourse': {
-      component: require('../views/course/MyCourse.vue')
+    /**
+     * 支付模块
+     */
+    // 支付成功
+    'pay/success/:type/:id': {
+      component: require('../views/pay/Success.vue')
     },
 
     /**
@@ -149,15 +136,99 @@ export function configRouter (router) {
      */
     //通用专题
     '/common/topic/:ctpId': {
-      component: require('../views/topic/commonTopic.vue')
-    },
-    //通用专题确认订单页面
-    '/common/topic/order/:ctpId': {
-      component: require('../views/topic/commonTopicOrder.vue')
+      component: require('../views/topic/CommonTopic.vue')
     },
     //打包课专题
     '/spec/topic/:stpId': {
-      component: require('../views/topic/specTopic.vue')
+      component: require('../views/topic/SpecTopic.vue')
+    },
+    /**
+     * 新手测试
+     */
+    //新手测试起始页
+    '/newertest/start': {
+      component: require('../views/newertest/NewertestStart.vue')
+    },
+    //答题页
+    '/newertest/question': {
+      component: require('../views/newertest/NewertestQuestion.vue')
+    },
+    //结果页
+    '/newertest/ending': {
+      component: require('../views/newertest/NewertestEnd.vue')
+    },
+
+    /**
+     * 院生访谈
+     */
+    //访谈列表
+    '/interview/interview-list': {
+      component: require('../views/interview/InterviewList.vue')
+    },
+    //访谈内容
+    '/interview/interview-record/:interviewId': {
+      component: require('../views/interview/InterviewRecord.vue')
+    },
+    /**
+     * 每日一题
+     */
+    //获取每日一题
+    '/daily/quiz': {
+      component: require('../views/daily/DailyQuestion.vue')
+    },
+    //用户提交答案
+    '/daily/answer': {
+      component: require('../views/daily/DailyQuestionAnswer.vue')
+    },
+
+      /**
+       * 作业
+       */
+    //草稿箱
+    '/drafts': {
+      component: require('../views/homework/Drafts.vue')
+    },
+    //问答题 写作业
+    '/essay/answer': {
+      component: require('../views/homework/EssayAnswer.vue')
+    },
+    //问答题 看分数
+    '/essay/mark': {
+      component: require('../views/homework/EssayMark.vue')
+    },
+    //选择题 做测试
+    '/choice/answer': {
+      component: require('../views/homework/ChoiceAnswer.vue')
+    },
+    //选择题 看分数
+    '/choice/mark': {
+      component: require('../views/homework/ChoiceMark.vue')
+    },
+    /**
+     * 策略产品
+     */
+    //策略 专业版 宣传
+    '/strategy/professional/intro': {
+      component: require('../views/strategy/ProfessionalIntro.vue')
+    },
+    //策略 vip 宣传
+    '/strategy/vip/intro': {
+      component: require('../views/strategy/VipIntro.vue')
+    },
+    //策略 vip 数据
+    '/strategy/vip/product': {
+      component: require('../views/strategy/VipProduct.vue')
+    },
+    //策略 专业版 数据
+    '/strategy/professional/product': {
+      component: require('../views/strategy/ProfessionalProduct.vue')
+    },
+    '/strategy/duoyinzi/faq': {
+      component: require('../views/strategy/DuoYinZiFaq.vue')
+    },
+    //延期说明
+    '/postpone/explain': {
+      component: require('../views/pay/PostponeExplain.vue')
     }
   })
 

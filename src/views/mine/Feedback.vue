@@ -49,14 +49,13 @@
   }
 </style>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Toast from 'vux/toast'
-  import {mineActions, globalActions} from '../../vuex/actions'
+  import {mineActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        updateContent: mineActions.updateContent,
-        showAlert: globalActions.showAlert
+        updateContent: mineActions.updateContent
       }
     },
 
@@ -75,13 +74,13 @@
       //点击提交按钮
       doSave () {
         const me = this
-        this.upLoadContent(this.content).then(
+        this.uploadContent(this.content).then(
           function (rep) {
             me.content = ''
             me.$route.router.go('/setting')
           },
           function () {
-            me.showAlert('暂停失败,请重试')
+            me.showAlert('暂时失败,请重试')
           }
         )
       },

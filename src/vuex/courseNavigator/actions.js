@@ -16,8 +16,7 @@ export const loadNavigatorData = ({ dispatch }) => {
         resolve()
       },
       err => {
-        console.warn(err)
-        reject()
+        reject(err)
       }
     )
   })

@@ -1,22 +1,25 @@
 <template>
-    <div>
+    <div class="principal-base reset-password-start">
       <ict-titlebar>重置密码</ict-titlebar>
+      <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
+        {{errTip}}
+      </div>
       <flexbox>
         <flexbox-item :span="1/20"></flexbox-item>
         <flexbox-item>
           <group>
+            <div style="height: 1rem"></div>
             <x-input title="手机号"
                      placeholder="输入手机号"
                      :value.sync="phone">
             </x-input>
           </group>
-          <div style="height: 4rem" class="spacer"></div>
+          <div style="height: 3rem" class="spacer"></div>
           <ict-button type="default"
                     :disabled="isDisabled"
                     @click="sendPhone"
                     text="提交">
           </ict-button>
-          <div style="height: 4rem" class="spacer"></div>
         </flexbox-item>
         <flexbox-item :span="1/20"></flexbox-item>
       </flexbox>
@@ -26,31 +29,32 @@
 
 </style>
 <script>
-import IctTitlebar from '../../../components/IctTitlebar.vue'
+import IctTitlebar from '../../../components/IctTitleBar.vue'
 import IctButton from '../../../components/IctButton.vue'
 import {Flexbox, FlexboxItem} from 'vux/flexbox'
 import Group from 'vux/group'
 import XInput from 'vux/x-input'
-import {userActions, globalActions} from '../../../vuex/actions'
+import {userActions} from '../../../vuex/actions'
 export default {
   vuex: {
-    getters: {
-
-    },
     actions: {
-      resetPasswordStart: userActions.resetPasswordStart,
-      showAlert: globalActions.showAlert
+      resetPasswordStart: userActions.resetPasswordStart
     }
   },
   data () {
     return {
+      errTip: '',
       phone: ''
     }
   },
   computed: {
     isDisabled () {
       return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
-//      return false
+    }
+  },
+  watch: {
+    phone () {
+      this.errTip = ''
     }
   },
   methods: {
@@ -58,10 +62,10 @@ export default {
      * 点击下一步
      */
     sendPhone () {
-//      this.$route.router.go('/reset/password/18516560361')
       this.resetPasswordStart(this.phone).then(
-        () => this.$route.router.go('/reset/password/' + this.phone),
-        (err) => this.showAlert(err)
+        () => { this.$route.router.go('/reset/password/' + this.phone) }
+      ).catch(
+        err => { this.errTip = err.message }
       )
     }
   },
@@ -75,3 +79,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .reset-password-start{
+
+  }
+</style>

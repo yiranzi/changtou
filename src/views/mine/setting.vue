@@ -4,7 +4,7 @@
     <div class="ict-user-info">
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
       <p class="ict-user-name">{{name}}</p>
-      <div v-if="!isLogin" style="height: 1rem" class="spacer"></div>
+      <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
       <flexbox v-if="!isLogin">
         <flexbox-item :span="1/10"></flexbox-item>
         <ict-button text="登录"
@@ -17,13 +17,13 @@
         <flexbox-item :span="1/10"></flexbox-item>
       </flexbox>
     </div>
+    <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
+              :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
+              v-touch:tap="onStrategyTap">
+    </ict-item>
     <ict-item title="个人资料"
               link="/personal/information"
               :disabled="!isLogin">
-    </ict-item>
-    <ict-item title="指数宝"
-              v-if="isZSB"
-              link="">
     </ict-item>
     <ict-item title="鼓励师首页"
               v-if="isSpire"
@@ -31,50 +31,90 @@
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
+              :disabled="!isLogin"
               link="/system/message">
+      <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
     </ict-item>
-    <ict-item title="意见反馈"
-              link="/feedback">
+    <ict-item title="小投答疑"
+              link="/self/service">
+      <badge :text="badgeSuggestionNum" slot="badge" v-show="badgeSuggestionNum"></badge>
     </ict-item>
     <ict-item title="关于我们"
               link="/contact/us">
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="设置"
+              :disabled="!isLogin"
               link="/configuration">
     </ict-item>
   </div>
 </template>
 <script>
-  import IctTitlebar from '../../components/IctTitlebar.vue'
+  import Badge from 'vux/badge'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import {userGetters} from '../../vuex/getters'
+  import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
+  import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
+  import {strategyLevel} from '../../frame/userLevelConfig'
   export default {
     vuex: {
+      actions: {
+        jpushAddOpenHandler
+      },
       getters: {
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
         userName: userGetters.userName,
-        strategy: userGetters.strategy
-      },
-      actions: {
-
+        strategy: userGetters.strategy,
+        newMessageNum: messageGetters.newMsgNum,
+        newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
     computed: {
-      isZSB () {
-        return this.strategy && (this.strategy.strategyLevel === 'A')
+      badgeMessageNum () {
+        let number = this.newMessageNum + ''
+        if (this.newMessageNum === 0) {
+          number = ''
+        }
+        return number
       },
-      isSpire () {
 
+      badgeSuggestionNum () {
+        let number = this.newSuggestionNum + ''
+        if (this.newSuggestionNum === 0) {
+          number = ''
+        }
+        return number
+      },
+
+      isSpire () {
+        //todo 鼓励师逻辑
       },
       name () {
-        return this.userName ? this.userName : '未登录'
+        return this.userName ? this.userName : ''
       },
       avatarUrl () {
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
+      }
+    },
+
+    methods: {
+      doLogin   () {
+        this.$route.router.go('/entry')
+      },
+      doRegister () {
+        this.$route.router.go('/register/start')
+      },
+      onStrategyTap () {
+        if (!this.strategy || this.strategy.strategyLevel === strategyLevel.COMMON) {
+          this.$route.router.go('/strategy/professional/intro')
+        } else if (this.strategy.strategyLevel === strategyLevel.VIP) {
+          this.$route.router.go('/strategy/vip/product')
+        } else if (this.strategy.strategyLevel === strategyLevel.PRO) {
+          this.$route.router.go('/strategy/professional/product')
+        }
       }
     },
     components: {
@@ -82,15 +122,8 @@
       IctButton,
       IctItem,
       Flexbox,
-      FlexboxItem
-    },
-    methods: {
-      doLogin: function () {
-        this.$route.router.go('/entry')
-      },
-      doRegister: function () {
-        this.$route.router.go('/register/start')
-      }
+      FlexboxItem,
+      Badge
     }
   }
 </script>
@@ -102,10 +135,10 @@
     }
     .ict-user-info {
       text-align: center;
-      margin: 1rem;
+      margin: 30/20rem 0 1rem;
       .ict-user-avatar {
-        width: 3.4rem;
-        height: 3.4rem;
+        width: 3.5rem;
+        height: 3.5rem;
         border-radius: 50%;
       }
     }
@@ -115,7 +148,15 @@
       color: #898989;
     }
     .ict-btn{
+      width: 6.5rem;
       height: 1.8rem;
+      border: 1px solid #00b0f0;
+      border-radius: 5px;
+      background: #fff;
+      min-height: 0;
+      padding: 0;
+      color: #00b0f0;
+      font-size: 0.85rem;
     }
   }
 </style>

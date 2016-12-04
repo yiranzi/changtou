@@ -5,7 +5,7 @@
       </div>
 
       <div class="app-logo">
-        <img src="/static/image/mine/LOGO.png">
+        <img src='../../assets/styles/image/LOGO.png'>
       </div>
       <div class="item">
         <span>微信号</span>
@@ -17,7 +17,7 @@
       </div>
       <div class="item">
         <span>版本信息</span>
-        <span>1.6.1</span>
+        <span> {{ jsVersion }} </span>
       </div>
 
       <div class="copyright">
@@ -102,10 +102,17 @@
   }
 </style>
 <script>
-    import IctTitlebar from '../../components/IctTitlebar.vue'
-    export default {
-      components: {
-        IctTitlebar
-      }
+import IctTitlebar from '../../components/IctTitleBar.vue'
+import {jsVersion} from '../../plugin/version'
+  export default {
+  data () {
+    return {
+      jsVersion
     }
+  },
+  components: {
+    IctTitlebar
+  }
+}
+
 </script>
