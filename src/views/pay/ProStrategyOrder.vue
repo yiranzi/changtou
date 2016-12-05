@@ -60,7 +60,7 @@
       },
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === strategyLevel.PRO) ? `已购买长投宝专业版,剩余有效期${this.strategy.strategyLeftDay}天` : (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
       },
       // 实付金额
       sum () {
