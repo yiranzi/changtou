@@ -132,6 +132,8 @@ const apiUrl = {
   'homework_get_report': '/student/choice-question-report/:lessonId', // 获取选择题 测试报告
   'homework_submit_report': '/student/choice-question-report', // 提交选择题 测试报告
   'homework_get_choice_knowledge_point': '/course/knowledge-point', // 获取选择题 对应知识点
+  'homework_get_choice_question': '/student/choice-question/:lessonId', // 获取选择题
+  'homework_get_essay_question': '/student/essay-question/:lessonId', // 获取问答题
 
   /**
    * 策略产品
