@@ -18,7 +18,7 @@
         <span class="close-icon" v-touch:tap="onExplainClose"></span>
         <p class="title">答案提示</p>
         <p class="content">{{explain}}</p>
-        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -29,7 +29,6 @@ export default {
   vuex: {
     getters: {
       isLogin: userGetters.isLogin,
-      lessonId: choiceGetters.lessonId,
       choiceQuestion: choiceGetters.choiceQuestionArr,
       knowledgeMap: choiceGetters.knowledgeMap
     },
@@ -51,7 +50,6 @@ export default {
       totalNum: 0, //总题数
       rightNum: 0, //答对的题数
       currIndex: 0, //当前题号
-      currQuestion: null, //当前的题目
       pointData: null, // 计算时使用的临时报告
       report: null // 选择题 报告
     }
@@ -59,7 +57,9 @@ export default {
   computed: {
     // 题目
     title () {
-      return `${this.currIndex + 1}/${this.totalNum}${this.currQuestion.title}`
+      if (this.choiceQuestion && this.choiceQuestion.length > 0) {
+        return `${this.currIndex + 1}/${this.totalNum}${this.currQuestion.title}`
+      }
     },
     // 是否显示 错误提示
     isExplainShow () {
@@ -77,32 +77,43 @@ export default {
       return this.choiceQuestion.length
     },
     currQuestion () {
-      return this.choiceQuestion[this.currIndex]
+      if (this.choiceQuestion && this.choiceQuestion.length > 0) {
+        return this.choiceQuestion[this.currIndex]
+      } else {
+        return {
+          content: []
+        }
+      }
     }
   },
   route: {
-    data () {
-      this.getQuestion(this.lessonId)
-      this.initPointData()
+    data ({to: {params}}) {
+      this.lessonId = params.lessonId
+      this.getQuestion(this.lessonId).then(
+        (choiceQuestion) => {
+          this.initPointData(choiceQuestion)
+        }
+      )
     }
   },
   methods: {
-    initPointData () {
-        const idArr = []
-        const countArr = []
-        const rightNumArr = []
-        const contentArr = []
-        for (let i = 0, length = this.choiceQuestion.length; i < length; i++) {
-          const index = idArr.indexOf(this.choiceQuestion[i].kpId)
-          if (index < 0) {
-            idArr.push(this.choiceQuestion[i].kpId)
-            countArr.push(1)
-            rightNumArr.push(0)
-            contentArr.push(this.knowledgeMap[this.choiceQuestion[i].kpId])
-          } else {
-            countArr[index] ++
-          }
+    initPointData (choiceQuestion) {
+      const idArr = []
+      const countArr = []
+      const rightNumArr = []
+      const contentArr = []
+      for (let i = 0, length = choiceQuestion.length; i < length; i++) {
+        const index = idArr.indexOf(choiceQuestion[i].kpId)
+        if (index < 0) {
+          idArr.push(choiceQuestion[i].kpId)
+          countArr.push(1)
+          rightNumArr.push(0)
+          contentArr.push(this.knowledgeMap[choiceQuestion[i].kpId])
+        } else {
+          countArr[index] ++
         }
+      }
+
         this.pointData = {
           idArr,
           countArr,
@@ -110,6 +121,7 @@ export default {
           contentArr
         }
     },
+
     /**
      * 点击右上方关闭按钮
      */
@@ -170,6 +182,7 @@ export default {
       this.isBtnDisabled = true
       this.explain = ''
 
+      //最后一题
       if (this.currIndex === this.totalNum - 1) {
         this.updateReport(this.report)
         const me = this
@@ -196,7 +209,7 @@ export default {
      * 跳转到结果页
      */
     goToMark () {
-      this.$route.router.replace('homework/choice/mark')
+      this.$route.router.replace('/homework/choice/mark')
       setTimeout(
         () => {
           this.resetView()
@@ -255,7 +268,8 @@ export default {
       this.report = {
         kpScore: postReportKpScore,
         lessonId: this.lessonId,
-        rightNum: this.rightNum
+        rightNum: this.rightNum,
+        totalNum: this.totalNum
       }
     }
   },

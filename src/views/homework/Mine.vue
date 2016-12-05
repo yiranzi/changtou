@@ -234,7 +234,6 @@
        * @param choice
        **/
       onChoiceTap (choice) {
-        console.log(choice)
         if (choice.available) {
           const me = this
           me.getReport(choice.lessonId).then(
@@ -257,7 +256,6 @@
        * @param essay
       */
       onEssayTap (essay) {
-        console.log(essay)
         if (essay.available) {
           const me = this
           me.getArticle(essay.lessonId).then(
@@ -302,7 +300,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-          () => me.$route.router.go('/homework/essay/answer/:lessonId')
+          () => me.$route.router.go(`/homework/essay/answer/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )

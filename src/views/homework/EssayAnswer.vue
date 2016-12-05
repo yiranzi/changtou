@@ -32,7 +32,6 @@ export default {
     getters: {
       essayContent: essayGetters.essayQuestion,
       essayAnswer: essayGetters.essayAnswer,
-      lessonId: essayGetters.essayLessonId,
       articleId: essayGetters.articleId
     },
     actions: {
@@ -72,7 +71,8 @@ export default {
     }
   },
   route: {
-    data () {
+    data ({to: {params}}) {
+      this.lessonId = params.lessonId
       this.getQuestion(this.lessonId)
       setTimeout(
         this.resizeTextarea,

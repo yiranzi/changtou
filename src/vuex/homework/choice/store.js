@@ -3,7 +3,7 @@
  */
 const state = {
   lessonId: '', //
-  choiceQuestion: null, // 选择题数组
+  choiceQuestion: [], // 选择题数组
   knowledgeMap: null, // 选择题知识点 对应关系
   report: { // 发送服务器的 测试报告
     kpScore: [],  //知识点得分

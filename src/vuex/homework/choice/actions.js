@@ -21,8 +21,6 @@ export const setChoice = ({dispatch}, choice) => {
  * @returns {Promise}
  */
 export const getChoiceQuestion = ({dispatch, state}, lessonId) => {
-  console.log(state)
-
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(

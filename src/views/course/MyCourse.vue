@@ -11,7 +11,7 @@
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
 
-          <div class="homework-panel">
+          <div class="homework-panel" v-if="isLogin">
             <span v-touch:tap="goToMyHomework" class="homework-item">
               <img src="../../assets/styles/image/myCourse/homework.png">
               <p>我的作业</p>
