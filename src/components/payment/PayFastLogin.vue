@@ -34,6 +34,9 @@
           </div>
         </flexbox>
       </group>
+    <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
+      {{errTip}}
+    </div>
   </div>
 </template>
 <script>
@@ -56,6 +59,7 @@ export default {
   },
   data () {
     return {
+      errTip: '',
       phone: '',
       validationCode: '',
       validationBtnText: '获取验证码',
@@ -73,14 +77,22 @@ export default {
     }
   },
   watch: {
+    phone (newPhone) {
+      this.errTip = ''
+    },
     validationCode (newCode) {
+      this.errTip = ''
       const me = this
       if (/^\d{6}$/.test(newCode) && /^1[3|4|5|7|8]\d{9}$/.test(this.phone)) {
         this.fastLoginEnd(this.phone, this.validationCode).then(
           (user) => {
-          me.onCodeConfirm()
-          me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-        }
+            me.onCodeConfirm()
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+          }
+        ).catch(
+          err => {
+            this.errTip = err.message
+          }
         )
       }
     }
@@ -195,6 +207,18 @@ export default {
     .vux-flex-row{
       height: 2rem;
       border-bottom: 1px solid #f0eff5;
+    }
+    .err-tip{
+      width: 100%;
+      line-height: 30px;
+      background: grey;
+      text-align: center;
+      color: black;
+      font-size: 0.7rem;
+    }
+    .no-err{
+      background: transparent;
+      color: transparent;
     }
   }
 </style>

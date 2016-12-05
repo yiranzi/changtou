@@ -193,8 +193,9 @@ export const fastLoginEnd = ({ dispatch }, phone, validationCode) => {
         user => {
           updateAppUser(dispatch, user)
           resolve(user)
-        },
-        err => console.warn(err)
+        }
+      ).catch(
+        err => reject(err)
       )
     }
   )
