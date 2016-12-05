@@ -192,7 +192,7 @@ export function configRouter (router) {
       component: require('../views/homework/Drafts.vue')
     },
     //问答题 写作业
-    '/homework/essay/answer': {
+    '/homework/essay/answer/:lessonId': {
       component: require('../views/homework/EssayAnswer.vue')
     },
     //问答题 看分数
@@ -200,7 +200,7 @@ export function configRouter (router) {
       component: require('../views/homework/EssayMark.vue')
     },
     //选择题 做测试
-    '/homework/choice/answer': {
+    '/homework/choice/answer/:lessonId': {
       component: require('../views/homework/ChoiceAnswer.vue')
     },
     //选择题 看分数

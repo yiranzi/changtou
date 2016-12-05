@@ -210,7 +210,6 @@ export default {
      * 点击我的作业
      */
     goToMyHomework () {
-      console.log('goToMyHomework')
       this.$route.router.go('/homework/mine')
     },
     /**

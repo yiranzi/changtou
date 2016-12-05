@@ -36,6 +36,7 @@ export default {
       articleId: essayGetters.articleId
     },
     actions: {
+      getQuestion: essayActions.getEssayQuestion,
       submitArticle: essayActions.submitArticle
     }
   },
@@ -72,6 +73,7 @@ export default {
   },
   route: {
     data () {
+      this.getQuestion(this.lessonId)
       setTimeout(
         this.resizeTextarea,
         300

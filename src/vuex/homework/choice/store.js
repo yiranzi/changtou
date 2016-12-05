@@ -32,7 +32,7 @@ const mutations = {
   UPDATE_CHOICE_REPORT (state, report) {
     state.report.kpScore = report.kpScore
     state.report.rightNum = report.rightNum
-    state.report.totalNum = state.choiceQuestion.length
+    state.report.totalNum = report.totalNum
   },
 
   /**

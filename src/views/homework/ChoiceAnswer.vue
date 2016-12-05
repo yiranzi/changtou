@@ -34,6 +34,7 @@ export default {
       knowledgeMap: choiceGetters.knowledgeMap
     },
     actions: {
+      getQuestion: choiceActions.getChoiceQuestion,
       updateReport: choiceActions.updateReport,
       submitReport: choiceActions.submitReport
     }
@@ -81,6 +82,7 @@ export default {
   },
   route: {
     data () {
+      this.getQuestion(this.lessonId)
       this.initPointData()
     }
   },

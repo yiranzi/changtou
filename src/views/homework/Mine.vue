@@ -111,7 +111,6 @@
             let essay = []
             let essayTotal = 0
             let completeEssayNum = 0
-            console.log()
             let lessonIds = me.expenseRecords.find(
               function (record) {
                 return record.subjectId === item.subjectId
@@ -235,22 +234,22 @@
        * @param choice
        **/
       onChoiceTap (choice) {
+        console.log(choice)
         if (choice.available) {
           const me = this
-          // todo me.setChoiceQuestion(choiceQuestionArr)
           me.getReport(choice.lessonId).then(
             report => {
-            if (report.kpScore) {
-            // 做过选择题
-            me.$route.router.go('homework/choice/mark')
-          } else {
-            // 没做过
-            me.showChoice = true
-          }
-        }
-        ).catch(
+              if (report.kpScore) {
+                // 做过选择题
+                me.$route.router.go('/homework/choice/mark')
+              } else {
+                // 没做过
+                me.$route.router.go(`/homework/choice/answer/${choice.lessonId}`)
+              }
+            }
+          ).catch(
             err => console.log(err.message)
-        )
+          )
         }
       },
       /**
@@ -258,9 +257,9 @@
        * @param essay
       */
       onEssayTap (essay) {
+        console.log(essay)
         if (essay.available) {
           const me = this
-          // todo me.setEssayQuestion(essayQuestion)
           me.getArticle(essay.lessonId).then(
             evaluation => {
               if (evaluation && evaluation.status !== null) {
@@ -303,7 +302,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-          () => me.$route.router.go('/homework/essay/answer')
+          () => me.$route.router.go('/homework/essay/answer/:lessonId')
         ).catch(
             err => console.warn(err)
         )
