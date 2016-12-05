@@ -139,7 +139,8 @@ export default {
               }
             }, 1000)
         }).catch(
-          () => {
+          (err) => {
+            me.errTip = err.message
             me.isValidationBtnDisable = false
             clearInterval(me.timer)
           }

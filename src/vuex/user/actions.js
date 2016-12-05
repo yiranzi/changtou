@@ -166,8 +166,9 @@ export const fastLoginStart = ({ dispatch }, phone) => {
       ).then(
         () => {
           resolve()
-        },
-        err => console.warn(err)
+        }
+      ).catch(
+        err => reject(err)
       )
     }
   )
