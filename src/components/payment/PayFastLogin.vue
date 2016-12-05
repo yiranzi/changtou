@@ -6,16 +6,13 @@
   <div class="order-fast-login" v-if="show">
       <p class="fast-login-title">免登陆购买或<span v-touch:tap="onLoginTap" style="color: #007aff;">立即登录</span></p>
       <group>
-        <x-input title="手机号"
-                 placeholder="输入手机号"
-                 :readonly="isPhoneReadonly"
-                 :value.sync="phone">
-        </x-input>
         <flexbox>
           <flexbox-item>
-            <x-input title="验证码"
-                     placeholder="输入验证码"
-                     :value.sync="validationCode">
+            <x-input title="手机号"
+                     placeholder="输入手机号"
+                     :show-clear="false"
+                     :readonly="isPhoneReadonly"
+                     :value.sync="phone">
             </x-input>
           </flexbox-item>
           <ict-button type="mini"
@@ -23,6 +20,18 @@
                       @click="getValidationCode"
                       :text="validationBtnText">
           </ict-button>
+        </flexbox>
+        <flexbox>
+          <flexbox-item>
+            <x-input title="验证码"
+                     :show-clear="false"
+                     placeholder="输入验证码"
+                     :value.sync="validationCode">
+            </x-input>
+          </flexbox-item>
+          <div class="code-tip">
+            10分钟内有效
+          </div>
         </flexbox>
       </group>
   </div>
@@ -150,8 +159,42 @@ export default {
       font-size: 0.75rem;
       color: #656565;
     }
+    .ict-btn-mini{
+      height: 1.3rem;
+      width: 4.25rem;
+      margin-right: 0.5rem;
+      border: 1px solid #007aff;
+      border-radius: 0;
+      font-size: 0.65rem;
+      background: #fff;
+      color: #007aff;
+    }
+    .ict-btn-disabled.ict-btn-mini{
+      border: 1px solid #ddd;
+      color: #ddd;
+    }
+    .code-tip{
+      margin-right: 1rem;
+      font-size: 0.65rem;
+      color: #aaa;
+    }
     .weui_cells{
       margin: 0;
+      .weui_label{
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #080808;
+      }
+      .weui_input{
+        font-size: 0.7rem;
+      }
+      .weui_icon_warn{
+        display: none;
+      }
+    }
+    .vux-flex-row{
+      height: 2rem;
+      border-bottom: 1px solid #f0eff5;
     }
   }
 </style>
