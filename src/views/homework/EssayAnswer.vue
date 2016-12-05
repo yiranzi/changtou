@@ -41,6 +41,7 @@ export default {
   },
   data () {
     return {
+      lessonId: 0,
       isToast: false,
       toastMsg: '',
       isAlert: false,

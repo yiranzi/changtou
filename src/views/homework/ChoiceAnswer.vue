@@ -40,6 +40,7 @@ export default {
   },
   data () {
     return {
+      lessonId: 0,
       btnText: '下一题', // 按钮文案
       isBtnDisabled: true,  // 按钮是否可用
       isRight: false, // 答对

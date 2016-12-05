@@ -67,9 +67,7 @@
       },
       actions: {
         getMyHomework: myHomeworkActions.getMyHomework,
-        setEssayQuestion: essayActions.setEssay,
         getArticle: essayActions.getArticle,
-        setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport
       }
     },
