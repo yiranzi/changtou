@@ -20,12 +20,22 @@ Vue.mixin({
         {title, message, okText, okCallback, cancelText, cancelCallback})
     },
 
-    showAlert: function ({message = '', btnText = '确定'}) {
-      this.$dispatch(eventMap.SHOW_ALERT, {message, btnText})
+    showAlert: function (args) {
+      if (typeof args === 'string') {
+        this.$dispatch(eventMap.SHOW_ALERT, {message: args, btnText: '确定'})
+      } else if (typeof args === 'object') {
+        const {message = '', btnText = '确定'} = args
+        this.$dispatch(eventMap.SHOW_ALERT, {message, btnText})
+      }
     },
 
-    showToast: function ({message = '', type = 'text'}) {
-      this.$dispatch(eventMap.SHOW_TOAST, {message, type})
+    showToast: function (args) {
+      if (typeof args === 'string') {
+        this.$dispatch(eventMap.SHOW_TOAST, {message: args, type: 'text'})
+      } else if (typeof args === 'object') {
+        const {message = '', type = 'text'} = args
+        this.$dispatch(eventMap.SHOW_TOAST, {message, type})
+      }
     },
 
     showMask: function ({component, hideOnMaskTap = true, callbackName, callbackFn}) {
