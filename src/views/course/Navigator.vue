@@ -18,7 +18,7 @@
             院生故事
           </span>
         </div>
-        <div class="expenselist-area">
+        <div class="expenselist-area" id="popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -39,7 +39,7 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
-        <div class="expenselist-area">
+        <div class="expenselist-area" id="expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">优质好课</span>
@@ -223,10 +223,13 @@
 
 <style lang="less">
   .course-navigator{
+    #popularSpe{
+      padding-bottom: .8rem;
+    }
     .expenselist-area{
-      padding-bottom: 1rem;
       .box-container{
-        width: 45rem;
+        width: 37.5rem;
+        margin-left: .3rem;
         .box-item {
           float: left;
           text-align: center;
@@ -326,7 +329,9 @@
       }
     }
 
-
+    #expenselistSpe{
+      border-bottom: .4rem solid #f0eff5;
+    }
     .expenselist-area{
       background: white;
       text-align: center;
@@ -388,6 +393,7 @@
     }
 
     .freelist-area{
+      background: white;
       text-align: center;
       .free-course{
         display: inline-block;
@@ -460,13 +466,13 @@
       background: url("../../assets/styles/image/feiji.png") no-repeat  center  center / 90%;
       display: inline-block;
       position: absolute;
-      left: 80%;
+      left: 86%;
       top: 40%;
     }
 
     .finan-icon{
-      width: 1.525rem;
-      height: 1.525rem;
+      width: 1.725rem;
+      height: 1.725rem;
       display: inline-block;
       margin-bottom: -.5rem;
       zoom: .5;

@@ -116,8 +116,8 @@
     methods: {
       updateSelectedLesson (lesson, index) {
         this.selectedLesson = lesson
-        this.currSelecteLessonIndex = index
-        this.$dispatch('lessonSelectedFree', lesson)
+        this.currSelectedLessonIndex = index
+        this.$dispatch('lessonSelectedFree', lesson, this.currSelectedLessonIndex)
       }
     }
   }
