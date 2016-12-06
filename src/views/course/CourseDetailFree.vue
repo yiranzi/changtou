@@ -363,6 +363,7 @@
        * 参加课程
        */
       join () {
+        console.log(this.isUserLogin)
         if (this.isUserLogin) {
           const me = this
           me.joinSubject(parseInt(me.subjectId)).then(
