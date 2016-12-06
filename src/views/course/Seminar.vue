@@ -86,7 +86,6 @@
       }
     }
     .full-screen-icon{
-      /*display: none;*/
     }
   }
 
@@ -199,6 +198,7 @@
       back () {
         window.history.back()
       },
+
       /**
        * 重置页面
        */
