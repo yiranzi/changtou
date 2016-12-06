@@ -302,7 +302,7 @@ export const resetNickName = ({ dispatch }, nickName) => {
       }
       postWithinAuth(
         {
-          url: getUrl('reset_nickname'),
+          url: getUrl('reset_nick_post_nickname'),
           data: {
             nickName
           }
