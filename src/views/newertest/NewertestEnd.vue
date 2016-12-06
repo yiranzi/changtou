@@ -138,6 +138,7 @@
           background-size: 100%;
         }
         .label{
+          background-repeat: no-repeat;
           margin-left: 0.7rem;
           padding: 0.3rem 1rem;
           background-image: url("../../assets/styles/image/newertest/end/lable2.png");
@@ -225,16 +226,20 @@
     },
     computed: {
       isBulb2: function () {
+        if (this.testReport.level) {
         if (this.testReport.level === 2 || this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
+      }
       },
       isBulb3: function () {
+      if (this.testReport.level) {
         if (this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
+      }
       }
     },
       ready () {

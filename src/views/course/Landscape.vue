@@ -25,7 +25,7 @@
   import WebAudio from '../../components/WebAudio.vue'
   import Swiper from 'vue-swiper'
   import {getSessionCache, clearSessionCache} from '../../util/cache'
-//  import { courseDetailGetters } from '../../vuex/getters'
+  //import { courseDetailGetters } from '../../vuex/getters'
 
   export default {
     data () {
@@ -98,12 +98,11 @@
     },
 
     route: {
-      data ({to: {params: {subjectId, lessonId}}}) {
-        const {lesson, chapterIndex, currChapter} = getSessionCache('landscapeSrc')
-        clearSessionCache('landscapeSrc')
+      data ({to: {params: {selectedChapter}}}) {
+        const {chapterIndex, currChapter} = getSessionCache('landscapeSrc')
 
+        clearSessionCache('landscapeSrc')
         return Promise.resolve({
-          lesson,
           chapterIndex,
           currChapter,
           isFloatShow: true,

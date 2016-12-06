@@ -125,7 +125,7 @@
 
     .title-babel:after {
       position: absolute;
-      right: -60/40rem;
+      left:3.8555rem;
       content: '';
       height: 0;
       width: 0;

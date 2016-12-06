@@ -22,7 +22,7 @@
         </div>
         <hr>
         <div class="score-summary">
-          <p class="defeat-num">同期战胜{{defeatNum}}的人</p>
+          <p class="defeat-num">同期战胜{{defeatNum}}%的人</p>
           <p class="correct-rate">小测试共{{report.totalNum}}道 正确率{{score * 20}}%</p>
           <p class="right-num">答对{{report.rightNum}}道 答错{{report.totalNum-report.rightNum}}道</p>
           <span class="retest-btn" v-touch:tap="reTest">重测</span>

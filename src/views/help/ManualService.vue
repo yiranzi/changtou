@@ -12,7 +12,7 @@
           <div class="answer">
             <img class="answer_avatar" src="../../assets/styles/image/help/answerImg.png">
             <div class="answer_content">
-              <div>若需急速解决请加QQ客服群578360014（或扫描下方二维码），咨询人工服务。客服事件：上午11:00-12:00，下午16:00-18:00</div>
+              <div>若需急速解决请加QQ客服群578360014（或扫描下方二维码），咨询人工服务。客服时间：上午11:00-12:00，下午16:00-18:00</div>
               <img src="../../assets/styles/image/help/qrcode.png">
             </div>
           </div>
@@ -301,6 +301,7 @@
         font-size: 0.7rem;
         outline: 0;
         font-family: '微软雅黑';
+        border-radius: .3rem;
       }
       .send_box{
         width: 20%;
