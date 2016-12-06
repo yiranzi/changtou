@@ -99,9 +99,8 @@ const mixin = {
     },
 
     [eventMap.SHOW_TOAST]: function ({message, type}) {
-      const me = this
-      me.isMaskShow = true
-      me.toast = {
+      this.isMaskShow = true
+      this.toast = {
         show: true,
         type: type, // success,text
         message: message

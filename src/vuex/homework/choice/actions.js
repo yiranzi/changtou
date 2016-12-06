@@ -20,7 +20,7 @@ export const setChoice = ({dispatch}, choice) => {
  * @param lessonId
  * @returns {Promise}
  */
-export const getChoiceQuestion = ({dispatch, state}, lessonId) => {
+export const getChoiceQuestion = ({dispatch}, lessonId) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(

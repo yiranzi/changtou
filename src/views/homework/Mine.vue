@@ -169,9 +169,6 @@
         )
       }
     },
-    watch: {
-
-    },
     route: {
       data () {
         const me = this
@@ -193,9 +190,6 @@
           err => me.showAlert(err.message)
         )
       }
-    },
-    ready () {
-
     },
     methods: {
       /**

@@ -36,7 +36,7 @@
       <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
     </flexbox>
 
-    <div class="third-party-container" v-if="showWx || showQQ">
+    <div class="third-party-container" v-if="isWxShow || isQQShow">
       <div class="third-text-container">
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
@@ -44,11 +44,11 @@
       </div>
       <div style="height: 0.5rem" class="spacer"></div>
       <div class="third-icon-container">
-        <div class="third-icon" v-if="showQQ">
+        <div class="third-icon" v-if="isQQShow">
           <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
           <p>QQ登录</p>
         </div>
-        <div class="third-icon" v-if="showWx">
+        <div class="third-icon" v-if="isWxShow">
           <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
           <p>微信登录</p>
         </div>
@@ -86,10 +86,10 @@
         plainPassword: '',
         identity: '',
         disabled: true,
-        showQQ: false,             // 是否显示qq
-        showWx: false,            //  是否显示微信
-        QQInstall: false,           // 是否安装qq
-        WXInstall: false           // 是否安装wx
+        isQQShow: false,             // 是否显示qq
+        isWxShow: false,            //  是否显示微信
+        isQQInstall: false,           // 是否安装qq
+        isWXInstall: false           // 是否安装wx
       }
     },
     watch: {
@@ -120,30 +120,30 @@
           return Promise.all(checkList).then(function (reArr) {
             if (Device.platform === platformMap.IOS) {
               return {
-                QQInstall: reArr[0],
-                WXInstall: reArr[1],
-                showQQ: reArr[0],
-                showWx: reArr[1]
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: reArr[0],
+                isWxShow: reArr[1]
               }
             } else if (Device.platform === platformMap.ANDROID) {
               return {
-                QQInstall: reArr[0],
-                WXInstall: reArr[1],
-                showQQ: true,
-                showWx: true
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: true,
+                isWxShow: true
               }
             }
           })
         } else {
-          this.showQQ = false
-          this.showWx = false
+          this.isQQShow = false
+          this.isWxShow = false
         }
       }
     },
     methods: {
       onQQLoginTap () {
         const me = this
-        if (this.QQInstall) {
+        if (this.isQQInstall) {
           qqAuth.QQAuth().then(
               qqCode => {
                   me.loginByQQ(qqCode).then(
@@ -162,7 +162,7 @@
       },
       onWxLoginTap () {
         const me = this
-        if (this.WXInstall) {
+        if (this.isWXInstall) {
           wxAuth.WxAuth().then(
             wxCode => {
               me.loginByWx(wxCode).then(
