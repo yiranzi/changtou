@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div style="height: 100%;" class="seminar-detail">
+  <div style="height: 100%;" class="seminar-detail" v-touch:tap='showSystempUpdatePage'>
     <div class="top-back-btn" v-touch:tap="back"></div>
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
@@ -86,7 +86,7 @@
       }
     }
     .full-screen-icon{
-      display: none;
+      /*display: none;*/
     }
   }
 
@@ -100,22 +100,42 @@
   import Scroller from 'vux/scroller'
   import {getWithoutAuth} from '../../frame/ajax'
   import {getUrl} from '../../frame/apiConfig'
-//  import {setSessionCache} from '../../util/cache'
+  import {setSessionCache} from '../../util/cache'
 
   export default {
     data () {
       return {
-        isResponsive: true, // 当前页面是否处于可响应状态 ((响应 音频播放完成,全屏 事件))
-        scrollerHeight: '0px',
-
         seminarId: '', //讲座Id
         seminar: null, //讲座
+        isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
+        scrollerHeight: '480px',  // 0px ?
 
+        isLoadedFail: false, //数据是否加载完毕
+        subjectId: '', //课程Id
         hasVaildChapterCicked: false,
 
-        selectedLesson: null, //当前选中的chapter
+        isSubjectBranch: false, // 当前课程是否为选修课
+        currSubject: null, // 当前课程
+        currRecord: null, //当起进度
+        currUseabLessonArr: [], //当前可用lessonId集合
+        currStatus: 'L', //当前课程状态 {N：在读 | E：过期 | Y：毕业 | P：暂停 | I ：未激活 | W : 没有进度} 默认L: 加载中
+        lastSubmitlessonId: 0, //最后一次提交作业的lesson
+        isAssignmentSubmitted: false,
+        is90daysPostponeUsed: false,
+        isSuspendUsed: false,
+
+        currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
+        currTabIndex: 0,
+
+        selectedLesson: null, //当前选中的lesson
+        selectedChapter: null, //当前选中的chapter
+        currChapterIndex: -1, //当前选中的chater index
         currAudioSrc: null, //当前音频地址
-        currPpts: [] //当前ppt地址集合
+        currPpts: [], //当前ppt地址集合
+
+        isSelectdLessonLimited: true, //当前选中lesson是否受限
+        showEssay: false,
+        showChoice: false
       }
     },
 
@@ -129,7 +149,10 @@
        * @param seminarId
        */
       data ({to: {params: {seminarId}}, from}) {
-        // todo 2.4 横屏
+         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        if (from.path && from.path.indexOf('landscape/') > -1) {
+          // do nothing
+        } else {
         this.resetView()
         this.seminarId = seminarId
         const me = this
@@ -140,17 +163,21 @@
             me.seminar = seminar
           }
         )
-      },
+       }
+      }
 
       /**
        * 页面隐藏时
        */
-      deactivate ({to, next}) {
-        // todo 2.4 横屏
+     /* deactivate ({to, next}) {
+       if (to.path && to.path.indexOf('landscape/') > -1) {
+          next()
+        } else {
         this.pause()
         this.isResponsive = false
         next()
       }
+      } */
     },
 
     ready () {
@@ -164,12 +191,14 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'lessonSelectedFree': function (lesson) {
+      'lessonSelectedFree': function (lesson, currSelectedLessonIndex) {
         this.playChapter(lesson)
+        this.selectedLesson = lesson
+        this.selectedChapter = currSelectedLessonIndex
       },
 
       /**
-       * 音频播放结束
+       * 音频播放结束s
        * 继续播放下一节可用的音频
        */
       'audioPlayEnd' () {
@@ -178,6 +207,11 @@
           // 由子组件接收事件控制
           this.$broadcast('playNextCapterSeminar')
         }
+      },
+      'fullScreenTap' () {
+        if (this.isResponsive) {
+          this.goToFullScreen(this.selectedLesson, this.selectedChapter)
+        }
       }
     },
 
@@ -185,7 +219,6 @@
       back () {
         window.history.back()
       },
-
       /**
        * 重置页面
        */
@@ -212,9 +245,13 @@
         this.currAudioSrc = lesson.audio
         this.currPpts = lesson.ppts
         this.$dispatch('chapterPlay', lesson)
+      },
+      goToFullScreen (currChapter, selectedChapter) {
+      setSessionCache('landscapeSrc', {currChapter, selectedChapter})
+      const currIndex = 1
+     this.$route.router.go(`/landscape/${selectedChapter}/${currIndex}`)
       }
     },
-
     components: {
       WebAudio,
       Swiper,

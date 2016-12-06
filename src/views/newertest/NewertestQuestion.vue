@@ -106,16 +106,16 @@
         height: 10.675rem;
         background-image: url("../../assets/styles/image/newertest/answerButton.png");
         background-size: 100%;
-        line-height: 10.675rem;
+      /*  line-height: 10.675rem;  */
         text-align: center;
         .box{
-          display: inline-block;
-          width: 7.5rem;
-          height: 4.5rem;
-          vertical-align: middle;
           font-size: 1.3rem;
           font-weight: bold;
-          -webkit-writing-mode: vertical-rl;
+          /* -webkit-writing-mode: vertical-rl; */
+          position: absolute;
+          left: 28%;
+          top: 30%;
+          width: 47%;
         }
       }
       .btn-disabled{

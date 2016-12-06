@@ -1,25 +1,22 @@
 <template>
-    <div class="principal-base reset-password-start">
+    <div>
       <ict-titlebar>重置密码</ict-titlebar>
-      <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
-        {{errTip}}
-      </div>
       <flexbox>
         <flexbox-item :span="1/20"></flexbox-item>
         <flexbox-item>
           <group>
-            <div style="height: 1rem"></div>
             <x-input title="手机号"
                      placeholder="输入手机号"
                      :value.sync="phone">
             </x-input>
           </group>
-          <div style="height: 3rem" class="spacer"></div>
+          <div style="height: 4rem" class="spacer"></div>
           <ict-button type="default"
                     :disabled="isDisabled"
                     @click="sendPhone"
                     text="提交">
           </ict-button>
+          <div style="height: 4rem" class="spacer"></div>
         </flexbox-item>
         <flexbox-item :span="1/20"></flexbox-item>
       </flexbox>
@@ -43,7 +40,6 @@ export default {
   },
   data () {
     return {
-      errTip: '',
       phone: ''
     }
   },
@@ -52,20 +48,14 @@ export default {
       return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
     }
   },
-  watch: {
-    phone () {
-      this.errTip = ''
-    }
-  },
   methods: {
     /**
      * 点击下一步
      */
     sendPhone () {
       this.resetPasswordStart(this.phone).then(
-        () => { this.$route.router.go('/reset/password/' + this.phone) }
-      ).catch(
-        err => { this.errTip = err.message }
+        () => this.$route.router.go('/reset/password/' + this.phone),
+        (err) => this.showAlert(err)
       )
     }
   },
@@ -79,8 +69,3 @@ export default {
   }
 }
 </script>
-<style lang="less">
-  .reset-password-start{
-
-  }
-</style>

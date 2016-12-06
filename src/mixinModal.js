@@ -40,6 +40,13 @@ Vue.mixin({
 
     showMask: function ({component, hideOnMaskTap = true, callbackName, callbackFn}) {
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, callbackName, callbackFn})
+    },
+    hideMask () {
+     // const me = this
+      let MyComponent = Vue.extend({
+        template: `<div></div>`
+      })
+      new MyComponent({ el: '#mask' })
     }
   }
 })
@@ -132,17 +139,6 @@ const mixin = {
         }
       })
       new MyComponent({ el: '#mask' })
-    }
-  },
-  methods: {
-    hideMask () {
-      const me = this
-      let MyComponent = Vue.extend({
-        template: `<div></div>`
-      })
-      new MyComponent({ el: '#mask' })
-      me.isMaskShow = false
-      me.isMaskShow = false
     }
   }
 }

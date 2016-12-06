@@ -20,6 +20,7 @@
                  class="custom-input"
                  text-align="left"
                  placeholder="输入密码"
+                   type="password"
                  :value.sync="plainPassword" >
           </x-input>
         </group>
@@ -31,9 +32,9 @@
     <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
 
     <flexbox>
-      <ict-button type="string" text="注册" v-touch:tap="doRegister"></ict-button>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="regiBtn ictBtn"></ict-button>
       <flexbox-item></flexbox-item>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="forgetPwd ictBtn"></ict-button>
     </flexbox>
 
     <div class="third-party-container" v-if="isWxShow || isQQShow">
@@ -222,6 +223,17 @@
     width: 100%;
     height: 100%;
     position: relative;
+    .ictBtn{
+      font-size: .65rem;
+    }
+    .regiBtn{
+      text-align: left;
+      padding-left: 1.5rem;
+    }
+    .forgetPwd{
+      text-align: right;
+      padding-right: 1.5rem;
+    }
     p{
       margin: 0;
     }

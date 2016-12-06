@@ -301,6 +301,7 @@
         font-size: 0.7rem;
         outline: 0;
         font-family: '微软雅黑';
+        border-radius: .3rem;
       }
       .send_box{
         width: 20%;

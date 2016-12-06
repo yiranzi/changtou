@@ -87,7 +87,7 @@
   }
 
   .timer {
-    width: 4rem;
+    /*width: 4rem;*/
     font-size: 12/20rem;
     font-weight: bold;
     color: #fff
