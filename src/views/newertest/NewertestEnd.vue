@@ -226,16 +226,20 @@
     },
     computed: {
       isBulb2: function () {
+        if (this.testReport.level) {
         if (this.testReport.level === 2 || this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
+      }
       },
       isBulb3: function () {
+      if (this.testReport.level) {
         if (this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
+      }
       }
     },
       ready () {

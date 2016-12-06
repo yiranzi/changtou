@@ -17,7 +17,6 @@
           <p v-for="course in product.related" class="strategy-options-related-item"
              v-touch:tap="goToCourse(course.type,course.itemType,course.itemId)">
             {{course.itemName}}》
-            <span class="play-icon" ></span>
           </p>
           <div class="strategy-options-intro" v-if="product.intro">
             <p v-for="item in product.intro">{{item}}</p>

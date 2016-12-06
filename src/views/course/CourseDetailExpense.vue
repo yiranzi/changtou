@@ -820,6 +820,7 @@
       playChapter (chapter) {
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
+        console.log(JSON.stringify(chapter))
         this.$dispatch('chapterPlay', chapter)
       },
 
