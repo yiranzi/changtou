@@ -5,8 +5,8 @@
 
 <template>
   <div class="course-list">
-    <ict-titlebar>全部课程</ict-titlebar>
-    <scroller :lock-x="true" scrollbar-y v-ref:scroller>
+    <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
         <div class="promote-panel" v-show="promoteShow" v-touch:tap="goToProfessionalStrategy">
           <img src="../../assets/styles/image/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
@@ -57,13 +57,33 @@
     },
     data () {
       return {
+        scrollerHeight: '0px',
         promoteShow: true
+      }
+    },
+    route: {
+      data () {
+        this.setScrollerHeight()
       }
     },
     created () {
       this.loadList()
     },
     methods: {
+      /**
+       * 设置滚动高度
+       */
+      setScrollerHeight () {
+        const me = this
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 200)
+      },
       onPromoteCloseTap () {
         this.promoteShow = false
       },
