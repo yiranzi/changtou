@@ -44,7 +44,7 @@
       border-bottom: 1px solid #f0eff5;
       background-color: #fff;
       .msg-content{
-        padding: 0.7rem 0.9rem;
+        padding: 0.7rem 0.5rem;
         margin: 0;
         font-size: 0.7rem;
       }
