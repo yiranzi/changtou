@@ -162,7 +162,6 @@
         ]
         this.proLeftDays = order.proLeftDays
         this.deductions = [order.oneYearPaid ? order.oneYearPaid : 0, order.twoYearsPaid ? order.twoYearsPaid : 0]
-        this.coupons = this.getCoupons(order)
         this.currentBalance = order.currentBalance
       },
       /**
