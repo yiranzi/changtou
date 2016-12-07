@@ -96,7 +96,7 @@
     }
     &:not(.ict-btn-disabled):active {
       color: @color-default-pressed-text-color;
-      background-color: @color-default-pressed-background;
+     // background-color: @color-default-pressed-background;
     }
   }
 
@@ -129,6 +129,7 @@
       background-color: @color-title-button-background;
     }
   }
+
 
   //disabled
   .ict-btn-disabled {

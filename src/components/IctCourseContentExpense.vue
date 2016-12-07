@@ -139,6 +139,7 @@
   .expand-transition {
     transition: all 0.3s ease;
     opacity: 1;
+    margin-left: .7rem;
   }
 
   /* .expand-enter 定义进入的开始状态 */
