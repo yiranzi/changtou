@@ -38,8 +38,8 @@ Vue.mixin({
       }
     },
 
-    showMask: function ({component, hideOnMaskTap = true, callbackName, callbackFn}) {
-      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, callbackName, callbackFn})
+    showMask: function ({component, hideOnMaskTap = true, data, callbackName, callbackFn}) {
+      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, data, callbackName, callbackFn})
     },
     /**
      * 隐藏 mask
@@ -119,13 +119,13 @@ const mixin = {
       }
     },
 
-    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, callbackName, callbackFn}) {
+    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
       let MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-float-mask" v-touch:tap="onFloatMaskTap"></div>
-                    <div class="ict-float-component"><mask-component></mask-component></div>
+                    <div class="ict-float-component"><mask-component><a slot="data">${data}</a></mask-component></div>
                   </div>`,
         components: {
           'mask-component': require('./components/' + component)

@@ -216,7 +216,7 @@ export default {
      * 点击我的毕业证书
      */
     goToMyDiploma () {
-      console.log('goToMyDiploma')
+      this.$route.router.go('/graduation/list')
     }
   },
   components: {

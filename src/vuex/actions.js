@@ -22,7 +22,7 @@ import * as helpActions from './help/actions'
 import * as strategyIntroActions from './strategy/intro/actions'
 import * as strategyProductActions from './strategy/product/actions'
 import * as strategyNoticeActions from './strategy/notice/actions'
-
+import * as graduationDiplomaActions from './graduationDiploma/actions'
 export {
   userActions,
   navigatorActions,
@@ -44,5 +44,6 @@ export {
   helpActions, //小投答疑
   strategyIntroActions, // 策略产品 宣传
   strategyProductActions, // 策略产品 数据
-  strategyNoticeActions //策略产品 通知
+  strategyNoticeActions, //策略产品 通知
+  graduationDiplomaActions // 毕业证
 }

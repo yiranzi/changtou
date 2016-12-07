@@ -6,6 +6,7 @@
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
 import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/actions'
+import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {choiceActions} from './vuex/actions'
@@ -22,6 +23,7 @@ const mixin = {
       jpushInit,
       jpushSetAlias,
       jpushAddReceiveHandler,
+      getDiplomaList,
       syncUser
     },
     getters: {
@@ -95,6 +97,17 @@ const mixin = {
       this.doWhenUserNotValid(user)
     },
 
+    [eventMap.SUBJECT_GRADUATION]: function ({subjectId}) {
+      this.showMask({
+        component: 'graduationDiploma/Congratulation.vue',
+        hideOnMaskTap: true,
+        callbackName: 'graduationCongratulationConfirm',
+        callbackFn: () => {
+          this.$route.router.go(`/graduation/subject/diploma/${subjectId}`)
+        }
+      })
+    },
+
     /**
      * 章节播放,这里做中转,供横屏页面监听同步
      * @param chapter
@@ -116,6 +129,8 @@ const mixin = {
       tasks.push(this.loadAllExpenseRecords())
       // 设置jpush用户关联
       tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
+      // 获取毕业证列表
+      tasks.push(this.getDiplomaList().then(this.onGraduationDiplomaLoaded))
 
       return Promise.all(tasks).then(
         () => {}
@@ -141,6 +156,20 @@ const mixin = {
     hideSplashscreen: function () {
       if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
          window.navigator.splashscreen.hide()
+      }
+    },
+
+    /**
+     * 下载了用户的毕业证列表
+     */
+    onGraduationDiplomaLoaded: function (diplomaList) {
+      const newDiploma = diplomaList.find(
+        function (diploma) {
+          return diploma.show
+        }
+      )
+      if (newDiploma) {
+        this.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
       }
     }
   }
