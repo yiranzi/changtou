@@ -59,9 +59,9 @@
       },
       canUserBuy () {
         let subjectIndex = this.expenseRecords.findIndex(function (record) {
-          if (this.subjectId === record.subjectId) {
+           if (this.subjectId === record.subjectId) {
             return true
-          }
+            }
         })
         return !(this.isLogin && (subjectIndex >= 0))
       },
