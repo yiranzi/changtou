@@ -86,14 +86,25 @@
         })
         }, 200)
       },
-      /**
-       * 立即购买
-       */
-      buyNow () {
+      onAgreeTap () {
+        this.hideMask()
         this.$route.router.on(`/pay-VS-0`, {
           component: require('../pay/VipStrategyOrder.vue')
         })
         this.$route.router.go(`/pay-VS-0`)
+      },
+      /**
+       * 立即购买
+       */
+      buyNow () {
+        if (!this.disabled) {
+          this.showMask({
+            component: 'strategy/StrategyAgreement.vue',
+            hideOnMaskTap: true,
+            callbackName: 'onAgreeTap',
+            callbackFn: this.onAgreeTap.bind(this) //组件上的
+          })
+        }
       }
     },
     components: {

@@ -101,6 +101,7 @@
       },
 
       onAgreeTap () {
+        this.hideMask()
         this.$route.router.on(`/pay-PS-0`, {
           component: require('../pay/ProStrategyOrder.vue')
         })
