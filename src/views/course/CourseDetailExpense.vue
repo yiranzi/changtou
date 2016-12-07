@@ -697,6 +697,8 @@
         const msg = '<p style="text-align: left">课程暂停功能为在短时间内无法继续学习的院生提供临时性免费停课机会，暂停功能只在课程有效期内使用；</p>' +
             '<p style="text-align: left">仅有一次暂停30天机会，中途支持提前开启课程；</p>' +
             '<p style="text-align: left">您是否想暂停课程？</p>'
+
+        me.showAlert('激活课程成功')
         me.showConfirm({
           title: '',
           message: msg,
