@@ -111,6 +111,7 @@ export default {
       }
     }
     .draft-item{
+      position: relative;
       background: #fff;
       padding: 0.9rem 0.6rem 0.65rem;
       margin-top: 0.4rem;
