@@ -5,7 +5,6 @@
 <template>
     <div class="strategy-zhishubao">
       <div>
-        <div class="product-flag-container"></div>
         <div class="product-title-container">指数宝策略</div>
         <div class="content">
           <div class="recommend-product">

@@ -37,7 +37,7 @@
       <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="forgetPwd ictBtn"></ict-button>
     </flexbox>
 
-    <div class="third-party-container">
+    <div class="third-party-container" v-if="isWxShow || isQQShow">
       <div class="third-text-container">
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
@@ -45,11 +45,11 @@
       </div>
       <div style="height: 0.5rem" class="spacer"></div>
       <div class="third-icon-container">
-        <div class="third-icon">
+        <div class="third-icon" v-if="isQQShow">
           <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
           <p>QQ登录</p>
         </div>
-        <div class="third-icon">
+        <div class="third-icon" v-if="isWxShow">
           <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
           <p>微信登录</p>
         </div>
@@ -87,11 +87,10 @@
         plainPassword: '',
         identity: '',
         disabled: true,
-        qqIcon: '',               // 是否居中
-        wxIcon: '',                // 是否居中
-        showQQ: true,               // 是否显示qq
-        showWx: true,        //  是否显示微信
-        IconPosCen: ''
+        isQQShow: false,             // 是否显示qq
+        isWxShow: false,            //  是否显示微信
+        isQQInstall: false,           // 是否安装qq
+        isWXInstall: false           // 是否安装wx
       }
     },
     watch: {
@@ -115,70 +114,71 @@
     route: {
       data (transition) {
         this.plainPassword = ''
-        if (Device.platform === platformMap.IOS) {
+        if (Device.platform !== platformMap.WEB) {
           const checkList = []
-          const me = this
           checkList.push(qqAuth.checkQQInstalled())
           checkList.push(wxAuth.checkWxInstalled())
           return Promise.all(checkList).then(function (reArr) {
-            if (reArr[0] && reArr[1]) {
-              me.IconPosCen = ''
-            } else if (reArr[0] || reArr[1]) {
-              me.IconPosCen = 'icon-poscen'
-            } else {
-              me.IconPosCen = ''
-            }
-            return {
-              showQQ: reArr[0],
-              showWx: reArr[1],
-              IconPosCen: me.IconPosCen
+            if (Device.platform === platformMap.IOS) {
+              return {
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: reArr[0],
+                isWxShow: reArr[1]
+              }
+            } else if (Device.platform === platformMap.ANDROID) {
+              return {
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: true,
+                isWxShow: true
+              }
             }
           })
+        } else {
+          this.isQQShow = false
+          this.isWxShow = false
         }
-        }
-    },
-    computed: {
-      isAuthPanelShow () {
-        return this.showQQ || this.showWx
-      },
-      qqIcon () {
-        return this.showQQ
-      },
-      wxIcon () {
-        return this.showWx
       }
     },
     methods: {
-//     isInstalledWX, isInstalledQQ,
       onQQLoginTap () {
         const me = this
-        qqAuth.QQAuth().then(
-            qqCode => {
-                me.loginByQQ(qqCode).then(
-                    user => {
-                        me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-                        window.history.back()
-                    }
-                )
-            }
-        ).catch(
-            err => { me.errTip = err }
-        )
+        if (this.isQQInstall) {
+          qqAuth.QQAuth().then(
+              qqCode => {
+                  me.loginByQQ(qqCode).then(
+                      user => {
+                          me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                          window.history.back()
+                      }
+                  )
+              }
+          ).catch(
+              err => { me.errTip = err }
+          )
+        } else {
+          this.showAlert({message: '请安装QQ客户端'})
+        }
       },
       onWxLoginTap () {
         const me = this
-        wxAuth.WxAuth().then(
-          wxCode => {
-            me.loginByWx(wxCode).then(
-              user => {
-                me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-                window.history.back()
-              }
-            )
-          }
-        ).catch(
-          err => { me.errTip = err }
-        )
+        if (this.isWXInstall) {
+          wxAuth.WxAuth().then(
+            wxCode => {
+              me.loginByWx(wxCode).then(
+                user => {
+                  me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                  window.history.back()
+                }
+              )
+            }
+          ).catch(
+            err => { me.errTip = err }
+          )
+        } else {
+          this.showAlert({message: '请安装微信客户端'})
+        }
       },
       doLogin () {
         this.disabled = true
