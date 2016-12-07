@@ -5,7 +5,7 @@
 <template>
     <div class="order-base">
       <ict-titlebar v-el:titlebar :right-options="rightOptions">确认订单
-        <a slot="right">{{barRightOptions.text}}</a>
+        <a slot="right" v-if="barRightOptions && barRightOptions.text">{{barRightOptions && barRightOptions.text}}</a>
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <slot></slot>
@@ -40,7 +40,15 @@ export default {
     tip: String,
     total: Number,
     toubi: Number,
-    barRightOptions: Object,
+    barRightOptions: {
+      type: Object,
+      default: function () {
+        return {
+          disabled: true,
+          callback: null
+        }
+      }
+    },
     btnOptions: {
       type: Object,
       default: function () {

@@ -8,7 +8,7 @@
     <ict-titlebar>全部课程</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller>
       <div>
-        <div class="promote-panel" v-show="promoteShow">
+        <div class="promote-panel" v-show="promoteShow" v-touch:tap="goToProfessionalStrategy">
           <img src="../../assets/styles/image/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
           <img src="../../assets/styles/image/courseList/total-list-strategy.png" class="promote-img">
         </div>
@@ -70,6 +70,9 @@
       goToCourseDetail (type, subjectId) {
         const path = `/subject/detail/${type}/${subjectId}/0`
         this.$route.router.go(path)
+      },
+      goToProfessionalStrategy () {
+        this.$route.router.go('/strategy/professional/intro')
       }
     },
     components: {

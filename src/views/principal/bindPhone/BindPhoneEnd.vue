@@ -14,8 +14,8 @@
                    :readonly=true
                    :value.sync="phone">
           </x-input>
+          <div style="height: 1rem"></div>
           <flexbox>
-            <div style="height: 1rem"></div>
             <flexbox-item>
               <x-input title="验证码"
                        placeholder="输入验证码"
@@ -30,15 +30,17 @@
             </ict-button>
           </flexbox>
         </group>
-        <div style="height: 3rem" class="spacer"></div>
-        <ict-button type="default"
-                    :disabled="isDisabled"
-                    @click="sendIdentity"
-                    text="提交">
-        </ict-button>
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
+    <div style="height: 3rem" class="spacer"></div>
+    <div class="btn-box">
+      <ict-button type="default"
+                  :disabled="isDisabled"
+                  @click="sendIdentity"
+                  text="提交">
+      </ict-button>
+    </div>
   </div>
 </template>
 <style>
@@ -141,6 +143,15 @@
 </script>
 <style lang="less">
 .bind-phone-end{
-
+  .btn-box{
+    .ict-btn {
+      width: 84%;
+    }
+  }
+  .ict-btn-mini{
+    height: 2rem;
+    border-radius: 0;
+    font-size: 0.7rem;
+  }
 }
 </style>

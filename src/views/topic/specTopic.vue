@@ -7,12 +7,15 @@
             <img v-bind:src="specTopicInfo.topicPic"/>
             <div  class="description">{{{specTopicInfo.description}}}</div>
           </div>
+
           <div v-for="course in specTopicInfo.coursePackage">
             <div class="recommend">
-              <img v-bind:src="course.pic">
-              <div class="item-info">
-                <span class="item-count">{{course.purchaseCount}}人学过</span>
-                <span class="item-price">￥{{course.origPrice}}</span>
+              <div class="recommend-subject" v-touch:tap="onSubjectTap(course)">
+                <img v-bind:src="course.pic">
+                <div class="item-info">
+                  <span class="item-count">{{course.purchaseCount}}人学过</span>
+                  <span class="item-price">￥{{course.origPrice}}</span>
+                </div>
               </div>
               <div class="item-promotion">
                 <span>小投推荐：</span>
@@ -20,6 +23,7 @@
               </div>
             </div>
           </div>
+
           <div class="topic-conclusion">
             <div class="conclusion-top">
               <span class="learning">学习收获</span>
@@ -88,20 +92,30 @@
       text-align: center;
       font-size: 0;
       border-bottom: 0.5rem #f0eff5 solid;
-      img{
+
+      .recommend-subject{
         width: 17.25rem;
+        height: 7.5rem;
+        position: relative;
+        img{
+          width: 17.25rem;
+          height: 7.5rem;
+          margin: 0 0.75rem;
+        }
       }
+
       .item-info{
+        position: absolute;
+        bottom: 0;
         width: 16.25rem;
         height: 0.85rem;
+        margin: 0 0.75rem;
         font-size: 0.65rem;
         color: #fff;
         background-color: #000;
         opacity: 0.3;
         text-align: left;
-        margin: 0 0.75rem;
         padding: 0.5rem ;
-        position: relative;
         .item-price{
           position: absolute;
           right: 0.5rem;
@@ -276,7 +290,7 @@
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-//              top: 0
+              top: 0
           })
         })
         }, 300)
@@ -311,6 +325,12 @@
           component: require('../pay/SpecTopicOrder.vue')
         })
         this.$route.router.go(path)
+      },
+      /**
+       * 点击课程
+       */
+      onSubjectTap (subject) {
+        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       }
     },
     components: {
