@@ -15,6 +15,32 @@ export const setChoice = ({dispatch}, choice) => {
 }
 
 /**
+ * 获取选择题 题目
+ * @param dispatch
+ * @param lessonId
+ * @returns {Promise}
+ */
+export const getChoiceQuestion = ({dispatch}, lessonId) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('homework_get_choice_question').replace(':lessonId', lessonId)
+        }
+      ).then(
+        choiceQuestion => {
+          dispatch('UPDATE_CHOICE_QUESTION', choiceQuestion)
+          resolve(choiceQuestion)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
  * 获取报告
  * @param dispatch
  * @param lessonId

@@ -105,6 +105,32 @@ export const setEssay = ({ dispatch }, essay) => {
 }
 
 /**
+ * 获取问答题 题目
+ * @param dispatch
+ * @param lessonId
+ * @returns {Promise}
+ */
+export const getEssayQuestion = ({dispatch}, lessonId) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('homework_get_essay_question').replace(':lessonId', lessonId)
+        }
+      ).then(
+        essayQuestion => {
+          dispatch('UPDATE_ESSAY', essayQuestion)
+          resolve(essayQuestion)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
  * 设置 草稿
  * @param dispatch
  * @param draft

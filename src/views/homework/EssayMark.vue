@@ -65,7 +65,7 @@ export default {
      * 点击编辑作业
      */
     editAnswer () {
-      this.$route.router.go('/essay/answer')
+      this.$route.router.go('/homework/essay/answer')
     }
   },
   components: {

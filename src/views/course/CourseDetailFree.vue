@@ -350,10 +350,11 @@
         const me = this
         me.updateSubject({prevLessonId: me.recentLessonId, lessonId: me.selectedLesson.lessonId}).then(
           function () {
+            me.showToast({message: '激活课程成功', type: 'success'})
             me.syncRecord()
           },
           function () {
-            me.showToast('激活失败,请重试')
+            me.showToast({message: '激活失败,请重试'})
           }
         )
       },
@@ -364,12 +365,14 @@
       join () {
         if (this.isUserLogin) {
           const me = this
-          me.joinSubject(me.subjectId).then(
+          me.joinSubject(parseInt(me.subjectId)).then(
             function () {
               me.syncRecord()
-            },
+              me.showToast({message: '参加课程成功', type: 'success'})
+            }
+          ).catch(
             function () {
-              me.showToast('参加课程失败,请重试')
+              me.showToast({message: '参加课程失败,请重试'})
             }
           )
         } else {

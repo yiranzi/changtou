@@ -166,8 +166,9 @@ export const fastLoginStart = ({ dispatch }, phone) => {
       ).then(
         () => {
           resolve()
-        },
-        err => console.warn(err)
+        }
+      ).catch(
+        err => reject(err)
       )
     }
   )
@@ -193,8 +194,9 @@ export const fastLoginEnd = ({ dispatch }, phone, validationCode) => {
         user => {
           updateAppUser(dispatch, user)
           resolve(user)
-        },
-        err => console.warn(err)
+        }
+      ).catch(
+        err => reject(err)
       )
     }
   )
@@ -353,7 +355,7 @@ export const bindPhone = ({ dispatch }, phone) => {
           resolve()
         },
         err => {
-          reject(err.message)
+          reject(err)
         }
       )
     })
@@ -379,7 +381,7 @@ export const bindPhoneEnd = ({ dispatch }, phone, validationCode) => {
           resolve()
         },
         err => {
-          reject(err.message)
+          reject(err)
         }
       )
     })

@@ -1,6 +1,6 @@
 <template>
   <div class="principal-base bind-phone">
-    <ict-titlebar>绑定手机号</ict-titlebar>
+    <ict-titlebar>{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
@@ -33,9 +33,13 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
+  import {userGetters} from '../../../vuex/getters'
   import {userActions} from '../../../vuex/actions'
   export default {
     vuex: {
+      getters: {
+        userPhone: userGetters.phone
+      },
       actions: {
         bindPhone: userActions.bindPhone
       }
@@ -64,7 +68,10 @@
         this.bindPhone(this.phone).then(
           () => this.$route.router.go('/bind/phone/end/' + this.phone)
         ).catch(
-          err => { this.errTip = err.message }
+          err => {
+           console.dir('err')
+           this.errTip = err.message
+          }
         )
       }
     },
@@ -80,6 +87,8 @@
 </script>
 <style lang="less">
 .bind-phone{
-
+  .ict-btn {
+    width: 84%;
+  }
 }
 </style>

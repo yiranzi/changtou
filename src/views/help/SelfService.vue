@@ -145,9 +145,6 @@
     watch: {
       'helpList': function () {
         this.refreshScroller()
-      },
-      'currQuestionIndex': function () {
-        this.refreshScroller()
       }
     },
 
@@ -157,29 +154,35 @@
         me.loadQAList().then(
           function () {
             transition.next()
-          },
-          function () {
-//            me.showAlert('加载信息失败，请重试！')
           }
         )
       }
     },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
-    },
     methods: {
       lookAnswer (index) {
+        const me = this
         if (this.currQuestionIndex !== index) {
           this.currQuestionIndex = index
+          if (index === (this.helpList.length - 1)) {
+            this.$nextTick(() => {
+              setTimeout(() => {
+                me.$refs.scroller._xscroll.resetSize()
+              }, 50)
+            })
+          }
         } else {
           this.currQuestionIndex = -1
         }
       },
+      /**
+       * 调整到你问我答
+       */
       goToManualService () {
         this.$route.router.go('/manual/service')
       },
       refreshScroller () {
         const me = this
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
