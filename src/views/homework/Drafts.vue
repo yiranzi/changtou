@@ -71,7 +71,7 @@ export default {
   methods: {
     goToArticleEdit (draft) {
       this.updateDraft(draft)
-      this.$route.router.go('/homework/essay/answer')
+      this.$route.router.go(`/homework/essay/answer/${draft.lessonId}`)
     },
     goToDeleteDraft (articleId) {
       const me = this
