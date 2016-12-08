@@ -219,6 +219,15 @@
         })
         }, 200)
       },
+
+      refreshScroller () {
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.$refs.scroller._xscroll.resetSize()
+          })
+        }, 50)
+      },
+
       /**
        * 点击课程
        */
@@ -227,7 +236,7 @@
           let item = this.clsList[index]
           item.isUnfold = !item.isUnfold
           this.clsList.$set(index, item)
-          this.setScrollerHeight()
+          this.refreshScroller()
         }
       },
       /**
