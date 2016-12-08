@@ -71,11 +71,13 @@
     },
     computed: {
       badgeMessageNum () {
+      if (this.isLogin) {
         let number = this.newMessageNum + ''
         if (this.newMessageNum === 0) {
           number = ''
         }
         return number
+      }
       },
 
       badgeSuggestionNum () {

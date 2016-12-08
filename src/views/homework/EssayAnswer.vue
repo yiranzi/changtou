@@ -199,17 +199,17 @@ export default {
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
+      ul{
+        margin-left: -2rem;
+      }
       p{
         margin: 0;
       }
       .fold-icon{
-        position: absolute;
-        padding: 0.5rem 1rem;
-        right: 0;
-        bottom: 0;
         display: block;
         font-size: 0.65rem;
         color: #00b0f0;
+        text-align: right;
       }
     }
 
