@@ -184,24 +184,27 @@ export function configRouter (router) {
       /**
        * 作业
        */
+    '/homework/mine': {
+        component: require('../views/homework/Mine.vue')
+      },
     //草稿箱
-    '/drafts': {
+    '/homework/drafts': {
       component: require('../views/homework/Drafts.vue')
     },
     //问答题 写作业
-    '/essay/answer': {
+    '/homework/essay/answer/:lessonId': {
       component: require('../views/homework/EssayAnswer.vue')
     },
     //问答题 看分数
-    '/essay/mark': {
+    '/homework/essay/mark': {
       component: require('../views/homework/EssayMark.vue')
     },
     //选择题 做测试
-    '/choice/answer': {
+    '/homework/choice/answer/:lessonId': {
       component: require('../views/homework/ChoiceAnswer.vue')
     },
     //选择题 看分数
-    '/choice/mark': {
+    '/homework/choice/mark': {
       component: require('../views/homework/ChoiceMark.vue')
     },
     /**
@@ -225,6 +228,10 @@ export function configRouter (router) {
     },
     '/strategy/duoyinzi/faq': {
       component: require('../views/strategy/DuoYinZiFaq.vue')
+    },
+    //延期说明
+    '/postpone/explain': {
+      component: require('../views/pay/PostponeExplain.vue')
     }
   })
 

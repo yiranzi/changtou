@@ -14,7 +14,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
@@ -26,6 +26,8 @@
     },
     data () {
       return {
+        tyep: '',
+        subjectId: 0,
         courseList: [], //课程列表
         price: 0, // 价格
         coupons: [],  // 优惠列表
@@ -56,7 +58,11 @@
         return this.total - this.toubi
       },
       canUserBuy () {
-        return !(this.isLogin && !this.expenseRecords.indexOf(this.subjectId))
+        const me = this
+        const subjectIndex = this.expenseRecords.findIndex(function (record) {
+            return me.subjectId === record.subjectId
+        })
+        return !(me.isLogin && (subjectIndex >= 0))
       },
       // 支付按钮 信息
       btnOptions () {
@@ -94,6 +100,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
@@ -190,7 +197,7 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       /**
@@ -198,6 +205,11 @@
        */
       goToPaySuccess () {
         this.$route.router.go(`/pay/success/S/${this.subjectId}`)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
       }
     },
     components: {

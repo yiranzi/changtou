@@ -144,14 +144,7 @@
 
     watch: {
       'helpList': function () {
-        const me = this
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-//              top: 0
-          })
-        })
-        }, 300)
+        this.refreshScroller()
       }
     },
 
@@ -161,35 +154,42 @@
         me.loadQAList().then(
           function () {
             transition.next()
-          },
-          function () {
-//            me.showAlert('加载信息失败，请重试！')
           }
         )
       }
     },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
-    },
     methods: {
       lookAnswer (index) {
+        const me = this
         if (this.currQuestionIndex !== index) {
           this.currQuestionIndex = index
-          // todo 如果是最后一题， 页面滚动
-//          if (index === (this.helpList.length - 1)) {
-//            console.log('xxxx')
-//            this.$nextTick(() => {
-//              setTimeout(() => {
-//                this.$refs.scroller._xscroll.resetSize()
-//              }, 50)
-//            })
-//          }
+          if (index === (this.helpList.length - 1)) {
+            this.$nextTick(() => {
+              setTimeout(() => {
+                me.$refs.scroller._xscroll.resetSize()
+              }, 50)
+            })
+          }
         } else {
           this.currQuestionIndex = -1
         }
       },
+      /**
+       * 调整到你问我答
+       */
       goToManualService () {
         this.$route.router.go('/manual/service')
+      },
+      refreshScroller () {
+        const me = this
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 300)
       }
     },
     components: {

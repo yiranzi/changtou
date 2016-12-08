@@ -1,91 +1,62 @@
 <template>
-  <div>
-    <ict-titlebar>登陆</ict-titlebar>
+  <div class="principal-base login-entry ">
+    <ict-titlebar>登录</ict-titlebar>
+    <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
+      {{errTip}}
+    </div>
     <flexbox>
       <flexbox-item :span="1/20"></flexbox-item>
       <flexbox-item>
         <group>
+          <div style="height: 1rem"></div>
           <x-input title="用户名"
                    class="custom-input"
                    text-align="left"
                    placeholder="输入长投用户名/手机号"
                    :value.sync="identity" >
           </x-input>
+          <div style="height: 1rem"></div>
           <x-input title="密码 "
                  class="custom-input"
                  text-align="left"
                  placeholder="输入密码"
                  :value.sync="plainPassword" >
-
           </x-input>
         </group>
-
-        <div style="height: 4rem" class="spacer"></div>
-        <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登陆</ict-button>
-
-        <flexbox>
-          <ict-button type="string" text="注册" v-touch:tap="doRegister"></ict-button>
-          <flexbox-item></flexbox-item>
-          <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
-        </flexbox>
-
-         <div class="third-party-container">
-           <div class="third-text-container">
-             <i class="horizon-line"></i>
-             <p class="third-text">第三方登录</p>
-             <i class="horizon-line"></i>
-           </div>
-              <div class="third-icon icon-qq" >
-                <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
-                QQ登录
-              </div>
-              <div class="third-icon icon-wx" >
-                <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
-                微信登录
-              </div>
-         </div>
       </flexbox-item>
       <flexbox-item :span="1/20"></flexbox-item>
     </flexbox>
+
+    <div style="height: 3rem" class="spacer"></div>
+    <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
+
+    <flexbox>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister"></ict-button>
+      <flexbox-item></flexbox-item>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
+    </flexbox>
+
+    <div class="third-party-container" v-if="isWxShow || isQQShow">
+      <div class="third-text-container">
+        <i class="horizon-line"></i>
+        <p class="third-text">第三方登录</p>
+        <i class="horizon-line"></i>
+      </div>
+      <div style="height: 0.5rem" class="spacer"></div>
+      <div class="third-icon-container">
+        <div class="third-icon" v-if="isQQShow">
+          <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
+          <p>QQ登录</p>
+        </div>
+        <div class="third-icon" v-if="isWxShow">
+          <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
+          <p>微信登录</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
-<style>
-         .third-party-container{
-            width:100%;
-            margin-top: 8rem;
-            font-size: 70%;
-            margin-left: .8rem;
-         }
-         .horizon-line{
-           display: inline-block;
-           width: 30%;
-           background:#BFB3B3;
-           height: .05rem;
-           vertical-align: middle;
-         }
-         .third-text{
-           display: inline-block;
-           margin-left: .5rem;
-           margin-right: .5rem;
-         }
-         .third-icon{
-           display: inline-block;
-         }
-         .third-icon span{
-           display: block;
-           width:2.4rem;
-           height:2.4rem;
-         }
-         .third-icon-qq{
-           background: url("../../assets/styles/image/loginView/QQ.png") no-repeat center center/90%;
-         }
-         .third-icon-wx{
-           background: url("../../assets/styles/image/loginView/weixin.png") no-repeat center center/90%;
-         }
-         .icon-qq{
-           margin-right: 8rem;
-         }
-</style>
+
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
@@ -97,6 +68,7 @@
   import {eventMap} from '../../frame/eventConfig'
   import qqAuth from '../../plugin/thirdPartyQQ'
   import wxAuth from '../../plugin/thirdPartyWX'
+  import {Device, platformMap} from '../../plugin/device'
   export default{
     vuex: {
       getters: {
@@ -110,15 +82,19 @@
     },
     data () {
       return {
+        errTip: '',
         plainPassword: '',
         identity: '',
         disabled: true,
-        qqInstalled: false, //是否安装QQ
-        wxInstalled: false //是否安装微信
+        isQQShow: false,             // 是否显示qq
+        isWxShow: false,            //  是否显示微信
+        isQQInstall: false,           // 是否安装qq
+        isWXInstall: false           // 是否安装wx
       }
     },
     watch: {
       identity (newVal) {
+        this.errTip = ''
         if (/\S/.test(newVal) && /\S/.test(this.plainPassword)) {
           this.disabled = false
         } else {
@@ -126,6 +102,7 @@
         }
       },
       plainPassword (newVal) {
+        this.errTip = ''
         if (/\S/.test(this.identity) && /\S/.test(newVal)) {
           this.disabled = false
         } else {
@@ -133,54 +110,74 @@
         }
       }
     },
-    ready () {
-      const me = this
-      qqAuth.checkQQInstalled().then(function () {
-        me.qqInstalled = true
-      }).catch(function () {
-        me.qqInstalled = false
-      })
-      wxAuth.checkWxInstalled().then(function () {
-        me.wxInstalled = true
-        }).catch(function () {
-        me.wxInstalled = false
-      })
+    route: {
+      data (transition) {
+        this.plainPassword = ''
+        if (Device.platform !== platformMap.WEB) {
+          const checkList = []
+          checkList.push(qqAuth.checkQQInstalled())
+          checkList.push(wxAuth.checkWxInstalled())
+          return Promise.all(checkList).then(function (reArr) {
+            if (Device.platform === platformMap.IOS) {
+              return {
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: reArr[0],
+                isWxShow: reArr[1]
+              }
+            } else if (Device.platform === platformMap.ANDROID) {
+              return {
+                isQQInstall: reArr[0],
+                isWXInstall: reArr[1],
+                isQQShow: true,
+                isWxShow: true
+              }
+            }
+          })
+        } else {
+          this.isQQShow = false
+          this.isWxShow = false
+        }
+      }
     },
     methods: {
-//     isInstalledWX, isInstalledQQ,
       onQQLoginTap () {
         const me = this
-        qqAuth.QQAuth().then(
-            function (qqCode) {
-              me.loginByQQ(qqCode).then(
-                  function (user) {
-                    me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-                    window.history.back()
-                  }
-              )
-            }
-        ).catch(
-            function (err) {
-              console.dir(err)
-            }
-        )
+        if (this.isQQInstall) {
+          qqAuth.QQAuth().then(
+              qqCode => {
+                  me.loginByQQ(qqCode).then(
+                      user => {
+                          me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+                          window.history.back()
+                      }
+                  )
+              }
+          ).catch(
+              err => { me.errTip = err }
+          )
+        } else {
+          this.showAlert({message: '请安装QQ客户端'})
+        }
       },
       onWxLoginTap () {
         const me = this
-        wxAuth.WxAuth().then(
-          function (wxCode) {
-            me.loginByWx(wxCode).then(
-                function (user) {
+        if (this.isWXInstall) {
+          wxAuth.WxAuth().then(
+            wxCode => {
+              me.loginByWx(wxCode).then(
+                user => {
                   me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                   window.history.back()
                 }
-            )
-          }
-        ).catch(
-          function (err) {
-            console.dir(err)
-          }
-        )
+              )
+            }
+          ).catch(
+            err => { me.errTip = err }
+          )
+        } else {
+          this.showAlert({message: '请安装微信客户端'})
+        }
       },
       doLogin () {
         this.disabled = true
@@ -188,16 +185,18 @@
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
           this.login(this.identity, this.plainPassword).then(
             (user) => {
-            me.disabled = true
-            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-            window.history.back()
-          }).catch(
-              err => {
-                  console.dir(err)
+              me.disabled = true
+              me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+              window.history.back()
+            }
+          ).catch(
+            err => {
+                me.errTip = err.message
                 me.disabled = false
             }
           )
         } else {
+          me.errTip = '请输入正确的用户名和密码'
           me.disabled = true
         }
       },
@@ -218,3 +217,116 @@
     }
   }
 </script>
+<style lang="less">
+  .principal-base{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    p{
+      margin: 0;
+    }
+    .err-tip{
+      width: 100%;
+      line-height: 30px;
+      background: grey;
+      text-align: center;
+      color: black;
+      font-size: 0.7rem;
+    }
+    .no-err{
+      background: transparent;
+      color: transparent;
+    }
+    .weui_cells{
+      margin-top: 0;
+      background-color: #f0eff5;
+      &:before, &:after{
+        border: 0;
+      }
+      .weui_cell{
+        .weui_label{
+          min-width: 4.7rem;
+        }
+        .weui_icon_warn:before{
+          display: none;
+          content: ''
+        }
+        .weui_icon_clear:before{
+          display: none;
+          content: ''
+        }
+        &:before{
+          border: 0;
+        }
+        &:after{
+          content: " ";
+          position: absolute;
+          left: 15px;
+          bottom: 0;
+          width: 100%;
+          height: 1px;
+          border-top: 1px solid #c3c3c3;
+          -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+          -webkit-transform: scaleY(0.5);
+          transform: scaleY(0.5);
+        }
+      }
+      .weui_label{
+        font-size: 0.75rem;
+      }
+      .weui_input{
+        font-size: 0.75rem;
+      }
+    }
+  }
+  .login-entry{
+    .ict-btn{
+      width: 84%;
+    }
+    .third-party-container{
+      position: absolute;
+      bottom: 0;
+      width:100%;
+      font-size: 0.7rem;
+      color: #656565;
+      text-align: center;
+    }
+    .third-icon-container{
+      width:100%;
+      font-size: 0;
+      text-align: center;
+    }
+    .horizon-line{
+      display: inline-block;
+      width: 30%;
+      background:#BFB3B3;
+      height: .05rem;
+      vertical-align: middle;
+    }
+    .third-text{
+      display: inline-block;
+      margin-left: .5rem;
+      margin-right: .5rem;
+    }
+    .third-icon{
+      display: inline-block;
+      width: 50%;
+      text-align: center;
+      font-size: 0.7rem;
+    }
+    .third-icon span{
+      display: inline-block;
+      width:2.4rem;
+      height:2.4rem;
+    }
+    .third-icon-qq{
+      display: inline-block;
+      background: url("../../assets/styles/image/loginView/QQ.png") no-repeat center center/90%;
+    }
+    .third-icon-wx{
+      display: inline-block;
+      background: url("../../assets/styles/image/loginView/weixin.png") no-repeat center center/90%;
+    }
+  }
+</style>

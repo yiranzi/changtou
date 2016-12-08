@@ -17,7 +17,7 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
@@ -65,7 +65,12 @@
           }
         )
         for (let i = 0, length = subjectIds.length; i < length; i++) {
-          if (this.expenseRecords.indexOf(subjectIds[i])) {
+          let subjectIndex = this.expenseRecords.findIndex(function (records) {
+            if (subjectIds[i] === records.subjectId) {
+              return true
+            }
+          })
+          if (subjectIndex >= 0) {
             return false
           }
         }
@@ -108,6 +113,7 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
@@ -211,7 +217,7 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       /**
@@ -226,6 +232,11 @@
        */
       goBack () {
         window.history.go(-2)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
       }
     },
     components: {

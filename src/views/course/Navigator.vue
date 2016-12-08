@@ -15,17 +15,34 @@
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-fangtan"></i>
-            院生访谈
+            院生故事
           </span>
-        </div>
-        <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          <p>每日一题 积攒你的财商</p>
-          <p class="daily-subtext">财富自由之路第一步</p>
         </div>
         <div class="expenselist-area">
           <p class="area-label">
             <span class="color-span"> </span>
-            <span class="title">热门畅销</span>
+            <span class="title">人气必备</span>
+          </p>
+          <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
+            <div class="box-container" >
+                <div class="box-item" v-for="item in recommends"
+                     v-touch:tap="goToRecommendDetail('P',$index)">
+                  <img :src="item.imgUrl">
+                  <p class="sub-title">{{item.title}}</p>
+                  <p class="sub-price">￥{{item.price}}</p>
+                </div>
+            </div>
+          </scroller>
+        </div>
+        <div class="daily-question" v-touch:tap="goToDailyQuestion">
+          <p>每日一题 积攒你的财商</p>
+          <p class="daily-subtext">财富自由之路第一步</p>
+          <span class="daily-anpic-container"></span>
+        </div>
+        <div class="expenselist-area">
+          <p class="area-label">
+            <span class="color-span"> </span>
+            <span class="title">优质好课</span>
             <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
@@ -75,7 +92,8 @@
       getters: {
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
-        expenseList: navigatorGetters.expenseCourseList
+        expenseList: navigatorGetters.expenseCourseList,
+        recommends: navigatorGetters.recommends
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
@@ -106,9 +124,6 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
-        },
-        function () {
-
         }
       )
     },
@@ -150,6 +165,9 @@
         let courseList = type === 'P' ? this.expenseList : this.freeList
         let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
         this.$route.router.go(path)
+      },
+      goToRecommendDetail (type, index) {
+        this.$route.router.go(`/subject/detail/${type}/${this.recommends[index].subjectId}/0`)
       },
       onListTap () {
         this.$route.router.go('/totalList')
@@ -205,6 +223,46 @@
 
 <style lang="less">
   .course-navigator{
+    .expenselist-area{
+      padding-bottom: 1rem;
+      .box-container{
+        width: 45rem;
+        .box-item {
+          float: left;
+          text-align: center;
+          line-height: 5rem;
+          width: 6.8rem;
+          height: 8.5rem;
+          margin-right: .5rem;
+          img {
+            width: 6.8rem;
+            height: 8.5rem;
+            border-radius: .8rem;
+          }
+          .sub-title {
+            position: absolute;
+            bottom: 1.2rem;
+            padding: 0 0.5rem;
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            bottom: -9.2rem;
+          }
+          .sub-price {
+            position: absolute;
+            bottom: -10.5rem;
+            padding: 0 0.5rem 0.5rem 0.5rem;
+            font-size: 0.6rem;
+            color: #ff9800;
+          }
+          .box-item:first-child {
+            margin-left: 1rem;
+          }
+        }
+      }
+    }
     p{
       margin: 0;
     }
@@ -219,8 +277,8 @@
         vertical-align: middle;
       }
       .color-span{
-        width: 2%;
-        height: 1rem;
+        width: .125rem;
+        height: .8rem;
         background-color: #00b0f0;
       }
       .title{
@@ -234,6 +292,7 @@
         font-size: 0.7rem;
         color: #aaa;
         text-align: right;
+        margin-left: -.5rem;
       }
       .subtitle:after{
         content: '';
@@ -258,6 +317,8 @@
       align-items: center;
       background-color: #fff;
       border-bottom: 0.5rem #f0eff5 solid;
+      font-size: 0.75rem;
+      color: #444;
 
       span{
         width: 50%;
@@ -267,6 +328,7 @@
 
 
     .expenselist-area{
+      background: white;
       text-align: center;
       .expense-course{
         position: relative;
@@ -374,50 +436,56 @@
         margin: 1rem 0 1.25rem;
       }
     }
-  }
+    /*每日一题*/
+    .daily-question{
+      width: 325/375;
+      height: 3rem;
+      padding: 1.5rem 5.5rem;
+      background-color: #f2f2f2;
+      font-size: .75rem;
+      color:#444;
+      line-height: 1.2rem;
+      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      position: relative;
+    }
 
+    .daily-subtext {
+      color: #898989;
+      font-size: .65rem;
+    }
 
-  /*                                                      The  icon add  by  Ritsu Yan                                    */
-  /*每日一题*/
-  .daily-question{
-    width: 325/375;
-    height: 3rem;
-    padding: 1.5rem 5.5rem;
-    background-color: #eee;
-    font-size: .75rem;
-    color:#444;
-    line-height: 1.2rem;
-    background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ,
-    url("../../assets/styles/image/feiji.png") no-repeat  90%  center   / 10%;
-  }
+    .daily-anpic-container {
+      width: 1.725rem;
+      height: 1.05rem;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  center  center / 90%;
+      display: inline-block;
+      position: absolute;
+      left: 80%;
+      top: 40%;
+    }
 
-  .daily-subtext {
-    color: #898989;
-    font-size: .65rem;
-  }
-
-  .finan-icon{
-    width : 3.05rem;  // 1 rem === 20 px
-    height : 3.05rem;
-    display: inline-block;
-    margin-bottom: -1rem;
-    zoom:.5;
-  }
+    .finan-icon{
+      width: 1.525rem;
+      height: 1.525rem;
+      display: inline-block;
+      margin-bottom: -.5rem;
+      zoom: .5;
+    }
 
   .finan-icon.finan-icon-jiemi{
     background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
   }
 
-  .finan-icon.finan-icon-fangtan{
-    background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+    .finan-icon.finan-icon-fangtan{
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+    }
+
+    .vertical-line-yan{
+      display: inline-block;
+      width:.08rem;
+      height:1.5rem;
+      background: #eee;
+    }
   }
 
-  .vertical-line-yan{
-    display: inline-block;
-    width:.08rem;
-    height:1.5rem;
-    background: #eee;
-  }
-
-  /*                                                       The icon add   by  Ritsu Yan                                    */
 </style>

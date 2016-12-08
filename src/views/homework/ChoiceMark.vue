@@ -94,6 +94,8 @@
     score (newScore) {
       if (newScore >= 0 && newScore < 3) {
         this.isFloatShow = true
+      } else {
+        this.isFloatShow = false
       }
     }
   },
@@ -108,7 +110,7 @@
      * 重测
      */
     reTest () {
-      this.$route.router.replace('/choice/answer')
+      this.$route.router.replace('/homework/choice/answer')
     },
     /**
      * 点击浮层

@@ -4,10 +4,10 @@
 */
 <template>
   <div class="order-vip-strategy">
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip">
+    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
-      <div v-if="proLeftDays" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
+      <div v-if="proLeftDays && selectedDeduction" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
     </pay-base>
   </div>
 </template>
@@ -15,10 +15,11 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       getters: {
@@ -28,12 +29,14 @@
     },
     data () {
       return {
+        order: null, //订单信息
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
         coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
         selectedPeriod: null, // 选择的服务期限
+        selectedPeriodIndex: 0, //  选择的服务期限 的index
         itemId: 1, // 交易 id
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -74,16 +77,40 @@
             callback: this.onConfirmTap
           }
         }
+      },
+      coupons () {
+        if (this.order && this.price) {
+          let coupons = []
+          if (this.order.coupons) {
+            coupons = this.order.coupons
+          }
+          if (this.order.card) {
+            coupons.push({
+              name: '长投卡(7折)',
+              userBene: Math.floor(this.price * 0.3)
+            })
+          }
+          return coupons
+        } else {
+          return []
+        }
+      },
+      itemId () {
+        return this.selectedPeriodIndex === '1' ? 4 : 3 // 交易用到的itemId //3 一年VIP版 4 两年VIP版
+      },
+      price () {
+        return this.periods.length > 0 ? this.periods[this.selectedPeriodIndex].price : 0
+      },
+      selectedDeduction () {
+        return this.deductions.length > 0 ? this.deductions[ this.selectedPeriodIndex ] ? this.deductions[ this.selectedPeriodIndex ] : this.deductions[0] : 0
       }
-    },
-    watch: {
-
     },
     route: {
       data () {
         const me = this
         return Promise.all([getStrategyOrder(goodsType.VIP_STRATEGY)]).then(
             ([order]) => {
+            me.order = order
             me.arrangeOrder(order)
       }).catch(
           (err) => console.log(err)
@@ -92,12 +119,8 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        this.itemId = periodIndex ? 4 : 3 // 交易用到的itemId //3 一年VIP版 4 两年VIP版
-        this.price = this.periods[ periodIndex ].price
-        this.selectedDeduction = this.deduction[ periodIndex ] ? this.deduction[ periodIndex ] : this.deduction[0]
-        if (this.coupons.length > 0 && !this.coupons[ this.coupons.length - 1 ].couponNo) {
-          this.coupons[ this.coupons.length - 1 ].userBene = Math.floor((this.periods[ periodIndex ].price - this.selectedDeduction) * 0.3)
-        }
+        this.selectedPeriodIndex = periodIndex
+        this.selectedPeriod = this.periods[periodIndex]
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
@@ -105,10 +128,16 @@
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
       },
       'codeConfirm' () {
         const me = this
-        getStrategyOrder(goodsType.VIP_STRATEGY).then(order => me.arrangeOrder(order))
+        getStrategyOrder(goodsType.VIP_STRATEGY).then(
+          order => {
+            me.order = order
+            me.arrangeOrder(order)
+          }
+        )
       },
       'loginTap' () {
         this.$route.router.go('/entry')
@@ -132,25 +161,9 @@
           }
         ]
         this.proLeftDays = order.proLeftDays
-        this.deduction = [order.oneYearPaid ? order.oneYearPaid : 0, order.twoYearsPaid ? order.twoYearsPaid : 0]
+        this.deductions = [order.oneYearPaid ? order.oneYearPaid : 0, order.twoYearsPaid ? order.twoYearsPaid : 0]
         this.coupons = this.getCoupons(order)
         this.currentBalance = order.currentBalance
-      },
-      /**
-       *  生成 优惠列表
-       */
-      getCoupons (order) {
-        let coupons = []
-        if (order.coupons) {
-          coupons = order.coupons
-        }
-        if (order.card) {
-          coupons.push({
-            name: '长投卡(7折)',
-            userBene: 0
-          })
-        }
-        return coupons
       },
       /**
        * 点击确认订单
@@ -170,7 +183,7 @@
         const me = this
         const trade = {
           sum: this.sum,
-          body: this.selectedPeriod,
+          body: '长投课程',
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
@@ -179,7 +192,7 @@
               dealType: this.strategy.strategyLevel === strategyLevel.COMMON ? dealType.BUY : this.strategy.strategyLevel === strategyLevel.PRO ? dealType.UPDATE : dealType.POSTPONE,
               itemId: this.itemId,
               mchantType: 6,
-              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene : 0,
+              misc: (this.selectedCoupon && !this.selectedCoupon.couponNo) ? this.selectedCoupon.userBene + '' : '',
               price: this.total
             }]
           }
@@ -198,7 +211,7 @@
           me.goToPaySuccess()
         }
       },
-        err => me.showAlert(err.reason)
+        (err) => me.onPayFail(err)
       )
       },
       /**
@@ -206,6 +219,12 @@
        */
       goToPaySuccess () {
         this.$route.router.go(`/pay/success/VS/0`)
+        this.$dispatch(eventMap.SYNC_USER)
+      },
+      onPayFail (err) {
+        if (err.type === errorType.FAIL) {
+          this.showAlert({message: err.reason})
+        }
       }
     },
     components: {
