@@ -463,7 +463,7 @@
     .daily-anpic-container {
       width: 1.725rem;
       height: 1.05rem;
-      background: url("../../assets/styles/image/feiji.png") no-repeat  center  center / 90%;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / 70%;
       display: inline-block;
       position: absolute;
       left: 86%;
@@ -474,16 +474,16 @@
       width: 1.725rem;
       height: 1.725rem;
       display: inline-block;
-      margin-bottom: -.5rem;
-      zoom: .5;
+      margin-bottom: -.3rem;
     }
 
   .finan-icon.finan-icon-jiemi{
-    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat center right;
+    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / 70%;
   }
 
     .finan-icon.finan-icon-fangtan{
-      background: url("../../assets/styles/image/fangtan.png") no-repeat center right;
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / 70%;
+      margin-bottom: -.5rem;
     }
 
     .vertical-line-yan{

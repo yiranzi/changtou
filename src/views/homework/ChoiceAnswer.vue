@@ -59,7 +59,8 @@ export default {
     // 题目
     title () {
       if (this.choiceQuestion && this.choiceQuestion.length > 0) {
-        return `${this.currIndex + 1}/${this.totalNum}${this.currQuestion.title}`
+        return ` ${this.currIndex + 1}/${this.totalNum}  第${this.currIndex + 1}题
+       ${this.currQuestion.title}`
       }
     },
     // 是否显示 错误提示
