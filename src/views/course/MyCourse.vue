@@ -11,7 +11,7 @@
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
 
-          <div class="homework-panel" v-if="isLogin">
+          <div class="homework-panel" v-if="isLoginAndCourse">
             <span v-touch:tap="goToMyHomework" class="homework-item">
               <img src="../../assets/styles/image/myCourse/homework.png">
               <p>我的作业</p>
@@ -92,13 +92,25 @@ export default {
         }
       )
       return accumulatedTime
+    },
+    isLoginAndCourse () {
+      if (!this.isLogin) {
+        return false
+      }
+      if (this.isLogin && this.courseList.length > 0) {
+        for (let k = 0; k < this.courseList.length; k++) {
+          if (this.courseList[k].price > 0) {
+            return true
+          }
+        }
+      }
+       return false
     }
   },
   route: {
     data () {
       let promiseArray = []
       const me = this
-
       if (this.isLogin) {
         promiseArray = [this.loadUserCourses()]
       } else {
