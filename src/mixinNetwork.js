@@ -21,9 +21,6 @@ const mixin = {
     onlineHandler () {
       const networkState = window.navigator.connection.type
       //  判断当前为什么网络
-      if (networkState === 'wifi') {
-        this.showToast({message: '您当前是为 wifi 状态'})
-      }
       if (networkState === 'cell_4g' || networkState === 'cell_3g' || networkState === 'cell_2g') {
         this.showToast({message: '您当前为 4G/3G/2G ,请注意流量使用情况或可使用WIFI'})
       }
