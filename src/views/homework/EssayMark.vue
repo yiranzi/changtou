@@ -22,7 +22,7 @@
           <div class="user-info">
             <img src="/static/image/homework/portrait.png">
             <div class="user-box">
-              <p class="user-name">{{remark.userName}}的作业</p>
+              <p class="user-name">{{remark.userName}}</p>
               <p class="create-time">发表于{{remark.create_time}}</p>
             </div>
             <div class="content">{{remark.content}}</div>
@@ -174,6 +174,7 @@ export default {
         margin-left: 3rem;
         margin-bottom: 1rem;
         font-size: .65rem;
+        line-height: 1rem;
         color: #444;
       }
     }
