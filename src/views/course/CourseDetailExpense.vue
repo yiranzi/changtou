@@ -754,7 +754,7 @@
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
-              me.showToast('已激活课程')
+              me.showToast({message: '激活课程成功', type: 'success'})
             },
             function () {
               me.showAlert('激活失败,请重试')
