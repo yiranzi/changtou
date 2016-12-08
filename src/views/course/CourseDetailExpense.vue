@@ -613,26 +613,35 @@
        */
       showTipWhenLessonLimitedAndOnLine () {
         const me = this
-
         let msg = ''
         let confirmText = '确认'
         let confirmHandler = null
+        const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
+        const lessonTitle = lastSubmitLesson.title
+        const essayQuestion = lastSubmitLesson.essayQuestion
 
-        const lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-        const essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
             me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
+
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
           confirmText = '去写作业'
-          confirmHandler = function () {
-            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+          if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
+            // 有选择题
+            confirmHandler = function () {
+              me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+            }
+          } else {
+            confirmHandler = function () {
+              me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+            }
           }
+
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
 
