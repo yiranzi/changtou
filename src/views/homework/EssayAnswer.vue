@@ -15,16 +15,12 @@
           <span v-touch:tap="submitDraft">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
         </div>
-      <alert :show.sync="isAlert" button-text="知道了" class="ict-alert" @on-hide="alertHandler">{{alertMsg}}</alert>
-      <toast :show.sync="isToast" class="ict-toast" :type="toastType">{{toastMsg}}</toast>
     </div>
 </template>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
-  import Alert from 'vux/alert'
-  import Toast from 'vux/toast'
   import { essayGetters } from '../../vuex/getters'
   import { essayActions } from '../../vuex/actions'
 export default {
@@ -42,10 +38,6 @@ export default {
   data () {
     return {
       lessonId: 0,
-      isToast: false,
-      toastMsg: '',
-      isAlert: false,
-      alertMsg: '',
       rightOptions: { //titlebar
         callback: '',
         disabled: true
@@ -53,8 +45,7 @@ export default {
       foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: this.essayAnswer, // 填写的答案
-      alertHandler: () => {}
+      answer: this.essayAnswer // 填写的答案
     }
   },
   watch: {
@@ -121,16 +112,13 @@ export default {
       this.submitArticle(essayContent).then(
         markInfo => {
           if (markInfo.correction_date) {
-            this.alertHandler = this.onAlertHide
-            this.alertMsg = `您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`
-            this.isAlert = true
+            this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
             this.rightOptions.disabled = false
           } else {
             window.history.back()
           }
         }).catch(
         err => {
-          console.log(err)
           this.rightOptions.disabled = false
         }
       )
@@ -148,12 +136,8 @@ export default {
       }
       this.submitArticle(essay).then(
         result => {
-          this.articleId = result.articleId
-          this.toastMsg = '你的草稿已保存'
-          this.isToast = true
-        }).catch(
-        err => console.log(err)
-      )
+          this.showToast('你的草稿已保存')
+        })
     },
 
     onAlertHide () {
@@ -175,9 +159,7 @@ export default {
   components: {
     IctTitlebar,
     Scroller,
-    xTextarea,
-    Alert,
-    Toast
+    xTextarea
   }
 }
 </script>
