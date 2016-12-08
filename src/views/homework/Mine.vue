@@ -78,7 +78,7 @@
           disabled: false
         },
         subjectStatus: {
-          'N': '在读中',
+          'N': '学习中',
           'E': '已过期',
           'Y': '已毕业',
           'P': '暂停',
@@ -327,7 +327,7 @@
         display: inline-block;
         height: 32/40rem;
         line-height: 32/40rem;
-        width: 72/40rem;
+        width: 2.3rem;
         margin-left: 20/40rem;
         border: 1px solid #00b0f0;
         text-align: center;

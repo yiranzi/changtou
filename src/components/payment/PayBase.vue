@@ -81,8 +81,6 @@ export default {
       }
     }
   },
-  route: {
-    },
   ready () {
     // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
     const me = this
