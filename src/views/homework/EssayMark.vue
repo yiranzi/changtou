@@ -20,7 +20,7 @@
         <p class="title">作业留言</p>
         <div v-for="remark in remarkList">
           <div class="user-info">
-            <img src="/static/image/homework/portrait.png">
+            <img src="../../assets/styles/image/homework/portrait.png">
             <div class="user-box">
               <p class="user-name">{{remark.userName}}</p>
               <p class="create-time">发表于{{remark.create_time}}</p>
