@@ -98,9 +98,8 @@
     },
 
     route: {
-      data ({to: {params: {selectedChapter}}}) {
+      data ({to: {params: {subjectId, lessonId}}}) {
         const {chapterIndex, currChapter} = getSessionCache('landscapeSrc')
-
         clearSessionCache('landscapeSrc')
         return Promise.resolve({
           chapterIndex,

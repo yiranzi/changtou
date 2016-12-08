@@ -3,7 +3,7 @@
     <ict-titlebar :left-options="{showBack: false}">我的</ict-titlebar>
     <div class="ict-user-info">
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
-      <p class="ict-user-name">{{name}} <span class="resetNickName" v-touch:tap="resetNickNameStart"></span></p>
+      <p class="ict-user-name">{{name}} <span class="resetNickName" v-touch:tap="resetNickNameStart"  :disabled></span></p>
       <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
       <flexbox v-if="!isLogin">
         <flexbox-item :span="1/10"></flexbox-item>
