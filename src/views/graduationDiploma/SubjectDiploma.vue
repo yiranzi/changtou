@@ -238,6 +238,10 @@
       background: url('../../assets/styles/image/graduationDiploma/expired.png') 50% 50% no-repeat;
       background-size: 100% 100%;
     }
+    .used{
+      background: url('../../assets/styles/image/graduationDiploma/used.png') 50% 50% no-repeat;
+      background-size: 100% 100%;
+    }
     .failed{
       background: url('../../assets/styles/image/graduationDiploma/failed.png') 50% 50% no-repeat;
       background-size: 100% 100%;
