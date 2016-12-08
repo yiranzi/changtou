@@ -6,7 +6,6 @@
     <div class="ict-input-container">
       <label class="title">{{title}}</label>
       <input :type="type"
-             :placeHolder
              v-model="value"
              :placeholder="placeholder"
              @blur="onBlur"
@@ -27,6 +26,10 @@
       },
       title: {
         type: String
+      },
+      placeholder: {
+        type: String,
+        default: ''
       },
       value: {
 //        required: true,
@@ -88,6 +91,8 @@
     }
 
     input {
+      position: relative;
+      top: 2px;
       flex: 1;
       border-top-color: initial;
       border-top-style: initial;
@@ -105,7 +110,6 @@
       outline-style: initial;
       outline-width: 0px;
       line-height: 0.75rem;
-      height: 0.75rem;
       font-size: 0.75rem;
       color: inherit;
       background-color: transparent;
