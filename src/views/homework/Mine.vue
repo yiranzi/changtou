@@ -206,8 +206,6 @@
               }
             )
           }
-        ).catch(
-          err => me.showAlert(err.message)
         )
       }
     },
