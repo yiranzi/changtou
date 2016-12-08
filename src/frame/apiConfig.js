@@ -149,7 +149,7 @@ const apiUrl = {
    */
   'graduation_diploma_list': '/student/diploma-list', // 毕业奖状列表
   'graduation_draw': '/integral/graduate-draw', // 毕业抽奖
-  'graduation_diploma': '' // 毕业奖状详情
+  'graduation_diploma_details': '/student/diploma-details/:subjectId' // 毕业奖状详情
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

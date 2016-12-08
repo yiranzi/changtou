@@ -3,7 +3,8 @@
  */
 
 const state = {
-  diplomaList: []
+  diplomaList: [],
+  diplomaDetails: null
 }
 
 const mutations = {
@@ -15,6 +16,16 @@ const mutations = {
      */
   GRADUATION_UPDATE_DIPLOMA_LIST (state, list) {
     state.diplomaList = list
+  },
+
+  /**
+   * 更新 毕业证详情
+   * @param state
+   * @param details
+   * @constructor
+     */
+  GRADUATION_UPDATE_DIPLOMA_DETAILS (state, details) {
+    state.diplomaDetails = details
   }
 }
 

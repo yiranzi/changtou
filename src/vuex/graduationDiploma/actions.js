@@ -44,13 +44,38 @@ export const getDraw = ({dispatch}, {drawType, subjectId}) => {
           url: getUrl('graduation_draw'),
           data: {
             drawType,
-            subjectId,
-            userId: 'dc602a74c0574092b7f2224078e1f313'
+            subjectId
           }
         }
       ).then(
         res => {
           resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 获取 课程详情
+ * @param dispatch
+ * @param subjectId
+ * @returns {Promise}
+ */
+export const getDiplomaDetails = ({dispatch}, subjectId) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('graduation_diploma_details').replace(':subjectId', subjectId)
+        }
+      ).then(
+        details => {
+          dispatch('GRADUATION_UPDATE_DIPLOMA_DETAILS', details)
+          resolve(details)
         },
         err => {
           reject(err)

@@ -10,46 +10,47 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="subject-diploma">
-            <p class="user-name">用户名</p>
-            <p class="subject-name">课程名</p>
-            <span class="graduation-date">2016.12.6</span>
+            <p class="user-name">{{userName}}</p>
+            <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
+            <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
           </div>
           <div>
             <p class="draw-title">－长投毕业激励金抽奖－</p>
-            <div class="draw-panel" >
+            <div class="draw-panel" v-if="diplomaDetails && diplomaDetails.drawStatus !== drawStatus.draw" :class="{'draw-disabled':diplomaDetails.drawStatus !== drawStatus.undraw}">
               <div class="animated-border animated-border-top"></div>
               <div class="animated-border animated-border-bottom"></div>
               <div class="animated-border animated-border-left"></div>
               <div class="animated-border animated-border-right"></div>
-              <!--v-if="undraw/expired/failed" :class="{'undraw': '','expired':'','failed':''}"-->
-              <span class="status-label expired"></span>
-              <div class="type-panel conservative" v-touch:tap="onDrawTap('conservative')">
+              <span class="status-label"
+                    :class="{'expired': drawStatusCls.expired,'failed': drawStatusCls.failed}"></span>
+              <div class="type-panel conservative" v-touch:tap="onDrawTap('B')">
                 <span></span>
                 <p>保守型</p>
                 <p>随机积分</p>
               </div>
-              <div class="type-panel robustness" v-touch:tap="onDrawTap('robustness')">
+              <div class="type-panel robustness" v-touch:tap="onDrawTap('W')">
                 <span></span>
                 <p>稳健性</p>
                 <p>随机积分</p>
               </div>
-              <div class="type-panel radical" v-touch:tap="onDrawTap('radical')">
+              <div class="type-panel radical" v-touch:tap="onDrawTap('J')">
                 <span></span>
                 <p>激进型</p>
                 <p>随机积分</p>
               </div>
             </div>
-            <div class="draw-stamps"><!--v-if="!undraw/expired/failed"-->
-              <span class="status-label expired"></span>
+            <div class="draw-stamps" v-if="diplomaDetails && diplomaDetails.drawStatus === drawStatus.draw">
+              <span class="status-label"
+              :class="{'expired': integralTicketCls.expired,'used': integralTicketCls.used}"></span>
               <p class="app-label">APP专享</p>
               <div class="stamps-info">
-                <span class="amount">2500</span>
+                <span class="amount">{{diplomaDetails && diplomaDetails.integralTicket && diplomaDetails.integralTicket.integral}}</span>
                 <span class="name">
                   <p>积分</p>
                   <p>长投毕业鼓励金</p>
                 </span>
               </div>
-              <p class="valid-info">购买付费课程(策略类除外)可用<span class="valid-date">有效期至2016-12-06</span></p>
+              <p class="valid-info">购买付费课程(策略类除外)可用<span class="valid-date">有效期至{{diplomaDetails && diplomaDetails.integralTicket && diplomaDetails.integralTicket.endTime}}</span></p>
             </div>
             <div class="draw-explain">
               <p>抽奖说明及使用提示</p>
@@ -68,13 +69,15 @@
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {graduationDiplomaActions} from '../../vuex/actions'
-
+  import {graduationDiplomaGetters, userGetters} from '../../vuex/getters'
   export default {
   vuex: {
     getters: {
-
+      userName: userGetters.userName,
+      diplomaDetails: graduationDiplomaGetters.diplomaDetails
     },
     actions: {
+      getDiplomaDetails: graduationDiplomaActions.getDiplomaDetails,
       getDraw: graduationDiplomaActions.getDraw
     }
   },
@@ -85,16 +88,44 @@
       rightOptions: { //titlebar
         callback: this.onFinishTap,
         disabled: false
+      },
+      drawStatus: {
+        'undraw': 'N', //未抽取
+        'draw': 'Y', //已抽取
+        'expired': 'E', //已过期
+        'failed': 'F' //未抽中
+      },
+      ticketStatus: {
+        'used': 'Y', //已使用
+        'unused': 'N', //未使用
+        'expired': 'E' //已过期
       }
     }
   },
   computed: {
-
+    // 用来显示抽奖机会的状态
+    drawStatusCls () {
+      return {
+        expired: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.expired,
+        failed: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.failed
+      }
+    },
+    integralTicketCls () {
+      return {
+        expired: this.diplomaDetails && this.diplomaDetails.integralTicket && this.diplomaDetails.integralTicket.isUsed === this.ticketStatus.expired,
+        used: this.diplomaDetails && this.diplomaDetails.integralTicket && this.diplomaDetails.integralTicket.isUsed === this.ticketStatus.used,
+        unused: this.diplomaDetails && this.diplomaDetails.integralTicket && this.diplomaDetails.integralTicket.isUsed === this.ticketStatus.unused
+      }
+    }
   },
   route: {
     data ({to: {params}}) {
       this.subjectId = params.subjectId
-      this.setScrollerHeight()
+      this.getDiplomaDetails(this.subjectId).then(
+        details => {
+          this.setScrollerHeight()
+        }
+      )
     }
   },
   methods: {
@@ -123,7 +154,7 @@
      */
     onDrawTap (type) { //conservative  robustness  radical
       //可抽奖
-      if ('可抽奖') {
+      if (this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.undraw) {
         this.getDraw(
           {
             drawType: type,
@@ -141,8 +172,6 @@
           }
         )
       }
-      //不可抽奖
-      console.log('onDrawTap')
     }
   },
   components: {
@@ -304,15 +333,14 @@
       .animated-border{
         position: absolute;
         background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') 0 0;
-        /*background-size: 100% 100%;*/
         animation-duration: 10s;
         -webkit-animation-duration: 10s;
         animation-delay: 0s;
         -webkit-animation-delay: 0s;
         animation-iteration-count: infinite;
         -webkit-animation-iteration-count: infinite;
-        animation-fill-mode: backwards;
-        -webkit-animation-fill-mode: backwards;
+        animation-fill-mode: forwards;
+        -webkit-animation-fill-mode: forwards;
         animation-timing-function: linear;
         -webkit-animation-timing-function: linear;
       }
@@ -320,7 +348,7 @@
         top: -2px;
         left: 0;
         width: 100%;
-        height: 4px;
+        height: 3px;
         animation-name: runRight;
         -webkit-animation-name: runRight;
       }
@@ -328,27 +356,25 @@
         bottom: -2px;
         left: 0;
         width: 100%;
-        height: 4px;
+        height: 3px;
         animation-name: runLeft;
         -webkit-animation-name: runLeft;
       }
       .animated-border-right{
-        top: 0;
+        top: 3px;
         right: -2px;
-        height: 100%;
-        width: 4px;
+        height: 100% - 6px;
+        width: 3px;
         background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 0;
-        /*background-size: 100% 100%;*/
         animation-name: runBottom;
         -webkit-animation-name: runBottom;
       }
       .animated-border-left{
-        top: 0;
+        top: 3px;
         left: -2px;
-        height: 100%;
-        width: 4px;
+        height: 100% - 6px;
+        width: 3px;
         background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 0;
-        /*background-size: 100% 100%;*/
         animation-name: runTop;
         -webkit-animation-name: runTop;
       }
@@ -492,42 +518,42 @@
     }
     @keyframs runRight {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') 100% 0;
+        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') -100% 0;
       }
     }
     @-webkit-keyframes runRight {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') 100% 0;
+        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') -100% 0;
       }
     }
     @keyframs runLeft {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') -100% 0;
+        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') 100% 0;
       }
     }
     @-webkit-keyframes runLeft {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') -100% 0;
+        background: url('../../assets/styles/image/graduationDiploma/border-horizon.png') 100% 0;
       }
     }
     @keyframs runBottom {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
+        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 -100%;
       }
     }
     @-webkit-keyframes runBottom {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
+        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 -100%;
       }
     }
     @keyframs runTop {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 -100%;
+        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
       }
     }
     @-webkit-keyframes runTop {
       100% {
-        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 -100%;
+        background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
       }
     }
   }
