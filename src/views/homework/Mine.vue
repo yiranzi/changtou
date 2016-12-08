@@ -117,6 +117,17 @@
               }
             )
             let lessonIds = subjectRecords ? subjectRecords.lessonSet.lessonIds : []
+            item.lessons.sort(
+              function (former, latter) {
+                if (former.sequence < latter.sequence) {
+                  return -1
+                } else if (former.sequence === latter.sequence) {
+                  return 0
+                } else if (former.sequence > latter.sequence) {
+                  return 1
+                }
+              }
+            )
             for (let i = 0, lessonLength = item.lessons.length; i < lessonLength; i++) {
               if (item.lessons[i].hasChoice === 'Y') {
                 choice.push({
