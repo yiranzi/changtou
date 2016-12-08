@@ -11,7 +11,7 @@
           <div class="diploma-item" v-touch:tap="onDiplomaTap(item)">
             <img src="../../assets/styles/image/graduationDiploma/diploma-icon.png">
             <div class="subject-panel">
-              <p class="subject-title">{{item.subjectName}}<span class="draw-icon" v-if="item.drawStatus === 'Y'">抽奖</span></p>
+              <p class="subject-title">{{item.subjectName}}<span class="draw-icon" v-if="item.drawStatus === 'N'">抽奖</span></p>
               <p class="subject-rank">第{{item.rank}}名毕业</p>
             </div>
           </div>
@@ -53,7 +53,6 @@ export default {
     setScrollerHeight () {
       const me = this
       me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
-      console.log(me.$els.titlebar.offsetHeight)
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({

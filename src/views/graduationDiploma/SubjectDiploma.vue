@@ -50,7 +50,7 @@
                   <p>长投毕业鼓励金</p>
                 </span>
               </div>
-              <p class="valid-info">购买付费课程(策略类除外)可用<span class="valid-date">有效期至{{diplomaDetails && diplomaDetails.integralTicket && diplomaDetails.integralTicket.endTime}}</span></p>
+              <p class="valid-info">购买付费课程(策略类除外)可用<span class="valid-date">有效期至{{diplomaDetails && diplomaDetails.integralTicket && diplomaDetails.integralTicket.endTime.split(' ')[0]}}</span></p>
             </div>
             <div class="draw-explain">
               <p>抽奖说明及使用提示</p>
@@ -142,6 +142,17 @@
     },
 
     /**
+     * 更新奖状信息
+     */
+    reloadDiploma () {
+      this.getDiplomaDetails(this.subjectId).then(
+        details => {
+          this.setScrollerHeight()
+        }
+      )
+    },
+
+    /**
      * 点击完成
      */
     onFinishTap () {
@@ -162,6 +173,7 @@
           }
         ).then(
           ({integral}) => {
+            this.reloadDiploma()
             this.showMask({
               component: 'graduationDiploma/DrawVolume.vue',
               hideOnMaskTap: true,

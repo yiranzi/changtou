@@ -10,3 +10,11 @@ export const diplomaList = (state) => {
 export const diplomaDetails = (state) => {
   return state.graduationDiploma.diplomaDetails
 }
+// 是否有新弹框的毕业证
+export const newShowDiploma = (state) => {
+  return state.graduationDiploma.newShowDiploma
+}
+// 是否有新提示的毕业证
+export const newDrawDiploma = (state) => {
+  return state.graduationDiploma.newDrawDiploma
+}

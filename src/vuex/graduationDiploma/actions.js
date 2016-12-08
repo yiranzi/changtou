@@ -19,6 +19,18 @@ export const getDiplomaList = ({dispatch}) => {
       ).then(
         list => {
           dispatch('GRADUATION_UPDATE_DIPLOMA_LIST', list)
+          const newShowDiploma = list.find(
+            function (diploma) {
+              return !diploma.show
+            }
+          )
+          const newDrawDiploma = list.find(
+            function (diploma) {
+              return diploma.drawStatus === 'N'
+            }
+          )
+          dispatch('GRADUATION_UPDATE_SHOW_DIPLOMA', newShowDiploma)
+          dispatch('GRADUATION_UPDATE_DRAW_DIPLOMA', newDrawDiploma)
           resolve(list)
         },
         err => {

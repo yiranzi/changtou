@@ -153,16 +153,17 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
+  import {courseDetailGetters, courseRecordsGetters, userGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
-
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
-        isUserLogin: userGetters.isLogin
+        isUserLogin: userGetters.isLogin,
+        newShowDiploma: graduationDiplomaGetters.newShowDiploma
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -177,7 +178,9 @@
         getArticle: essayActions.getArticle,
 
         setChoiceQuestion: choiceActions.setChoice,
-        getReport: choiceActions.getReport
+        getReport: choiceActions.getReport,
+
+        getDiplomaList: graduationDiplomaActions.getDiplomaList
       }
     },
 
@@ -259,6 +262,21 @@
             }
           )
         }
+      },
+
+      activate ({from, next}) {
+        //做完课程最后一课选择题 拉取毕业奖状列表
+        const me = this
+        if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
+          me.getDiplomaList().then(
+            () => {
+              if (this.newShowDiploma) {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
+              }
+            }
+          )
+        }
+        next()
       },
 
       /**

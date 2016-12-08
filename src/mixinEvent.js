@@ -9,6 +9,7 @@ import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/act
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
+import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {choiceActions} from './vuex/actions'
 import {platformMap, Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
@@ -162,14 +163,10 @@ const mixin = {
     /**
      * 下载了用户的毕业证列表
      */
-    onGraduationDiplomaLoaded: function (diplomaList) {
-      const newDiploma = diplomaList.find(
-        function (diploma) {
-          return diploma.show
-        }
-      )
-      if (newDiploma) {
-        this.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
+    onGraduationDiplomaLoaded: function () {
+      const diploma = newShowDiploma()
+      if (diploma) {
+        this.$dispatch(eventMap.SUBJECT_GRADUATION, diploma)
       }
     }
   }
