@@ -7,9 +7,8 @@
       <ict-titlebar :right-options="rightOptions" v-el:titlebar>
         <a slot="right">提交</a>
       </ict-titlebar>
-        <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}
-          <span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span>
-        </div>
+      <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
+      <p class="fold-panel"><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
       <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft">存草稿</span>
@@ -118,7 +117,7 @@ export default {
             window.history.back()
           }
         }).catch(
-        err => {
+        () => {
           this.rightOptions.disabled = false
         }
       )
@@ -166,24 +165,30 @@ export default {
 <style lang="less">
   .essay-answer{
     height: 100%;
-
-    .fold-essay{
-      p{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    p{
+      margin: 0;
     }
-
+    .fold-essay{
+      height: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .essay-content{
-      position: relative;
-      padding: 0.75rem 0.6rem;
+      padding: 0.75rem 0.6rem 0;
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
-      p{
+      *{
         margin: 0;
+        padding: 0;
       }
+    }
+    .fold-panel{
+      position: relative;
+      width: 100%;
+      height: 30/40rem;
+      background: #f0eff5;
       .fold-icon{
         position: absolute;
         padding: 0.5rem 1rem;
@@ -194,7 +199,6 @@ export default {
         color: #00b0f0;
       }
     }
-
     textarea{
       display: block;
       width: 100%;
