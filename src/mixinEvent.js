@@ -9,7 +9,7 @@ import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/act
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {choiceActions} from './vuex/actions'
-import {platformMap, Device} from './plugin/device'
+//import {platformMap, Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
 
 const mixin = {
@@ -55,13 +55,17 @@ const mixin = {
       this.jpushAddReceiveHandler(this.onReceiveNotification)
 
       // 同步用户信息
-      this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
-
-      this.getKnowledgePointMap()
-
-      this.hideSplashscreen()
+      this.syncUser().then(this.doWhenUserValid)
+        .then(this.hideSplashscreen)
+        .catch(this.hideSplashscreen)
 
       initVerNum()
+
+      // 延迟获取对应知识点, 增加页面的响应速度
+      const me = this
+      setTimeout(function () {
+        me.getKnowledgePointMap()
+      }, 500)
     },
 
     /**
@@ -132,9 +136,11 @@ const mixin = {
      * 隐藏启动图片
      */
     hideSplashscreen: function () {
-      if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
-         window.navigator.splashscreen.hide()
-      }
+      //if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
+        if (window.navigator.splashscreen) {
+          window.navigator.splashscreen.hide()
+        }
+      //}
     }
   }
 }

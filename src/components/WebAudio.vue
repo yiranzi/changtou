@@ -275,6 +275,8 @@
         const me = this
         this.intervalId = setInterval(() => {
             me.currentTime = convertAudioTimeToString(webAudio.currentTime)
+            // 这里每次都设置总时间, 是因为手机端loadMediaDuration 事件触发有延迟, 所以加了一道保险
+            me.totalTime = convertAudioTimeToString(webAudio.duration)
             me.ctrTranslateXByAmplitude(webAudio.amplitude)
           }, 1000)
       },
