@@ -69,6 +69,9 @@ export default {
         this.resizeTextarea,
         300
       )
+    },
+    deactivate () {
+      this.submitDraft()
     }
   },
   beforeDestroy () {
@@ -136,7 +139,8 @@ export default {
       this.submitArticle(essay).then(
         result => {
           this.showToast('你的草稿已保存')
-        })
+        }
+      )
     },
 
     onAlertHide () {
