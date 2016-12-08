@@ -8,9 +8,9 @@
     <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
-        <div class="promote-panel" v-show="promoteShow" v-touch:tap="goToProfessionalStrategy">
+        <div class="promote-panel" v-show="promoteShow">
           <img src="../../assets/styles/image/courseList/total-list-close.png" class="close-icon" v-touch:tap="onPromoteCloseTap">
-          <img src="../../assets/styles/image/courseList/total-list-strategy.png" class="promote-img">
+          <img src="../../assets/styles/image/courseList/total-list-strategy.png" class="promote-img"  v-touch:tap="goToProfessionalStrategy">
         </div>
         <div class="course-group" v-for="group in courseList">
           <p class="course-group-title">{{group.categoryName}}</p>

@@ -10,42 +10,44 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <div class="subject-panel" v-for="subject in homeworkList">
-          <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
-            <p>{{subject.title}}
-              <span class="subject-status">{{subjectStatus[subject.status]}}</span>
-              <span class="subject-info">{{subjectInfo[subject.status]}}</span>
-            </p>
-          </div>
-
-          <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
-            <div class="subject-progress">
-              <p class="modules-title">进度</p>
-              <p v-if="subject.hasChoice">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
-              <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
-            </div>
-
-            <div class="latest-notice">
-
-            </div>
-
-            <div class="choice-panel"  v-if="subject.hasChoice">
-              <p class="modules-title">课后测试</p>
-              <span v-for="choice in subject.choice"
-                    v-touch:tap="onChoiceTap(choice)"
-                    class="choice-item">
-                <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index+1]}}课</span>
-                <img v-if="choice.status" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
-              </span>
-            </div>
-
-            <div class="essay-panel">
-              <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
-              <p v-for="essay in subject.essay"
-                 v-touch:tap="onEssayTap(essay)"
-                 class="essay-item">
-                  <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
-                <span class="essay-status">{{essayStatus[essay.status]}}</span>
+          <div  v-if="subject.hasChoice || subject.hasEssay">
+            <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
+              <p>{{subject.title}}
+                <span class="subject-status">{{subjectStatus[subject.status]}}</span>
+                <span class="subject-info">{{subjectInfo[subject.status]}}</span>
               </p>
+            </div>
+
+            <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
+              <div class="subject-progress">
+                <p class="modules-title">进度</p>
+                <p v-if="subject.hasChoice">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
+                <p>{{subject.hasChoice ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
+              </div>
+
+              <div class="latest-notice">
+
+              </div>
+
+              <div class="choice-panel"  v-if="subject.hasChoice">
+                <p class="modules-title">课后测试</p>
+                <span v-for="choice in subject.choice"
+                      v-touch:tap="onChoiceTap(choice)"
+                      class="choice-item">
+                  <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index+1]}}课</span>
+                  <img v-if="choice.status" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+                </span>
+              </div>
+
+              <div class="essay-panel">
+                <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+                <p v-for="essay in subject.essay"
+                   v-touch:tap="onEssayTap(essay)"
+                   class="essay-item">
+                    <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
+                  <span class="essay-status">{{essayStatus[essay.status]}}</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -109,28 +111,41 @@
             let essay = []
             let essayTotal = 0
             let completeEssayNum = 0
-            let lessonIds = me.expenseRecords.find(
+            let subjectRecords = me.expenseRecords.find(
               function (record) {
                 return record.subjectId === item.subjectId
               }
-            ).lessonSet.lessonIds
+            )
+            let lessonIds = subjectRecords ? subjectRecords.lessonSet.lessonIds : []
+            item.lessons.sort(
+              function (former, latter) {
+                if (former.sequence < latter.sequence) {
+                  return -1
+                } else if (former.sequence === latter.sequence) {
+                  return 0
+                } else if (former.sequence > latter.sequence) {
+                  return 1
+                }
+              }
+            )
             for (let i = 0, lessonLength = item.lessons.length; i < lessonLength; i++) {
               if (item.lessons[i].hasChoice === 'Y') {
                 choice.push({
                   lessonId: item.lessons[i].lessonId,
                   status: item.lessons[i].isChoicePassed === 'Y',
                   hasChoice: item.lessons[i].hasChoice === 'Y',
-                  available: lessonIds.indexOf(item.lessons[i].lessonId) >= 0
+                  available: item.status === 'N' && lessonIds.indexOf(item.lessons[i].lessonId) >= 0
                 })
               }
               if (item.lessons[i].hasEssay === 'Y') {
                 essay.push({
+                  essayType: item.lessons[i].essayType,
                   lessonId: item.lessons[i].lessonId,
                   status: item.lessons[i].essayStatus,
                   title: item.lessons[i].title,
                   hasEssay: item.lessons[i].hasEssay === 'Y',
                   type: item.lessons[i].type,
-                  available: lessonIds.indexOf(item.lessons[i].lessonId) >= 0
+                  available: item.status === 'N' && lessonIds.indexOf(item.lessons[i].lessonId) >= 0
                 })
               }
               if (item.lessons[i].hasChoice === 'Y') {
@@ -156,6 +171,11 @@
             // 课程是否有选择题
             if (choice.length > 0) {
               item.hasChoice = true
+            }
+
+            // 课程是否有问答题
+            if (essay.length > 0) {
+              item.hasEssay = true
             }
 
             // 课程是否打开
@@ -186,8 +206,6 @@
               }
             )
           }
-        ).catch(
-          err => me.showAlert(err.message)
         )
       }
     },
@@ -210,6 +228,15 @@
         })
         }, 200)
       },
+
+      refreshScroller () {
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.$refs.scroller._xscroll.resetSize()
+          })
+        }, 50)
+      },
+
       /**
        * 点击课程
        */
@@ -218,7 +245,7 @@
           let item = this.clsList[index]
           item.isUnfold = !item.isUnfold
           this.clsList.$set(index, item)
-          this.setScrollerHeight()
+          this.refreshScroller()
         }
       },
       /**
@@ -248,35 +275,41 @@
        * @param essay
       */
       onEssayTap (essay) {
+        const me = this
         if (essay.available) {
-          const me = this
-          me.getArticle(essay.lessonId).then(
-            evaluation => {
-              if (evaluation && evaluation.status !== null) {
-                switch (evaluation.status) {
-                  case 0://作业已提交
-                    me.goEssayMark(essay.lessonId)
-                    break
-                  case 1://草稿已提交 写作业
-                    me.goEssayAnswer(essay.lessonId)
-                    break
-                  case 2://已批改 未通过 查看作业
-                    me.goEssayMark(essay.lessonId)
-                    break
-                  case 3://已批改 通过 查看作业
-                    me.goEssayMark(essay.lessonId)
-                    break
-                  default:
-                    me.goEssayMark(essay.lessonId)
-                    break
+          if (essay.essayType === 'N') {
+            // 简单作业
+            me.getArticle(essay.lessonId).then(
+              evaluation => {
+                if (evaluation && evaluation.status !== null) {
+                  switch (evaluation.status) {
+                    case 0://作业已提交
+                      me.goEssayMark(essay.lessonId)
+                      break
+                    case 1://草稿已提交 写作业
+                      me.goEssayAnswer(essay.lessonId)
+                      break
+                    case 2://已批改 未通过 查看作业
+                      me.goEssayMark(essay.lessonId)
+                      break
+                    case 3://已批改 通过 查看作业
+                      me.goEssayMark(essay.lessonId)
+                      break
+                    default:
+                      me.goEssayMark(essay.lessonId)
+                      break
+                  }
+                } else {
+                  me.goEssayAnswer(essay.lessonId)
                 }
-              } else {
-                me.goEssayAnswer(essay.lessonId)
               }
-            }
-          ).catch(
-            err => console.log(err.message)
-          )
+            ).catch(
+              err => console.log(err.message)
+            )
+          } else if (essay.essayType === 'Y') {
+            // 复杂作业
+            me.showAlert(`该课作业为复杂的图表作业。为了您更好的完成作业，真实的反映你的学习水平，请前往长投网www.ichangtou.com，完成该课作业。`)
+          }
         }
       },
 
