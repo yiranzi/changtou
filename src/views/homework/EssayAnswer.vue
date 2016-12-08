@@ -72,6 +72,11 @@ export default {
     },
     deactivate () {
       this.submitDraft()
+      this.lessonId = 0
+      this.foldText = '收起' //折叠 文案
+      this.isFold = false // 是否折叠题目
+      this.textareaStyle = '' //textarea样式
+      this.answer = this.essayAnswer // 填写的答案
     }
   },
   beforeDestroy () {
