@@ -7,7 +7,6 @@
       <ict-titlebar>草稿箱</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller>
         <div v-if="isEmpty" class="empty-tip">
-          <img src="/static/image/mine/noMessages.png">
         </div>
         <div v-if="!isEmpty">
           <div v-for="draft in draftList" class="draft-item">
@@ -103,12 +102,10 @@ export default {
     }
     .empty-tip{
       text-align: center;
-      img{
-        margin: 6.5rem auto 0;
-        height: 6.05rem;
-        width: 6.05rem;
-        background-size: 100% 100%;
-      }
+      background: url("../../../static/image/mine/noMessages.png") no-repeat center center / 70%;
+      margin: 6.5rem auto 0;
+      height: 6.05rem;
+      width: 6.05rem;
     }
     .draft-item{
       background: #fff;

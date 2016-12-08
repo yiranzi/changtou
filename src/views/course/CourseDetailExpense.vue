@@ -741,8 +741,9 @@
        * 激活
        */
       active () {
-        const me = this
+             this.showToast('此课程已激活')
 
+        const me = this
         const activeHandler = function () {
           me.activeSubject(me.subjectId).then(
             function () {
@@ -754,15 +755,7 @@
             }
           )
         }
-
-        const msg = '<p>该课程尚未激活</p><p>您是否想现在激活此课程?</p>'
-        me.showConfirm({
-          title: '',
-          message: msg,
-          okText: '确认激活',
-          cancelText: '我再想想',
-          okCallback: activeHandler
-        })
+        activeHandler()
       },
 
       /**
