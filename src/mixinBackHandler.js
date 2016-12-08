@@ -16,22 +16,24 @@ const mixin = {
 
   methods: {
     defaultBackHandler () {
-      if (this.isMaskShow) {
-        // 模块窗口弹出, do nothing
-        return
-      }
-
       //在首页,点击后退退出app
       if (this.route.path === '/main' || this.route.path === '/setting' || this.route.path === '/mycourse') {
         if (isWantQuit) {
           window.navigator.app.exitApp()
         } else {
           this.showToast({message: '再按一次退出长投学堂'})
+
           isWantQuit = true
           setTimeout(() => { isWantQuit = false }, 2000)
         }
       } else {
-        window.history.back()
+        // 如果不是首页
+        if (this.isMaskShow) {
+          // 模块窗口弹出, 隐藏
+          return
+        } else {
+          window.history.back()
+        }
       }
     }
   }
