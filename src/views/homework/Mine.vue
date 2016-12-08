@@ -120,7 +120,7 @@
                   lessonId: item.lessons[i].lessonId,
                   status: item.lessons[i].isChoicePassed === 'Y',
                   hasChoice: item.lessons[i].hasChoice === 'Y',
-                  available: lessonIds.indexOf(item.lessons[i].lessonId) >= 0
+                  available: item.status === 'N' && lessonIds.indexOf(item.lessons[i].lessonId) >= 0
                 })
               }
               if (item.lessons[i].hasEssay === 'Y') {
@@ -130,7 +130,7 @@
                   title: item.lessons[i].title,
                   hasEssay: item.lessons[i].hasEssay === 'Y',
                   type: item.lessons[i].type,
-                  available: lessonIds.indexOf(item.lessons[i].lessonId) >= 0
+                  available: item.status === 'N' && lessonIds.indexOf(item.lessons[i].lessonId) >= 0
                 })
               }
               if (item.lessons[i].hasChoice === 'Y') {
