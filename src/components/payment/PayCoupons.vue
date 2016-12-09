@@ -18,7 +18,7 @@
     <div class="order-coupons" v-if="show">
       <p class="coupons-label">长投卡/优惠券（不可叠加使用）</p>
       <label v-for="coupon in coupons" for="coupons_{{$index}}" class="coupon-item">
-        <span>{{coupon.name}}</span><span v-if="!coupons.couponNo">省{{coupon.userBene}}元</span>
+        <span>{{coupon.name}}</span><span v-if="!coupon.ticketNo">省{{coupon.userBene}}元</span>
         <input class="coupon-item-check" type="radio" value="{{$index}}" checked="{{!$index}}" v-model="value" id="coupons_{{$index}}">
         <span class="coupon-item-checked"></span>
       </label>

@@ -14,7 +14,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   export default {
@@ -83,15 +83,10 @@
     route: {
       data ({to: {path}}) {
         const pathArr = path.split('-')
-        const me = this
         this.type = pathArr[1]
         this.subjectId = parseInt(pathArr[2])
-        return Promise.all([getOrder(this.type, this.subjectId)]).then(
-            ([order]) => {
-            me.arrangeOrder(order)
-      }).catch(
-          (err) => console.log(err)
-      ) }
+        return this.getSubjectOrder()
+      }
     },
     events: {
       // 优惠信息 选择
@@ -103,8 +98,7 @@
         this.sheetShow = false
       },
       'codeConfirm' () {
-        const me = this
-        getOrder(this.type, this.subjectId).then(order => me.arrangeOrder(order))
+        this.getSubjectOrder()
       },
       'loginTap' () {
         this.$route.router.go('/entry')
@@ -112,9 +106,22 @@
     },
     methods: {
       /**
+       * 获取课程订单
+       */
+      getSubjectOrder () {
+        const me = this
+        Promise.all([getOrder(this.type, this.subjectId), getIntegral()]).then(
+          ([order, integral]) => {
+          me.arrangeOrder(order, integral)
+        }).catch(
+            (err) => console.log(err)
+        )
+      },
+
+      /**
        * 整理显示数据
        */
-      arrangeOrder (order) {
+      arrangeOrder (order, integral) {
         this.courseList = [{
           pic: order.pic,
           title: order.title,
@@ -122,17 +129,29 @@
           price: order.price
         }]
         this.price = order.price
-        this.coupons = this.getCoupons(order)
+        this.coupons = this.getCoupons(order, integral)
         this.currentBalance = order.currentBalance
       },
       /**
        *  生成 优惠列表
        */
-      getCoupons (order) {
+      getCoupons (order, integral) {
         let coupons = []
-
-        if (order.coupons) {
-          coupons = order.coupons
+        if (this.subjectId !== 21) { // 21长投打新课
+          let availableCoupons = integral.filter(
+            (item) => {
+              return item.isUsed === 'N'
+            }
+          )
+          coupons = availableCoupons.map(
+            (item) => {
+              return {
+                name: `积分${item.integral}抵¥${item.integral / 100}`,
+                userBene: item.integral / 100,
+                ticketNo: item.ticketNo
+              }
+            }
+          )
         }
         if (order.card) {
           coupons.push({
@@ -170,10 +189,11 @@
           sum: this.sum,
           body: '长投课程',
           deal: {
-            cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
+            cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.ticketNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
             items: [{
-              coupon: (this.selectedCoupon && this.selectedCoupon.couponNo) ? this.selectedCoupon : null,
+              integralTicketNo: this.selectedCoupon.ticketNo,
+              coupon: null,
               dealType: dealType.BUY,
               itemId: this.subjectId,
               mchantType: 1,
