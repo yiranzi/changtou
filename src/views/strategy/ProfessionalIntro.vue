@@ -71,11 +71,10 @@
         transition.next()
       },
       data () {
-        this.getProfessionalIntro()
+        this.getProfessionalIntro().then(
+          () => this.setScrollerHeight()
+        )
       }
-    },
-    ready () {
-      this.setScrollerHeight()
     },
     methods: {
       /**

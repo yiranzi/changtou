@@ -65,11 +65,10 @@
         transition.next()
       },
       data () {
-        this.getVipIntro()
+        this.getVipIntro().then(
+          () => this.setScrollerHeight()
+        )
       }
-    },
-    ready () {
-      this.setScrollerHeight()
     },
     methods: {
       /**
@@ -125,6 +124,9 @@
   .strategy-vip-intro{
     position: relative;
     background: #fff;
+    p{
+      margin: 0;
+    }
     .intro-promotion{
       width: 18.75rem;
       height: 10rem;
