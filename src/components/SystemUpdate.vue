@@ -7,10 +7,10 @@
 </style>
 <script>
    export default {
-    methods: {
-    loadingClose () {
-        this.$dispatch('loadingClose')
+     methods: {
+       loadingClose () {
+         this.$dispatch('loadingClose')
       }
-}
+   }
 }
 </script>

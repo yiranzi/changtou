@@ -6,8 +6,8 @@
     <div class="choice-answer">
       <span class="close-icon" v-touch:tap="onCloseTap"></span>
       <div class="choice-title">
-        {{titleIndex}} <br/>
-        {{titleContent}}
+        {{questionOrderTip}} <br/>
+        {{title}}
       </div>
       <div class="choice-options" v-for="option in currQuestion.content"
            :class="{'select-right': optionTaped && $index === selectedOptionIndex && $index === currQuestion.answer, 'select-wrong': optionTaped && $index === selectedOptionIndex && $index !== currQuestion.answer}"
@@ -16,6 +16,7 @@
       </div>
       <ict-button :disabled="isBtnDisabled" v-touch:tap="onNextTap">{{btnText}}</ict-button>
       <div class="explain" v-show="isExplainShow">
+        <span class="close-icon" v-touch:tap="onExplainClose"></span>
         <p class="title">答案提示</p>
         <p class="content">{{explain}}</p>
       </div>
@@ -57,13 +58,13 @@ export default {
   },
   computed: {
     // 题目
-    titleIndex () {
+    questionOrderTip () {
       if (this.choiceQuestion && this.choiceQuestion.length > 0) {
         return ` ${this.currIndex + 1}/${this.totalNum}  第${this.currIndex + 1}题
        `
       }
     },
-    titleContent () {
+    title () {
       if (this.choiceQuestion && this.choiceQuestion.length > 0) {
         return `${this.currQuestion.title}`
       }

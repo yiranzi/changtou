@@ -111,7 +111,7 @@
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',  // 0px ?
         hasVaildChapterCicked: false,
-        selectedLesson: 2, //当前选中的lesson
+        selectedLesson: 0, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
         currAudioSrc: null, //当前音频地址
         currPpts: [] //当前ppt地址集合
@@ -178,7 +178,7 @@
       },
 
       /**
-       * 音频播放结束s
+       * 音频播放结束
        * 继续播放下一节可用的音频
        */
       'audioPlayEnd' () {
