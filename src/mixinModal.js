@@ -110,13 +110,18 @@ const mixin = {
       }
     },
 
-    [eventMap.SHOW_TOAST]: function ({message, type}) {
+    [eventMap.SHOW_TOAST]: function ({message, type, timeout = 2000}) {
       this.isMaskShow = true
       this.toast = {
         show: true,
         type: type, // success,text
         message: message
       }
+      setTimeout(
+        () => {
+          this.toast.show = false
+        }, timeout
+      )
     },
 
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {

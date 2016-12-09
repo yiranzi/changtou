@@ -112,9 +112,26 @@
             ([order]) => {
             me.order = order
             me.arrangeOrder(order)
-      }).catch(
-          (err) => console.log(err)
-      ) }
+        }).catch(
+            (err) => console.log(err)
+        )
+      },
+      deactivate () {
+        this.order = null //订单信息
+        this.pic = '' // 图片
+        this.price = 0 // 价格
+        this.periods = []  // 服务期限列表
+        this.coupons = []  // 优惠列表
+        this.selectedCoupon = null // 选择的优惠
+        this.selectedPeriod = null // 选择的服务期限
+        this.selectedPeriodIndex = 0 //  选择的服务期限 的index
+        this.itemId = 1 // 交易 id
+        this.currentBalance = 0  // 投币余额
+        this.sheetShow = false // 显示支付sheet
+        this.deductions = [] // pro 抵扣列表
+        this.selectedDeduction = 0 // 选择的 抵扣金额
+        this.proLeftDays = 0 // pro 剩余时间
+      }
     },
     events: {
       // 服务期限 更改

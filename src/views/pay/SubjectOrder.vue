@@ -86,7 +86,18 @@
         this.type = pathArr[1]
         this.subjectId = parseInt(pathArr[2])
         return this.getSubjectOrder()
+      },
+      deactivate () {
+        this.tyep = ''
+        this.subjectId = 0
+        this.courseList = [] //课程列表
+        this.price = 0 // 价格
+        this.coupons = []  // 优惠列表
+        this.selectedCoupon = null // 选择的优惠
+        this.currentBalance = 0  // 投币余额
+        this.sheetShow = false // 显示支付sheet
       }
+
     },
     events: {
       // 优惠信息 选择

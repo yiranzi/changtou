@@ -21,9 +21,6 @@
     <alert :show.sync="alertBox.show"
            :button-text="alertBox.btnText"
            class="ict-alert">{{alertBox.message}}</alert>
-    <toast class="ict-toast"
-           :show.sync="toast.show"
-           :type="toast.type">{{toast.message}}</toast>
     <confirm
              :show.sync="confirmBox.show"
              :title="confirmBox.title"
@@ -33,6 +30,13 @@
              @on-cancel="confirmBox.cancelCallback">
       <p style="text-align:center;">{{{confirmBox.message}}}</p>
     </confirm>
+
+    <div class="ict-toast" v-show.sync="toast.show">
+      <div class="ict-toast-content">
+        <span :class="{'success':toast.type === 'success'}"></span>
+        {{toast.message}}
+      </div>
+    </div>
 
     <div id="mask"></div>
 
@@ -353,5 +357,44 @@
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+  }
+  .ict-toast{
+    position: absolute;
+    z-index: 50000;
+    top: 30%;
+    width: 100%;
+    height: 0;
+    text-align: center;
+    .ict-toast-content{
+      display: inline-block;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #fff;
+      opacity: 0.8;
+      border-radius: 10px;
+      background-color: #000;
+      p{
+        margin: 0;
+      }
+      .success{
+        position: relative;
+        display: block;
+        margin: 0 auto;
+        width: 4rem;
+        height: 4rem;
+      }
+      .success:before{
+        position: absolute;
+        display: block;
+        width: 4rem;
+        height: 4rem;
+        line-height: 4rem;
+        text-align: center;
+        font-family: 'myicon';
+        content: '\e914';
+        font-size: 2.5rem !important;
+      }
+      padding: 0.5rem 1rem;
+    }
   }
 </style>
