@@ -81,23 +81,27 @@ const orderUrl = {
  * @returns {Promise}
  */
 const getIntegral = () => {
-  return new Promise(
-    (resolve, reject) => {
-      getWithinAuth(
-        {
-          url: getUrl('integral_list')
-        }
-      ).then(
-        integralList => {
-          resolve(integralList)
-        }
-      ).catch(
-        err => {
-          reject(err)
-        }
-      )
-    }
-  )
+  if (user.isLogin) {
+    return new Promise(
+      (resolve, reject) => {
+        getWithinAuth(
+          {
+            url: getUrl('integral_list')
+          }
+        ).then(
+          integralList => {
+            resolve(integralList)
+          }
+        ).catch(
+          err => {
+            reject(err)
+          }
+        )
+      }
+    )
+  } else {
+    return null
+  }
 }
 
 /**
