@@ -4,28 +4,21 @@
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
-    <flexbox>
-      <flexbox-item :span="1/20"></flexbox-item>
-      <flexbox-item>
-        <group>
-          <div style="height: 1rem"></div>
-          <x-input title="用户名"
-                   class="custom-input"
-                   text-align="left"
-                   placeholder="输入长投用户名/手机号"
-                   :value.sync="identity" >
-          </x-input>
-          <div style="height: 1rem"></div>
-          <x-input title="密码 "
-                 class="custom-input"
-                 text-align="left"
-                 placeholder="输入密码"
-                 :value.sync="plainPassword" >
-          </x-input>
-        </group>
-      </flexbox-item>
-      <flexbox-item :span="1/20"></flexbox-item>
-    </flexbox>
+
+    <ict-input v-ref:identity
+               :value.sync="identity"
+               title="用户名"
+               placeholder="输入长投用户名/手机号">
+    </ict-input>
+
+    <div style="height: 1rem"></div>
+
+    <ict-input :value.sync="plainPassword"
+               v-ref:password
+               title="密码"
+               type="password"
+               placeholder="输入密码">
+    </ict-input>
 
     <div style="height: 3rem" class="spacer"></div>
     <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
@@ -36,7 +29,7 @@
       <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
     </flexbox>
 
-    <div class="third-party-container" v-if="isWxShow || isQQShow">
+    <div class="third-party-container" v-el:auth-container style="display: block">
       <div class="third-text-container">
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
@@ -54,6 +47,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -62,13 +56,17 @@
   import IctButton from '../../components/IctButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
-  import XInput from 'vux/x-input'
+  import IctInput from '../../components/form/IctInput.vue'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import qqAuth from '../../plugin/thirdPartyQQ'
   import wxAuth from '../../plugin/thirdPartyWX'
   import {Device, platformMap} from '../../plugin/device'
+
+  // 键盘是否弹出
+  let isKeyboardPop = false
+
   export default{
     vuex: {
       getters: {
@@ -80,6 +78,7 @@
         loginByWx: userActions.loginByWx
       }
     },
+
     data () {
       return {
         errTip: '',
@@ -92,6 +91,7 @@
         isWXInstall: false           // 是否安装wx
       }
     },
+
     watch: {
       identity (newVal) {
         this.errTip = ''
@@ -101,6 +101,7 @@
           this.disabled = true
         }
       },
+
       plainPassword (newVal) {
         this.errTip = ''
         if (/\S/.test(this.identity) && /\S/.test(newVal)) {
@@ -110,6 +111,7 @@
         }
       }
     },
+
     route: {
       data (transition) {
         this.plainPassword = ''
@@ -140,7 +142,33 @@
         }
       }
     },
+
+    events: {
+      /**
+       * input控件被选中
+       */
+      'ictInputFocus': function () {
+        isKeyboardPop = true
+        this.hideThirdPartyWhenKeyboardShow()
+      },
+
+      /**
+       * input控件失去焦点
+       */
+      'ictInputBlur': function () {
+        isKeyboardPop = false
+        setTimeout(() => {
+          if (!isKeyboardPop) {
+            this.showThirdPartyWhenKeyboardHide()
+          }
+        }, 500)
+      }
+    },
+
     methods: {
+      /**
+       * qq登录
+       */
       onQQLoginTap () {
         const me = this
         if (this.isQQInstall) {
@@ -160,6 +188,10 @@
           this.showAlert({message: '请安装QQ客户端'})
         }
       },
+
+      /**
+       * 登录
+       */
       onWxLoginTap () {
         const me = this
         if (this.isWXInstall) {
@@ -179,6 +211,10 @@
           this.showAlert({message: '请安装微信客户端'})
         }
       },
+
+      /**
+       * 登录
+       */
       doLogin () {
         this.disabled = true
         const me = this
@@ -191,8 +227,8 @@
             }
           ).catch(
             err => {
-                me.errTip = err.message
-                me.disabled = false
+              me.errTip = err.message
+              me.disabled = false
             }
           )
         } else {
@@ -200,20 +236,45 @@
           me.disabled = true
         }
       },
+
       doRegister () {
         this.$route.router.go('/register/start')
       },
+
       doResetPassword () {
         this.$route.router.go('/reset/password/start')
+      },
+
+      /**
+       * 键盘弹出
+       * 隐藏 三方登录按钮
+       */
+      hideThirdPartyWhenKeyboardShow () {
+        const {authContainer} = this.$els
+        if (authContainer) {
+          authContainer.setAttribute('style', 'display: none')
+        }
+      },
+
+      /**
+       * 键盘隐藏
+       * 显示三方登录
+       */
+      showThirdPartyWhenKeyboardHide () {
+        const {authContainer} = this.$els
+        if (authContainer) {
+          authContainer.setAttribute('style', 'display: block')
+        }
       }
     },
+
     components: {
       IctTitlebar,
       IctButton,
       Flexbox,
       FlexboxItem,
       Group,
-      XInput
+      IctInput
     }
   }
 </script>
