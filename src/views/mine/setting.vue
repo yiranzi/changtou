@@ -118,7 +118,7 @@
           this.$route.router.go('/strategy/professional/product')
         }
       },
-      resetNickNameStart () {
+      gotoResetNickName () {
           this.$route.router.go('/personal/information')
       }
     },
