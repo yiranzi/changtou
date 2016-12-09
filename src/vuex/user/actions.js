@@ -327,7 +327,12 @@ export const resetNickName = ({ dispatch }, nickName) => {
 export const resetNickName = ({ dispatch }, nickName) => {
   return new Promise(
     (resolve, reject) => {
-      postWithoutAuth(
+      const validInfo = validNickName(nickName)
+      if (!validInfo.isValid) {
+        reject(validInfo.errTip)
+        return
+      }
+      postWithinAuth(
         {
           url: getUrl('reset_nick_post_nickname'),             // TODO not the really url
           data: {
@@ -336,6 +341,7 @@ export const resetNickName = ({ dispatch }, nickName) => {
         }
       ).then(
         res => {
+          dispatch('USERNAME_UPDATE', nickName)
           resolve()
         },
         err => {
