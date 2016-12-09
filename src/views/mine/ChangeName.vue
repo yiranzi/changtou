@@ -21,7 +21,7 @@
         <div style="height: 3rem" class="spacer"></div>
         <ict-button type="default"
                     :disabled="isDisabled"
-                    @click="sendNickName"
+                    @click="updateNickName"
                     text="提交">
         </ict-button>
       </flexbox-item>
@@ -43,7 +43,6 @@ import {Flexbox, FlexboxItem} from 'vux/flexbox'
 import Group from 'vux/group'
 import XInput from 'vux/x-input'
 import {userActions} from '../../vuex/actions'
-import forbidWords from '../../../static/forbidWords'
 export default {
   vuex: {
     actions: {
@@ -61,42 +60,24 @@ export default {
       return !(/\S/.test(this.nickName))
     }
   },
-  watch: {
-    phone () {
-      this.errTip = ''
-    }
-  },
+  route: {
+      deactivate ({to, next}) {
+          this.nickName = ''
+          next()
+      }
+    },
  methods: {
     /**
-     * 点击下一步
+     * 重置昵称
      */
-    sendNickName () {
-      let name = this.nickName
-      const whiteList = ['小熊之家', '水湄物语', '小投', '小小投', '长投', '长投网', '长投学堂']
-      const reg = /^(?!(.)\1+$)(?!\d{6,8}$)[\w\u4e00-\u9fa5]{6,12}$/
-      const forbidWordLen = forbidWords.length
-      for (let k = 0; k < whiteList.length; k++) {
-        if (name.indexOf(whiteList[k]) > 0) {
-          this.errTip = '昵称不得含有白名单字段'
-          return false
-        }
-      }
-      if (!reg.test(name)) { // false
-        this.errTip = '昵称不规范请重新修改'
-        return false
-      }
-      for (let k = 0; k < forbidWordLen; k++) {
-        if (name.indexOf(forbidWords[k]) > 0) {
-          this.errTip = '昵称不得含有敏感词'
-          return false
-        }
-      }
-     this.errTip = 'that ok'
-    /* this.resetNickName(this.nickName).then(
-        () => { this.$route.router.go('/personal/information' + this.nickName) }
+    updateNickName () {
+     this.resetNickName(this.nickName).then(
+        () => { this.$route.router.go('/personal/information') }
       ).catch(
-        err => { this.errTip = err.message }
-       )  */
+        err => {
+        this.errTip = err.message
+        }
+       )
      }
   },
   components: {

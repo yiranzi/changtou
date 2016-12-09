@@ -93,11 +93,12 @@ export default {
       )
       return accumulatedTime
     },
+    // 如果登录并且有付费课程显示 '我的作业' 和 '毕业证书'
     isLoginAndCourse () {
       if (!this.isLogin) {
         return false
       }
-      if (this.isLogin && this.courseList.length > 0) {
+      if (this.courseList.length > 0) {
         for (let k = 0; k < this.courseList.length; k++) {
           if (this.courseList[k].price > 0) {
             return true
@@ -116,7 +117,6 @@ export default {
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
-
       return Promise.all(promiseArray).then(
         function () {
           setTimeout(

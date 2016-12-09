@@ -31,7 +31,7 @@
               </div>
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
-                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail(subjectArr) ">
+                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过
                   <span class="play-icon"></span>
                 </div>
@@ -226,20 +226,16 @@
     },
     computed: {
       isBulb2: function () {
-        if (this.testReport.level) {
         if (this.testReport.level === 2 || this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
-      }
       },
       isBulb3: function () {
-      if (this.testReport.level) {
         if (this.testReport.level === 3) {
           return 'bulb-light'
         }
           return 'bulb'
-      }
       }
     },
       ready () {
@@ -271,8 +267,8 @@
         /**
          *  去对应的课程页
          */
-        gotoSubjectDetail  (subject) {
-          this.$route.router.go(`/subject/detail/P/${subject.subjectId}/0`)
+        gotoSubjectDetail  () {
+          this.$route.router.go('/subject/detail/P/1/0')
         }
       },
       components: {

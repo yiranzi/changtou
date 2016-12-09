@@ -36,8 +36,7 @@ const mixin = {
       }
     },
     showSystempUpdatePage: function () {
-      const me = this
-      me.showMask({
+      this.showMask({
         component: 'SystemUpdate.vue',
         hideOnMaskTap: true,
         callbackName: 'loadingClose',
@@ -56,9 +55,8 @@ const mixin = {
     responIntercepter: function (res) {
       // 若返回值不是object, 强制转换
       let resData = res.data
-      const me = this
-      if (me.isSystemUpdate(resData)) {
-        me.showSystempUpdatePage()
+      if (this.isSystemUpdate(resData)) {
+        this.showSystempUpdatePage()
       }
       if (typeof res.data === 'string') {
         try {

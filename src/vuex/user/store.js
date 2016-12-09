@@ -56,7 +56,26 @@ const mutations = {
     state.userId = user.userId
     setLocalCache('frame-user', user)
   },
-
+  /**
+   * 重置昵称
+   * @param state
+   * @param username
+   * @constructor
+   */
+  USERNAME_UPDATE (state, username) {
+    let user = getLocalCache('frame-user')
+    user.userName = username
+    user.isLogin = state.isLogin
+    user.card = state.card
+    user.image = state.image
+    user.lastLogin = state.lastLogin
+    user.level = state.level
+    user.phone = state.phone
+    user.sessionId = state.sessionId
+    user.strategy = state.strategy
+    user.userId = state.userId
+    setLocalCache('frame-user', user)
+  },
   /**
    * 登出
    * @constructor
