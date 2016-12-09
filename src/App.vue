@@ -90,8 +90,10 @@
 
     computed: {
       badgeNewMsgNum () {
-        let num = this.newSuggestionNum + this.newMsgNum
-        return num ? (num + '') : ''
+        if (this.isLogin) {
+          let num = this.newSuggestionNum + this.newMsgNum
+          return num ? (num + '') : ''
+        }
       },
 
       isTabbarView () {
@@ -232,7 +234,7 @@
     }
   }
 
-  .weui_dialog_alert{
+  .weui_dialog_confirm{
     .weui_dialog{
       border-radius: 10px;
       .weui_dialog_hd{
@@ -336,6 +338,16 @@
   .weui_tabbar_item.weui_bar_item_on .setting-icon:before{
     content: '\e905';
     color: #409af4;
+  }
+
+  .ict-alert{
+
+  }
+  .ict-confirm{
+
+  }
+  .ict-toast{
+
   }
   .ict-float-mask{
     position: fixed;

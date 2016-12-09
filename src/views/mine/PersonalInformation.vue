@@ -5,7 +5,7 @@
         <img class="ict-user-avatar" src="http://www.ichangtou.com/images/per-tx.png">
         <p class="username">{{name}}</p>
         <p class="level">{{levelName}}</p>
-        <div class="changeNickName" v-touch:tap="changeName">
+        <div class="changeNickName" v-touch:tap="gotoResetName">
           更改昵称
         </div>
       </div>
@@ -106,6 +106,7 @@ import Group from 'vux/group'
 import XButton from 'vux/x-button'
 import {userActions, courseRecordActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
+import {getLocalCache} from '../../util/cache'
 
 //修改成一个（json）文件
 const userLevel = {
@@ -121,7 +122,6 @@ const userLevel = {
 export default {
   vuex: {
     getters: {
-      name: userGetters.userName,
       level: userGetters.level,
       userPhone: userGetters.phone
     },
@@ -130,6 +130,11 @@ export default {
       resetRecords: courseRecordActions.resetRecords
     }
   },
+  data () {
+      return {
+        name: ''
+      }
+    },
   computed: {
     levelName () {
       return userLevel[this.level]
@@ -139,6 +144,11 @@ export default {
       return this.userPhone ? this.userPhone.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : '未绑定'
     }
   },
+      route: {
+      data ({to, from}) {
+       this.name = getLocalCache('frame-user').userName
+      }
+    },
   components: {
     IctTitlebar,
     Cell,
@@ -152,13 +162,13 @@ export default {
           message: '',
           okText: '确定',
           cancelText: '取消',
-          okCallback: this.okHandler
+          okCallback: okHandler.bind(this)
         })
-    },
-    okHandler: function () {
-      this.logout()
-      this.resetRecords()
-      this.$route.router.go('/setting')
+        function okHandler () {
+          this.logout()
+          this.resetRecords()
+          this.$route.router.go('/setting')
+        }
     },
     resetPassword: function () {
       this.$route.router.go('/reset/password/start')
@@ -166,7 +176,7 @@ export default {
     bindPhone: function () {
       this.$route.router.go('/bind/phone')
     },
-    changeName: function () {
+    gotoResetName: function () {
       this.$route.router.go('/changeNickName')
     }
   }
