@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2016/9/28.
- *  订单 优惠选择
+ *  订单 优惠列表
 
   @example
   <!--<pay-coupons :coupons="coupons" @on-change="change"></pay-coupons>-->
@@ -117,9 +117,10 @@ export default {
           &:before {
             position: absolute;
             display: block;
-            width: 1rem;
-            height: 1rem;
-            line-height: 1rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            text-align: center;
             font-family: 'myicon';
             content: '\e90c';
             color: #00b0f0;

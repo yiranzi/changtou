@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2016/10/20.
- *
+ * 延期订单 延期的类型
  */
 <template>
   <div class="pay-postpone">
@@ -114,8 +114,8 @@ export default {
       top: 1rem;
       right: 0.9rem;
       display: inline-block;
-      width: 1rem;
-      height: 1rem;
+      width: 1.2rem;
+      height: 1.2rem;
       border: #ddd 1px solid;
       border-radius: 50%;
     }
@@ -128,9 +128,10 @@ export default {
           &:before {
             position: absolute;
             display: block;
-            width: 1rem;
-            height: 1rem;
-            line-height: 1rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            text-align: center;
             font-family: 'myicon';
             content: '\e90c';
             color: #00b0f0;
