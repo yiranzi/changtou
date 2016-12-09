@@ -11,7 +11,7 @@ import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {choiceActions} from './vuex/actions'
-import {platformMap, Device} from './plugin/device'
+//import {platformMap, Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
 
 const mixin = {
