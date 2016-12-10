@@ -319,32 +319,6 @@ export const resetNickName = ({ dispatch }, nickName) => {
     })
 }
 /**
- * 重置昵称
- * @param dispatch
- * @param nickName
- * @returns {Promise}
- */
-export const resetNickName = ({ dispatch }, nickName) => {
-  return new Promise(
-    (resolve, reject) => {
-      postWithoutAuth(
-        {
-          url: getUrl('reset_nick_post_nickname'),             // TODO not the really url
-          data: {
-            nickName
-          }
-        }
-      ).then(
-        res => {
-          resolve()
-        },
-        err => {
-          reject(err)
-        }
-      )
-    })
-}
-/**
  * 重置密码 发送手机号，密码
  * @param dispatch
  * @param phone
