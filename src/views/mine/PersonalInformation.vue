@@ -1,22 +1,32 @@
 <template>
     <div class="person-info">
-      <ict-titlebar>个人信息</ict-titlebar>
+      <ict-titlebar>我的信息</ict-titlebar>
       <div class="user">
+        <img class="ict-user-avatar" src="http://www.ichangtou.com/images/per-tx.png">
         <p class="username">{{name}}</p>
         <p class="level">{{levelName}}</p>
+        <div class="changeNickName" v-touch:tap="gotoResetName">
+          更改昵称
+        </div>
       </div>
-      <group>
+      <group class="phoneBind">
         <cell title="手机绑定" :value="viewPhone" v-touch:tap="bindPhone" is-link></cell>
       </group>
       <group class="update-pwd">
         <cell title="登录密码" value="修改" v-touch:tap="resetPassword" is-link></cell>
       </group>
-      <x-button type="primary"  v-touch:tap="doLogout">退出当前账户</x-button>
+      <x-button type="primary"  v-touch:tap="doLogout">退出登录</x-button>
     </div>
 </template>
 
 <style lang="less">
     .person-info{
+      .user {
+
+      }
+      .phoneBind {
+        margin-top: .5rem;
+      }
       p{
         margin: 0;
         padding: 0;
@@ -25,27 +35,54 @@
         width: 93.6%;
         height: 3.354rem;
         background: #fff;
-        margin-top: 1.1rem;
+        margin-top: .6rem;
         padding-left: 1.2rem;
         font-size: 0.75rem;
-
+        .ict-user-avatar{
+          width: 2.8rem;
+          height: 2.8rem;
+          border-radius: 50%;
+          margin-top: .3rem;
+          float: left;
+          margin-right: .54rem;
+        }
         .username,.level{
-          width: 17.55rem;
-          line-height: 1rem;
+          display: inline-block;
+
         }
         .username{
-          margin-top: 0.5rem ;
-          padding-top: 0.5rem;
           color: #000;
+          width: 70%;
+          margin: .5rem 0;
         }
         .level{
-          margin: 0.25rem 0 0.5rem 0;
           color: #898989;
         }
       }
+      .changeNickName{
+        height: 1rem;
+        color: #888;
+        display: inline-block;
+        margin-left: 6.4rem;
+        position: relative;
+        top: -.8rem;
+      }
+      .changeNickName:after{
+        content: " ";
+        display: inline-block;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        height: 6px;
+        width: 6px;
+        border-width: 2px 2px 0 0;
+        border-color: #C8C8CD;
+        border-style: solid;
+        position: relative;
+        top: -1px;
+        margin-left: .3em;
+      }
       .weui_cells{
         margin-top: 0;
-        padding: 0.15rem 0.15rem;
         font-size: 0.7rem;
       }
       .update-pwd{
@@ -69,6 +106,7 @@ import Group from 'vux/group'
 import XButton from 'vux/x-button'
 import {userActions, courseRecordActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
+import {getLocalCache} from '../../util/cache'
 
 //修改成一个（json）文件
 const userLevel = {
@@ -84,7 +122,6 @@ const userLevel = {
 export default {
   vuex: {
     getters: {
-      name: userGetters.userName,
       level: userGetters.level,
       userPhone: userGetters.phone
     },
@@ -93,6 +130,11 @@ export default {
       resetRecords: courseRecordActions.resetRecords
     }
   },
+  data () {
+      return {
+        name: ''
+      }
+    },
   computed: {
     levelName () {
       return userLevel[this.level]
@@ -102,6 +144,11 @@ export default {
       return this.userPhone ? this.userPhone.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : '未绑定'
     }
   },
+      route: {
+      data ({to, from}) {
+       this.name = getLocalCache('frame-user').userName
+      }
+    },
   components: {
     IctTitlebar,
     Cell,
@@ -110,15 +157,27 @@ export default {
   },
   methods: {
     doLogout: function () {
-      this.logout()
-      this.resetRecords()
-      this.$route.router.go('/setting')
+      this.showConfirm({
+          title: '确定退出当前账号',
+          message: '',
+          okText: '确定',
+          cancelText: '取消',
+          okCallback: okHandler.bind(this)
+        })
+        function okHandler () {
+          this.logout()
+          this.resetRecords()
+          this.$route.router.go('/setting')
+        }
     },
     resetPassword: function () {
       this.$route.router.go('/reset/password/start')
     },
     bindPhone: function () {
       this.$route.router.go('/bind/phone')
+    },
+    gotoResetName: function () {
+      this.$route.router.go('/changeNickName')
     }
   }
 }

@@ -1,9 +1,12 @@
 <template>
   <div class="ict-setting-view">
-    <ict-titlebar :left-options="{showBack: false}">个人中心</ict-titlebar>
+    <ict-titlebar :left-options="{showBack: false}">我的</ict-titlebar>
     <div class="ict-user-info">
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
-      <p class="ict-user-name">{{name}}</p>
+      <p class="ict-user-name">
+        {{name}}
+        <span class="resetNickName" v-touch:tap="gotoResetNickName"  v-if="isLogin"></span>
+      </p>
       <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
       <flexbox v-if="!isLogin">
         <flexbox-item :span="1/10"></flexbox-item>
@@ -21,13 +24,10 @@
               :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
               v-touch:tap="onStrategyTap">
     </ict-item>
-    <ict-item title="个人资料"
-              link="/personal/information"
-              :disabled="!isLogin">
-    </ict-item>
     <ict-item title="鼓励师首页"
               v-if="isSpire"
-              link="">
+              link=""
+              v-touch:tap="tapFocus">
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
@@ -74,11 +74,13 @@
     },
     computed: {
       badgeMessageNum () {
+      if (this.isLogin) {
         let number = this.newMessageNum + ''
         if (this.newMessageNum === 0) {
           number = ''
         }
         return number
+      }
       },
 
       badgeSuggestionNum () {
@@ -115,6 +117,9 @@
         } else if (this.strategy.strategyLevel === strategyLevel.PRO) {
           this.$route.router.go('/strategy/professional/product')
         }
+      },
+      gotoResetNickName () {
+          this.$route.router.go('/personal/information')
       }
     },
     components: {
@@ -132,6 +137,19 @@
   .ict-setting-view{
     p {
       margin: 0;
+    }
+    .ict-item:active {
+      background-color: #ccc;
+      color:black;
+    }
+    .ict-user-name {
+      font-size: 0.8rem;
+      .resetNickName {
+        background: url("../../assets/styles/image/pen.png") no-repeat center center / 70%;
+        width: 1rem;
+        height:1rem;
+        display: inline-block;
+      }
     }
     .ict-user-info {
       text-align: center;
@@ -157,6 +175,10 @@
       padding: 0;
       color: #00b0f0;
       font-size: 0.85rem;
+    }
+    .itemOnFocus{
+      background-color: black;
+      color: white;
     }
   }
 </style>

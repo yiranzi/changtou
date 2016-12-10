@@ -86,7 +86,7 @@
       }
     }
     .full-screen-icon{
-      display: none;
+      /*display: none;*/
     }
   }
 
@@ -100,20 +100,19 @@
   import Scroller from 'vux/scroller'
   import {getWithoutAuth} from '../../frame/ajax'
   import {getUrl} from '../../frame/apiConfig'
-//  import {setSessionCache} from '../../util/cache'
+  import {setSessionCache} from '../../util/cache'
 
   export default {
     data () {
       return {
-        isResponsive: true, // 当前页面是否处于可响应状态 ((响应 音频播放完成,全屏 事件))
-        scrollerHeight: '0px',
-
+        currSelectedLessonIndex: 0,  // 当前讲座章节
         seminarId: '', //讲座Id
         seminar: null, //讲座
-
+        isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
+        scrollerHeight: '480px',  // 0px ?
         hasVaildChapterCicked: false,
-
-        selectedLesson: null, //当前选中的chapter
+        selectedLesson: 0, //当前选中的lesson
+        selectedChapter: null, //当前选中的chapter
         currAudioSrc: null, //当前音频地址
         currPpts: [] //当前ppt地址集合
       }
@@ -129,7 +128,11 @@
        * @param seminarId
        */
       data ({to: {params: {seminarId}}, from}) {
-        // todo 2.4 横屏
+         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        if (from.path && from.path.indexOf('landscape/') > -1) {
+          // do nothing
+        } else {
+        this.isResponsive = true
         this.resetView()
         this.seminarId = seminarId
         const me = this
@@ -140,16 +143,20 @@
             me.seminar = seminar
           }
         )
+       }
       },
 
       /**
        * 页面隐藏时
        */
       deactivate ({to, next}) {
-        // todo 2.4 横屏
+       if (to.path && to.path.indexOf('landscape/') > -1) {
+          next()
+        } else {
         this.pause()
         this.isResponsive = false
         next()
+      }
       }
     },
 
@@ -164,8 +171,10 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'lessonSelectedFree': function (lesson) {
+      'lessonSelectedFree': function (lesson, currSelectedLessonIndex) {
         this.playChapter(lesson)
+        this.selectedLesson = lesson
+        this.selectedChapter = currSelectedLessonIndex
       },
 
       /**
@@ -178,6 +187,11 @@
           // 由子组件接收事件控制
           this.$broadcast('playNextCapterSeminar')
         }
+      },
+      'fullScreenTap' () {
+        if (this.isResponsive) {
+          this.goToFullScreen(this.selectedLesson, this.selectedChapter)
+        }
       }
     },
 
@@ -185,7 +199,6 @@
       back () {
         window.history.back()
       },
-
       /**
        * 重置页面
        */
@@ -212,9 +225,13 @@
         this.currAudioSrc = lesson.audio
         this.currPpts = lesson.ppts
         this.$dispatch('chapterPlay', lesson)
+      },
+      goToFullScreen (currChapter, selectedChapter) {
+      setSessionCache('landscapeSrc', {currChapter, selectedChapter})
+      const currIndex = 1
+     this.$route.router.go(`/landscape/${selectedChapter}/${currIndex}`)
       }
     },
-
     components: {
       WebAudio,
       Swiper,

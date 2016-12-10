@@ -4,7 +4,7 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache, clearLocalCache} from '../../util/cache'
-
+import validNickName from './nickNameValid'
 //export const loadUserFromCache = ({ dispatch }) => {
 //  const user = getLocalCache('frame-user')
 //  user && dispatch('UPDATE_USER', user)
@@ -286,6 +286,38 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
   })
 }
 
+/**
+ * 重置昵称
+ * @param dispatch
+ * @param nickName
+ * @returns {Promise}
+ */
+export const resetNickName = ({ dispatch }, nickName) => {
+  return new Promise(
+    (resolve, reject) => {
+      const validInfo = validNickName(nickName)
+      if (!validInfo.isValid) {
+        reject(validInfo.errTip)
+        return
+      }
+      postWithinAuth(
+        {
+          url: getUrl('reset_nickname'),
+          data: {
+            nickName
+          }
+        }
+      ).then(
+        res => {
+          dispatch('USERNAME_UPDATE', nickName)
+          resolve()
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
 /**
  * 重置密码 发送手机号，密码
  * @param dispatch

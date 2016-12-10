@@ -99,25 +99,29 @@
       'lessons',
       'selectedLesson'
     ],
-
+    data () {
+      return {
+        currSelectedLessonIndex: 0
+      }
+    },
     ready () {
       this.selectedLesson = this.lessons[0]
     },
-
     events: {
       'playNextCapterSeminar': function () {
-        if (this.currSelecteLessonIndex + 1 < this.lessons.length) {
+        if (this.currSelectedLessonIndex + 1 < this.lessons.length) {
           this.updateSelectedLesson(
-            this.lessons[this.currSelecteLessonIndex + 1], this.currSelecteLessonIndex + 1)
+            this.lessons[this.currSelectedLessonIndex + 1], this.currSelectedLessonIndex + 1)
         }
       }
     },
 
     methods: {
       updateSelectedLesson (lesson, index) {
+        this.currSelectedLessonIndex = index
         this.selectedLesson = lesson
-        this.currSelecteLessonIndex = index
-        this.$dispatch('lessonSelectedFree', lesson)
+        this.currSelectedLessonIndex = index
+        this.$dispatch('lessonSelectedFree', lesson, this.currSelectedLessonIndex)
       }
     }
   }

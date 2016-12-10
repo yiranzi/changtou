@@ -30,6 +30,23 @@ const mixin = {
       // todo nothing
       //console.log('request', req, req.method)
     },
+    isSystemUpdate: function (reJsonData) {
+      if (reJsonData.up || reJsonData.up === '_sys_now') {
+        return true
+      }
+    },
+    showSystempUpdatePage: function () {
+      this.showMask({
+        component: 'SystemUpdate.vue',
+        hideOnMaskTap: true,
+        callbackName: 'loadingClose',
+        callbackFn: setTimeout(this.loadingClose.bind(this), 30000)
+      })
+    },
+    loadingClose () {
+      this.isMaskShow = false
+      this.hideMask()
+    },
 
     /**
      * 拦截响应
@@ -37,9 +54,12 @@ const mixin = {
      */
     responIntercepter: function (res) {
       // 若返回值不是object, 强制转换
+      let resData = res.data
+      if (this.isSystemUpdate(resData)) {
+        this.showSystempUpdatePage()
+      }
       if (typeof res.data === 'string') {
         try {
-          res.data = JSON.parse(res.data)
         } catch (e) {
           //todo 上传此错误
         }
