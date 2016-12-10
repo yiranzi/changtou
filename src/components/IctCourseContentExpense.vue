@@ -198,7 +198,11 @@
           this.unfoldLesson(lessonIndex)
         }
 
-        this.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
+        // 这里加入延迟, 是因为 selectedLesson 可能会后被触发, 造成用户点击听课时, 课程受限, 直接跳转到购买页面
+        const me = this
+        setTimeout(function () {
+          me.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
+        }, 200)
       },
 
       /**
