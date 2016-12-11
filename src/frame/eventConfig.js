@@ -3,6 +3,7 @@
  */
 
 export const eventMap = {
+  INPUT_FOUCS: '输入框焦点移入', //此时手机键盘会被弹出
   APP_START: 'app_start',
   LOGIN_SUCCESS: 'login',
   REGISTER_SUCCESS: 'register',
