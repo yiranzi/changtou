@@ -154,7 +154,7 @@
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters, graduationDiplomaGetters} from '../../vuex/getters'
+  import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   export default {
