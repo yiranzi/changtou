@@ -162,8 +162,7 @@
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
-        isUserLogin: userGetters.isLogin,
-        newShowDiploma: graduationDiplomaGetters.newShowDiploma
+        isUserLogin: userGetters.isLogin
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -270,9 +269,9 @@
         const me = this
         if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
           me.getDiplomaList().then(
-            () => {
-              if (this.newShowDiploma) {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
+            (newDiploma) => {
+              if (newDiploma) {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
               }
             }
           )
