@@ -267,8 +267,8 @@
         /**
          *  去对应的课程页
          */
-        gotoSubjectDetail  () {
-          this.$route.router.go('/subject/detail/P/1/0')
+        gotoSubjectDetail  (subject) {
+          this.$route.router.go(`/subject/detail/P/${subject.subjectId}/0`)
         }
       },
       components: {

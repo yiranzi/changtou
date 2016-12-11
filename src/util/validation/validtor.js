@@ -1,8 +1,8 @@
 /**
- * Created by Administrator on 2016/12/9.
+ * Created by Administrator on 2016/12/11.
  */
 
-import forbidWords from '../../../static/forbidWords'
+import forbidWords from './forbidWords'
 const whiteList = ['小熊之家', '水湄物语', '小投', '小小投', '长投', '长投网', '长投学堂']
 const reg = /^(?!(.)\1+$)(?!\d{2,8}$)[\w\u4e00-\u9fa5]{2,12}$/
 const forbidWordLen = forbidWords.length
@@ -32,4 +32,9 @@ const validNickName = (nickName) => {
   }
 }
 
-export default validNickName
+const verifyPhone = () => {}
+
+export {
+  validNickName,
+  verifyPhone
+}

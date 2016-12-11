@@ -29,6 +29,7 @@ export {
   courselistActions,
   courseRecordActions,
   courseDetailActions,
+  //globalActions,
   myCoursesActions,
   mineActions,
   messageActions, //系统消息提醒

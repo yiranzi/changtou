@@ -15,7 +15,6 @@
           </x-input>
           <div style="height: 1rem"></div>
           <x-input title="密码"
-                   type="password"
                    placeholder="输入密码"
                    :value.sync="plainPassword">
           </x-input>

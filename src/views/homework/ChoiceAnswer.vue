@@ -60,8 +60,7 @@ export default {
     // 题目
     questionOrderTip () {
       if (this.choiceQuestion && this.choiceQuestion.length > 0) {
-        return ` ${this.currIndex + 1}/${this.totalNum}  第${this.currIndex + 1}题
-       `
+        return ` ${this.currIndex + 1}/${this.totalNum}  第${this.currIndex + 1}题`
       }
     },
     title () {

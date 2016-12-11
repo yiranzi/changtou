@@ -28,8 +28,6 @@ const apiUrl = {
   'reset_password_post_code': '/principal/users/reset-password-verificaiton', // 重置密码 发送验证码
   // 重置昵称
   'reset_nickname': '/principal/user/reset-nickname',
-  // 重置昵称
-  // TODO set a reset nickName interface
   // 第三方登录
   'qq_login': '/3rdparty//qq/login/info', // qq登录
   'wx_app_login': '/wx/app/authorization/user-info',

@@ -111,8 +111,8 @@ export function configRouter (router) {
       component: require('../views/mine/SystemMessage.vue')
     },
     // 修改昵称
-    '/changeNickName': {
-      component: require('../views/mine/ChangeName.vue')
+    '/resetNickName': {
+      component: require('../views/mine/resetNickName.vue')
     },
 
     /**

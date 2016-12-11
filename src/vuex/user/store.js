@@ -63,6 +63,7 @@ const mutations = {
    * @constructor
    */
   USERNAME_UPDATE (state, username) {
+    state.userName = username
     let user = getLocalCache('frame-user')
     user.userName = username
     user.isLogin = state.isLogin
@@ -92,6 +93,7 @@ const mutations = {
     state.strategy = ''
     state.userName = ''
     state.userId = ''
+    state.newMsgNum = 0
     clearLocalCache('frame-user')
   },
   /**

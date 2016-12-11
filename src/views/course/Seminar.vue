@@ -85,8 +85,6 @@
         }
       }
     }
-    .full-screen-icon{
-    }
   }
 
 </style>
@@ -110,7 +108,7 @@
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',  // 0px ?
         hasVaildChapterCicked: false,
-        selectedLesson: 0, //当前选中的lesson
+        selectedLesson: null, //当前选中的lesson
         selectedChapter: null, //当前选中的chapter
         currAudioSrc: null, //当前音频地址
         currPpts: [] //当前ppt地址集合
@@ -170,7 +168,7 @@
       /**
        * 选中某个chapter, 设置音频,ppt ,跳转逻辑
        */
-      'lessonSelectedFree': function (lesson, currSelectedLessonIndex) {
+      'lessonSelectedSeminar': function (lesson, currSelectedLessonIndex) {
         this.playChapter(lesson)
         this.selectedLesson = lesson
         this.selectedChapter = currSelectedLessonIndex

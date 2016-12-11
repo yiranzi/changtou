@@ -6,6 +6,7 @@ import * as navigatorGetters from './courseNavigator/getters'
 import * as courselistGetters from './courselist/getters'
 import * as courseDetailGetters from './courseDetail/getters'
 import * as courseRecordsGetters from './courseRecords/getters'
+import * as globalGetters from './global/getters'
 import * as myCoursesGetters from './myCourse/getters'
 import * as mineGetters from './mine/getters'
 import * as messageGetters from './message/getters'
@@ -28,6 +29,7 @@ export {
   courselistGetters, //全部列表
   courseDetailGetters, //课程详情
   courseRecordsGetters, //进度
+  globalGetters,
   myCoursesGetters,
   mineGetters, //个人中心
   messageGetters, //系统消息提醒

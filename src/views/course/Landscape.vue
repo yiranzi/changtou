@@ -97,9 +97,11 @@
 
     route: {
       data ({to: {params: {subjectId, lessonId}}}) {
-        const {chapterIndex, currChapter} = getSessionCache('landscapeSrc')
+        const {lesson, chapterIndex, currChapter} = getSessionCache('landscapeSrc')
         clearSessionCache('landscapeSrc')
+
         return Promise.resolve({
+          lesson,
           chapterIndex,
           currChapter,
           isFloatShow: true,

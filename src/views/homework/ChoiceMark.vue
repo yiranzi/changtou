@@ -110,8 +110,7 @@
      * 重测
      */
     reTest () {
-    //  this.$route.router.replace('/homework/choice/answer/lessonId')
-      this.$route.router.go('/homework/choice/answer/lessonId')
+      this.$route.router.replace('/homework/choice/answer/lessonId')
     },
     /**
      * 点击浮层

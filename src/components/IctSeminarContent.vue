@@ -111,7 +111,7 @@
       'playNextCapterSeminar': function () {
         if (this.currSelectedLessonIndex + 1 < this.lessons.length) {
           this.updateSelectedLesson(
-            this.lessons[this.currSelectedLessonIndex + 1], this.currSelectedLessonIndex + 1)
+          this.lessons[this.currSelectedLessonIndex + 1], this.currSelectedLessonIndex + 1)
         }
       }
     },
@@ -121,7 +121,7 @@
         this.currSelectedLessonIndex = index
         this.selectedLesson = lesson
         this.currSelectedLessonIndex = index
-        this.$dispatch('lessonSelectedFree', lesson, this.currSelectedLessonIndex)
+        this.$dispatch('lessonSelectedSeminar', lesson, this.currSelectedLessonIndex)
       }
     }
   }
