@@ -11,6 +11,7 @@ export const eventMap = {
   SHOW_CONFIRM: 'show_confirm', //确认框
   SHOW_ALERT: 'show_alert', //提示框
   SHOW_TOAST: 'show_toast', // toast
-  SHOW_MASK: 'show_mask' //浮层
+  SHOW_MASK: 'show_mask', //浮层
+  SUBJECT_GRADUATION: 'subject_graduation' // 课程毕业
 }
 

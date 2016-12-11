@@ -142,8 +142,18 @@ const apiUrl = {
   'strategy_professional_data': '/strategy/data/professional',
   'strategy_professional_intro': '/strategy/promotion/professional',
   'strategy_vip_intro': '/strategy/promotion/vip',
-  'strategy_notice': '/strategy/data/message/:authority' // 通知
+  'strategy_notice': '/strategy/data/message/:authority', // 通知
 
+  /**
+   * 毕业礼
+   */
+  'graduation_diploma_list': '/student/diploma-list', // 毕业奖状列表
+  'graduation_draw': '/integral/graduate-draw', // 毕业抽奖
+  'graduation_diploma_details': '/student/diploma-details/:subjectId', // 毕业奖状详情
+  /**
+   * 积分券
+   */
+  'integral_list': '/integral/user/ticket-list' //毕业积分券
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

@@ -232,6 +232,18 @@ export function configRouter (router) {
     //延期说明
     '/postpone/explain': {
       component: require('../views/pay/PostponeExplain.vue')
+    },
+
+      /**
+       * 毕业礼
+       */
+    // 毕业证 详情
+    '/graduation/subject/diploma/:subjectId': {
+      component: require('../views/graduationDiploma/SubjectDiploma.vue')
+    },
+    // 毕业证 列表
+    '/graduation/list': {
+      component: require('../views/graduationDiploma/DiplomaList.vue')
     }
   })
 

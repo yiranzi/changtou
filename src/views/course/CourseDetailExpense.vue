@@ -153,10 +153,10 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
+  import {courseDetailGetters, courseRecordsGetters, userGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
-
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       getters: {
@@ -177,7 +177,9 @@
         getArticle: essayActions.getArticle,
 
         setChoiceQuestion: choiceActions.setChoice,
-        getReport: choiceActions.getReport
+        getReport: choiceActions.getReport,
+
+        getDiplomaList: graduationDiplomaActions.getDiplomaList
       }
     },
 
@@ -260,6 +262,21 @@
             }
           )
         }
+      },
+
+      activate ({from, next}) {
+        //做完课程最后一课选择题 拉取毕业奖状列表
+        const me = this
+        if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
+          me.getDiplomaList().then(
+            (newDiploma) => {
+              if (newDiploma) {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
+              }
+            }
+          )
+        }
+        next()
       },
 
       /**
@@ -621,26 +638,35 @@
        */
       showTipWhenLessonLimitedAndOnLine () {
         const me = this
-
         let msg = ''
         let confirmText = '确认'
         let confirmHandler = null
+        const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
+        const lessonTitle = lastSubmitLesson.title
+        const essayQuestion = lastSubmitLesson.essayQuestion
 
-        const lessonTitle = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).title
-        const essayQuestion = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId).essayQuestion
         if (this.isAssignmentSubmitted) {
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
             me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
+
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
           confirmText = '去写作业'
-          confirmHandler = function () {
-            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+          if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
+            // 有选择题
+            confirmHandler = function () {
+              me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+            }
+          } else {
+            confirmHandler = function () {
+              me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+            }
           }
+
           msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
 
@@ -753,7 +779,7 @@
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
-              me.showToast('已激活课程')
+              me.showToast({message: '激活课程成功', type: 'success'})
             },
             function () {
               me.showAlert('激活失败,请重试')

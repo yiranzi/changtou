@@ -91,7 +91,18 @@
             me.arrangeOrder(order)
         }).catch(
             (err) => console.log(err)
-        ) }
+        )
+      },
+      deactivate () {
+        this.price = 0// 价格
+        this.postponeList = []//延期列表
+        this.coupons = [] // 优惠列表
+        this.selectedPostponeIndex = 0//选择的延期类型的index
+        this.selectedCoupon = null// 选择的优惠
+        this.currentBalance = 0 // 投币余额
+        this.misc = ''// 延期的时间
+        this.sheetShow = false // 显示支付sheet
+      }
     },
     events: {
       // 优惠信息 选择
