@@ -71,11 +71,10 @@
         transition.next()
       },
       data () {
-        this.getProfessionalIntro()
+        this.getProfessionalIntro().then(
+          () => this.setScrollerHeight()
+        )
       }
-    },
-    ready () {
-      this.setScrollerHeight()
     },
     methods: {
       /**
@@ -101,6 +100,7 @@
       },
 
       onAgreeTap () {
+        this.hideMask()
         this.$route.router.on(`/pay-PS-0`, {
           component: require('../pay/ProStrategyOrder.vue')
         })

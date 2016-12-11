@@ -1,6 +1,6 @@
 /**
 * Created by jun on 2016/11/17.
-* 订单 策略产品 服务期
+* 策略产品订单  选择服务费年限
 */
 <template>
   <div class="order-coupons">

@@ -77,6 +77,34 @@ const orderUrl = {
 }
 
 /**
+ * 获取积分券
+ * @returns {Promise}
+ */
+const getIntegral = () => {
+  if (user.isLogin) {
+    return new Promise(
+      (resolve, reject) => {
+        getWithinAuth(
+          {
+            url: getUrl('integral_list')
+          }
+        ).then(
+          integralList => {
+            resolve(integralList)
+          }
+        ).catch(
+          err => {
+            reject(err)
+          }
+        )
+      }
+    )
+  } else {
+    return null
+  }
+}
+
+/**
  * 获取 课程/专题 订单
  * @returns {Promise}
  */
@@ -297,6 +325,7 @@ export {
   dealType,
   transactionChannel,
   errorType,
+  getIntegral, //积分券
   getOrder, // 课程 | 专题 订单
   getPostponeOrder, // 延期 订单
   getStrategyOrder, // 策略产品 订单
