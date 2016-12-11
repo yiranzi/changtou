@@ -7,24 +7,19 @@
       <ict-titlebar :right-options="rightOptions" v-el:titlebar>
         <a slot="right">提交</a>
       </ict-titlebar>
-        <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}
-          <span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span>
-        </div>
+      <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
+      <p class="fold-panel"><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
       <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
         </div>
-      <alert :show.sync="isAlert" button-text="知道了" class="ict-alert" @on-hide="alertHandler">{{alertMsg}}</alert>
-      <toast :show.sync="isToast" class="ict-toast" :type="toastType">{{toastMsg}}</toast>
     </div>
 </template>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
-  import Alert from 'vux/alert'
-  import Toast from 'vux/toast'
   import { essayGetters } from '../../vuex/getters'
   import { essayActions } from '../../vuex/actions'
 export default {
@@ -42,10 +37,6 @@ export default {
   data () {
     return {
       lessonId: 0,
-      isToast: false,
-      toastMsg: '',
-      isAlert: false,
-      alertMsg: '',
       rightOptions: { //titlebar
         callback: '',
         disabled: true
@@ -53,8 +44,7 @@ export default {
       foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: this.essayAnswer, // 填写的答案
-      alertHandler: () => {}
+      answer: this.essayAnswer // 填写的答案
     }
   },
   watch: {
@@ -79,6 +69,14 @@ export default {
         this.resizeTextarea,
         300
       )
+    },
+    deactivate () {
+      this.submitDraft()
+      this.lessonId = 0
+      this.foldText = '收起' //折叠 文案
+      this.isFold = false // 是否折叠题目
+      this.textareaStyle = '' //textarea样式
+      this.answer = this.essayAnswer // 填写的答案
     }
   },
   beforeDestroy () {
@@ -121,16 +119,13 @@ export default {
       this.submitArticle(essayContent).then(
         markInfo => {
           if (markInfo.correction_date) {
-            this.alertHandler = this.onAlertHide
-            this.alertMsg = `您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`
-            this.isAlert = true
+            this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
             this.rightOptions.disabled = false
           } else {
             window.history.back()
           }
         }).catch(
-        err => {
-          console.log(err)
+        () => {
           this.rightOptions.disabled = false
         }
       )
@@ -148,11 +143,8 @@ export default {
       }
       this.submitArticle(essay).then(
         result => {
-          this.articleId = result.articleId
-          this.toastMsg = '你的草稿已保存'
-          this.isToast = true
-        }).catch(
-        err => console.log(err)
+          this.showToast('你的草稿已保存')
+        }
       )
     },
 
@@ -175,33 +167,37 @@ export default {
   components: {
     IctTitlebar,
     Scroller,
-    xTextarea,
-    Alert,
-    Toast
+    xTextarea
   }
 }
 </script>
 <style lang="less">
   .essay-answer{
     height: 100%;
-
-    .fold-essay{
-      p{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    p{
+      margin: 0;
     }
-
+    .fold-essay{
+      height: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .essay-content{
-      position: relative;
-      padding: 0.75rem 0.6rem;
+      padding: 0.75rem 0.6rem 0;
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
-      p{
+      *{
         margin: 0;
+        padding: 0;
       }
+    }
+    .fold-panel{
+      position: relative;
+      width: 100%;
+      height: 30/40rem;
+      background: #f0eff5;
       .fold-icon{
         position: absolute;
         padding: 0.5rem 1rem;
@@ -212,7 +208,6 @@ export default {
         color: #00b0f0;
       }
     }
-
     textarea{
       display: block;
       width: 100%;

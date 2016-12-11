@@ -17,6 +17,7 @@
               <p>我的作业</p>
             </span>
             <span v-touch:tap="goToMyDiploma" class="homework-item">
+              <span class="draw-icon" v-if="newDrawDiploma">抽奖</span>
               <img src="../../assets/styles/image/myCourse/diploma.png">
               <p>毕业证书</p>
             </span>
@@ -48,7 +49,7 @@
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import {myCoursesActions} from '../../vuex/actions'
-  import {myCoursesGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
 
 export default {
   vuex: {
@@ -59,7 +60,8 @@ export default {
       isLogin: userGetters.isLogin, //是否登录
       card: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
-      freeRecords: courseRecordsGetters.freeRecords //免费课程记录
+      freeRecords: courseRecordsGetters.freeRecords, //免费课程记录
+      newDrawDiploma: graduationDiplomaGetters.newDrawDiploma // 有新的毕业证书
     },
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
@@ -216,7 +218,7 @@ export default {
      * 点击我的毕业证书
      */
     goToMyDiploma () {
-      console.log('goToMyDiploma')
+      this.$route.router.go('/graduation/list')
     }
   },
   components: {
@@ -258,6 +260,7 @@ export default {
       border-bottom: 20/40rem solid #f0eff5;
       font-size: 0;
       .homework-item{
+        position: relative;
         width: 50%;
         display: inline-block;
         text-align: center;
@@ -269,6 +272,20 @@ export default {
           margin-top: 10/40rem;
           font-size: 22/40rem;
           color: #444;
+        }
+        .draw-icon{
+          position: absolute;
+          left: 50%;
+          top: -7px;
+          display: inline-block;
+          width: 1.5rem;
+          height: 0.8rem;
+          line-height: 0.8rem;
+          text-align: center;
+          border-radius: 13/2px;
+          font-size: 18/40rem;
+          color: #fff;
+          background: #ff9800;
         }
       }
     }
@@ -377,6 +394,5 @@ export default {
         }
       }
     }
-
   }
 </style>

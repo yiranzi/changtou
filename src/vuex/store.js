@@ -24,6 +24,7 @@ import help from './help/store'
 import strategyIntro from './strategy/intro/store'
 import strategyProduct from './strategy/product/store'
 import strategyNotice from './strategy/notice/store'
+import graduationDiploma from './graduationDiploma/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     help, //小投答疑
     strategyIntro, // 策略产品 宣传
     strategyProduct, // 策略产品 数据
-    strategyNotice // 滚动通知文字
+    strategyNotice, // 滚动通知文字
+    graduationDiploma //毕业证
   }
 })

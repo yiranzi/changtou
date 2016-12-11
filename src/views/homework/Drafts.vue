@@ -71,7 +71,7 @@ export default {
   methods: {
     goToArticleEdit (draft) {
       this.updateDraft(draft)
-      this.$route.router.go('/homework/essay/answer')
+      this.$route.router.go(`/homework/essay/answer/${draft.lessonId}`)
     },
     goToDeleteDraft (articleId) {
       const me = this
@@ -111,6 +111,7 @@ export default {
       }
     }
     .draft-item{
+      position: relative;
       background: #fff;
       padding: 0.9rem 0.6rem 0.65rem;
       margin-top: 0.4rem;

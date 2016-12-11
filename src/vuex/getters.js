@@ -22,7 +22,7 @@ import * as helpGetters from './help/getters'
 import * as strategyIntroGetters from './strategy/intro/getters'
 import * as strategyProductGetters from './strategy/product/getters'
 import * as strategyNoticeGetters from './strategy/notice/getters'
-
+import * as graduationDiplomaGetters from './graduationDiploma/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -44,5 +44,6 @@ export {
   helpGetters, //小投答疑
   strategyIntroGetters, // 策略产品 宣传
   strategyProductGetters, // 策略产品 数据
-  strategyNoticeGetters  //策略产品 通知
+  strategyNoticeGetters,  //策略产品 通知
+  graduationDiplomaGetters  //毕业证
 }
