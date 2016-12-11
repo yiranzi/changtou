@@ -11,7 +11,7 @@
       </div>
 
       <swiper :style="screenHeight" v-if="isShow">
-        <div v-for="ppt in currPpts" class="test-box">
+        <div v-for="ppt in currPpts" class="test-box" track-by="$index">
           <img :src="ppt" alt="" v-bind:style="imgStyle" v-touch:tap="onPptTap">
         </div>
       </swiper>

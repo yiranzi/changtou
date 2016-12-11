@@ -7,7 +7,7 @@
              alt="" style="height: 12rem; width: 100%; display: block">
 
         <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem">
+        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
           <img :src="ppt" alt="" style="height: 100%; width: 100%">
         </swiper-item>
         <!--<swiper-item class="black"><h2 class="title fadeInUp animated">你无处可藏</h2></swiper-item>-->
@@ -351,9 +351,7 @@
             this.setSubjectRecordStatus(currSubjectRecord)
           } else {
             //如果没有当前课程的进度
-            //设置第0课可以听
-            this.currStatus = 'W'
-//            this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
+            this.resetSubjectRecordStatus()
           }
         }
       }
@@ -602,6 +600,44 @@
           if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubjectRecord.lessonSet.lessonIds.length) {
             this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
           }
+        }
+
+        // 设置当前选中(进度改变后), 课程可不可以听
+        if (this.selectedLesson) {
+          // 如果是公开课,永远不受限
+          if (this.selectedLesson.type === 'C') {
+            this.isSelectdLessonLimited = false
+          } else {
+            this.isSelectdLessonLimited =
+              this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === this.selectedLesson.lessonId) === -1
+          }
+        }
+      },
+
+      /**
+       * 重置课程进度状态
+       */
+      resetSubjectRecordStatus () {
+        this.currRecord = null
+
+        //设置是否已经提交了作业
+        this.isAssignmentSubmitted = false
+
+        //设置课程状态
+        this.currStatus = 'W'
+
+        //设置是否已经暂停过
+        this.isSuspendUsed = false
+
+        //设置是否已经延期过
+        this.postponeCount = false
+
+        //设置可用课程列表
+        this.currUseabLessonArr = []
+
+        //设置当前提交作业(或者需要)的课程Id
+        if (this.currUseabLessonArr.length > 0) {
+          this.lastSubmitlessonId = this.currUseabLessonArr[this.currUseabLessonArr.length - 1]
         }
 
         // 设置当前选中(进度改变后), 课程可不可以听
