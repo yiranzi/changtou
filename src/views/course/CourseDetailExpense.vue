@@ -29,7 +29,9 @@
           </sticky>
 
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
-          <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
+          <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []"
+                   :homework="currHomework"
+                   :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
         <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
@@ -154,7 +156,7 @@
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
+  import {courseDetailGetters, courseRecordsGetters, userGetters, myHomeworkGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   export default {
@@ -162,7 +164,8 @@
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
-        isUserLogin: userGetters.isLogin
+        isUserLogin: userGetters.isLogin,
+        homeworkList: myHomeworkGetters.myHomework
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -226,6 +229,13 @@
        */
       postText () {
         return this.postponeCount ? '再次延期' : '延期'
+      },
+
+      /**
+       * 作业
+       */
+      currHomework () {
+        return this.homeworkList.find(homework => (homework.subjectId + '') === this.subjectId)
       }
     },
 
@@ -337,6 +347,9 @@
         //设置课程信息
         this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
+        //设置当前作业
+//        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
+
         //设置是否为选修课
         this.isSubjectBranch = this.currSubject.type === 'B'
 
@@ -351,7 +364,8 @@
         } else {
           //如果没有当前课程的进度
           //设置第0课可以听
-          this.currStatus = 'W'
+          this.resetSubjectRecordStatus()
+//          this.currStatus = 'W'
 //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
         }
       },
@@ -651,6 +665,9 @@
 
         //设置可用课程列表
         this.currUseabLessonArr = []
+
+        //设置作业
+        this.homework = null
 
         //设置当前提交作业(或者需要)的课程Id
         if (this.currUseabLessonArr.length > 0) {
