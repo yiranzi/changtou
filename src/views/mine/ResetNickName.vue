@@ -63,6 +63,7 @@ export default {
   route: {
       deactivate ({to, next}) {
           this.nickName = ''
+          this.errTip = ''
           next()
       }
     },
