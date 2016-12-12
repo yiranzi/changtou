@@ -162,8 +162,7 @@
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
-        isUserLogin: userGetters.isLogin,
-        newShowDiploma: graduationDiplomaGetters.newShowDiploma
+        isUserLogin: userGetters.isLogin
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -253,6 +252,7 @@
             tasks.push(this.loadExpenseRecord(subjectId))
           }
 
+          setTimeout(this.resetScroller.bind(this), 100)
           return Promise.all(tasks).then(
             () => {
               return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
@@ -269,9 +269,9 @@
         const me = this
         if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
           me.getDiplomaList().then(
-            () => {
-              if (this.newShowDiploma) {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
+            (newDiploma) => {
+              if (newDiploma) {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
               }
             }
           )
@@ -340,11 +340,7 @@
         //设置是否为选修课
         this.isSubjectBranch = this.currSubject.type === 'B'
 
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-            top: 0
-          })
-        })
+        this.resetScroller()
 
         //获取进度信息
         let currSubjectRecord = this.expenseRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
@@ -624,6 +620,17 @@
             this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
           }
         }
+
+        // 设置当前选中(进度改变后), 课程可不可以听
+        if (this.selectedLesson) {
+          // 如果是公开课,永远不受限
+          if (this.selectedLesson.type === 'C') {
+            this.isSelectdLessonLimited = false
+          } else {
+            this.isSelectdLessonLimited =
+              this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === this.selectedLesson.lessonId) === -1
+          }
+        }
       },
 
       /**
@@ -840,6 +847,17 @@
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
         this.$dispatch('chapterPlay', chapter)
+      },
+
+      /**
+       * 重置 滚动条
+       */
+      resetScroller () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+//              top: 0
+          })
+        })
       }
     },
 

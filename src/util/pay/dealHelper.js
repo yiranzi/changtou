@@ -81,27 +81,27 @@ const orderUrl = {
  * @returns {Promise}
  */
 const getIntegral = () => {
-  if (user.isLogin) {
     return new Promise(
       (resolve, reject) => {
-        getWithinAuth(
-          {
-            url: getUrl('integral_list')
-          }
-        ).then(
-          integralList => {
-            resolve(integralList)
-          }
-        ).catch(
-          err => {
-            reject(err)
-          }
-        )
+        if (user.isLogin) {
+          getWithinAuth(
+            {
+              url: getUrl('integral_list')
+            }
+          ).then(
+            integralList => {
+              resolve(integralList)
+            }
+          ).catch(
+            err => {
+              reject(err)
+            }
+          )
+        } else {
+          reject({message: '用户未登录'})
+        }
       }
     )
-  } else {
-    return null
-  }
 }
 
 /**

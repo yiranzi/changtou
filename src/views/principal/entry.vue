@@ -29,7 +29,7 @@
       <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword"></ict-button>
     </flexbox>
 
-    <div class="third-party-container" v-el:auth-container style="display: block">
+    <div class="third-party-container" v-if="showWx || showQQ" v-el:auth-container style="display: block">
       <div class="third-text-container">
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
