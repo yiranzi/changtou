@@ -10,8 +10,8 @@ let isValid = true
 const errTip = {}
 
 const verifyNickName = (nickName) => {
-  if (!isLengthValid(nickName)) {
-     if (!isInWhiteList(nickName)) {
+  if (isLengthValid(nickName)) {
+     if (isInWhiteList(nickName)) {
         isForbidWord(nickName)
      }
   }
@@ -33,7 +33,7 @@ const isForbidWord = (nickName) => {
 }
 const isLengthValid = (nickName) => {
   if (!reg.test(nickName)) { // false
-    errTip.message = '名称必须为4-12位字符'
+    errTip.message = '名称必须为4-12位非空字符'
     isValid = false
     return false
   }
