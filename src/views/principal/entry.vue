@@ -24,9 +24,9 @@
     <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
 
     <flexbox>
-      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ictBtn regi-btn"></ict-button>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn regi-btn"></ict-button>
       <flexbox-item></flexbox-item>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ictBtn forgetPwd-btn"></ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn forget-pwd-btn"></ict-button>
     </flexbox>
 
     <div class="third-party-container" v-if="showWx || showQQ" v-el:auth-container style="display: block">
@@ -283,7 +283,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    .ictBtn{
+    .ict-btn{
       font-size: .65rem;
     }
     .regi-btn{

@@ -72,10 +72,10 @@ export default {
      */
     updateNickName () {
      this.resetNickName(this.nickName).then(
-        () => { this.$route.router.go('/personal/information') }
+        () => { window.history.back() }
       ).catch(
         err => {
-        this.errTip = err.message
+          this.errTip = err.message
         }
        )
      }
