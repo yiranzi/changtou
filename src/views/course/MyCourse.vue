@@ -100,12 +100,8 @@ export default {
       if (!this.isLogin) {
         return false
       }
-      if (this.courseList.length > 0) {
-        for (let k = 0; k < this.courseList.length; k++) {
-          if (this.courseList[k].price > 0) {
-            return true
-          }
-        }
+      if (this.expenseRecords.length > 0) {
+        return true
       }
        return false
     }

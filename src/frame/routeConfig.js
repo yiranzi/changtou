@@ -112,7 +112,7 @@ export function configRouter (router) {
     },
     // 修改昵称
     '/resetNickName': {
-      component: require('../views/mine/resetNickName.vue')
+      component: require('../views/mine/ResetNickName.vue')
     },
 
     /**

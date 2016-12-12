@@ -109,7 +109,7 @@
         scrollerHeight: '480px',  // 0px ?
         hasVaildChapterCicked: false,
         selectedLesson: null, //当前选中的lesson
-        selectedChapter: null, //当前选中的chapter
+        selectedIndex: 0, //当前选中的chapter
         currAudioSrc: null, //当前音频地址
         currPpts: [] //当前ppt地址集合
       }
@@ -171,7 +171,7 @@
       'lessonSelectedSeminar': function (lesson, currSelectedLessonIndex) {
         this.playChapter(lesson)
         this.selectedLesson = lesson
-        this.selectedChapter = currSelectedLessonIndex
+        this.selectedIndex = currSelectedLessonIndex
       },
 
       /**
@@ -187,7 +187,7 @@
       },
       'fullScreenTap' () {
         if (this.isResponsive) {
-          this.goToFullScreen(this.selectedLesson, this.selectedChapter)
+          this.goToFullScreen(this.selectedLesson, this.selectedIndex)
         }
       }
     },
@@ -224,10 +224,14 @@
         this.currPpts = lesson.ppts
         this.$dispatch('chapterPlay', lesson)
       },
-      goToFullScreen (currChapter, selectedChapter) {
-      setSessionCache('landscapeSrc', {currChapter, selectedChapter})
-      const currIndex = 1
-     this.$route.router.go(`/landscape/${selectedChapter}/${currIndex}`)
+
+      /**
+       *  全屏
+       * @param currChapter
+       */
+      goToFullScreen (currChapter, selectedIndex) {
+        setSessionCache('landscapeSrc', {currChapter, selectedIndex})
+        this.$route.router.go(`/landscape/${selectedIndex}/1`)
       }
     },
     components: {

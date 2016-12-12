@@ -54,12 +54,13 @@ const mixin = {
      */
     responIntercepter: function (res) {
       // 若返回值不是object, 强制转换
-      let resData = res.data
-      if (this.isSystemUpdate(resData)) {
+      if (this.isSystemUpdate(res.data)) {
+        // TODO 终结ajax请求
         this.showSystempUpdatePage()
       }
       if (typeof res.data === 'string') {
         try {
+          res.data = JSON.parse(res.data)
         } catch (e) {
           //todo 上传此错误
         }
