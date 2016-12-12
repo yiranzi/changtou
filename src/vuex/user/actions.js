@@ -297,7 +297,7 @@ export const resetNickName = ({ dispatch }, nickName) => {
     (resolve, reject) => {
       const validInfo = verifyNickName(nickName)
       if (!validInfo.isValid) {
-        reject(validInfo.errTip)
+        reject({message: validInfo.errTip})
         return
       }
       postWithinAuth(

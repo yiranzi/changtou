@@ -3,49 +3,82 @@
  */
 
 import forbidWords from './forbidWords'
-const whiteList = ['小熊之家', '水湄物语', '小投', '小小投', '长投', '长投网', '长投学堂']
-const reg = /^[\w\u4e00-\u9fa5]{4,12}$/
-const forbidWordLen = forbidWords.length
-let isValid = true
-const errTip = {}
 
+/**
+ *  验证昵称
+ * @param nickName
+ * @returns {*}
+ */
 const verifyNickName = (nickName) => {
-  if (isLengthValid(nickName)) {
-     if (isInWhiteList(nickName)) {
-        isForbidWord(nickName)
-     }
+  let re = {
+    isValid: false,
+    errTip: ''
+  }
+
+  if (!isLengthValid(nickName)) {
+    re.errTip = '名称必须为4-12位非空字符'
+    return re
+  }
+
+  if (!isInWhiteList(nickName)) {
+    re.errTip = '用户信息非法'
+    return re
+  }
+
+  if (!isForbidWord(nickName)) {
+    re.errTip = '用户信息非法'
+    return re
   }
 
   return {
-    isValid: isValid,
-    errTip: errTip
+    isValid: true,
+    errTip: re.errTip
   }
 }
 
-const isForbidWord = (nickName) => {
+/**
+ * 验证是否有敏感词
+ * @param nickName
+ * @param fbidWords
+ * @returns {boolean}
+ */
+const isForbidWord = (nickName, fbidWords = forbidWords) => {
+  const forbidWordLen = fbidWords.length
   for (let k = 0; k < forbidWordLen; k++) {
     if (nickName.indexOf(forbidWords[k]) > 0) {
-      errTip.message = '用户信息非法'
-      isValid = false
       return false
     }
   }
+  return true
 }
+
+/**
+ * 验证昵称长度
+ * @param nickName
+ * @returns {boolean}
+ */
 const isLengthValid = (nickName) => {
-  if (!reg.test(nickName)) { // false
-    errTip.message = '名称必须为4-12位非空字符'
-    isValid = false
+  // const reg = /^[\w\u4e00-\u9fa5]{4,12}$/
+  if (!nickName || nickName.length > 12 || nickName.length < 4) { // false
     return false
+  } else {
+    return true
   }
 }
+
+/**
+ * 验证昵称是否含白名单
+ * @param nickName
+ * @returns {boolean}
+ */
 const isInWhiteList = (nickName) => {
+  const whiteList = ['小熊之家', '水湄物语', '小投', '小小投', '长投', '长投网', '长投学堂']
   for (let k = 0; k < whiteList.length; k++) {
     if (nickName.indexOf(whiteList[k]) > 0) {
-      errTip.message = '用户信息非法'
-      isValid = false
       return false
     }
   }
+  return true
 }
 
 const verifyPhone = () => {}
