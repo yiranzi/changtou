@@ -50,7 +50,7 @@ export default {
         }
       }
       .strategy-options-labels {
-        color: #ffab6d;
+         color: #ffab6d;
       }
       .strategy-options-intro {
         background: #ffeee2;

@@ -11,7 +11,7 @@
             <p><span class="time">{{accumulatedTime}}</span>分钟</p>
           </div>
 
-          <div class="homework-panel" v-if="isLogin">
+          <div class="homework-panel" v-if="isShowHomeWorkPanel">
             <span v-touch:tap="goToMyHomework" class="homework-item">
               <img src="../../assets/styles/image/myCourse/homework.png">
               <p>我的作业</p>
@@ -94,19 +94,27 @@ export default {
         }
       )
       return accumulatedTime
+    },
+    // 如果登录并且有付费课程显示 '我的作业' 和 '毕业证书'
+    isShowHomeWorkPanel () {
+      if (!this.isLogin) {
+        return false
+      }
+      if (this.expenseRecords.length > 0) {
+        return true
+      }
+       return false
     }
   },
   route: {
     data () {
       let promiseArray = []
       const me = this
-
       if (this.isLogin) {
         promiseArray = [this.loadUserCourses()]
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
-
       return Promise.all(promiseArray).then(
         function () {
           setTimeout(

@@ -4,7 +4,7 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache, clearLocalCache} from '../../util/cache'
-
+import {verifyNickName} from '../../util/validation/validtor'
 //export const loadUserFromCache = ({ dispatch }) => {
 //  const user = getLocalCache('frame-user')
 //  user && dispatch('UPDATE_USER', user)
@@ -284,6 +284,39 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
       }
     )
   })
+}
+
+/**
+ * 重置昵称
+ * @param dispatch
+ * @param nickName
+ * @returns {Promise}
+ */
+export const resetNickName = ({ dispatch }, nickName) => {
+  return new Promise(
+    (resolve, reject) => {
+      const validInfo = verifyNickName(nickName)
+      if (!validInfo.isValid) {
+        reject({message: validInfo.errTip})
+        return
+      }
+      postWithinAuth(
+        {
+          url: getUrl('reset_nickname'),
+          data: {
+            nickName
+          }
+        }
+      ).then(
+        res => {
+          dispatch('USER_UPDATE_NAME', nickName)
+          resolve()
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
 }
 
 /**

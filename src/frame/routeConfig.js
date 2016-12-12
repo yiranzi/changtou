@@ -110,6 +110,10 @@ export function configRouter (router) {
     '/system/message': {
       component: require('../views/mine/SystemMessage.vue')
     },
+    // 修改昵称
+    '/resetNickName': {
+      component: require('../views/mine/ResetNickName.vue')
+    },
 
     /**
      * 小投答疑
