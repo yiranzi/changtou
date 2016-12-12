@@ -65,11 +65,10 @@
         transition.next()
       },
       data () {
-        this.getVipIntro()
+        this.getVipIntro().then(
+          () => this.setScrollerHeight()
+        )
       }
-    },
-    ready () {
-      this.setScrollerHeight()
     },
     methods: {
       /**
@@ -86,14 +85,25 @@
         })
         }, 200)
       },
-      /**
-       * 立即购买
-       */
-      buyNow () {
+      onAgreeTap () {
+        this.hideMask()
         this.$route.router.on(`/pay-VS-0`, {
           component: require('../pay/VipStrategyOrder.vue')
         })
         this.$route.router.go(`/pay-VS-0`)
+      },
+      /**
+       * 立即购买
+       */
+      buyNow () {
+        if (!this.disabled) {
+          this.showMask({
+            component: 'strategy/StrategyAgreement.vue',
+            hideOnMaskTap: true,
+            callbackName: 'onAgreeTap',
+            callbackFn: this.onAgreeTap.bind(this) //组件上的
+          })
+        }
       }
     },
     components: {
@@ -114,6 +124,9 @@
   .strategy-vip-intro{
     position: relative;
     background: #fff;
+    p{
+      margin: 0;
+    }
     .intro-promotion{
       width: 18.75rem;
       height: 10rem;

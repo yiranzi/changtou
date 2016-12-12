@@ -5,7 +5,7 @@
 <template>
     <ict-sheet title="课后作业" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
-        <div class="essay-content">{{{essayQuestion}}}</div>
+        <div class="essay-content" v-if="essayType === 'S'">{{{essayQuestion}}}</div>
         <div class="essay-explain">
           {{{explain}}}
         </div>
@@ -26,7 +26,7 @@
       btnText: '写作业'
     },
     // 复杂作业
-    'C': {
+    'H': {
       explain:
         `<p>该课作业为复杂的图表作业。
         为了您更好的完成作业，真实的反映你的学习水平，

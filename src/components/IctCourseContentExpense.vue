@@ -24,16 +24,22 @@
         <!--选择题作业-->
         <div v-if="lesson.choiceQuestion.length > 0 && lesson.type !== 'C'" class="chapter-title"
              v-touch:tap="onHomeworkChoiceTap()">
-          <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
-          <span class="chioce-icon"></span>
-          &nbsp;&nbsp;课后作业
+          <span style="width: 85%">
+            <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
+            <span class="chioce-icon"></span>
+            &nbsp;&nbsp;课后作业
+          </span>
+          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomework.length > 0 ? lessonHomework[$index].choiceTip : ''}}</span>
         </div>
 
         <!--问答题作业-->
         <div v-if="lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C'" class="chapter-title"
              v-touch:tap="onHomeworkEssayTap()">
-          <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
-          <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
+          <span style="width: 85%">
+            <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
+            <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
+          </span>
+          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomework.length > 0 ? lessonHomework[$index].essayTip : ''}}</span>
         </div>
 
       </div>
@@ -156,18 +162,20 @@
 </style>
 
 <script>
-  export default{
+  export default {
     props: [
       'lessons',
       'record',
       'selectedLesson',
-      'selectedChapter'
+      'selectedChapter',
+      'homework'
     ],
 
     data () {
       return {
         lessonListType: [],
-        selectChapterIndex: -1
+        selectChapterIndex: -1,
+        lessonHomework: []
       }
     },
 
@@ -176,6 +184,46 @@
         this.lessonListType = newlessons.map(({lessonId}) => {
             return {lessonId: lessonId, isUnfold: false}
           })
+      },
+
+      'homework': function (newHomework) {
+        if (newHomework) {
+          this.lessonHomework = newHomework.lessons.map(homeworkItem => {
+              let homework = Object.assign({}, homeworkItem)
+
+              // 简答题设置状态
+              homework.hasEssay = homework.hasEssay === 'Y'
+              if (homework.hasEssay) {
+                let tip = ''
+                if (homework.essayStatus === -1) {
+                  tip = '未答题'
+                } else if (homework.essayStatus === 0) {
+                  tip = '审核中'
+                } else if (homework.essayStatus === 1) {
+                  tip = '草稿'
+                } else if (homework.essayStatus === 2) {
+                  tip = '未通过'
+                } else if (homework.essayStatus === 3) {
+                  tip = '通过'
+                }
+                homework.essayTip = tip
+              }
+
+              // 选择题设置状态
+              homework.hasChoice = homework.hasChoice === 'Y'
+              if (homework.hasChoice) {
+                let tip = ''
+                if (homework.choiceStatus === 'Y') {
+                  tip = '通过'
+                } else {
+                  tip = '未通过'
+                }
+                homework.choiceTip = tip
+              }
+
+              return homework
+            })
+        }
       }
     },
 

@@ -85,6 +85,17 @@
         }).catch(
             (err) => console.log(err)
         )
+      },
+      deactivate () {
+        this.pic = '' // 图片
+        this.title = '' // 标题
+        this.price = 0 // 价格
+        this.itemId = 0 // 交易项目标识
+        this.mchantType = 0 // 商品类型
+        this.coupons = []  // 优惠列表
+        this.selectedCoupon = null // 选择的优惠
+        this.currentBalance = 0  // 投币余额
+        this.sheetShow = false // 显示支付sheet
       }
     },
     events: {

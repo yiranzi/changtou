@@ -11,7 +11,7 @@
              alt="" style="height: 12rem; width: 100%; display: block">
 
         <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-          <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem">
+          <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
             <img :src="ppt" alt="" style="height: 100%; width: 100%">
           </swiper-item>
         </swiper>

@@ -218,30 +218,17 @@
         }
       }
     },
-    watch: {
-      'interviewRecord': function () {
-        const me = this
-        const {titlebar} = this.$els
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-//              top: 0
-          })
-        })
-        }, 1500)
-      }
-    },
     route: {
       data ({to: {params: {interviewId}}}) {
+        const me = this
         return this.loadInterviewRecord(interviewId).then(
           function () {
+            me.setScrollerHeight()
             return {
               isLoadSuccess: true
             }
           },
-          function (err) {
-            console.log('err', err)
+          function () {
             return {
               isLoadSuccess: false
             }
@@ -250,6 +237,17 @@
       }
     },
     methods: {
+      setScrollerHeight () {
+        const me = this
+        me.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+              top: 0
+          })
+        })
+        }, 200)
+      },
       showActionSharePanel () {
         const me = this
         setTimeout(() => {

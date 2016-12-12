@@ -250,7 +250,7 @@
 
   .title-babel:after {
     position: absolute;
-    left:3.8555rem;
+    right: -58/40rem;
     content: '';
     height: 0;
     width: 0;
