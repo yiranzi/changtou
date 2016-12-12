@@ -42,7 +42,7 @@ export default {
       scrollerHeight: '0px'
     }
   },
-  router: {
+  route: {
       data () {
         // 每一次进入页面都能获取实时的通知文本
         return Promise.all([this.getVipProduct(), this.getVipNotice()]).then(
