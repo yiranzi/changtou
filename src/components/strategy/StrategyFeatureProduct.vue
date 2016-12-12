@@ -49,6 +49,9 @@ export default {
           padding-bottom: 0;
         }
       }
+      .strategy-options-labels {
+         color: #ffab6d;
+      }
       .strategy-options-intro {
         background: #ffeee2;
       }

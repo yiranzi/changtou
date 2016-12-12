@@ -18,7 +18,7 @@
             院生故事
           </span>
         </div>
-        <div class="expenselist-area" id="popularSpe">
+        <div class="expenselist-area popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -39,7 +39,7 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
-        <div class="expenselist-area" id="expenselistSpe">
+        <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">优质好课</span>
@@ -223,7 +223,7 @@
 
 <style lang="less">
   .course-navigator{
-    #popularSpe{
+    .popularSpe{
       padding-bottom: .8rem;
     }
     .expenselist-area{
@@ -329,7 +329,7 @@
       }
     }
 
-    #expenselistSpe{
+    .expenselistSpe{
       border-bottom: .4rem solid #f0eff5;
     }
     .expenselist-area{

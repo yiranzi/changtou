@@ -1,6 +1,6 @@
 <template>
   <div class="ict-setting-view">
-    <ict-titlebar :left-options="{showBack: false}">我的</ict-titlebar>
+    <ict-titlebar :left-options="{showBack: false}">个人中心</ict-titlebar>
     <div class="ict-user-info">
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
       <p class="ict-user-name">
