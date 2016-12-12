@@ -156,7 +156,7 @@
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters, myHomeworkGetters} from '../../vuex/getters'
+  import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   export default {
@@ -165,7 +165,7 @@
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
         isUserLogin: userGetters.isLogin,
-        homeworkList: myHomeworkGetters.myHomework
+        homeworkList: homeworkListGetters.homeworkList
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
