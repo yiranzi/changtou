@@ -1,5 +1,5 @@
 <template>
-  <div class="course-navigator" style="height: 100%;">
+  <div class="course-navigator" style="height: 100%;" v-touch:tap="showPackage">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
@@ -210,6 +210,14 @@
        */
       goToStrategy () {
         this.$route.router.go('/strategy/professional/intro')
+      },
+      showPackage () {
+              this.showMask({
+        component: '../.vue',
+        hideOnMaskTap: true,
+        callbackName: 'loadingClose',
+        callbackFn: setTimeout(this.loadingClose.bind(this), 30000)
+      })
       }
     },
     components: {

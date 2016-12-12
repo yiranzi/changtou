@@ -4,7 +4,7 @@
 import {postWithoutAuth, postWithinAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 import {getLocalCache, clearLocalCache} from '../../util/cache'
-import {validNickName} from '../../util/validation/validtor'
+import {verifyNickName} from '../../util/validation/validtor'
 //export const loadUserFromCache = ({ dispatch }) => {
 //  const user = getLocalCache('frame-user')
 //  user && dispatch('UPDATE_USER', user)
@@ -295,7 +295,7 @@ export const resetPasswordStart = ({ dispatch }, phone) => {
 export const resetNickName = ({ dispatch }, nickName) => {
   return new Promise(
     (resolve, reject) => {
-      const validInfo = validNickName(nickName)
+      const validInfo = verifyNickName(nickName)
       if (!validInfo.isValid) {
         reject(validInfo.errTip)
         return
@@ -309,7 +309,7 @@ export const resetNickName = ({ dispatch }, nickName) => {
         }
       ).then(
         res => {
-          dispatch('USERNAME_UPDATE', nickName)
+          dispatch('USER_UPDATE_NAME', nickName)
           resolve()
         },
         err => {

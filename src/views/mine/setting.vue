@@ -5,7 +5,7 @@
       <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
       <p class="ict-user-name">
         {{name}}
-        <span class="resetNickName" v-touch:tap="gotoResetNickName"  v-if="isLogin"></span>
+        <span class="resetNickName" v-touch:tap="gotoPersonalInfo"  v-if="isLogin"></span>
       </p>
       <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
       <flexbox v-if="!isLogin">
@@ -23,11 +23,6 @@
     <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
               :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
               v-touch:tap="onStrategyTap">
-    </ict-item>
-    <ict-item title="鼓励师首页"
-              v-if="isSpire"
-              link=""
-              v-touch:tap="tapFocus">
     </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
@@ -74,13 +69,11 @@
     },
     computed: {
       badgeMessageNum () {
-      if (this.isLogin) {
         let number = this.newMessageNum + ''
         if (this.newMessageNum === 0) {
           number = ''
         }
         return number
-      }
       },
 
       badgeSuggestionNum () {
@@ -118,7 +111,7 @@
           this.$route.router.go('/strategy/professional/product')
         }
       },
-      gotoResetNickName () {
+      gotoPersonalInfo () {
           this.$route.router.go('/personal/information')
       }
     },

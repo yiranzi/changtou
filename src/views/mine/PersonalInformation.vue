@@ -154,7 +154,7 @@ export default {
         function okHandler () {
           this.logout()
           this.resetRecords()
-          this.$route.router.go('/setting')
+          window.history.back()
         }
     },
     resetPassword: function () {

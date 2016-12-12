@@ -130,7 +130,6 @@
     }
   }
 
-
   //disabled
   .ict-btn-disabled {
     &.ict-btn-mini{
