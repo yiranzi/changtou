@@ -9,7 +9,7 @@ import {getUrl} from '../../../frame/apiConfig'
  * @returns {Promise}
  */
 
-export const getMyHomework = ({dispatch}) => {
+export const getHomeworkList = ({dispatch}) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(

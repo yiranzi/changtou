@@ -19,7 +19,7 @@ import dailyQuestion from './dailyQuestion/store'
 import newertest from './newertest/store'
 import homeworkEssay from './homework/essay/store'
 import homeworkChoice from './homework/choice/store'
-import myHomework from './homework/mine/store'
+import homeworkList from './homework/mine/store'
 import help from './help/store'
 import strategyIntro from './strategy/intro/store'
 import strategyProduct from './strategy/product/store'
@@ -44,7 +44,7 @@ export default new Vuex.Store({
     newertest, //新手测试
     homeworkEssay, // 问答题
     homeworkChoice, // 选择题
-    myHomework, // 我的作业
+    homeworkList, // 我的作业
     help, //小投答疑
     strategyIntro, // 策略产品 宣传
     strategyProduct, // 策略产品 数据

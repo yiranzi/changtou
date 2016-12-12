@@ -3,6 +3,6 @@
  */
 
   //我的作业
-export const myHomework = (state) => {
-  return state.myHomework.list
+export const homeworkList = (state) => {
+  return state.homeworkList.list
 }

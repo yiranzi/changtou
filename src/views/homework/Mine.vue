@@ -59,16 +59,16 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
-  import {myHomeworkGetters, courseRecordsGetters} from '../../vuex/getters'
-  import {myHomeworkActions, essayActions, choiceActions} from '../../vuex/actions'
+  import {homeworkListGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {homeworkListActions, essayActions, choiceActions} from '../../vuex/actions'
   export default {
     vuex: {
       getters: {
-        myHomework: myHomeworkGetters.myHomework,
+        myHomework: homeworkListGetters.homeworkList,
         expenseRecords: courseRecordsGetters.expenseRecords
       },
       actions: {
-        getMyHomework: myHomeworkActions.getMyHomework,
+        getMyHomework: homeworkListActions.getHomeworkList,
         getArticle: essayActions.getArticle,
         getReport: choiceActions.getReport
       }
