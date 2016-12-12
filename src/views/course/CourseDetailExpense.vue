@@ -7,7 +7,7 @@
              alt="" style="height: 12rem; width: 100%; display: block">
 
         <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem">
+        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
           <img :src="ppt" alt="" style="height: 100%; width: 100%">
         </swiper-item>
         <!--<swiper-item class="black"><h2 class="title fadeInUp animated">你无处可藏</h2></swiper-item>-->
@@ -29,7 +29,9 @@
           </sticky>
 
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
-          <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
+          <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []"
+                   :homework="currHomework"
+                   :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
         <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
@@ -154,7 +156,7 @@
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters, graduationDiplomaGetters} from '../../vuex/getters'
+  import {courseDetailGetters, courseRecordsGetters, userGetters, myHomeworkGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   export default {
@@ -162,7 +164,8 @@
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
-        isUserLogin: userGetters.isLogin
+        isUserLogin: userGetters.isLogin,
+        homeworkList: myHomeworkGetters.myHomework
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -226,6 +229,13 @@
        */
       postText () {
         return this.postponeCount ? '再次延期' : '延期'
+      },
+
+      /**
+       * 作业
+       */
+      currHomework () {
+        return this.homeworkList.find(homework => (homework.subjectId + '') === this.subjectId)
       }
     },
 
@@ -337,6 +347,9 @@
         //设置课程信息
         this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
+        //设置当前作业
+//        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
+
         //设置是否为选修课
         this.isSubjectBranch = this.currSubject.type === 'B'
 
@@ -351,7 +364,8 @@
         } else {
           //如果没有当前课程的进度
           //设置第0课可以听
-          this.currStatus = 'W'
+          this.resetSubjectRecordStatus()
+//          this.currStatus = 'W'
 //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
         }
       },
@@ -368,9 +382,7 @@
             this.setSubjectRecordStatus(currSubjectRecord)
           } else {
             //如果没有当前课程的进度
-            //设置第0课可以听
-            this.currStatus = 'W'
-//            this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
+            this.resetSubjectRecordStatus()
           }
         }
       }
@@ -619,6 +631,47 @@
           if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubjectRecord.lessonSet.lessonIds.length) {
             this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
           }
+        }
+
+        // 设置当前选中(进度改变后), 课程可不可以听
+        if (this.selectedLesson) {
+          // 如果是公开课,永远不受限
+          if (this.selectedLesson.type === 'C') {
+            this.isSelectdLessonLimited = false
+          } else {
+            this.isSelectdLessonLimited =
+              this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === this.selectedLesson.lessonId) === -1
+          }
+        }
+      },
+
+      /**
+       * 重置课程进度状态
+       */
+      resetSubjectRecordStatus () {
+        this.currRecord = null
+
+        //设置是否已经提交了作业
+        this.isAssignmentSubmitted = false
+
+        //设置课程状态
+        this.currStatus = 'W'
+
+        //设置是否已经暂停过
+        this.isSuspendUsed = false
+
+        //设置是否已经延期过
+        this.postponeCount = false
+
+        //设置可用课程列表
+        this.currUseabLessonArr = []
+
+        //设置作业
+        this.homework = null
+
+        //设置当前提交作业(或者需要)的课程Id
+        if (this.currUseabLessonArr.length > 0) {
+          this.lastSubmitlessonId = this.currUseabLessonArr[this.currUseabLessonArr.length - 1]
         }
 
         // 设置当前选中(进度改变后), 课程可不可以听
