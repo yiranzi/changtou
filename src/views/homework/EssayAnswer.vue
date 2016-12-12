@@ -72,18 +72,15 @@ export default {
       )
     },
     deactivate () {
+      if (!this.submit) {
+        this.submitDraft()
+      }
       this.submit = false
-      this.submitDraft()
       this.lessonId = 0
       this.foldText = '收起' //折叠 文案
       this.isFold = false // 是否折叠题目
       this.textareaStyle = '' //textarea样式
       this.answer = this.essayAnswer // 填写的答案
-    }
-  },
-  beforeDestroy () {
-    if (!this.submit) {
-      this.submitDraft()
     }
   },
   methods: {
@@ -113,6 +110,7 @@ export default {
      * 提交作业
      */
     submitEssay () {
+      this.submit = true
       this.rightOptions.disabled = true
       const essayContent = {
         articleId: this.articleId,
