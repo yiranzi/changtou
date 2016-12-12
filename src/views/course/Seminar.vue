@@ -230,7 +230,7 @@
        * @param currChapter
        */
       goToFullScreen (currChapter, selectedChapterIndex) {
-        setSessionCache('landscapeSrc', {currChapter, selectedChapterIndex})
+        setSessionCache('landscapeSrc', {currChapter, selectedChapterIndex, lesson: this.selectedLesson})
         this.$route.router.go(`/landscape/${selectedChapterIndex}/1`)
       }
     },
