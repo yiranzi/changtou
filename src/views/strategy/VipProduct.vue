@@ -44,12 +44,11 @@ export default {
   },
   router: {
       data () {
-        this.getVipProduct()
-        this.getVipNotice()   // 每一次进入页面都能获取实时的通知文本
+        // 每一次进入页面都能获取实时的通知文本
+        return Promise.all([this.getVipProduct(), this.getVipNotice()]).then(
+          this.setScrollerHeight()
+        )
       }
-  },
-  ready () {
-    this.setScrollerHeight()
   },
   methods: {
     /**
@@ -80,6 +79,8 @@ export default {
 </script>
 <style lang="less">
   .strategy-vip-product{
+    width: 100%;
+    height: 100%;
     p{
       margin: 0;
     }

@@ -38,6 +38,7 @@
 export default {
   vuex: {
     getters: {
+      lessonId: essayGetters.essayLessonId,
       userName: userGetters.userName,
       articleId: essayGetters.articleId,
       essayAnswer: essayGetters.essayAnswer,
@@ -45,11 +46,6 @@ export default {
       remarkList: essayGetters.remarkList,
       score: essayGetters.score,
       status: essayGetters.status
-    }
-  },
-  data () {
-    return {
-      lessonId: this.$route.params.lessonId
     }
   },
   computed: {

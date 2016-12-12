@@ -47,12 +47,10 @@
     },
     route: {
         data () {
-            this.getProfessionalNotice()
-            this.getProfessionalProduct()
+            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice()]).then(
+              this.setScrollerHeight()
+            )
         }
-    },
-    ready () {
-      this.setScrollerHeight()
     },
     methods: {
       /**
@@ -82,5 +80,8 @@
   }
 </script>
 <style lang="less">
-
+.strategy-vip-product{
+  width: 100%;
+  height: 100%;
+}
 </style>

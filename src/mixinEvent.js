@@ -7,6 +7,7 @@ import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
 import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/actions'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
+import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
@@ -25,6 +26,7 @@ const mixin = {
       jpushSetAlias,
       jpushAddReceiveHandler,
       getDiplomaList,
+      getHomeworkList,
       syncUser
     },
     getters: {
@@ -137,6 +139,7 @@ const mixin = {
       // 获取毕业证列表
       tasks.push(this.getDiplomaList().then(this.onGraduationDiplomaLoaded))
 
+      tasks.push(this.getHomeworkList())
       return Promise.all(tasks).then(
         () => {}
       ).catch(
