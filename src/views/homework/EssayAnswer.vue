@@ -44,7 +44,8 @@ export default {
       foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: this.essayAnswer // 填写的答案
+      answer: this.essayAnswer, // 填写的答案
+      isSubmit: false //是否是提交作业 不是退出时保存草稿
     }
   },
   watch: {
@@ -71,6 +72,7 @@ export default {
       )
     },
     deactivate () {
+      this.submit = false
       this.submitDraft()
       this.lessonId = 0
       this.foldText = '收起' //折叠 文案
@@ -80,7 +82,9 @@ export default {
     }
   },
   beforeDestroy () {
-    this.submitDraft()
+    if (!this.submit) {
+      this.submitDraft()
+    }
   },
   methods: {
     /**
@@ -121,9 +125,8 @@ export default {
           if (markInfo.correction_date) {
             this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
             this.rightOptions.disabled = false
-          } else {
-            window.history.back()
           }
+          window.history.back()
         }).catch(
         () => {
           this.rightOptions.disabled = false
