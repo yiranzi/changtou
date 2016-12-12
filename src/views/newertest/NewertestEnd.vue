@@ -31,7 +31,7 @@
               </div>
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
-                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail(subjectArr) ">
+                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过
                   <span class="play-icon"></span>
                 </div>
@@ -138,6 +138,7 @@
           background-size: 100%;
         }
         .label{
+          background-repeat: no-repeat;
           margin-left: 0.7rem;
           padding: 0.3rem 1rem;
           background-image: url("../../assets/styles/image/newertest/end/lable2.png");

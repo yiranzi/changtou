@@ -15,6 +15,7 @@
     }
     .toggleField {
       width: 100%;
+      margin-top: -.5rem;
       .weui_label{
         line-height: 25px;
         font-size: 0.75rem;
@@ -37,6 +38,7 @@
         height: 1.25rem;
         top: -0.03rem;
         left: 0.1rem;
+        border-radius: .75rem;
       }
       .weui_switch:checked{
         border-color: #00b0f0;

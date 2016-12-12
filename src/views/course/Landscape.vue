@@ -25,8 +25,6 @@
   import WebAudio from '../../components/WebAudio.vue'
   import Swiper from 'vue-swiper'
   import {getSessionCache, clearSessionCache} from '../../util/cache'
-//  import { courseDetailGetters } from '../../vuex/getters'
-
   export default {
     data () {
       return {

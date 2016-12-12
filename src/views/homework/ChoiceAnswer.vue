@@ -6,6 +6,7 @@
     <div class="choice-answer">
       <span class="close-icon" v-touch:tap="onCloseTap"></span>
       <div class="choice-title">
+        {{questionOrderTip}} <br/>
         {{title}}
       </div>
       <div class="choice-options" v-for="option in currQuestion.content"
@@ -57,9 +58,14 @@ export default {
   },
   computed: {
     // 题目
+    questionOrderTip () {
+      if (this.choiceQuestion && this.choiceQuestion.length > 0) {
+        return ` ${this.currIndex + 1}/${this.totalNum}  第${this.currIndex + 1}题`
+      }
+    },
     title () {
       if (this.choiceQuestion && this.choiceQuestion.length > 0) {
-        return `${this.currIndex + 1}/${this.totalNum}${this.currQuestion.title}`
+        return `${this.currQuestion.title}`
       }
     },
     // 是否显示 错误提示
