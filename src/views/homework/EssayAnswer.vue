@@ -11,7 +11,7 @@
       <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
       <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
         <div v-el:draftbar class="draft-box">
-          <span v-touch:tap="submitDraft">存草稿</span>
+          <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
         </div>
     </div>
@@ -36,6 +36,7 @@ export default {
   },
   data () {
     return {
+      canDraft: false, //是否可以保存草稿
       lessonId: 0,
       rightOptions: { //titlebar
         callback: '',
@@ -44,7 +45,7 @@ export default {
       foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: this.essayAnswer, // 填写的答案
+      answer: '', // 填写的答案
       isAnswerChange: false //作业或草稿是否有关系,有更新退出时保存草稿
     }
   },
@@ -59,11 +60,13 @@ export default {
           // 新写作业
           this.isAnswerChange = true
         }
+        this.canDraft = true
         this.rightOptions = {
           callback: this.submitEssay,
           disabled: false
         }
       } else {
+        this.canDraft = false
         this.rightOptions.disabled = true
       }
       this.resizeTextarea()
@@ -73,13 +76,14 @@ export default {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.getQuestion(this.lessonId)
+      this.answer = this.essayAnswer
       setTimeout(
         this.resizeTextarea,
         300
       )
     },
     deactivate () {
-      if (this.isAnswerChange && !this.essayAnswer) {
+      if (this.isAnswerChange && this.essayAnswer) {
         this.submitDraft()
       }
       this.isAnswerChange = false
@@ -87,7 +91,8 @@ export default {
       this.foldText = '收起' //折叠 文案
       this.isFold = false // 是否折叠题目
       this.textareaStyle = '' //textarea样式
-      this.answer = this.essayAnswer // 填写的答案
+      this.answer = '' // 填写的答案
+      this.canDraft = false
     }
   },
   methods: {
@@ -142,6 +147,9 @@ export default {
        * 保存草稿
        */
     submitDraft () {
+      if (!this.canDraft) {
+        return
+      }
       this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,
@@ -248,6 +256,9 @@ export default {
         display: inline-block;
         padding: 0 1rem;
         text-align: center;
+      }
+      .draft-disabled{
+        color: #898989;
       }
       .keyboard-icon:before{
         position: absolute;
