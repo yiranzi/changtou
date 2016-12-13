@@ -145,8 +145,8 @@ export default {
   methods: {
     doLogout: function () {
       this.showConfirm({
-          title: '确定退出当前账号',
-          message: '',
+          title: '',
+          message: '确定退出当前账号',
           okText: '确定',
           cancelText: '取消',
           okCallback: okHandler.bind(this)
