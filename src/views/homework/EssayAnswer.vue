@@ -67,9 +67,6 @@ export default {
         this.rightOptions.disabled = true
       }
       this.resizeTextarea()
-    },
-    'isAnswerChange' (change) {
-      console.log(change)
     }
   },
   route: {
