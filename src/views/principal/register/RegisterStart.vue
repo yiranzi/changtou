@@ -123,8 +123,7 @@
       color: #898989;
     }
     .register-tip {
-      width: 84%;
-      margin: 0.5rem 21% 0;
+      margin-top: 0.5rem;
       font-size: 0.6rem;
       color: #bbb;
       text-align: center;

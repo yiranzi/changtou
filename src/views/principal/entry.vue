@@ -27,8 +27,8 @@
     </div>
 
     <div class="other-entry">
-      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn regi-btn"></ict-button>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn forget-pwd-btn"></ict-button>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"></ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"></ict-button>
     </div>
     <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container style="display: block">
       <div class="third-text-container">
@@ -282,17 +282,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-    .ict-btn{
-      font-size: .65rem;
-    }
-    .regi-btn{
-      text-align: left;
-      padding-left: 1.5rem;
-    }
-    .forgetPwd-btn{
-      text-align: right;
-      padding-right: 1.5rem;
-    }
     p{
       margin: 0;
     }
@@ -379,6 +368,7 @@
         display: inline-block;
         width: 50%;
         padding: 0;
+        font-size: 0.65rem;
         &:nth-of-type(1){
           text-align: left;
         }
