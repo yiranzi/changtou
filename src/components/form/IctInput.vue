@@ -8,6 +8,7 @@
       <input :type="type"
              v-model="value"
              :placeholder="placeholder"
+             :disabled="readonly"
              @blur="onBlur"
              @focus="onFocus"
              v-el:input >
@@ -31,6 +32,10 @@
       placeholder: {
         type: String,
         default: ''
+      },
+      readonly: {
+        type: Boolean,
+        default: false
       },
       value: {
 //        required: true,

@@ -4,25 +4,20 @@
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
-    <flexbox>
-      <flexbox-item :span="1/20"></flexbox-item>
-      <flexbox-item>
-        <group>
-          <div style="height: 1rem"></div>
-          <x-input title="手机号"
-                   placeholder="请输入新手机号"
-                   :value.sync="phone">
-          </x-input>
-        </group>
-      </flexbox-item>
-      <flexbox-item :span="1/20"></flexbox-item>
-    </flexbox>
+
+    <ict-input title="手机号"
+             placeholder="请输入新手机号"
+             :value.sync="phone">
+    </ict-input>
+
     <div style="height: 3rem" class="spacer"></div>
-    <ict-button type="default"
-                :disabled="isDisabled"
-                @click="sendPhone"
-                text="下一步">
-    </ict-button>
+    <div class="btn-box">
+      <ict-button type="default"
+                  :disabled="isDisabled"
+                  v-touch:tap="sendPhone"
+                  text="下一步">
+      </ict-button>
+    </div>
   </div>
 </template>
 <style>
@@ -30,9 +25,7 @@
 <script>
   import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
-  import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import Group from 'vux/group'
-  import XInput from 'vux/x-input'
+  import IctInput from '../../../components/form/IctInput.vue'
   import {userGetters} from '../../../vuex/getters'
   import {userActions} from '../../../vuex/actions'
   export default {
@@ -77,18 +70,13 @@
     },
     components: {
       IctTitlebar,
-      Flexbox,
-      FlexboxItem,
-      Group,
-      XInput,
+      IctInput,
       IctButton
     }
   }
 </script>
 <style lang="less">
 .bind-phone{
-  .ict-btn {
-    width: 84%;
-  }
+
 }
 </style>

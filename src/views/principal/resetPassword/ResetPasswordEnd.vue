@@ -4,35 +4,38 @@
       <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
         {{errTip}}
       </div>
-      <flexbox>
-        <flexbox-item :span="1/20"></flexbox-item>
-        <flexbox-item>
-          <group>
-            <x-input title="手机号"
-                     placeholder="输入手机号"
-                     v-if=false
-                     :value.sync="phone">
-            </x-input>
-            <div style="height: 1rem"></div>
-            <x-input title="密码"
-                     placeholder="输入密码"
-                     :value.sync="plainPassword">
-            </x-input>
-            <div style="height: 1rem"></div>
-            <x-input title="确认密码"
-                     placeholder="请再次输入密码"
-                     :value.sync="conformedPlainPassword">
-            </x-input>
-          </group>
-          <div style="height: 3rem" class="spacer"></div>
-          <ict-button type="default"
-                    :disabled="isDisabled"
-                    @click="doResetPassword"
-                    text="提交">
-          </ict-button>
-        </flexbox-item>
-        <flexbox-item :span="1/20"></flexbox-item>
-      </flexbox>
+
+      <ict-input title="手机号"
+               placeholder="输入手机号"
+               v-if=false
+               :value.sync="phone">
+      </ict-input>
+
+      <div style="height: 1rem"></div>
+
+      <ict-input title="密码"
+               type="password"
+               placeholder="输入密码"
+               :value.sync="plainPassword">
+      </ict-input>
+
+      <div style="height: 1rem"></div>
+
+      <ict-input title="确认密码"
+               placeholder="请再次输入密码"
+               :value.sync="conformedPlainPassword">
+      </ict-input>
+
+    <div style="height: 3rem" class="spacer"></div>
+
+    <div class="btn-box">
+      <ict-button type="default"
+                :disabled="isDisabled"
+                v-touch:tap="doResetPassword"
+                text="提交">
+      </ict-button>
+    </div>
+
     </div>
 </template>
 <style>
@@ -41,9 +44,7 @@
 <script>
 import IctTitlebar from '../../../components/IctTitleBar.vue'
 import IctButton from '../../../components/IctButton.vue'
-import {Flexbox, FlexboxItem} from 'vux/flexbox'
-import Group from 'vux/group'
-import XInput from 'vux/x-input'
+import IctInput from '../../../components/form/IctInput.vue'
 import {userActions} from '../../../vuex/actions'
 export default {
   vuex: {
@@ -90,10 +91,7 @@ export default {
   },
   components: {
     IctTitlebar,
-    Flexbox,
-    FlexboxItem,
-    Group,
-    XInput,
+    IctInput,
     IctButton
   }
 }
