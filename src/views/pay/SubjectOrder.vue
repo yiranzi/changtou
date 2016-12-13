@@ -203,7 +203,7 @@
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.ticketNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
             items: [{
-              integralTicketNo: this.selectedCoupon.ticketNo,
+              integralTicketNo: this.selectedCoupon && this.selectedCoupon.ticketNo,
               coupon: null,
               dealType: dealType.BUY,
               itemId: this.subjectId,
