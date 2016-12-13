@@ -265,7 +265,10 @@
             )
           } else if (essay.essayType === 'Y') {
             // 复杂作业
-            me.showAlert(`该课作业为复杂的图表作业。为了您更好的完成作业，真实的反映你的学习水平，请前往长投网www.ichangtou.com，完成该课作业。`)
+            me.showAlert({
+              message: `该课作业为复杂的图表作业。为了您更好的完成作业，真实的反映你的学习水平，请前往长投网www.ichangtou.com，完成该课作业。`,
+              btnText: '知道了'
+            })
           }
         }
       },
