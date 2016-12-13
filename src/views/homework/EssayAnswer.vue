@@ -8,7 +8,7 @@
         <a slot="right">提交</a>
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
-      <p class="fold-panel"><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
+      <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
       <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft">存草稿</span>
@@ -45,13 +45,20 @@ export default {
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
       answer: this.essayAnswer, // 填写的答案
-      isSubmit: false //是否是提交作业 不是退出时保存草稿
+      isAnswerChange: false //作业或草稿是否有关系,有更新退出时保存草稿
     }
   },
   watch: {
     'answer' (answer) {
       if (/\S/.test(answer)) {
         //非空合法内容
+        if (this.essayAnswer) {
+          // 修改草稿
+          this.isAnswerChange = answer !== this.essayAnswer
+        } else {
+          // 新写作业
+          this.isAnswerChange = true
+        }
         this.rightOptions = {
           callback: this.submitEssay,
           disabled: false
@@ -60,6 +67,9 @@ export default {
         this.rightOptions.disabled = true
       }
       this.resizeTextarea()
+    },
+    'isAnswerChange' (change) {
+      console.log(change)
     }
   },
   route: {
@@ -72,10 +82,10 @@ export default {
       )
     },
     deactivate () {
-      if (!this.submit) {
+      if (this.isAnswerChange && !this.essayAnswer) {
         this.submitDraft()
       }
-      this.submit = false
+      this.isAnswerChange = false
       this.lessonId = 0
       this.foldText = '收起' //折叠 文案
       this.isFold = false // 是否折叠题目
@@ -89,8 +99,7 @@ export default {
      */
     resizeTextarea () {
       const html = document.getElementsByTagName('html')[0]
-      const { titlebar, question, draftbar } = this.$els
-      const height = html.offsetHeight - titlebar.clientHeight - question.clientHeight - draftbar.clientHeight
+      const height = html.offsetHeight - this.$els.titlebar.clientHeight - this.$els.question.clientHeight - this.$els.fold.clientHeight - this.$els.draftbar.clientHeight
       this.textareaStyle = `height:${height}px;`
     },
 
@@ -110,7 +119,7 @@ export default {
      * 提交作业
      */
     submitEssay () {
-      this.submit = true
+      this.isAnswerChange = false
       this.rightOptions.disabled = true
       const essayContent = {
         articleId: this.articleId,
@@ -136,6 +145,7 @@ export default {
        * 保存草稿
        */
     submitDraft () {
+      this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,
         content: this.answer,
