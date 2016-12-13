@@ -197,16 +197,18 @@ export default {
     .fold-panel{
       position: relative;
       width: 100%;
-      height: 30/40rem;
+      height: 60/40rem;
       background: #f0eff5;
       .fold-icon{
         position: absolute;
-        padding: 0.5rem 1rem;
+        padding: 0 0.5rem;
+        line-height: 60/40rem;
         right: 0;
         bottom: 0;
         display: block;
         font-size: 0.65rem;
         color: #00b0f0;
+        background: #f0eff5;
       }
     }
     textarea{
