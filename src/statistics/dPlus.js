@@ -16,18 +16,23 @@ const isSupport = () => {
  * 初始化dplus配置
  */
 const init = () => {
-  if (isSupport()) {
-    window.dplus.init(D_PLUS_ID, {
-      //"disable_cookie": true,
-      //"cross_subdomain_cookie": true,
-      localstorage: true,
-      track_timeout: 1000, //回调响应时间
+  return Promise (
+    (resolve, reject) => {
+      if (isSupport()) {
+        window.dplus.init(D_PLUS_ID, {
+          //"disable_cookie": true,
+          //"cross_subdomain_cookie": true,
+          localstorage: true,
+          track_timeout: 1000, //回调响应时间
 
-      loaded: function(){
-        //todo EventBus.fireEvent(eventMap.DPLUS_READY)
+          loaded: function(){
+            resolve()
+            //EventBus.fireEvent(eventMap.DPLUS_READY)
+          }
+        })
       }
-    })
-  }
+    }
+  )
 }
 
 /**

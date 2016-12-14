@@ -4,12 +4,12 @@
 import dPlus from './dPlus'
 import ictData from './ictData'
 import {Device, platformMap} from '../plugin/device'
-
+import {} from '../vuex/principal/actions'
 /**
  * 统计事件
  * @type {{}}
  */
-const events = {
+export const events = {
   APP_START: '启动',
 
   /**
@@ -123,7 +123,7 @@ const events = {
 /**
  * 初始化配置
  */
-const initConfig = () => {
+export const initConfig = () => {
   var user = User.get()
   //设置平台
   dPlus.register({
@@ -145,7 +145,7 @@ const initConfig = () => {
 /**
  *  绑定监听的事件
  */
-const bindEvents = () => {
+export const bindEvents = () => {
   /**
    * 通用事件发生
    */
@@ -178,7 +178,7 @@ const bindEvents = () => {
  * @param user {obj/null}
  * @param type string {login/register/null}
  */
-const setUser = (userconfig, type) => {
+export const setUser = (userconfig, type) => {
   var me = this
   dplus.define('user', function (user) {
     user.setId(userconfig ? userconfig.userId : '00')
@@ -199,7 +199,7 @@ const setUser = (userconfig, type) => {
  * @param eventName 事件名称
  * @param props 属性值
  */
-const eventTrack = (eventName, props) =>{
+export const eventTrack = (eventName, props) =>{
   dPlus.track(eventName, props)
   ictData.track(eventName, props)
 }
@@ -208,7 +208,7 @@ const eventTrack = (eventName, props) =>{
  * 统计登陆事件
  * 统计登陆，并设计超级属性
  */
-const statLogin = (user) => {
+export const login = (user) => {
   dPlus.register({
     '长投Id': (user && user.userId) || '00'
   })
@@ -225,7 +225,7 @@ const statLogin = (user) => {
  * 统计注册事件
  * 统计注册，并设计超级属性
  */
-const statRegister = (user) => {
+export const register = (user) => {
   dPlus.register({
     '长投Id': (user && user.userId) || '00'
   })
@@ -242,7 +242,7 @@ const statRegister = (user) => {
  * 登出事件
  * 重置
  */
-const statLogout = () => {
+export const logout = () => {
   dPlus.track('退出账号')
   this.setUser()
   dPlus.register({
@@ -259,7 +259,7 @@ preView: null
 /**
  * 页面跳转
  */
-const viewChange = (view) => {
+export const viewChange = (view) => {
   //console.log('stat_view_change',view.config.stConfig,dPlus.isSupport())
   if(preView){
     var time = ((Date.now() - preView.startTime)/1000).toFixed(0)
@@ -292,7 +292,7 @@ const viewChange = (view) => {
  * 统计分享事件
  * @param props 事件属性
  */
-const share = (props) =>{
+export const share = (props) =>{
   //console.log('stat_share',this.events.WX_SHARE,props)
   dPlus.track(this.events.WX_SHARE,props)
 
@@ -303,7 +303,7 @@ const share = (props) =>{
  * 统计分享成功事件
  * @param props 事件属性
  */
-const shareSuccess = (props) => {
+export const shareSuccess = (props) => {
   //console.log('stat_share_success',this.events.WX_SHARE,props)
   dPlus.track(this.events.WX_SHARE_SUCCESS,props)
 
@@ -314,8 +314,9 @@ const shareSuccess = (props) => {
  * 统计分享取消事件
  * @param props 事件属性
  */
-const stat_share_cancel = (props) => {
+export const shareCancel = (props) => {
   dPlus.track(this.events.WX_SHARE_CANCEL,props)
 
   ictData.track(this.events.WX_SHARE_CANCEL,props)
 }
+
