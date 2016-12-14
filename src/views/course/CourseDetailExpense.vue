@@ -67,7 +67,7 @@
       </div>
 
       <div v-if="currStatus === 'N'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed" v-touch:tap="suspend">暂停课程</ict-button>
+        <ict-button class="left" v-if="!isSuspendUsed && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
