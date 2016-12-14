@@ -14,6 +14,7 @@ export const eventMap = {
   SHOW_TOAST: 'show_toast', // toast
   SHOW_MASK: 'show_mask', //浮层
   SUBJECT_GRADUATION: 'subject_graduation', // 课程毕业
-  STATISTICS_EVENT: 'statistics_event' // 数据统计
+  STATISTIC_EVENT: 'statistics_event', // 数据统计
+  VIEW_CHANGE: 'view_change' // 页面切换
 }
 
