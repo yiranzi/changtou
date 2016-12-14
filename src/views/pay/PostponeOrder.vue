@@ -22,6 +22,7 @@
   import {getPostponeOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+    import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -115,6 +116,7 @@
       },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
+        this.selectedPostponeIndex = postponeIndex
         this.price = this.postponeList[postponeIndex].price
         this.misc = this.postponeList[postponeIndex].misc
         // 有长投卡
@@ -131,8 +133,6 @@
           this.coupons = []
           this.selectedCoupon = null
         }
-
-        this.currPostponeIndex = postponeIndex
       },
       'codeConfirm' () {
         const me = this
@@ -163,6 +163,10 @@
         this.currentBalance = currentBalance
       },
       onConfirmTap () {
+       this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, {
+            '实付': this.sum,
+            '商品名称': this.postponeList[this.selectedPostponeIndex].name
+        })
         if (this.sum > 0) {
           this.sheetShow = true
         } else {

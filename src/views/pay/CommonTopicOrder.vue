@@ -20,6 +20,7 @@
   import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -146,6 +147,10 @@
         return coupons
       },
       onConfirmTap () {
+        this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, {
+            '实付': this.sum,
+            '商品名称': this.title
+        })
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
