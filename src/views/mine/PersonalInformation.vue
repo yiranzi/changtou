@@ -101,8 +101,9 @@ import IctTitlebar from '../../components/IctTitleBar.vue'
 import Cell from 'vux/cell'
 import Group from 'vux/group'
 import XButton from 'vux/x-button'
-import {userActions, courseRecordActions} from '../../vuex/actions'
+import {userActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
+import {eventMap} from '../../frame/eventConfig'
 
 //修改成一个（json）文件
 const userLevel = {
@@ -123,8 +124,8 @@ export default {
       userPhone: userGetters.phone
     },
     actions: {
-      logout: userActions.logout,
-      resetRecords: courseRecordActions.resetRecords
+      logout: userActions.logout
+//      resetRecords: courseRecordActions.resetRecords
     }
   },
   computed: {
@@ -153,7 +154,8 @@ export default {
         })
         function okHandler () {
           this.logout()
-          this.resetRecords()
+//          this.resetRecords()
+          this.$dispatch(eventMap.LOGOUT)
           window.history.back()
         }
     },

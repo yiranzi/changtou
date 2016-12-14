@@ -113,6 +113,9 @@ export const login = ({ dispatch }, identity, plainPassword) => {
 export const logout = ({ dispatch }) => {
   return Promise.resolve().then(function () {
     dispatch('USER_LOGOUT')
+    dispatch('MESSAGE_UPDATE_NEW_MSG_NUM', 0)
+    //console.log('user.newSuggestionReplyNum', user.newSuggestionReplyNum)
+    dispatch('HELP_UPDATE_NEW_SUGGESTION_NUM', 0)
   })
 }
 

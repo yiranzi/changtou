@@ -77,7 +77,7 @@ const mixin = {
      * 登录成功事件
      */
     [eventMap.LOGIN_SUCCESS]: function (user) {
-      console.info('LOGIN_SUCCESS', user)
+      //console.info('LOGIN_SUCCESS', user)
       this.doWhenUserValid(user)
     },
 
@@ -85,6 +85,7 @@ const mixin = {
      * 同步用户信息
      */
     [eventMap.SYNC_USER]: function () {
+      //console.info('SYNC_USER')
       this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
     },
 
@@ -92,7 +93,7 @@ const mixin = {
      * 注册成功事件
      */
     [eventMap.REGISTER_SUCCESS]: function (user) {
-      console.info('REGISTER_SUCCESS', user)
+      //console.info('REGISTER_SUCCESS', user)
       this.doWhenUserValid(user)
     },
 
@@ -100,7 +101,7 @@ const mixin = {
      * 退出账号事件
      */
     [eventMap.LOGOUT]: function (user) {
-      console.info('LOGOUT', user)
+      //console.info('LOGOUT', user)
       this.doWhenUserNotValid(user)
     },
 
