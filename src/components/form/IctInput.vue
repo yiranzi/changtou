@@ -2,7 +2,7 @@
   input控件
 -->
 <template>
-  <div style="margin-right: 12%; margin-left: 12%" class="ict-input-component">
+  <div v-bind:style="styleObject" class="ict-input-component">
     <div class="ict-input-container">
       <label class="title">{{title}}</label>
       <input :type="type"
@@ -12,6 +12,7 @@
              @focus="onFocus"
              v-el:input >
       <span class="eye" v-touch:tap="toggle" v-bind:class="{'hide': isHidePassword}" v-if="isShowToggle"></span>
+      <label v-if="rightTitle" class="right-title">{{rightTitle}}</label>
     </div>
 
     <hr class="line" v-bind:class="{'active': isFocus}"/>
@@ -41,6 +42,19 @@
         type: Boolean,
         default: false,
         twoWay: true
+      },
+      //标题位置
+      titlePosition: {
+        type: String,
+        default: 'center' // center | left
+      },
+      rightTitle: {
+        type: String,
+        default: ''
+      },
+      id: {
+        type: String,
+        default: 'ict-input'
       }
     },
 
@@ -48,8 +62,28 @@
       return {
         isHidePassword: true,
         isShowToggle: false,
-        isFocus: false
+        isFocus: false,
+        styleObject: {
+          marginRight: '12%',
+          marginLeft: '12%'
+        }
        }
+    },
+
+    computed: {
+      styleObject () {
+        if (this.titlePosition === 'center') {
+          return {
+            marginRight: '12%',
+            marginLeft: '12%'
+          }
+        } else if (this.titlePosition === 'left') {
+          return {
+            marginRight: '15px',
+            marginLeft: '15px'
+          }
+        }
+      }
     },
 
     watch: {
@@ -64,12 +98,12 @@
           this.isShowToggle = true
         }
         this.isFocus = true
-        this.$dispatch('ictInputFocus')
+        this.$dispatch('ictInputFocus', this.id)
       },
 
       onBlur () {
         this.isFocus = false
-        this.$dispatch('ictInputBlur')
+        this.$dispatch('ictInputBlur', this.id)
       },
 
       getFocusState () {
@@ -122,7 +156,7 @@
         outline-style: initial;
         outline-width: 0px;
         line-height: 0.75rem;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         color: inherit;
         background-color: transparent;
       }
@@ -139,6 +173,10 @@
         font-size: 1rem !important;
       }
 
+      .right-title {
+        font-size: 0.65rem;
+        color: #aaa;
+      }
       .hide::before {
         color: #bbb;
       }

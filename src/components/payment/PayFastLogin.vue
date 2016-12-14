@@ -8,12 +8,11 @@
       <group>
         <flexbox>
           <flexbox-item>
-            <x-input title="手机号"
+            <ict-input title="手机号"
+                     title-position="left"
                      placeholder="输入手机号"
-                     :show-clear="false"
-                     :readonly="isPhoneReadonly"
                      :value.sync="phone">
-            </x-input>
+            </ict-input>
           </flexbox-item>
           <ict-button type="mini"
                       :disabled="isValidationBtnDisable"
@@ -23,15 +22,13 @@
         </flexbox>
         <flexbox>
           <flexbox-item>
-            <x-input title="验证码"
-                     :show-clear="false"
+            <ict-input title="验证码"
+                     title-position="left"
                      placeholder="输入验证码"
+                     right-title="10分钟内有效"
                      :value.sync="validationCode">
-            </x-input>
+            </ict-input>
           </flexbox-item>
-          <div class="code-tip">
-            10分钟内有效
-          </div>
         </flexbox>
       </group>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
@@ -44,9 +41,11 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Group from 'vux/group'
   import XInput from 'vux/x-input'
+  import IctInput from '../form/IctInput.vue'
   import {userActions} from '../../vuex/actions'
   import {userGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
+
 export default {
   vuex: {
     getters: {
@@ -95,8 +94,19 @@ export default {
           }
         )
       }
+    },
+    /**
+     * 登录之后重置
+     */
+    isLogin: function (val) {
+      if (val) {
+        this.phone = ''
+        this.validationCode = ''
+//        window.clearInterval(this.timer)
+      }
     }
   },
+
   methods: {
     /**
      * 点击立即登录
@@ -153,7 +163,8 @@ export default {
     FlexboxItem,
     Group,
     XInput,
-    IctButton
+    IctButton,
+    IctInput
   }
 }
 </script>
