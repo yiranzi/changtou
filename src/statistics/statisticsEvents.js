@@ -1,10 +1,8 @@
 /**
  * Created by jun on 2016/12/13.
  */
-import dPlus from './dPlus'
 import ictData from './ictData'
-import {Device, platformMap} from '../plugin/device'
-import {} from '../vuex/principal/actions'
+
 /**
  * 统计事件
  * @type {{}}
@@ -121,202 +119,175 @@ export const events = {
 }
 
 /**
- * 初始化配置
- */
-export const initConfig = () => {
-  var user = User.get()
-  //设置平台
-  dPlus.register({
-    '平台': Device.platform()
-  })
-  dPlus.register({
-    '长投Id': (user && user.userId) || '00'
-  })
-
-  //设置长投统计数据
-  ictData.register({
-    'platform': Device.platform()
-  })
-  ictData.register({
-    'userId': (user && user.userId) || '00'
-  })
-}
-
-/**
  *  绑定监听的事件
- */
-export const bindEvents = () => {
-  /**
-   * 通用事件发生
-   */
+
+ export const bindEvents = () => {
+  //通用事件发生
   EventBus.on(eventMap.EVENT_TRACK, this.event_track, this)
 
-  /**
-   * 登陆事件
-   * 注册事件
-   * 设置用户的超级属性，并且上传一次登陆事件
-   */
+  ///**
+  // * 登陆事件
+  // * 注册事件
+  // * 设置用户的超级属性，并且上传一次登陆事件
+  //
   EventBus.on(eventMap.LOGIN_SUCCESS,this.stat_login,this)
   EventBus.on(eventMap.REGISTER_SUCCESS,this.stat_register,this)
   EventBus.on(eventMap.LOGOUT_SUCCESS,this.stat_logout,this)
 
-  /**
-   * 页面跳转
-   */
+  //页面跳转
   EventBus.on(eventMap.VIEW_CHANGE,this.stat_view_change,this)
 
-  /**
-   * 微信分享事件
-   */
+  //微信分享事件
   EventBus.on(eventMap.WX_SHARE,this.stat_share,this)
   EventBus.on(eventMap.WX_SHARE_SUCCESS,this.stat_share_success,this)
   EventBus.on(eventMap.WX_SHARE_CANCEL,this.stat_share_cancel,this)
 }
+ */
 
 /**
  * 设置用户
  * @param user {obj/null}
  * @param type string {login/register/null}
  */
-export const setUser = (userconfig, type) => {
-  var me = this
-  dplus.define('user', function (user) {
-    user.setId(userconfig ? userconfig.userId : '00')
-    user.setName(userconfig ? userconfig.userName: '游客')
-    user.setPhone(userconfig ? (userconfig.phone || '未知') : '未知')
-    user.setAccountType(userconfig ? (userconfig.accountType || '未知'): '未知')
-
-    if(type && type === me.user_type.LOGIN){
-      user.login()
-    }else if(type && type === me.user_type.REGISTER){
-      user.signUp()
-    }
-  })
-}
+//export const setUser = (userconfig, type) => {
+//  var me = this
+//  dplus.define('user', function (user) {
+//    user.setId(userconfig ? userconfig.userId : '00')
+//    user.setName(userconfig ? userconfig.userName: '游客')
+//    user.setPhone(userconfig ? (userconfig.phone || '未知') : '未知')
+//    user.setAccountType(userconfig ? (userconfig.accountType || '未知'): '未知')
+//
+//    if(type && type === me.user_type.LOGIN){
+//      user.login()
+//    }else if(type && type === me.user_type.REGISTER){
+//      user.signUp()
+//    }
+//  })
+//}
 
 /**
  * 统计事件
  * @param eventName 事件名称
  * @param props 属性值
  */
-export const eventTrack = (eventName, props) =>{
-  dPlus.track(eventName, props)
-  ictData.track(eventName, props)
-}
+//export const eventTrack = (eventName, props) =>{
+//  dPlus.track(eventName, props)
+//  ictData.track(eventName, props)
+//}
 
 /**
  * 统计登陆事件
  * 统计登陆，并设计超级属性
  */
-export const login = (user) => {
-  dPlus.register({
-    '长投Id': (user && user.userId) || '00'
-  })
-  this.setUser(user, this.user_type.LOGIN)
-
-  ictData.register({
-    userId: user.userId
-  })
-  ictData.updateUser(user)
-  ictData.track('登录')
-}
+//export const login = (user) => {
+//  dPlus.register({
+//    '长投Id': (user && user.userId) || '00'
+//  })
+//  this.setUser(user, this.user_type.LOGIN)
+//
+//  ictData.register({
+//    userId: user.userId
+//  })
+//  ictData.updateUser(user)
+//  ictData.track('登录')
+//}
 
 /**
  * 统计注册事件
  * 统计注册，并设计超级属性
  */
-export const register = (user) => {
-  dPlus.register({
-    '长投Id': (user && user.userId) || '00'
-  })
-  this.setUser(user, this.user_type.REGISTER)
-
-  ictData.register({
-    userId: user.userId
-  })
-  ictData.updateUser(user)
-  ictData.track('注册')
-}
+//export const register = (user) => {
+//  dPlus.register({
+//    '长投Id': (user && user.userId) || '00'
+//  })
+//  this.setUser(user, this.user_type.REGISTER)
+//
+//  ictData.register({
+//    userId: user.userId
+//  })
+//  ictData.updateUser(user)
+//  ictData.track('注册')
+//}
 
 /**
  * 登出事件
  * 重置
  */
-export const logout = () => {
-  dPlus.track('退出账号')
-  this.setUser()
-  dPlus.register({
-    '长投Id':  '00'
-  })
+//export const logout = () => {
+//  dPlus.track('退出账号')
+//  this.setUser()
+//  dPlus.register({
+//    '长投Id':  '00'
+//  })
+//
+//  ictData.register({
+//    userId: '00'
+//  })
+//}
 
-  ictData.register({
-    userId: '00'
-  })
-}
-
-preView: null
+//preView: null
 
 /**
  * 页面跳转
  */
-export const viewChange = (view) => {
-  //console.log('stat_view_change',view.config.stConfig,dPlus.isSupport())
-  if(preView){
-    var time = ((Date.now() - preView.startTime)/1000).toFixed(0)
-    dPlus.track(steventMap.PAGE_TIME,{'时长': time, '页面':preView.url})
-
-    ictData.track(steventMap.PAGE_TIME,{'时长': time, '页面':preView.url})
-  }
-
-  preView = {
-    startTime: Date.now(),
-    url: location.hash
-  }
-
-  dPlus.isSupport() && dplus.define('page', function (page) {
-    page.setType(view.config.stConfig && view.config.stConfig.type || '未知')
-    page.setTitle(view.config.stConfig && view.config.stConfig.title || '未知')
-    page.setTags(view.config.stConfig && view.config.stConfig.tags || ['未知'])
-    page.setCategory(view.config.stConfig && view.config.stConfig.categories || ['未知'])
-    page.setAuthor(view.config.stConfig && view.config.stConfig.author || 'dev')
-    page.setEditor(view.config.stConfig && view.config.stConfig.editor || 'dev')
-    page.view({
-      '访问页面': location.hash
-    })
-  })
-
-  ictData.track('页面访问',{ '页面':location.hash})
-}
+//export const viewChange = (view) => {
+//  //console.log('stat_view_change',view.config.stConfig,dPlus.isSupport())
+//  if(preView){
+//    var time = ((Date.now() - preView.startTime)/1000).toFixed(0)
+//    dPlus.track(steventMap.PAGE_TIME,{'时长': time, '页面':preView.url})
+//
+//    ictData.track(steventMap.PAGE_TIME,{'时长': time, '页面':preView.url})
+//  }
+//
+//  preView = {
+//    startTime: Date.now(),
+//    url: location.hash
+//  }
+//
+//  dPlus.isSupport() && dplus.define('page', function (page) {
+//    page.setType(view.config.stConfig && view.config.stConfig.type || '未知')
+//    page.setTitle(view.config.stConfig && view.config.stConfig.title || '未知')
+//    page.setTags(view.config.stConfig && view.config.stConfig.tags || ['未知'])
+//    page.setCategory(view.config.stConfig && view.config.stConfig.categories || ['未知'])
+//    page.setAuthor(view.config.stConfig && view.config.stConfig.author || 'dev')
+//    page.setEditor(view.config.stConfig && view.config.stConfig.editor || 'dev')
+//    page.view({
+//      '访问页面': location.hash
+//    })
+//  })
+//
+//  ictData.track('页面访问',{ '页面':location.hash})
+//}
 
 /**
  * 统计分享事件
  * @param props 事件属性
  */
-export const share = (props) =>{
-  //console.log('stat_share',this.events.WX_SHARE,props)
-  dPlus.track(this.events.WX_SHARE,props)
-
-  ictData.track(this.events.WX_SHARE,props)
-}
+//export const share = (props) =>{
+//  //console.log('stat_share',this.events.WX_SHARE,props)
+//  dPlus.track(this.events.WX_SHARE,props)
+//
+//  ictData.track(this.events.WX_SHARE,props)
+//}
 
 /**
  * 统计分享成功事件
  * @param props 事件属性
  */
-export const shareSuccess = (props) => {
-  //console.log('stat_share_success',this.events.WX_SHARE,props)
-  dPlus.track(this.events.WX_SHARE_SUCCESS,props)
-
-  ictData.track(this.events.WX_SHARE_SUCCESS,props)
-}
+//export const shareSuccess = (props) => {
+//  //console.log('stat_share_success',this.events.WX_SHARE,props)
+//  dPlus.track(this.events.WX_SHARE_SUCCESS,props)
+//
+//  ictData.track(this.events.WX_SHARE_SUCCESS,props)
+//}
 
 /**
  * 统计分享取消事件
  * @param props 事件属性
  */
-export const shareCancel = (props) => {
-  dPlus.track(this.events.WX_SHARE_CANCEL,props)
-
-  ictData.track(this.events.WX_SHARE_CANCEL,props)
-}
+//export const shareCancel = (props) => {
+//  dPlus.track(this.events.WX_SHARE_CANCEL,props)
+//
+//  ictData.track(this.events.WX_SHARE_CANCEL,props)
+//}
 

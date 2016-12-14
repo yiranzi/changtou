@@ -13,6 +13,7 @@ export const eventMap = {
   SHOW_ALERT: 'show_alert', //提示框
   SHOW_TOAST: 'show_toast', // toast
   SHOW_MASK: 'show_mask', //浮层
-  SUBJECT_GRADUATION: 'subject_graduation' // 课程毕业
+  SUBJECT_GRADUATION: 'subject_graduation', // 课程毕业
+  STATISTICS_EVENT: 'statistics_event' // 数据统计
 }
 

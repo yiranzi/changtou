@@ -11,14 +11,15 @@ import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
-import {choiceActions} from './vuex/actions'
-//import {platformMap, Device} from './plugin/device'
+import {getKnowledgePointMap} from './vuex/homework/choice/actions'
+//import {Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
+import ictData from './statistics/ictData'
 
 const mixin = {
   vuex: {
     actions: {
-      getKnowledgePointMap: choiceActions.getKnowledgePointMap,
+      getKnowledgePointMap,
       loadAllFreeRecords,
       loadAllExpenseRecords,
       resetRecords,
@@ -31,7 +32,8 @@ const mixin = {
     },
     getters: {
       isLogin,
-      userId
+      userId,
+      newShowDiploma
     }
   },
 
@@ -51,7 +53,6 @@ const mixin = {
      */
     [eventMap.APP_START]: function () {
       console.info('APP_START')
-
       // 设置推送配置
       this.jpushInit()
       // 默认用户 设置成'00'
@@ -60,7 +61,7 @@ const mixin = {
       this.jpushAddReceiveHandler(this.onReceiveNotification)
 
       // 同步用户信息
-      this.syncUser().then(this.doWhenUserValid)
+      this.syncUser().then(this.afterSyncUser)
         .then(this.hideSplashscreen)
         .catch(this.hideSplashscreen)
 
@@ -84,8 +85,9 @@ const mixin = {
     /**
      * 同步用户信息
      */
-    [eventMap.SYNC_USER]: function () {
-      this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
+    [eventMap.SYNC_USER]: function (user) {
+      console.info('SYNC_USER', user)
+      this.doWhenUserValid(user)
     },
 
     /**
@@ -104,6 +106,9 @@ const mixin = {
       this.doWhenUserNotValid(user)
     },
 
+    /**
+     * 毕业提示
+     */
     [eventMap.SUBJECT_GRADUATION]: function ({subjectId}) {
       this.showMask({
         component: 'graduationDiploma/Congratulation.vue',
@@ -113,6 +118,12 @@ const mixin = {
           this.$route.router.go(`/graduation/subject/diploma/${subjectId}`)
         }
       })
+    },
+    /**
+     * 数据统计事件
+     */
+    [eventMap.STATISTICS_EVENT]: function ({subjectId}) {
+      ictData.track()
     },
 
     /**
@@ -125,6 +136,12 @@ const mixin = {
   },
 
   methods: {
+    /**
+     * 用户同步信息后
+     */
+    afterSyncUser: function (user) {
+      this.$dispatch(eventMap.SYNC_USER, user)
+    },
     /**
      * 用户信息合法并且成功进入系统
      * @param user
@@ -173,9 +190,8 @@ const mixin = {
      * 下载了用户的毕业证列表
      */
     onGraduationDiplomaLoaded: function () {
-      const diploma = newShowDiploma()
-      if (diploma) {
-        this.$dispatch(eventMap.SUBJECT_GRADUATION, diploma)
+      if (this.newShowDiploma) {
+        this.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
       }
     }
   }

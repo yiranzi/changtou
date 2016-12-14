@@ -5,14 +5,14 @@ import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
 import {appRouter} from './util/appRouter'
 import {eventMap} from './frame/eventConfig'
-import {initDplus} from './statistics/dPlus'
+import ictData from './statistics/ictData'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
 Vue.use(VueResource)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
-initDplus()
+ictData.init()
 // start run app
 //if ((Device.platform === platformMap.WEB)) {
   // on develop environment
