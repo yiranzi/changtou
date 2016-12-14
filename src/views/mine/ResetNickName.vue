@@ -4,18 +4,16 @@
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
+    <ict-input
+      :value.sync="nickName"
+      placeholder="输入昵称"
+      title="昵称">
+    </ict-input>
     <flexbox>
       <flexbox-item :span="1/20"></flexbox-item>
       <flexbox-item>
-        <group>
-          <div style="height: 1rem"></div>
-          <x-input title="昵称"
-                   placeholder="输入昵称"
-                   :value.sync="nickName">
-          </x-input>
-        </group>
         <div class="detail">
-          1.支持6~12位数字、汉字、英文字母混编及纯汉字/纯英文组合；
+          1.支持4~12位数字、汉字(2~6位)、英文字母混编及纯汉字/纯英文组合；
           2.此昵称非会员名，仅做会员名片展示；
         </div>
         <div style="height: 3rem" class="spacer"></div>
@@ -39,9 +37,10 @@ color: #888;
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import IctButton from '../../components/IctButton.vue'
+import IctInput from '../../components/form/IctInput.vue'
 import {Flexbox, FlexboxItem} from 'vux/flexbox'
 import Group from 'vux/group'
-import XInput from 'vux/x-input'
+//import XInput from 'vux/x-input'
 import {userActions} from '../../vuex/actions'
 export default {
   vuex: {
@@ -60,6 +59,13 @@ export default {
       return !(/\S/.test(this.nickName))
     }
   },
+
+  watch: {
+    nickName: function () {
+      this.errTip = ''
+    }
+  },
+
   route: {
       deactivate ({to, next}) {
           this.nickName = ''
@@ -86,7 +92,8 @@ export default {
     Flexbox,
     FlexboxItem,
     Group,
-    XInput,
+//    XInput,
+    IctInput,
     IctButton
   }
 }

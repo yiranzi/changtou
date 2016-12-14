@@ -59,7 +59,7 @@ const isForbidWord = (nickName, fbidWords = forbidWords) => {
  */
 const isLengthValid = (nickName) => {
   // const reg = /^[\w\u4e00-\u9fa5]{4,12}$/
-  if (!nickName || nickName.length > 12 || nickName.length < 4) { // false
+  if (!nickName || nickName.length > 12 || nickName.length < 2) { // false
     return false
   } else {
     return true
