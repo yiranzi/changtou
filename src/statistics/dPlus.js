@@ -15,37 +15,18 @@ const isSupport = () => {
 /**
  * 初始化dplus配置
  */
-const init = () => {
-  return Promise (
-    (resolve, reject) => {
-      if (isSupport()) {
-        window.dplus.init(D_PLUS_ID, {
-          //"disable_cookie": true,
-          //"cross_subdomain_cookie": true,
-          localstorage: true,
-          track_timeout: 1000, //回调响应时间
+const initDplus = () => {
+  if (isSupport()) {
+    window.dplus.init(D_PLUS_ID, {
+      //"disable_cookie": true,
+      //"cross_subdomain_cookie": true,
+      localstorage: true,
+      track_timeout: 1000, //回调响应时间
 
-          loaded: function(){
-            resolve()
-            //EventBus.fireEvent(eventMap.DPLUS_READY)
-          }
-        })
+      loaded: function(){
+        console.log('initDplus loaded')
       }
-    }
-  )
-}
-
-/**
- *  停止制定事件的统计
- *  @params events []  事件的数组
- *  若是没有参数  表示停止所有的事件统计
- *
- */
-const disable = (events) => {
-  if(events){
-    window.dplus.disable(events)
-  }else{
-    window.dplus.disable()
+    })
   }
 }
 
@@ -55,7 +36,7 @@ const disable = (events) => {
  * @param properties object 事件属性
  * @param callback
  */
-const track = (eventName, properties, callback) => {
+const track = ({eventName, properties}, callback = () => {}) => {
   if (isSupport()) {
     window.dplus.track(eventName, properties || {}, function(){
       if (callback) {
@@ -81,6 +62,20 @@ const register = (properties) => {
 
   if (window.window.ictData) {
     window.ictData.register(properties)
+  }
+}
+
+/**
+ *  停止制定事件的统计
+ *  @params events []  事件的数组
+ *  若是没有参数  表示停止所有的事件统计
+ *
+ */
+const disable = (events) => {
+  if(events){
+    window.dplus.disable(events)
+  }else{
+    window.dplus.disable()
   }
 }
 
@@ -144,14 +139,8 @@ const getConfig = (config) => {
   }
 }
 
-export const dPlus = {
-  init,
-  disable,
+export default {
+  initDplus,
   track,
-  register,
-  unregister,
-  getProperty,
-  clear,
-  setConfig,
-  getConfig
+  register
 }

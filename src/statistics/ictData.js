@@ -3,6 +3,7 @@
  */
 
 import 'whatwg-fetch'
+import dplus from './dPlus'
 const cacheItem = 'sessionProps'
 
 let server = 'http://121.40.131.112:3000'
@@ -27,6 +28,9 @@ const track = function (eventProps) {
   }
 
   var trackData = Object.assign({}, {userId: '00'}, sessionProps, eventProps)
+
+  //
+  //dplus.track(trackData)
 
   window.fetch(server + '/event', {
     method: 'POST',
