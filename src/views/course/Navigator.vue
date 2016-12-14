@@ -237,6 +237,7 @@
           width: 6.8rem;
           height: 8.5rem;
           margin-right: .5rem;
+          margin-left: .1rem;
           img {
             width: 6.8rem;
             height: 8.5rem;
