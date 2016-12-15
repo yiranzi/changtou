@@ -9,7 +9,7 @@
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
       <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
+      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()"></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
@@ -184,7 +184,23 @@ export default {
       textarea.blur()
       setTimeout(
         this.resizeTextarea,
-        50
+        100
+      )
+    },
+
+    onTextFocus () {
+      this.$els.draftbar.setAttribute('style', 'position: relative')
+      setTimeout(
+        this.resizeTextarea,
+        100
+      )
+    },
+
+    onTextBlur () {
+      this.$els.draftbar.setAttribute('style', 'position: absolute')
+      setTimeout(
+        this.resizeTextarea,
+        100
       )
     }
   },
@@ -197,7 +213,9 @@ export default {
 </script>
 <style lang="less">
   .essay-answer{
+    width: 100%;
     height: 100%;
+    position: relative;
     p{
       margin: 0;
     }
@@ -249,7 +267,9 @@ export default {
     }
 
     .draft-box{
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       height: 2.2rem;
       line-height: 2.2rem;
       padding: 0;
