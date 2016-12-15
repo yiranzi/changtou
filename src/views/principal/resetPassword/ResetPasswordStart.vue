@@ -17,7 +17,7 @@
         <ict-button type="default"
                   :disabled="isDisabled"
                   v-touch:tap="sendPhone"
-                  text="提交">
+                  text="下一步">
         </ict-button>
       </div>
 
