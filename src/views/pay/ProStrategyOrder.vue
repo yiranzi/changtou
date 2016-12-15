@@ -41,6 +41,7 @@
         price: 0, // 价格
         periods: [],  // 服务期限列表
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
         itemId: 1, // 交易 id
@@ -52,7 +53,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -124,6 +125,7 @@
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
         this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
         this.itemId = 1 // 交易 id
@@ -140,6 +142,7 @@
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {

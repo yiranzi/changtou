@@ -44,6 +44,7 @@
         coupons: [],  // 优惠列表
         selectedPostponeIndex: 0, //选择的延期类型的index
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         misc: '', // 延期的时间
         sheetShow: false, // 显示支付sheet
@@ -53,7 +54,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -103,6 +104,7 @@
         this.coupons = [] // 优惠列表
         this.selectedPostponeIndex = 0//选择的延期类型的index
         this.selectedCoupon = null// 选择的优惠
+        this.selectedCouponIndex = 0
         this.currentBalance = 0 // 投币余额
         this.misc = ''// 延期的时间
         this.sheetShow = false // 显示支付sheet
@@ -112,6 +114,7 @@
     events: {
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[couponsIndex]
       },
       'payChannelChange' (channel) {
