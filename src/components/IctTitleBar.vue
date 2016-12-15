@@ -68,6 +68,7 @@ titlebar
        * 左侧按钮的回调
        */
       leftTapCallback () {
+        this.$emit('back')
         if (this.leftOptions && this.leftOptions.callback) {
           this.leftOptions.callback()
         } else {

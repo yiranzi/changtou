@@ -47,6 +47,7 @@
   import {userActions} from '../../vuex/actions'
   import {userGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
   vuex: {
     getters: {
@@ -102,6 +103,7 @@ export default {
      * 点击立即登录
      */
     onLoginTap () {
+      this.$dispatch(statisticsMap.LOGIN_NOW, {})
       this.$emit('login-tap')
     },
 

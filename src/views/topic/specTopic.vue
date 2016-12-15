@@ -10,7 +10,7 @@
 
           <div v-for="course in specTopicInfo.coursePackage">
             <div class="recommend">
-              <div class="recommend-subject" v-touch:tap="onSubjectTap(course)">
+              <div class="recommend-subject" v-touch:tap="onSubjectTap(course, $index)">
                 <img v-bind:src="course.pic">
                 <div class="item-info">
                   <span class="item-count">{{course.purchaseCount}}人学过</span>
@@ -41,7 +41,7 @@
       <div class="bottom-area" v-el:bottom-btn >
         <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
-          <span class="disPrice">￥{{ priceObj.disPriceSum}}</span>
+          <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
         </ict-button>
         <div class="buttom-tip" v-show="isBuySubject">已购买过专题中任意一课，不再享受打包购买优惠价</div>
@@ -220,6 +220,8 @@
   import IctButton from '../../components/IctButton.vue'
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
   import {specTopicGetters, myCoursesGetters, userGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -241,6 +243,7 @@
         transition.next()
       },
       data ({to: {params: {stpId}}}) {
+        setLocalCache('statistics-entry-page', {entryPage: '专题'})
         this.stpId = stpId
 
         let taskArr = []
@@ -319,6 +322,10 @@
         return ret
       },
       toBuy () {
+        this.$dispatch(statisticsMap.TOPIC_CONFIRM_TAP, {
+          '商品名称': this.specTopicInfo.name,
+          '价格': this.priceObj.origPriceSum
+        })
         //跳转到订单页面
         const path = '/pay-ST-' + this.$route.params.stpId
         this.$route.router.on(path, {
@@ -329,7 +336,12 @@
       /**
        * 点击课程
        */
-      onSubjectTap (subject) {
+      onSubjectTap (subject, index) {
+        this.$dispatch(statisticsMap.TOPIC_CONFIRM_TAP, {
+          'type': subject.type,
+          'subjectid': subject.subjectId,
+          'index': index
+        })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       }
     },

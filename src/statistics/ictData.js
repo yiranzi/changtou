@@ -46,7 +46,7 @@ const track = function (eventName, properties = {}) {
     console.warn('发送到统计数据', properties, '不是一个合法的对象, 忽略')
     return
   }
-  console.log('track')
+
   //dplus
   if (isDplusSupport()) {
     window.dplus.track(eventName, properties, () => {})

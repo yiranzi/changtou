@@ -42,6 +42,7 @@
   import Rater from 'vux/rater'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import { choiceGetters, userGetters } from '../../vuex/getters'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
   vuex: {
     getters: {
@@ -110,6 +111,9 @@
      * 重测
      */
     reTest () {
+      this.$dispatch(statisticsMap.CHOICE_QUESTION_RETEST, {
+        lessonid: this.lessonId
+      })
       this.$route.router.replace('/homework/choice/answer/lessonId')
     },
     /**

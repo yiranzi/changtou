@@ -1,12 +1,13 @@
 <template>
   <div class="principal-base bind-phone">
-    <ict-titlebar>{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
+    <ict-titlebar @back="onTitlebarBack">{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
 
     <ict-input title="手机号"
              placeholder="请输入新手机号"
+             id="bind-phone-phone"
              :value.sync="phone">
     </ict-input>
 
@@ -28,6 +29,7 @@
   import IctInput from '../../../components/form/IctInput.vue'
   import {userGetters} from '../../../vuex/getters'
   import {userActions} from '../../../vuex/actions'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -53,11 +55,19 @@
         this.errTip = ''
       }
     },
+    events: {
+      'ictInputFocus' (id) {
+        if (id === 'bind-phone-phone') {
+          this.$dispatch(statisticsMap.BIND_PHONE_INPUT_PHONE, {})
+        }
+      }
+    },
     methods: {
       /**
        * 点击下一步
        */
       sendPhone () {
+        this.$dispatch(statisticsMap.BIND_PHONE_TAP_NEXT, {})
         this.bindPhone(this.phone).then(
           () => this.$route.router.go('/bind/phone/end/' + this.phone)
         ).catch(
@@ -66,6 +76,10 @@
            this.errTip = err.message
           }
         )
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(statisticsMap.BIND_PHONE_PHONE_BACK, {})
       }
     },
     components: {

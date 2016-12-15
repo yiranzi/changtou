@@ -26,6 +26,7 @@
   import IctButton from '../../components/IctButton.vue'
   import { choiceGetters, userGetters } from '../../vuex/getters'
   import { choiceActions } from '../../vuex/actions'
+  import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
   vuex: {
     getters: {
@@ -167,13 +168,19 @@ export default {
       this.optionTaped = true
       this.selectedOptionIndex = index
       this.isBtnDisabled = false
-
+      let result = '错误'
       if (this.currQuestion.answer === index) {
+        result = '正确'
         this.updateAnswer(true)
       } else {
         this.updateAnswer(false)
         this.explain = this.currQuestion.explain
       }
+      this.$dispatch(statisticsMap.CHOICE_QUESTION, {
+        lessonid: this.lessonId,
+        '题号': this.currIndex + 1,
+        '用户选择': result
+      })
     },
     /**
      * 点击 下一题

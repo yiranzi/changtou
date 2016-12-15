@@ -1,6 +1,6 @@
 <template>
   <div class="principal-base bind-phone-end">
-    <ict-titlebar>绑定手机号</ict-titlebar>
+    <ict-titlebar @back="onTitlebarBack">{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
@@ -15,6 +15,7 @@
 
     <div class="validation-box">
       <ict-input title="验证码"
+               id="bind-phone-end-code"
                placeholder="输入验证码"
                :value.sync="validationCode">
       </ict-input>
@@ -43,6 +44,7 @@
   import IctButton from '../../../components/IctButton.vue'
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -75,6 +77,13 @@
         const me = this
         me.phone = phone
         me.countdown()
+      }
+    },
+    events: {
+      'ictInputFocus' (id) {
+        if (id === 'bind-phone-end-code') {
+          this.$dispatch(statisticsMap.BIND_PHONE_INPUT_VALIDATION_CODE, {})
+        }
       }
     },
     methods: {
@@ -114,12 +123,17 @@
        * 点击提交
        */
       sendIdentity () {
+        this.$dispatch(statisticsMap.BIND_PHONE_TAP_SUBMIT, {})
         const me = this
         me.bindPhoneEnd(me.phone, me.validationCode).then(
           () => window.history.go(-3)
         ).catch(
           err => { me.errTip = err.message }
         )
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(statisticsMap.BIND_PHONE_VALIDATION_CODE_BACK, {})
       }
     },
     components: {

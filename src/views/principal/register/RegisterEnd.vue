@@ -1,6 +1,6 @@
 <template>
   <div class="principal-base register-end">
-    <ict-titlebar>注册</ict-titlebar>
+    <ict-titlebar  @back="onTitlebarBack">注册</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
@@ -15,6 +15,7 @@
              type="password"
              placeholder="输入密码"
              v-if=false
+             id="register-end-plainPassword"
              :value.sync="plainPassword">
     </ict-input>
 
@@ -49,6 +50,7 @@
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
 
   export default {
     vuex: {
@@ -102,10 +104,18 @@
         }, 1000)
       }
     },
+
     watch: {
       validationCode () {
         this.errTip = ''
         this.verifyCode()
+      }
+    },
+    events: {
+      'ictInputFocus' (id) {
+        if (id === 'register-end-plainPassword') {
+          this.$dispatch(statisticsMap.REGISTER_INPUT_VALIDATION_CODE, {})
+        }
       }
     },
     methods: {
@@ -159,6 +169,7 @@
        * 点击提交
        */
       doRegister () {
+        this.$dispatch(statisticsMap.REGISTER_TAP_SUBMIT, {})
         const me = this
         this.isDisabled = true
         if (this.verifyCode()) {
@@ -178,6 +189,10 @@
           me.errTip = '请输入正确的验证码'
           me.isDisabled = false
         }
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(statisticsMap.REGISTER_VALIDATION_CODE_BACK, {})
       }
     }
   }

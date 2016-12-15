@@ -62,8 +62,8 @@ const mixin = {
     /**
      * 页面切换事件
      */
-    [eventMap.VIEW_CHANGE]: function (eventName, viewPath) {
-      this.viewChange(eventName, viewPath)
+    [eventMap.VIEW_CHANGE]: function (viewPath) {
+      this.viewChange(viewPath)
     },
 
     /**

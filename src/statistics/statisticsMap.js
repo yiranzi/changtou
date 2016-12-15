@@ -13,9 +13,9 @@ export const statisticsMap = {
   /**
    *
    */
-  WX_SHARE: '微信内分享',
-  WX_SHARE_SUCCESS: '微信内分享成功',
-  WX_SHARE_CANCEL: '微信内分享取消',
+  //WX_SHARE: '微信内分享',
+  //WX_SHARE_SUCCESS: '微信内分享成功',
+  //WX_SHARE_CANCEL: '微信内分享取消',
 
   /**
    * 课程
@@ -91,15 +91,15 @@ export const statisticsMap = {
   BIND_PHONE_PHONE_BACK: '绑定手机-手机号页面-返回',
   BIND_PHONE_VALIDATION_CODE_BACK: '绑定手机-验证码页面-返回',
 
-  LOGIN_BIND_PHONE_TAP_CANCEL: '登录-绑定手机-点击-取消',
-  LOGIN_BIND_PHONE_TAP_BIND: '登录-绑定手机-点击-绑定',
+  //LOGIN_BIND_PHONE_TAP_CANCEL: '登录-绑定手机-点击-取消',
+  //LOGIN_BIND_PHONE_TAP_BIND: '登录-绑定手机-点击-绑定',
 
-  KNOWLEDGE_ENTRY: '知识地图-点击进入',
-  KNOWLEDGE_ARTICLE: '知识地图-3级知识点浮层',
+  //KNOWLEDGE_ENTRY: '知识地图-点击进入',
+  //KNOWLEDGE_ARTICLE: '知识地图-3级知识点浮层',
 
-  NEWER_TEST_SUBJECT_TAP: '理财揭秘-点击课程',
+  NEWER_TEST_SUBJECT_TAP: '理财揭秘-点击课程'
 
-  ADVER_MY_COURSE_NO_LOGIN_KNOWLEDGE: '我的课程-未登录-点击广告A',
-  ADVER_MY_COURSE_LOGIN_KNOWLEDGE: '我的课程-已登录-点击广告B',
-  ADVER_MY_COURSE_LOGIN_KNOWLEDGE_CLOSE: '我的课程-已登录-删除广告'
+  //ADVER_MY_COURSE_NO_LOGIN_KNOWLEDGE: '我的课程-未登录-点击广告A',
+  //ADVER_MY_COURSE_LOGIN_KNOWLEDGE: '我的课程-已登录-点击广告B',
+  //ADVER_MY_COURSE_LOGIN_KNOWLEDGE_CLOSE: '我的课程-已登录-删除广告'
 }

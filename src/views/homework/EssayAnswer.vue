@@ -22,6 +22,7 @@
   import xTextarea from 'vux/x-textarea'
   import { essayGetters } from '../../vuex/getters'
   import { essayActions } from '../../vuex/actions'
+  import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
   vuex: {
     getters: {
@@ -121,6 +122,7 @@ export default {
      * 提交作业
      */
     submitEssay () {
+      this.$dispatch(statisticsMap.SUBMIT_HOMEWORK, {})
       this.isAnswerChange = false
       this.rightOptions.disabled = true
       const essayContent = {
@@ -150,6 +152,7 @@ export default {
       if (!this.canDraft) {
         return
       }
+      this.$dispatch(statisticsMap.SAVE_DRAFT, {})
       this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,

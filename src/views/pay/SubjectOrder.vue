@@ -17,7 +17,8 @@
   import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
-    import {statisticsMap} from '../../statistics/statisticsMap'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
       getters: {
@@ -34,7 +35,8 @@
         coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
         currentBalance: 0,  // 投币余额
-        sheetShow: false // 显示支付sheet
+        sheetShow: false, // 显示支付sheet
+        statisticData: null //统计数据
       }
     },
     computed: {
@@ -97,6 +99,7 @@
         this.selectedCoupon = null // 选择的优惠
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
+        this.statisticData = null //统计数据
       }
 
     },
@@ -177,10 +180,11 @@
        * 点击确认订单
        */
       onConfirmBuy () {
-        this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, {
-            '实付': this.sum,
-            '商品名称': this.courseList[0].title
-        })
+        this.statisticData = {
+          '实付': this.sum,
+          '商品名称': this.courseList[0].title
+        }
+        this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
@@ -200,6 +204,11 @@
        * @param channel
        */
       payByChannel (channel) {
+        Object.assign(this.statisticData, {
+          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
+        })
+        this.$dispatch(statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
           sum: this.sum,
@@ -240,10 +249,16 @@
        * 跳转到 支付成功
        */
       goToPaySuccess () {
+        this.$dispatch(statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/S/${this.subjectId}`)
       },
       onPayFail (err) {
+        Object.assign(this.statisticData, {
+          '原因': err.reason
+        })
+        this.$dispatch(statisticsMap.PAY_CANCEL, this.statisticData)
         if (err.type === errorType.FAIL) {
+          this.$dispatch(statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
       }

@@ -1,12 +1,13 @@
 <template>
   <div class="principal-base register-start">
-    <ict-titlebar>注册</ict-titlebar>
+    <ict-titlebar @back="onTitlebarBack">注册</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
 
     <ict-input title="账号"
              placeholder="输入手机号"
+             :id="register-start-phone"
              :value.sync="phone">
     </ict-input>
 
@@ -15,6 +16,7 @@
     <ict-input title="密码"
              type="password"
              placeholder="输入密码"
+             :id="register-start-plainPassword"
              :value.sync="plainPassword">
     </ict-input>
 
@@ -36,6 +38,7 @@
   import IctButton from '../../../components/IctButton.vue'
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
 
   export default {
     vuex: {
@@ -69,6 +72,16 @@
         this.plainPassword = ''
       }
     },
+    events: {
+      'ictInputFocus' (id) {
+        console.log(id)
+        if (id === 'register-start-phone') {
+          this.$dispatch(statisticsMap.REGISTER_INPUT_IDENTITY, {})
+        } else if (id === 'register-start-plainPassword') {
+          this.$dispatch(statisticsMap.REGISTER_INPUT_PASSWORD, {})
+        }
+      }
+    },
     methods: {
       /**
        * 验证手机号和密码是否合法
@@ -87,6 +100,7 @@
        */
       doRegister () {
         if (this.verifyPhoneAndPassword()) {
+          this.$dispatch(statisticsMap.REGISTER_TAP_REGISTER, {})
           const me = this
           this.buttonDisable = true
           this.registerStart(this.phone, this.plainPassword).then(
@@ -106,6 +120,10 @@
        */
       showAgreement () {
         this.$route.router.go('/user/agreement')
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(statisticsMap.REGISTER_IDENTITY_BACK, {})
       }
     },
     components: {
