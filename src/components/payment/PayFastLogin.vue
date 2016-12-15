@@ -127,6 +127,10 @@ export default {
      * 点击 获取验证码
      */
     getValidationCode () {
+      if (this.isValidationBtnDisable) {
+        return
+      }
+
       const me = this
       if (this.phone && /^1[3|4|5|7|8]\d{9}$/.test(this.phone)) {
         me.isValidationBtnDisable = true

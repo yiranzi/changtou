@@ -165,6 +165,9 @@
        * 点击 获取验证码
        */
       getValidationCode () {
+        if (me.isValidationBtnDisable) {
+          return
+        }
         const me = this
         me.isValidationBtnDisable = true
         me.registerStart(this.phone, this.plainPassword).then(

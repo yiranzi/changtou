@@ -95,6 +95,10 @@ export default {
      * 点击 获取验证码
      */
     getValidationCode () {
+      if (this.isValidationBtnDisable) {
+        return
+      }
+
       var me = this
       this.resetPasswordStart(this.phone).then(
         res => me.countdown()

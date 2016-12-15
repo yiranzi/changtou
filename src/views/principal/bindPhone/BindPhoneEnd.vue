@@ -122,6 +122,9 @@
        * 点击获取验证码
        */
       getValidationCode () {
+        if (this.isValidationBtnDisable) {
+          return
+        }
         const me = this
         me.bindPhone(me.phone).then(
           () => me.countdown()
