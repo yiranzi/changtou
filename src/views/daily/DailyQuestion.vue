@@ -79,7 +79,7 @@
       .desc{
         display: inline-block;
         vertical-align: top;
-        padding: 0.5rem;
+        padding-top: 1rem;
         height: 2rem;
         line-height: 1rem;
         color: #666;
