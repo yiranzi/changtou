@@ -169,6 +169,8 @@
             me.loadRecords().then(
               function () {
                 me.userQuestion = ''
+                // 发送之后,键盘收起, 重置页面
+                setTimeout(me.refreshScroller, 300)
               },
               function () {
                 me.showAlert('加载信息失败，请重试！')

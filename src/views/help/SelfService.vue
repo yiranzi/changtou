@@ -158,6 +158,7 @@
         )
       }
     },
+
     methods: {
       lookAnswer (index) {
         const me = this
@@ -174,12 +175,14 @@
           this.currQuestionIndex = -1
         }
       },
+
       /**
        * 调整到你问我答
        */
       goToManualService () {
         this.$route.router.go('/manual/service')
       },
+
       refreshScroller () {
         const me = this
         this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
