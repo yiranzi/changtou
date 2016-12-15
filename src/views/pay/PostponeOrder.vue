@@ -12,7 +12,7 @@
               :btn-options="btnOptions"
               :tip="tip"
               :sheet-show="sheetShow">
-      <pay-postpone :postpone-list="postponeList"></pay-postpone>
+      <pay-postpone :postpone-list="postponeList" :value.sync="postponeValue"></pay-postpone>
     </pay-base>
   </div>
 </template>
@@ -39,7 +39,7 @@
           callback: this.goToPostponeExplain.bind(this),
           disabled: false
         },
-        price: 0, // 价格
+        postponeValue: '0',
         postponeList: [], //延期列表
         coupons: [],  // 优惠列表
         selectedPostponeIndex: 0, //选择的延期类型的index
@@ -107,11 +107,7 @@
       },
       // 选择的优惠信息
       selectedCoupon () {
-        if (parseInt(this.selectedPostponeIndex) && this.card) {
-          return this.coupons[0]
-        } else {
-          return null
-        }
+        return parseInt(this.selectedPostponeIndex) && this.card ? this.coupons[0] : null
       }
     },
     route: {
@@ -128,14 +124,14 @@
         )
       },
       deactivate () {
-        this.price = 0// 价格
-        this.postponeList = []//延期列表
+        this.postponeValue = '0'
+        this.postponeList = [] //延期列表
         this.coupons = [] // 优惠列表
-        this.selectedPostponeIndex = 0//选择的延期类型的index
-        this.selectedCoupon = null// 选择的优惠
+        this.selectedPostponeIndex = 0 //选择的延期类型的index
+        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0 // 投币余额
-        this.misc = ''// 延期的时间
+        this.misc = '' // 延期的时间
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
       }
