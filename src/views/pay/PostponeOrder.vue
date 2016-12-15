@@ -83,6 +83,35 @@
             callback: this.onConfirmTap
           }
         }
+      },
+      // 价格
+      price () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].price : 0
+      },
+      //
+      misc () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].misc : 0
+      },
+      // 优惠信息
+      coupons () {
+        if (parseInt(this.selectedPostponeIndex) && this.card) {
+          return [{
+            couponNo: 1,
+            name: '长投卡(7折)',
+            userBene: Math.ceil(this.postponeList[this.selectedPostponeIndex].price * 0.3),
+            holderBene: 0
+          }]
+        } else {
+          return []
+        }
+      },
+      // 选择的优惠信息
+      selectedCoupon () {
+        if (parseInt(this.selectedPostponeIndex) && this.card) {
+          return this.coupons[0]
+        } else {
+          return null
+        }
       }
     },
     route: {
@@ -127,22 +156,6 @@
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
         this.selectedPostponeIndex = postponeIndex
-        this.price = this.postponeList[postponeIndex].price
-        this.misc = this.postponeList[postponeIndex].misc
-        // 有长投卡
-
-        if (parseInt(postponeIndex) && this.card) {
-          this.coupons = [{
-            couponNo: 1,
-            name: '长投卡(7折)',
-            userBene: Math.ceil(this.postponeList[1].price * 0.3),
-            holderBene: 0
-          }]
-          this.selectedCoupon = this.coupons[0]
-        } else {
-          this.coupons = []
-          this.selectedCoupon = null
-        }
       },
       'codeConfirm' () {
         const me = this
