@@ -35,6 +35,7 @@
         price: 0, // 价格
         coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
         statisticData: null //统计数据
@@ -43,7 +44,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-coupon.userBene
       total () {
@@ -98,6 +99,7 @@
         this.price = 0 // 价格
         this.coupons = []  // 优惠列表
         this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
@@ -107,10 +109,14 @@
     events: {
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
+      },
+      'payChannelClose' () {
         this.sheetShow = false
       },
       'codeConfirm' () {

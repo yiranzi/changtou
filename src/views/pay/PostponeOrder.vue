@@ -12,7 +12,7 @@
               :btn-options="btnOptions"
               :tip="tip"
               :sheet-show="sheetShow">
-      <pay-postpone :postpone-list="postponeList"></pay-postpone>
+      <pay-postpone :postpone-list="postponeList" :value.sync="postponeValue"></pay-postpone>
     </pay-base>
   </div>
 </template>
@@ -39,11 +39,12 @@
           callback: this.goToPostponeExplain.bind(this),
           disabled: false
         },
-        price: 0, // 价格
+        postponeValue: '0',
         postponeList: [], //延期列表
         coupons: [],  // 优惠列表
         selectedPostponeIndex: 0, //选择的延期类型的index
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         misc: '', // 延期的时间
         sheetShow: false, // 显示支付sheet
@@ -53,7 +54,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -82,6 +83,31 @@
             callback: this.onConfirmTap
           }
         }
+      },
+      // 价格
+      price () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].price : 0
+      },
+      //
+      misc () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].misc : 0
+      },
+      // 优惠信息
+      coupons () {
+        if (parseInt(this.selectedPostponeIndex) && this.card) {
+          return [{
+            couponNo: 1,
+            name: '长投卡(7折)',
+            userBene: Math.ceil(this.postponeList[this.selectedPostponeIndex].price * 0.3),
+            holderBene: 0
+          }]
+        } else {
+          return []
+        }
+      },
+      // 选择的优惠信息
+      selectedCoupon () {
+        return parseInt(this.selectedPostponeIndex) && this.card ? this.coupons[0] : null
       }
     },
     route: {
@@ -98,13 +124,14 @@
         )
       },
       deactivate () {
-        this.price = 0// 价格
-        this.postponeList = []//延期列表
+        this.postponeValue = '0'
+        this.postponeList = [] //延期列表
         this.coupons = [] // 优惠列表
-        this.selectedPostponeIndex = 0//选择的延期类型的index
-        this.selectedCoupon = null// 选择的优惠
+        this.selectedPostponeIndex = 0 //选择的延期类型的index
+        this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.currentBalance = 0 // 投币余额
-        this.misc = ''// 延期的时间
+        this.misc = '' // 延期的时间
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
       }
@@ -112,31 +139,19 @@
     events: {
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[couponsIndex]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
         this.selectedPostponeIndex = postponeIndex
-        this.price = this.postponeList[postponeIndex].price
-        this.misc = this.postponeList[postponeIndex].misc
-        // 有长投卡
-
-        if (parseInt(postponeIndex) && this.card) {
-          this.coupons = [{
-            couponNo: 1,
-            name: '长投卡(7折)',
-            userBene: Math.ceil(this.postponeList[1].price * 0.3),
-            holderBene: 0
-          }]
-          this.selectedCoupon = this.coupons[0]
-        } else {
-          this.coupons = []
-          this.selectedCoupon = null
-        }
       },
       'codeConfirm' () {
         const me = this

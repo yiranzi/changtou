@@ -1,5 +1,5 @@
 <template>
-    <div class="reset-password-start">
+    <div class="principal-base reset-password-start">
       <ict-titlebar>重置密码</ict-titlebar>
 
       <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">

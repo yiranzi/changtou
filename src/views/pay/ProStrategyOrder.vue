@@ -22,6 +22,7 @@
   import PayBase from '../../components/payment/PayBase.vue'
   import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
+  import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
@@ -29,6 +30,9 @@
   import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
+      actions: {
+        syncUser: userActions.syncUser
+      },
       getters: {
         isLogin: userGetters.isLogin,
         strategy: userGetters.strategy
@@ -41,6 +45,7 @@
         price: 0, // 价格
         periods: [],  // 服务期限列表
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
         itemId: 1, // 交易 id
@@ -52,7 +57,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -124,6 +129,7 @@
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
         this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
         this.itemId = 1 // 交易 id
@@ -140,10 +146,14 @@
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
+      },
+      'payChannelClose' () {
         this.sheetShow = false
       },
       'codeConfirm' () {
@@ -245,7 +255,11 @@
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/PS/0`)
-        this.$dispatch(eventMap.SYNC_USER)
+        this.syncUser().then(
+          user => {
+            this.$dispatch(eventMap.SYNC_USER, user)
+          }
+        )
       },
       onPayFail (err) {
         Object.assign(this.statisticData, {

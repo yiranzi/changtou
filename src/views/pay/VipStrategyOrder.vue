@@ -17,6 +17,7 @@
   import PayBase from '../../components/payment/PayBase.vue'
   import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
+  import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
@@ -24,6 +25,9 @@
   import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
+      actions: {
+        syncUser: userActions.syncUser
+      },
       getters: {
         isLogin: userGetters.isLogin,
         strategy: userGetters.strategy
@@ -35,14 +39,14 @@
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
-        coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
         itemId: 1, // 交易 id
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
-        deductions: [], // pro 抵扣列表
+        deductions: [0], // pro 抵扣列表
         selectedDeduction: 0, // 选择的 抵扣金额
         proLeftDays: 0, // pro 剩余时间
         statisticData: null //统计数据
@@ -51,7 +55,7 @@
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -63,7 +67,7 @@
       },
       // 按钮上方提示语
       tip () {
-        return (this.isLogin && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+        return ''
       },
       // 实付金额
       sum () {
@@ -90,7 +94,7 @@
           if (this.order.card) {
             coupons.push({
               name: '长投卡(7折)',
-              userBene: Math.floor(this.price * 0.3)
+              userBene: Math.floor((this.price - this.selectedDeduction) * 0.3)
             })
           }
           return coupons
@@ -124,14 +128,14 @@
         this.pic = '' // 图片
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
-        this.coupons = []  // 优惠列表
         this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
         this.itemId = 1 // 交易 id
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
-        this.deductions = [] // pro 抵扣列表
+        this.deductions = [0] // pro 抵扣列表
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
@@ -145,10 +149,14 @@
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
+      },
+      'payChannelClose' () {
         this.sheetShow = false
       },
       'codeConfirm' () {
@@ -250,7 +258,11 @@
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/VS/0`)
-        this.$dispatch(eventMap.SYNC_USER)
+        this.syncUser().then(
+          user => {
+            this.$dispatch(eventMap.SYNC_USER, user)
+          }
+        )
       },
       onPayFail (err) {
         Object.assign(this.statisticData, {
