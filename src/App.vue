@@ -67,9 +67,12 @@
   import mixinModal from './mixinModal'
   import mixinBackHandler from './mixinBackHandler'
   import mixinNetwork from './mixinNetwork'
+  import mixinStatistics from './mixinStatistics'
+
+  import {eventMap} from './frame/eventConfig'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork, mixinStatistics],
 
     store,
 
@@ -89,6 +92,12 @@
     data () {
       return {
         isShowNewTestPop: false
+      }
+    },
+
+    watch: {
+      route (newRoute) {
+        this.$dispatch(eventMap.VIEW_CHANGE, newRoute.path)
       }
     },
 

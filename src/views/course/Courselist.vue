@@ -36,6 +36,8 @@
   import Scroller from 'vux/scroller'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
+
   export default {
     vuex: {
       getters: {
@@ -63,6 +65,7 @@
     },
     route: {
       data () {
+        setLocalCache('statistics-entry-page', {entryPage: '全部课程列表'})
         this.setScrollerHeight()
       }
     },

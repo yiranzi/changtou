@@ -22,6 +22,9 @@
   import {getPostponeOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
       getters: {
@@ -43,7 +46,8 @@
         selectedCoupon: null, // 选择的优惠
         currentBalance: 0,  // 投币余额
         misc: '', // 延期的时间
-        sheetShow: false // 显示支付sheet
+        sheetShow: false, // 显示支付sheet
+        statisticData: null //统计数据
       }
     },
     computed: {
@@ -102,6 +106,7 @@
         this.currentBalance = 0 // 投币余额
         this.misc = ''// 延期的时间
         this.sheetShow = false // 显示支付sheet
+        this.statisticData = null //统计数据
       }
     },
     events: {
@@ -115,6 +120,7 @@
       },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
+        this.selectedPostponeIndex = postponeIndex
         this.price = this.postponeList[postponeIndex].price
         this.misc = this.postponeList[postponeIndex].misc
         // 有长投卡
@@ -131,8 +137,6 @@
           this.coupons = []
           this.selectedCoupon = null
         }
-
-        this.currPostponeIndex = postponeIndex
       },
       'codeConfirm' () {
         const me = this
@@ -163,6 +167,11 @@
         this.currentBalance = currentBalance
       },
       onConfirmTap () {
+        this.statisticData = {
+          '实付': this.sum,
+          '商品名称': this.postponeList[this.selectedPostponeIndex].name
+        }
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
@@ -174,6 +183,11 @@
        * @param channel
        */
       payByChannel (channel) {
+        Object.assign(this.statisticData, {
+          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
           sum: this.sum,
@@ -212,10 +226,16 @@
       )
       },
       goToPaySuccess () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/subject/detail/P/${this.subjectId}/0`)
       },
       onPayFail (err) {
+        Object.assign(this.statisticData, {
+          '原因': err.reason
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CANCEL, this.statisticData)
         if (err.type === errorType.FAIL) {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
       },

@@ -98,7 +98,7 @@ const getIntegral = () => {
             }
           )
         } else {
-          reject({message: '用户未登录'})
+          resolve([])
         }
       }
     )

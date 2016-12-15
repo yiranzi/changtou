@@ -11,14 +11,14 @@ import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
-import {choiceActions} from './vuex/actions'
-//import {platformMap, Device} from './plugin/device'
+import {getKnowledgePointMap} from './vuex/homework/choice/actions'
+//import {Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
 
 const mixin = {
   vuex: {
     actions: {
-      getKnowledgePointMap: choiceActions.getKnowledgePointMap,
+      getKnowledgePointMap,
       loadAllFreeRecords,
       loadAllExpenseRecords,
       resetRecords,
@@ -31,7 +31,8 @@ const mixin = {
     },
     getters: {
       isLogin,
-      userId
+      userId,
+      newShowDiploma
     }
   },
 
@@ -84,9 +85,9 @@ const mixin = {
     /**
      * 同步用户信息
      */
-    [eventMap.SYNC_USER]: function () {
-      //console.info('SYNC_USER')
-      this.syncUser().then(this.doWhenUserValid).catch(() => console.log('没有账户, 不做处理'))
+    [eventMap.SYNC_USER]: function (user) {
+      //console.info('SYNC_USER', user)
+      this.doWhenUserValid(user)
     },
 
     /**
@@ -174,9 +175,8 @@ const mixin = {
      * 下载了用户的毕业证列表
      */
     onGraduationDiplomaLoaded: function () {
-      const diploma = newShowDiploma()
-      if (diploma) {
-        this.$dispatch(eventMap.SUBJECT_GRADUATION, diploma)
+      if (this.newShowDiploma) {
+        this.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
       }
     }
   }

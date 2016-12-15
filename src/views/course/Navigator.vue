@@ -26,7 +26,7 @@
           <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
             <div class="box-container" >
                 <div class="box-item" v-for="item in recommends"
-                     v-touch:tap="goToRecommendDetail('P',$index)">
+                     v-touch:tap="goToRecommendDetail(item,$index)">
                   <img :src="item.imgUrl">
                   <p class="sub-title">{{item.title}}</p>
                   <p class="sub-price">￥{{item.price}}</p>
@@ -43,11 +43,11 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">优质好课</span>
-            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap('P')">全部课程</span>
           </p>
           <div v-for="(index, course) in expenseList"
                v-bind:class="['expense-course',index ? index%2 ? 'expense-course-mini-left' : 'expense-course-mini-right' : 'expense-course-max']"
-               v-touch:tap="goToCourseDetail('P',$index)">
+               v-touch:tap="goToCourseDetail(course,$index)">
             <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
@@ -59,10 +59,10 @@
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">免费好课</span>
-            <span class="subtitle" v-touch:tap="onListTap">全部课程</span>
+            <span class="subtitle" v-touch:tap="onListTap('F')">全部课程</span>
           </p>
           <div v-for="course in freeList"
-               v-touch:tap="goToCourseDetail('F',$index)"
+               v-touch:tap="goToCourseDetail(course,$index)"
                class="free-course">
             <img v-bind:src=freeList[$index].pic class="free-course-img"/>
             <p class="free-course-title">{{course.title}}</p>
@@ -86,7 +86,9 @@
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
-
+  import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -104,6 +106,7 @@
 
     route: {
       data () {
+        setLocalCache('statistics-entry-page', {entryPage: '首页'})
         this.$nextTick(() => {
           this.$refs.scroller.reset({
           top: 0
@@ -161,19 +164,35 @@
         })
         }, 150)
       },
-      goToCourseDetail (type, index) {
-        let courseList = type === 'P' ? this.expenseList : this.freeList
-        let path = `/subject/detail/${type}/${courseList[index].subjectId}/0`
-        this.$route.router.go(path)
+      goToCourseDetail (subject, index) {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          type: subject.type,
+          subjectid: subject.subjectId,
+          index: index,
+          position: subject.type === 'F' ? '免费听课' : '畅销好课'
+        })
+        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
-      goToRecommendDetail (type, index) {
-        this.$route.router.go(`/subject/detail/${type}/${this.recommends[index].subjectId}/0`)
+      goToRecommendDetail (subject, index) {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
+          type: 'P',
+          subjectid: subject.subjectId,
+          index: index
+        })
+        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
-      onListTap () {
+      onListTap (type) {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_TEXT_TAP, {
+          titile: '全部课程',
+          position: type === 'F' ? '免费听课' : '畅销好课'
+        })
         this.$route.router.go('/totalList')
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '新手测试'
+        })
         const me = this
         me.loadNewertestReport().then(function (newertestReport) {
           if (newertestReport) {
@@ -187,10 +206,16 @@
       },
       //跳转到院生访谈列表页面
       goToInterviewList () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '院生访谈'
+        })
         this.$route.router.go('/interview/interview-list')
       },
       //跳转到每日一题
       goToDailyQuestion () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '每日一题'
+        })
         const me = this
         me.loadDailyQuestion().then(function (dailyQuestion) {
           if (dailyQuestion.selectedOption) {
@@ -209,6 +234,9 @@
        * 跳转到专业版 策略 宣传
        */
       goToStrategy () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '策略宣传'
+        })
         this.$route.router.go('/strategy/professional/intro')
       }
     },
