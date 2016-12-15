@@ -156,6 +156,9 @@
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       'codeConfirm' () {
         const me = this
         getStrategyOrder(goodsType.VIP_STRATEGY).then(

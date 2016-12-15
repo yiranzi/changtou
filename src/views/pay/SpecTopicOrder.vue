@@ -132,6 +132,9 @@
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       'codeConfirm' () {
         const me = this
         getOrder(this.type, this.stpId).then(order => me.arrangeOrder(order))

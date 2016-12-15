@@ -116,6 +116,9 @@
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       'codeConfirm' () {
         this.getSubjectOrder()
       },

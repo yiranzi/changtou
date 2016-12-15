@@ -153,6 +153,9 @@
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       'codeConfirm' () {
         const me = this
         getStrategyOrder(goodsType.PRO_STRATEGY).then(

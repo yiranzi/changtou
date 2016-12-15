@@ -16,7 +16,7 @@
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
       <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns v-show="isShowBottomBtn"></pay-button>
-      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
+      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
     </div>
 </template>
 <script>
@@ -139,6 +139,9 @@ export default {
     },
     onPayChannelChange (payWay) {
       this.$dispatch('payChannelChange', payWay)
+    },
+    onPayWayClose () {
+      this.$dispatch('payChannelClose')
     },
     onCodeConfirm () {
       this.$dispatch('codeConfirm')
