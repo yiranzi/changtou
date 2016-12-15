@@ -605,6 +605,7 @@
       resetView () {
         this.hasVaildChapterCicked = false
         this.pause()
+        this.resetScroller()
       },
 
       /**
@@ -921,7 +922,7 @@
       resetScroller () {
         this.$nextTick(() => {
           this.$refs.scroller.reset({
-//              top: 0
+              top: 0
           })
         })
       }
