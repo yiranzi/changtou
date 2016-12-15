@@ -3,10 +3,19 @@
  */
 
 import 'whatwg-fetch'
+import {D_PLUS_ID} from '../frame/serverConfig'
 const cacheItem = 'sessionProps'
 
 let server = 'http://121.40.131.112:3000'
-let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) //全局的超级属性, 仅在本次会话内有效
+let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) || {} //全局的超级属性, 仅在本次会话内有效
+
+/**
+ * 是否支持dplus统计
+ * @returns {boolean}
+ */
+const isDplusSupport = () => {
+  return !!window.dplus
+}
 
 /**
  * 初始化 设置服务器地址(若需要)
@@ -14,20 +23,37 @@ let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) /
  */
 const init = function (serverUrl) {
   server = serverUrl
+  if (isDplusSupport()) {
+    window.dplus.init(D_PLUS_ID, {
+      //"disable_cookie": true,
+      //"cross_subdomain_cookie": true,
+      localstorage: true,
+      track_timeout: 1000, //回调响应时间
+
+      loaded: function () {
+
+      }
+    })
+  }
 }
 
 /**
  * 发送事件
- * @param eventProps
+ * @param eventName, properties
  */
-const track = function (eventProps) {
-  if (!(eventProps instanceof Object)) {
-    console.warn('发送到统计数据', eventProps, '不是一个合法的对象, 忽略')
+const track = function (eventName, properties = {}) {
+  if (!(eventName instanceof String) && !(properties instanceof Object)) {
+    console.warn('发送到统计数据', properties, '不是一个合法的对象, 忽略')
     return
   }
+  console.log('track')
+  //dplus
+  if (isDplusSupport()) {
+    window.dplus.track(eventName, properties, () => {})
+  }
 
-  var trackData = Object.assign({}, {userId: '00'}, sessionProps, eventProps)
-
+  // ict
+  var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
   window.fetch(server + '/event', {
     method: 'POST',
     headers: {
@@ -54,6 +80,7 @@ const updateUser = function (userProps) {
     return
   }
 
+  //ict
   window.fetch(server + '/user/' + userProps['userId'] || '00', {
     method: 'PUT',
     headers: {
@@ -80,15 +107,21 @@ const register = function (props) {
     return
   }
 
+  // dPlus
+  if (isDplusSupport()) {
+    window.dplus.register(props)
+  }
+
+  //
   Object.assign(sessionProps, props)
-  //记录到sessionStorage,本次会话有效(窗口不关闭)
+  // 记录到sessionStorage,本次会话有效(窗口不关闭)
   window.sessionStorage.setItem(cacheItem, window.JSON.stringify(sessionProps))
 }
 
 /**
  *
  */
-export const ictData = {
+export default {
   init,
   track,
   updateUser,

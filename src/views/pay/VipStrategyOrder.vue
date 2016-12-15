@@ -20,6 +20,7 @@
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
+    import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -185,6 +186,10 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, {
+            '实付': this.sum,
+            '商品名称': this.periods[this.selectedPeriodIndex].name
+        })
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
