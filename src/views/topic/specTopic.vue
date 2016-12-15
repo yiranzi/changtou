@@ -193,6 +193,7 @@
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
+        border-radius: 0;
 
         .disPrice{
           padding: 0 0.25rem;
