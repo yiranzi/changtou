@@ -110,7 +110,7 @@
        */
       deactivate () {
         clearInterval(this.timer)
-        this.validationBtnText = '发送验证码'
+        this.validationBtnText = '获取验证码'
         this.isValidationBtnDisable = false
         this.leftTime = 120
       }

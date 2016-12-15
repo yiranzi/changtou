@@ -1,5 +1,5 @@
 <template>
-    <div class="reset-password-start">
+    <div class="principal-base reset-password-start">
       <ict-titlebar>重置密码</ict-titlebar>
 
       <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
@@ -35,6 +35,14 @@ export default {
       resetPasswordStart: userActions.resetPasswordStart
     }
   },
+
+  route: {
+    deactivate () {
+      this.phone = ''
+      this.errTip = ''
+    }
+  },
+
   data () {
     return {
       phone: '',
@@ -72,6 +80,21 @@ export default {
 </script>
 <style lang="less">
   .reset-password-start{
-
+    /*.btn-box {*/
+      /*width: 84%;*/
+      /*margin: auto auto;*/
+    /*}*/
+    /*.err-tip{*/
+      /*width: 100%;*/
+      /*line-height: 30px;*/
+      /*background: grey;*/
+      /*text-align: center;*/
+      /*color: black;*/
+      /*font-size: 0.7rem;*/
+    /*}*/
+    /*.no-err{*/
+      /*background: transparent;*/
+      /*color: transparent;*/
+    /*}*/
   }
 </style>

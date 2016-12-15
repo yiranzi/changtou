@@ -73,6 +73,16 @@ export default {
       this.errTip = ''
     }
   },
+
+  route: {
+    deactivate () {
+      this.phone = ''
+      this.errTip = ''
+      this.plainPassword = ''
+      this.conformedPlainPassword = ''
+    }
+  },
+
   methods: {
     /**
      * 点击完成重置密码

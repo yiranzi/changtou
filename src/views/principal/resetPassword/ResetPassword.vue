@@ -74,7 +74,20 @@ export default {
   },
   route: {
     data () {
+      this.phone = this.$route.params.phone
       this.countdown()
+    },
+
+    /**
+     * 重置
+     */
+    deactivate () {
+      this.phone = ''
+      this.errTip = ''
+      clearInterval(this.timer)
+      this.validationBtnText = '获取验证码'
+      this.isValidationBtnDisable = false
+      this.leftTime = 120
     }
   },
   methods: {
