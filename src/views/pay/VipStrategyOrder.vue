@@ -39,7 +39,6 @@
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
-        coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
@@ -47,7 +46,7 @@
         itemId: 1, // 交易 id
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
-        deductions: [], // pro 抵扣列表
+        deductions: [0], // pro 抵扣列表
         selectedDeduction: 0, // 选择的 抵扣金额
         proLeftDays: 0, // pro 剩余时间
         statisticData: null //统计数据
@@ -95,7 +94,7 @@
           if (this.order.card) {
             coupons.push({
               name: '长投卡(7折)',
-              userBene: Math.floor(this.price * 0.3)
+              userBene: Math.floor((this.price - this.selectedDeduction) * 0.3)
             })
           }
           return coupons
@@ -129,7 +128,6 @@
         this.pic = '' // 图片
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
-        this.coupons = []  // 优惠列表
         this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
@@ -137,7 +135,7 @@
         this.itemId = 1 // 交易 id
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
-        this.deductions = [] // pro 抵扣列表
+        this.deductions = [0] // pro 抵扣列表
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
