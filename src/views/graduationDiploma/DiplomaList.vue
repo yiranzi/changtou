@@ -7,6 +7,7 @@
       <ict-titlebar v-el:titlebar>毕业证书</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div></div>
+        <div v-if="diplomaList.length === 0" class="empty-list"></div>
         <div v-for="item in diplomaList">
           <div class="diploma-item" v-touch:tap="onDiplomaTap(item)">
             <img src="../../assets/styles/image/graduationDiploma/diploma-icon.png">
@@ -37,9 +38,6 @@ export default {
     return {
       scrollerHeight: '0px'
     }
-  },
-  watch: {
-
   },
   route: {
     data () {
@@ -78,6 +76,12 @@ export default {
     background: #fff;
     p{
       margin: 0;
+    }
+    .empty-list{
+      width: 100%;
+      height: 100%;
+      /*background: url('empty.png') center center no-repeat;*/ //todo
+      background-size: 50% 50%;
     }
     .diploma-item{
       position: relative;
