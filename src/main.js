@@ -48,6 +48,9 @@ Vue.config.debug = process.env.NODE_ENV === 'dev'
 //  appRouter.start(App, 'app')
 //  setTimeout(function () {
 //    appRouter.app.$emit(eventMap.APP_START)
+//
+//    document.addEventListener('hidekeyboard', () => window.alert('hide'), false)
+//    document.addEventListener('showkeyboard', () => window.alert('show'), false)
 //  }, 50)
 // }
 // document.addEventListener('deviceready', onDeviceReady, false)
