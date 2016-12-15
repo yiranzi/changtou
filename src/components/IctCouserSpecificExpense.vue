@@ -103,10 +103,16 @@
 
 <script>
   export default{
-    props: [
-      'subject',
-      'record'
-    ],
+    props: {
+      subject: {
+        type: Object,
+        default: null
+      },
+      record: {
+        type: Object,
+        default: null
+      }
+    },
 
     data () {
       return {
@@ -153,8 +159,10 @@
       },
 
       'subject': function (newSubject) {
-        this.priceTip = `￥${newSubject.price}`
-        this.timeTip = `课程有效期${newSubject.period}天`
+        if (!this.record) {
+          this.priceTip = `￥${newSubject.price}`
+          this.timeTip = `课程有效期${newSubject.period}天`
+        }
       }
     },
 
