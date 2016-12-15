@@ -7,7 +7,7 @@
 
     <ict-input title="账号"
              placeholder="输入手机号"
-             :id="register-start-phone"
+             id="register-start-phone"
              :value.sync="phone">
     </ict-input>
 
@@ -16,7 +16,7 @@
     <ict-input title="密码"
              type="password"
              placeholder="输入密码"
-             :id="register-start-plainPassword"
+             id="register-start-plainPassword"
              :value.sync="plainPassword">
     </ict-input>
 
@@ -75,7 +75,6 @@
     },
     events: {
       'ictInputFocus' (id) {
-        console.log(id)
         if (id === 'register-start-phone') {
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_IDENTITY, {})
         } else if (id === 'register-start-plainPassword') {
@@ -137,6 +136,7 @@
 <style lang="less">
   .register-start{
     .password-tip{
+      margin-top: 0.5rem;
       text-align: center;
       font-size: 0.6rem;
       color: #898989;
