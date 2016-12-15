@@ -22,6 +22,7 @@
   import PayBase from '../../components/payment/PayBase.vue'
   import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
+  import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
@@ -29,6 +30,9 @@
   import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
+      actions: {
+        syncUser: userActions.syncUser
+      },
       getters: {
         isLogin: userGetters.isLogin,
         strategy: userGetters.strategy
@@ -248,7 +252,11 @@
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/PS/0`)
-        this.$dispatch(eventMap.SYNC_USER)
+        this.syncUser().then(
+          user => {
+            this.$dispatch(eventMap.SYNC_USER, user)
+          }
+        )
       },
       onPayFail (err) {
         Object.assign(this.statisticData, {
