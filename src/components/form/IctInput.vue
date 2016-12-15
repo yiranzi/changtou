@@ -67,11 +67,11 @@
       return {
         isHidePassword: true,
         isShowToggle: false,
-        isFocus: false,
-        styleObject: {
-          marginRight: '12%',
-          marginLeft: '12%'
-        }
+        isFocus: false
+//        styleObject: {
+//          marginRight: '12%',
+//          marginLeft: '12%'
+//        }
        }
     },
 
