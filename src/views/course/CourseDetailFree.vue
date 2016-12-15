@@ -122,6 +122,7 @@
   import {courseDetailActions, courseRecordActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
 
   export default {
@@ -364,7 +365,7 @@
        * 参加课程
        */
       join () {
-        this.$dispatch(statisticsMap.SUBJECT_JOIN_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_JOIN_TAP, {
           '商品名称': this.currSubject.title
         })
         if (this.isUserLogin) {

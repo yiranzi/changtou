@@ -103,7 +103,7 @@ export default {
      * 点击立即登录
      */
     onLoginTap () {
-      this.$dispatch(statisticsMap.LOGIN_NOW, {})
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.LOGIN_NOW, {})
       this.$emit('login-tap')
     },
 

@@ -114,7 +114,7 @@
     events: {
       'ictInputFocus' (id) {
         if (id === 'register-end-plainPassword') {
-          this.$dispatch(statisticsMap.REGISTER_INPUT_VALIDATION_CODE, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_VALIDATION_CODE, {})
         }
       }
     },
@@ -169,7 +169,7 @@
        * 点击提交
        */
       doRegister () {
-        this.$dispatch(statisticsMap.REGISTER_TAP_SUBMIT, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_TAP_SUBMIT, {})
         const me = this
         this.isDisabled = true
         if (this.verifyCode()) {
@@ -192,7 +192,7 @@
       },
 
       onTitlebarBack () {
-        this.$dispatch(statisticsMap.REGISTER_VALIDATION_CODE_BACK, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_VALIDATION_CODE_BACK, {})
       }
     }
   }

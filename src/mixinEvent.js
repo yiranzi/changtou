@@ -14,7 +14,6 @@ import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {getKnowledgePointMap} from './vuex/homework/choice/actions'
 //import {Device} from './plugin/device'
 import {initVerNum} from './plugin/version'
-import ictData from './statistics/ictData'
 
 const mixin = {
   vuex: {
@@ -118,12 +117,6 @@ const mixin = {
           this.$route.router.go(`/graduation/subject/diploma/${subjectId}`)
         }
       })
-    },
-    /**
-     * 数据统计事件
-     */
-    [eventMap.STATISTICS_EVENT]: function ({subjectId}) {
-      ictData.track()
     },
 
     /**

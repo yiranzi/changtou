@@ -29,6 +29,7 @@
   import IctInput from '../../../components/form/IctInput.vue'
   import {userGetters} from '../../../vuex/getters'
   import {userActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -58,7 +59,7 @@
     events: {
       'ictInputFocus' (id) {
         if (id === 'bind-phone-phone') {
-          this.$dispatch(statisticsMap.BIND_PHONE_INPUT_PHONE, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_INPUT_PHONE, {})
         }
       }
     },
@@ -67,7 +68,7 @@
        * 点击下一步
        */
       sendPhone () {
-        this.$dispatch(statisticsMap.BIND_PHONE_TAP_NEXT, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_TAP_NEXT, {})
         this.bindPhone(this.phone).then(
           () => this.$route.router.go('/bind/phone/end/' + this.phone)
         ).catch(
@@ -79,7 +80,7 @@
       },
 
       onTitlebarBack () {
-        this.$dispatch(statisticsMap.BIND_PHONE_PHONE_BACK, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_PHONE_BACK, {})
       }
     },
     components: {

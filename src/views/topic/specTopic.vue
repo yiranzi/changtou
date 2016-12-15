@@ -221,6 +221,7 @@
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
   import {specTopicGetters, myCoursesGetters, userGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -322,7 +323,7 @@
         return ret
       },
       toBuy () {
-        this.$dispatch(statisticsMap.TOPIC_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
           '商品名称': this.specTopicInfo.name,
           '价格': this.priceObj.origPriceSum
         })
@@ -337,7 +338,7 @@
        * 点击课程
        */
       onSubjectTap (subject, index) {
-        this.$dispatch(statisticsMap.TOPIC_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
           'type': subject.type,
           'subjectid': subject.subjectId,
           'index': index

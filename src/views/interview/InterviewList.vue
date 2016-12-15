@@ -54,6 +54,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -101,7 +102,7 @@
     },
     methods: {
       goToInterviewRecord (interviewId) {
-        this.$dispatch(statisticsMap.INTERVIEW, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
           '访谈Id': interviewId
         })
         this.$route.router.go(`/interview/interview-record/${interviewId}`)

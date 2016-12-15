@@ -123,6 +123,7 @@
 </style>
 <script>
   import {dailyQuestionGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -148,7 +149,7 @@
         }
       },
       result () {
-        this.$dispatch(statisticsMap.DAILY_QUIZ, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DAILY_QUIZ, {
           '题号': this.dailyQuestion.id,
           '用户选择': this.dailyQuestion.selectedOption === this.dailyQuestion.correctOption ? '正确' : '错误'
         })

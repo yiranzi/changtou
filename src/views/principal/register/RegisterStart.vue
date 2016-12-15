@@ -38,6 +38,7 @@
   import IctButton from '../../../components/IctButton.vue'
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
 
   export default {
@@ -76,9 +77,9 @@
       'ictInputFocus' (id) {
         console.log(id)
         if (id === 'register-start-phone') {
-          this.$dispatch(statisticsMap.REGISTER_INPUT_IDENTITY, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_IDENTITY, {})
         } else if (id === 'register-start-plainPassword') {
-          this.$dispatch(statisticsMap.REGISTER_INPUT_PASSWORD, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_PASSWORD, {})
         }
       }
     },
@@ -100,7 +101,7 @@
        */
       doRegister () {
         if (this.verifyPhoneAndPassword()) {
-          this.$dispatch(statisticsMap.REGISTER_TAP_REGISTER, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_TAP_REGISTER, {})
           const me = this
           this.buttonDisable = true
           this.registerStart(this.phone, this.plainPassword).then(
@@ -123,7 +124,7 @@
       },
 
       onTitlebarBack () {
-        this.$dispatch(statisticsMap.REGISTER_IDENTITY_BACK, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_IDENTITY_BACK, {})
       }
     },
     components: {

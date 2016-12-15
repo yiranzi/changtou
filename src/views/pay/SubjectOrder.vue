@@ -17,6 +17,7 @@
   import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {getLocalCache} from '../../util/cache'
   export default {
@@ -184,7 +185,7 @@
           '实付': this.sum,
           '商品名称': this.courseList[0].title
         }
-        this.$dispatch(statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
@@ -208,7 +209,7 @@
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
         })
-        this.$dispatch(statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
           sum: this.sum,
@@ -249,16 +250,16 @@
        * 跳转到 支付成功
        */
       goToPaySuccess () {
-        this.$dispatch(statisticsMap.PAY_SUCCESSFUL, this.statisticData)
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/S/${this.subjectId}`)
       },
       onPayFail (err) {
         Object.assign(this.statisticData, {
           '原因': err.reason
         })
-        this.$dispatch(statisticsMap.PAY_CANCEL, this.statisticData)
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CANCEL, this.statisticData)
         if (err.type === errorType.FAIL) {
-          this.$dispatch(statisticsMap.PAY_FAIL, this.statisticData)
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
       }

@@ -44,6 +44,7 @@
   import IctButton from '../../../components/IctButton.vue'
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -82,7 +83,7 @@
     events: {
       'ictInputFocus' (id) {
         if (id === 'bind-phone-end-code') {
-          this.$dispatch(statisticsMap.BIND_PHONE_INPUT_VALIDATION_CODE, {})
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_INPUT_VALIDATION_CODE, {})
         }
       }
     },
@@ -123,7 +124,7 @@
        * 点击提交
        */
       sendIdentity () {
-        this.$dispatch(statisticsMap.BIND_PHONE_TAP_SUBMIT, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_TAP_SUBMIT, {})
         const me = this
         me.bindPhoneEnd(me.phone, me.validationCode).then(
           () => window.history.go(-3)
@@ -133,7 +134,7 @@
       },
 
       onTitlebarBack () {
-        this.$dispatch(statisticsMap.BIND_PHONE_VALIDATION_CODE_BACK, {})
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_VALIDATION_CODE_BACK, {})
       }
     },
     components: {

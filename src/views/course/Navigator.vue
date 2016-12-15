@@ -87,6 +87,7 @@
   import {navigatorGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
   import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -164,7 +165,7 @@
         }, 150)
       },
       goToCourseDetail (subject, index) {
-        this.$dispatch(statisticsMap.HOME_PIC_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           type: subject.type,
           subjectid: subject.subjectId,
           index: index,
@@ -173,7 +174,7 @@
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
       goToRecommendDetail (subject, index) {
-        this.$dispatch(statisticsMap.TOPIC_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
           type: 'P',
           subjectid: subject.subjectId,
           index: index
@@ -181,7 +182,7 @@
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
       onListTap (type) {
-        this.$dispatch(statisticsMap.HOME_TEXT_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_TEXT_TAP, {
           titile: '全部课程',
           position: type === 'F' ? '免费听课' : '畅销好课'
         })
@@ -189,7 +190,7 @@
       },
       //跳转到理财揭秘起始页
       goToNewertestStart () {
-        this.$dispatch(statisticsMap.HOME_PIC_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '新手测试'
         })
         const me = this
@@ -205,14 +206,14 @@
       },
       //跳转到院生访谈列表页面
       goToInterviewList () {
-        this.$dispatch(statisticsMap.HOME_PIC_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
       },
       //跳转到每日一题
       goToDailyQuestion () {
-        this.$dispatch(statisticsMap.HOME_PIC_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '每日一题'
         })
         const me = this
@@ -233,7 +234,7 @@
        * 跳转到专业版 策略 宣传
        */
       goToStrategy () {
-        this.$dispatch(statisticsMap.HOME_PIC_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '策略宣传'
         })
         this.$route.router.go('/strategy/professional/intro')

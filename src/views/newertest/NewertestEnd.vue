@@ -198,6 +198,7 @@
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
 
@@ -275,7 +276,7 @@
          *  去对应的课程页
          */
         gotoSubjectDetail  (subject, index) {
-          this.$dispatch(statisticsMap.NEWER_TEST_SUBJECT_TAP, {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.NEWER_TEST_SUBJECT_TAP, {
             type: 'P',
             subjectId: subject.subjectId,
             index: index + 1

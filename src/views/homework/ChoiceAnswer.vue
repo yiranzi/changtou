@@ -26,6 +26,7 @@
   import IctButton from '../../components/IctButton.vue'
   import { choiceGetters, userGetters } from '../../vuex/getters'
   import { choiceActions } from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
   vuex: {
@@ -176,7 +177,7 @@ export default {
         this.updateAnswer(false)
         this.explain = this.currQuestion.explain
       }
-      this.$dispatch(statisticsMap.CHOICE_QUESTION, {
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION, {
         lessonid: this.lessonId,
         '题号': this.currIndex + 1,
         '用户选择': result

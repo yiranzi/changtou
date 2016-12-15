@@ -577,7 +577,7 @@
       confirmEssay () {
         this.resumeHomework()
         if (this.selectedLesson.essayQuestion.assignmentType === 'S') {
-          this.$dispatch(statisticsMap.DO_HOMEWORK, {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
             lessonid: this.selectedLesson.lessonId
           })
           this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
@@ -589,7 +589,7 @@
        */
       confirmChoice () {
         this.resumeHomework()
-        this.$dispatch(statisticsMap.CHOICE_QUESTION_BEGIN, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
           lessonid: this.selectedLesson.lessonId
         })
         this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
@@ -758,7 +758,7 @@
        * 试听
        */
       audition () {
-        this.$dispatch(statisticsMap.SUBJECT_AUDITION_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_AUDITION_TAP, {
           '商品名称': this.currSubject.title
         })
         this.currTabIndex = 1
@@ -864,7 +864,7 @@
        * 购买
        */
       buy () {
-        this.$dispatch(statisticsMap.SUBJECT_BUY_NOW_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_BUY_NOW_TAP, {
           '商品名称': this.currSubject.title
         })
         // 如果是选修课
