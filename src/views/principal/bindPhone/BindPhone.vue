@@ -1,28 +1,24 @@
 <template>
   <div class="principal-base bind-phone">
-    <ict-titlebar>{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
+    <ict-titlebar @back="onTitlebarBack">{{userPhone ? '修改手机号' : '绑定手机号'}}</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
-    <flexbox>
-      <flexbox-item :span="1/20"></flexbox-item>
-      <flexbox-item>
-        <group>
-          <div style="height: 1rem"></div>
-          <x-input title="手机号"
-                   placeholder="请输入新手机号"
-                   :value.sync="phone">
-          </x-input>
-        </group>
-      </flexbox-item>
-      <flexbox-item :span="1/20"></flexbox-item>
-    </flexbox>
+
+    <ict-input title="手机号"
+             placeholder="请输入新手机号"
+             id="bind-phone-phone"
+             :value.sync="phone">
+    </ict-input>
+
     <div style="height: 3rem" class="spacer"></div>
-    <ict-button type="default"
-                :disabled="isDisabled"
-                @click="sendPhone"
-                text="下一步">
-    </ict-button>
+    <div class="btn-box">
+      <ict-button type="default"
+                  :disabled="isDisabled"
+                  v-touch:tap="sendPhone"
+                  text="下一步">
+      </ict-button>
+    </div>
   </div>
 </template>
 <style>
@@ -30,11 +26,11 @@
 <script>
   import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
-  import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import Group from 'vux/group'
-  import XInput from 'vux/x-input'
+  import IctInput from '../../../components/form/IctInput.vue'
   import {userGetters} from '../../../vuex/getters'
   import {userActions} from '../../../vuex/actions'
+  import {eventMap} from '../../../frame/eventConfig'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -60,11 +56,19 @@
         this.errTip = ''
       }
     },
+    events: {
+      'ictInputFocus' (id) {
+        if (id === 'bind-phone-phone') {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_INPUT_PHONE, {})
+        }
+      }
+    },
     methods: {
       /**
        * 点击下一步
        */
       sendPhone () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_TAP_NEXT, {})
         this.bindPhone(this.phone).then(
           () => this.$route.router.go('/bind/phone/end/' + this.phone)
         ).catch(
@@ -73,22 +77,21 @@
            this.errTip = err.message
           }
         )
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.BIND_PHONE_PHONE_BACK, {})
       }
     },
     components: {
       IctTitlebar,
-      Flexbox,
-      FlexboxItem,
-      Group,
-      XInput,
+      IctInput,
       IctButton
     }
   }
 </script>
 <style lang="less">
 .bind-phone{
-  .ict-btn {
-    width: 84%;
-  }
+
 }
 </style>

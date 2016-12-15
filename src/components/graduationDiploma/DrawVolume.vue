@@ -22,7 +22,7 @@ export default {
     position: relative;
     width: 750/40rem;
     height: 1100/40rem;
-    background: url('../../assets/styles/image/graduationDiploma/draw-volume-bg.png') 50% 50% no-repeat;
+    background: url('../../../static/image/graduationDiploma/draw-volume-bg.png') 50% 50% no-repeat;
     background-size: 100% 100%;
     .graduation-tip{
       position: absolute;

@@ -187,6 +187,8 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -263,6 +265,11 @@
       },
       //分享朋友
       shareToFriend () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+          '访谈Id': this.interviewRecord.interviewId,
+          '分享渠道': '微信-会话'
+        })
+
         const me = this
         window.Wechat.share({
             message: {
@@ -291,6 +298,11 @@
 
       //分享到朋友圈
       shareToFriendCircle () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+          '访谈Id': this.interviewRecord.interviewId,
+          '分享渠道': '微信-朋友圈'
+        })
+
         const me = this
         window.Wechat.share({
           message: {

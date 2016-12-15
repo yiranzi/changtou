@@ -159,6 +159,7 @@
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -576,6 +577,9 @@
       confirmEssay () {
         this.resumeHomework()
         if (this.selectedLesson.essayQuestion.assignmentType === 'S') {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
+            lessonid: this.selectedLesson.lessonId
+          })
           this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
         }
       },
@@ -585,6 +589,9 @@
        */
       confirmChoice () {
         this.resumeHomework()
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
+          lessonid: this.selectedLesson.lessonId
+        })
         this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
       },
 
@@ -751,6 +758,9 @@
        * 试听
        */
       audition () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_AUDITION_TAP, {
+          '商品名称': this.currSubject.title
+        })
         this.currTabIndex = 1
         // 交给子控件统一处理
         this.$broadcast('audition', this.currSubject.lessonList[0])
@@ -854,6 +864,9 @@
        * 购买
        */
       buy () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_BUY_NOW_TAP, {
+          '商品名称': this.currSubject.title
+        })
         // 如果是选修课
         if (this.isSubjectBranch) {
           // 先判断主线课程是否购买

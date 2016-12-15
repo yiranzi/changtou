@@ -1,61 +1,56 @@
 <template>
   <div class="principal-base register-end">
-    <ict-titlebar>注册</ict-titlebar>
+    <ict-titlebar  @back="onTitlebarBack">注册</ict-titlebar>
     <div style="height: 1.5rem" :class="{'err-tip': errTip,'no-err': !errTip}">
       {{errTip}}
     </div>
-    <flexbox>
-      <flexbox-item :span="1/20"></flexbox-item>
-      <flexbox-item>
-        <group>
-          <div style="height: 1rem"></div>
-          <x-input title="手机号"
-                   placeholder="输入手机号"
-                   :readonly="isPhoneReadonly"
-                   :value.sync="phone">
-          </x-input>
-          <x-input title="密码"
-                   placeholder="输入密码"
-                   v-if="isPlainPasswordShow"
-                   :value.sync="plainPassword">
-          </x-input>
-          <div style="height: 1rem"></div>
-          <flexbox>
-            <flexbox-item>
-              <x-input title="验证码"
-                       placeholder="输入验证码"
-                       :value.sync="validationCode">
-              </x-input>
-            </flexbox-item>
-            <ict-button type="mini"
-                        :disabled="isValidationBtnDisable"
-                        @click="getValidationCode"
-                        :text="validationBtnText">
-            </ict-button>
-          </flexbox>
-        </group>
-      </flexbox-item>
-      <flexbox-item :span="1/20"></flexbox-item>
-    </flexbox>
+
+    <ict-input title="手机号"
+             placeholder="输入手机号"
+             :readonly="isPhoneReadonly"
+             :value.sync="phone">
+    </ict-input>
+
+    <ict-input title="密码"
+             type="password"
+             placeholder="输入密码"
+             v-if=false
+             id="register-end-plainPassword"
+             :value.sync="plainPassword">
+    </ict-input>
+
+    <div style="height: 1rem"></div>
+
+    <div class="validation-box">
+      <ict-input title="验证码"
+               placeholder="输入验证码"
+               :value.sync="validationCode">
+      </ict-input>
+      <ict-button type="mini"
+                  :disabled="isValidationBtnDisable"
+                  v-touch:tap="getValidationCode"
+                  :text="validationBtnText">
+      </ict-button>
+    </div>
+
     <div style="height: 3rem" class="spacer"></div>
+
     <div class="btn-box">
       <ict-button type="default"
                   :disabled="isDisabled"
-                  @click="doRegister"
+                  v-touch:tap="doRegister"
                   text="提交">
       </ict-button>
     </div>
-    <div style="height: 4rem" class="spacer"></div>
   </div>
 </template>
 <script>
   import IctTitlebar from '../../../components/IctTitleBar.vue'
   import IctButton from '../../../components/IctButton.vue'
-  import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import Group from 'vux/group'
-  import XInput from 'vux/x-input'
+  import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
+  import {statisticsMap} from '../../../statistics/statisticsMap'
 
   export default {
     vuex: {
@@ -66,10 +61,7 @@
     },
     components: {
       IctTitlebar,
-      Flexbox,
-      FlexboxItem,
-      Group,
-      XInput,
+      IctInput,
       IctButton
     },
     data () {
@@ -79,7 +71,6 @@
         validationCode: '',
         plainPassword: '',
         isPhoneReadonly: true,
-        isPlainPasswordShow: false,
         validationBtnText: '再次发送',
         isValidationBtnDisable: false,
         leftTime: 120,
@@ -113,10 +104,18 @@
         }, 1000)
       }
     },
+
     watch: {
       validationCode () {
         this.errTip = ''
         this.verifyCode()
+      }
+    },
+    events: {
+      'ictInputFocus' (id) {
+        if (id === 'register-end-plainPassword') {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_VALIDATION_CODE, {})
+        }
       }
     },
     methods: {
@@ -170,6 +169,7 @@
        * 点击提交
        */
       doRegister () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_TAP_SUBMIT, {})
         const me = this
         this.isDisabled = true
         if (this.verifyCode()) {
@@ -189,21 +189,16 @@
           me.errTip = '请输入正确的验证码'
           me.isDisabled = false
         }
+      },
+
+      onTitlebarBack () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_VALIDATION_CODE_BACK, {})
       }
     }
   }
 </script>
 <style lang="less">
   .register-end{
-    .btn-box{
-      .ict-btn {
-        width: 84%;
-      }
-    }
-    .ict-btn-mini{
-      height: 2rem;
-      border-radius: 0;
-      font-size: 0.7rem;
-    }
+
   }
 </style>

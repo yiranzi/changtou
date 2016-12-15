@@ -8,7 +8,7 @@ import {debug} from '../util/environment'
 
 var SEVER_URL = debug ? 'http://app.ichangtou.com.cn' : 'http://app.ichangtou.com.cn'
 
-const API_TOKEN = debug ? 'DE:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e' : 'DE:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e'
+const API_TOKEN = debug ? 'XX:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e' : 'XX:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e'
 
 const CONTENT_TYPE = 'application/json; charset=utf-8'
 

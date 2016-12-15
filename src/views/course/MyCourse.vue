@@ -50,7 +50,7 @@
   import Scroller from 'vux/scroller'
   import {myCoursesActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
-
+  import {setLocalCache} from '../../util/cache'
 export default {
   vuex: {
     getters: {
@@ -108,6 +108,7 @@ export default {
   },
   route: {
     data () {
+      setLocalCache('statistics-entry-page', {entryPage: '我的课程'})
       let promiseArray = []
       const me = this
       if (this.isLogin) {

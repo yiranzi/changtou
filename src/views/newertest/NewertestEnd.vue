@@ -31,7 +31,7 @@
               </div>
               <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
-                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail ">
+                <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail(subjectArr, $index)">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过
                   <span class="play-icon"></span>
                 </div>
@@ -197,6 +197,9 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   const financialLevel = new Map([[1, '理财原始人'], [2, '理财古代人'], [3, '理财现代人']])
 
   export default {
@@ -238,6 +241,11 @@
           return 'bulb'
       }
     },
+    route: {
+      data () {
+        setLocalCache('statistics-entry-page', {entryPage: '理财揭秘'})
+      }
+    },
       ready () {
         this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
       },
@@ -267,7 +275,12 @@
         /**
          *  去对应的课程页
          */
-        gotoSubjectDetail  (subject) {
+        gotoSubjectDetail  (subject, index) {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.NEWER_TEST_SUBJECT_TAP, {
+            type: 'P',
+            subjectId: subject.subjectId,
+            index: index + 1
+          })
           this.$route.router.go(`/subject/detail/P/${subject.subjectId}/0`)
         }
       },
