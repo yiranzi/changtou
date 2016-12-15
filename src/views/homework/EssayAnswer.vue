@@ -123,7 +123,9 @@ export default {
      * 提交作业
      */
     submitEssay () {
-      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBMIT_HOMEWORK, {})
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBMIT_HOMEWORK, {
+        lessonId: this.lessonId
+      })
       this.isAnswerChange = false
       this.rightOptions.disabled = true
       const essayContent = {
@@ -153,7 +155,9 @@ export default {
       if (!this.canDraft) {
         return
       }
-      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SAVE_DRAFT, {})
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SAVE_DRAFT, {
+        lessonId: this.lessonId
+      })
       this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,
