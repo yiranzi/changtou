@@ -36,14 +36,14 @@
         </div>
         <div>
           <p class="tip-title">温馨提示</p>
-          <p class="tip-paragraph" v-for="tip in dingtoubao.tips">{{{tip}}}</p>
+          <p class="tip-paragraph" v-for="tip in dingtoubao.tips" v-touch:tap="onTipTap">{{{tip}}}</p>
         </div>
       </div>
     </div>
 </template>
 <script>
 export default {
- props: {
+  props: {
    dingtoubao: {
      type: Object,
      default: function () {
@@ -55,7 +55,18 @@ export default {
        }
      }
    }
- }
+  },
+  methods: {
+    /**
+     * 点击跳转到课程
+     * @param e
+       */
+    onTipTap (e) {
+      if (e.target.className === 'strong link') {
+        this.$route.router.go(`/subject/detail/${e.target.getAttribute('type')}/${e.target.getAttribute('subjectid')}/0`)
+      }
+    }
+  }
 }
 </script>
 <style lang="less">
