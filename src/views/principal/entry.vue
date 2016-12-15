@@ -181,7 +181,7 @@
                   )
               }
           ).catch(
-              err => { me.errTip = err }
+//              err => { me.errTip = err }
           )
         } else {
           this.showAlert({message: '请安装QQ客户端'})
@@ -204,7 +204,7 @@
               )
             }
           ).catch(
-            err => { me.errTip = err }
+//            err => { me.errTip = err }
           )
         } else {
           this.showAlert({message: '请安装微信客户端'})
