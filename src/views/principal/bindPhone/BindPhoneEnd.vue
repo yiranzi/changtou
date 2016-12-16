@@ -44,10 +44,14 @@
   import IctButton from '../../../components/IctButton.vue'
   import IctInput from '../../../components/form/IctInput.vue'
   import {userActions} from '../../../vuex/actions'
+  import {userGetters} from '../../../vuex/getters'
   import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
   export default {
     vuex: {
+      getters: {
+        userPhone: userGetters.phone
+      },
       actions: {
         bindPhoneEnd: userActions.bindPhoneEnd
       }
@@ -75,9 +79,15 @@
     },
     route: {
       data ({to: {params: {phone}}}) {
-        const me = this
-        me.phone = phone
-        me.countdown()
+        this.phone = phone
+        this.countdown()
+      },
+
+      deactivate () {
+        clearInterval(this.timer)
+        this.validationBtnText = '获取验证码'
+        this.isValidationBtnDisable = false
+        this.leftTime = 120
       }
     },
     events: {
@@ -112,6 +122,9 @@
        * 点击获取验证码
        */
       getValidationCode () {
+        if (this.isValidationBtnDisable) {
+          return
+        }
         const me = this
         me.bindPhone(me.phone).then(
           () => me.countdown()

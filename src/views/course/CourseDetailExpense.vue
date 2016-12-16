@@ -52,7 +52,7 @@
     </scroller>
 
     <!--底部的btn-->
-    <div class="bottom-area" v-el:bottom-btn>
+    <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
       <!--<div v-if="currStatus === 'L'" class="btn-box">-->
         <!--<ict-button class="right">加载中..</ict-button>-->
       <!--</div>-->
@@ -62,20 +62,20 @@
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
 
-      <div v-if="currStatus === 'I'" class="btn-box">
+      <div v-if="currStatus === 'I' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
-      <div v-if="currStatus === 'N'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
+      <div v-if="currStatus === 'N' && currSubject.type == 'M'" class="btn-box">
+        <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
-      <div v-if="currStatus === 'P'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
       </div>
 
-      <div v-if="currStatus === 'Y' || currStatus === 'E'" class="btn-box">
+      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
@@ -155,7 +155,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -183,7 +183,9 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        getDiplomaList: graduationDiplomaActions.getDiplomaList
+        getDiplomaList: graduationDiplomaActions.getDiplomaList,
+
+        syncHomeworkList: homeworkListActions.getHomeworkList
       }
     },
 
@@ -237,6 +239,14 @@
        */
       currHomework () {
         return this.homeworkList.find(homework => (homework.subjectId + '') === this.subjectId)
+      },
+
+      isBottomBtnShow () {
+        if (this.currStatus && this.currSubject) {
+          return this.currStatus === 'W' || this.currSubject.type === 'M'
+        } else {
+          return false
+        }
       }
     },
 
@@ -391,6 +401,13 @@
             this.resetSubjectRecordStatus()
           }
         }
+      },
+
+      'isBottomBtnShow': function () {
+        this.$nextTick(() => {
+          this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+          setTimeout(this.resetScroller, 300)
+        })
       }
     },
 
@@ -614,6 +631,7 @@
       resetView () {
         this.hasVaildChapterCicked = false
         this.pause()
+        this.resetScroller()
       },
 
       /**
@@ -852,6 +870,7 @@
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
+              me.syncHomeworkList()
               me.showToast({message: '激活课程成功', type: 'success'})
             },
             function () {
@@ -931,7 +950,7 @@
       resetScroller () {
         this.$nextTick(() => {
           this.$refs.scroller.reset({
-//              top: 0
+              top: 0
           })
         })
       }

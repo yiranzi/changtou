@@ -17,7 +17,7 @@
         <ict-button type="default"
                   :disabled="isDisabled"
                   v-touch:tap="sendPhone"
-                  text="提交">
+                  text="下一步">
         </ict-button>
       </div>
 
@@ -35,6 +35,14 @@ export default {
       resetPasswordStart: userActions.resetPasswordStart
     }
   },
+
+  route: {
+    deactivate () {
+      this.phone = ''
+      this.errTip = ''
+    }
+  },
+
   data () {
     return {
       phone: '',
@@ -72,6 +80,21 @@ export default {
 </script>
 <style lang="less">
   .reset-password-start{
-
+    /*.btn-box {*/
+      /*width: 84%;*/
+      /*margin: auto auto;*/
+    /*}*/
+    /*.err-tip{*/
+      /*width: 100%;*/
+      /*line-height: 30px;*/
+      /*background: grey;*/
+      /*text-align: center;*/
+      /*color: black;*/
+      /*font-size: 0.7rem;*/
+    /*}*/
+    /*.no-err{*/
+      /*background: transparent;*/
+      /*color: transparent;*/
+    /*}*/
   }
 </style>

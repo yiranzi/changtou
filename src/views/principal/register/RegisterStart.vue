@@ -136,6 +136,7 @@
 <style lang="less">
   .register-start{
     .password-tip{
+      margin-top: 0.5rem;
       text-align: center;
       font-size: 0.6rem;
       color: #898989;
