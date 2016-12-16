@@ -56,6 +56,7 @@ export default {
       fastLoginEnd: userActions.fastLoginEnd
     }
   },
+
   data () {
     return {
       errTip: '',
@@ -67,6 +68,7 @@ export default {
       timer: null
     }
   },
+
   computed: {
     show () {
       return !this.isLogin
@@ -75,6 +77,7 @@ export default {
       return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
     }
   },
+
   watch: {
     phone (newPhone) {
       this.errTip = ''
@@ -107,6 +110,21 @@ export default {
     }
   },
 
+  events: {
+    /**
+     * 支付页面失活时, 清空控件数据
+     */
+    'pay-page-deactive': function () {
+      clearInterval(this.timer)
+      this.errTip = ''
+      this.phone = ''
+      this.validationCode = ''
+      this.validationBtnText = '获取验证码'
+      this.isValidationBtnDisable = false
+      this.leftTime = 120
+    }
+  },
+
   methods: {
     /**
      * 点击立即登录
@@ -127,6 +145,10 @@ export default {
      * 点击 获取验证码
      */
     getValidationCode () {
+      if (this.isValidationBtnDisable) {
+        return
+      }
+
       const me = this
       if (this.phone && /^1[3|4|5|7|8]\d{9}$/.test(this.phone)) {
         me.isValidationBtnDisable = true

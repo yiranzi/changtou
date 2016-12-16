@@ -123,6 +123,7 @@
             (err) => console.log(err)
         )
       },
+
       deactivate () {
         this.order = null //订单信息
         this.pic = '' // 图片
@@ -139,6 +140,7 @@
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
+        this.$broadcast('pay-page-deactive')
       }
     },
     events: {

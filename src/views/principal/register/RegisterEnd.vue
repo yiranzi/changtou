@@ -11,18 +11,19 @@
              :value.sync="phone">
     </ict-input>
 
-    <ict-input title="密码"
-             type="password"
-             placeholder="输入密码"
-             v-if=false
-             id="register-end-plainPassword"
-             :value.sync="plainPassword">
-    </ict-input>
+    <!--<ict-input title="密码"-->
+             <!--type="password"-->
+             <!--placeholder="输入密码"-->
+             <!--v-if=false-->
+             <!--id="register-end-plainPassword"-->
+             <!--:value.sync="plainPassword">-->
+    <!--</ict-input>-->
 
     <div style="height: 1rem"></div>
 
     <div class="validation-box">
       <ict-input title="验证码"
+                 id="register-end-valid-code"
                placeholder="输入验证码"
                :value.sync="validationCode">
       </ict-input>
@@ -89,7 +90,7 @@
         const me = this
         me.phone = params.phone
         me.plainPassword = params.plainPassword
-        setInterval(
+        me.timer = setInterval(
           () => {
             if (me.leftTime > 0) {
             me.leftTime--
@@ -102,6 +103,16 @@
             clearInterval(me.timer)
           }
         }, 1000)
+      },
+
+      /**
+       * 重置
+       */
+      deactivate () {
+        clearInterval(this.timer)
+        this.validationBtnText = '获取验证码'
+        this.isValidationBtnDisable = false
+        this.leftTime = 120
       }
     },
 
@@ -113,7 +124,7 @@
     },
     events: {
       'ictInputFocus' (id) {
-        if (id === 'register-end-plainPassword') {
+        if (id === 'register-end-valid-code') {
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_INPUT_VALIDATION_CODE, {})
         }
       }
@@ -154,6 +165,9 @@
        * 点击 获取验证码
        */
       getValidationCode () {
+        if (me.isValidationBtnDisable) {
+          return
+        }
         const me = this
         me.isValidationBtnDisable = true
         me.registerStart(this.phone, this.plainPassword).then(

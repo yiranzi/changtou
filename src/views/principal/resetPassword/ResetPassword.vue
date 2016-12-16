@@ -31,7 +31,7 @@
         <ict-button type="default"
                     :disabled="isDisabled"
                     v-touch:tap="sendIdentity"
-                    text="提交">
+                    text="下一步">
         </ict-button>
       </div>
     </div>
@@ -74,7 +74,20 @@ export default {
   },
   route: {
     data () {
+      this.phone = this.$route.params.phone
       this.countdown()
+    },
+
+    /**
+     * 重置
+     */
+    deactivate () {
+      this.phone = ''
+      this.errTip = ''
+      clearInterval(this.timer)
+      this.validationBtnText = '获取验证码'
+      this.isValidationBtnDisable = false
+      this.leftTime = 120
     }
   },
   methods: {
@@ -82,6 +95,10 @@ export default {
      * 点击 获取验证码
      */
     getValidationCode () {
+      if (this.isValidationBtnDisable) {
+        return
+      }
+
       var me = this
       this.resetPasswordStart(this.phone).then(
         res => me.countdown()
