@@ -27,7 +27,7 @@
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-  import {getLocalCache} from '../../util/cache'
+  import {getLocalCache, setLocalCache} from '../../util/cache'
   export default {
     vuex: {
       actions: {
@@ -141,6 +141,7 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
+        setLocalCache('strategy-period', {period: parseInt(periodIndex) ? '两年' : '一年'})
         this.selectedPeriodIndex = periodIndex
         this.selectedPeriod = this.periods[periodIndex]
       },
