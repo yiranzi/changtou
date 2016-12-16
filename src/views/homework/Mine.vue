@@ -34,7 +34,7 @@
                 <span v-for="choice in subject.lessons">
                   <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice)"  class="choice-item">
                     <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index]}}课</span>
-                    <img v-if="isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+                    <img v-if="choice.isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
                   </span>
                 </span>
               </div>
