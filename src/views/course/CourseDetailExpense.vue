@@ -52,7 +52,7 @@
     </scroller>
 
     <!--底部的btn-->
-    <div class="bottom-area" v-el:bottom-btn>
+    <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
       <!--<div v-if="currStatus === 'L'" class="btn-box">-->
         <!--<ict-button class="right">加载中..</ict-button>-->
       <!--</div>-->
@@ -62,20 +62,20 @@
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
 
-      <div v-if="currStatus === 'I'" class="btn-box">
+      <div v-if="currStatus === 'I' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
-      <div v-if="currStatus === 'N'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
+      <div v-if="currStatus === 'N' && currSubject.type == 'M'" class="btn-box">
+        <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
-      <div v-if="currStatus === 'P'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
       </div>
 
-      <div v-if="currStatus === 'Y' || currStatus === 'E'" class="btn-box">
+      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
@@ -237,6 +237,14 @@
        */
       currHomework () {
         return this.homeworkList.find(homework => (homework.subjectId + '') === this.subjectId)
+      },
+
+      isBottomBtnShow () {
+        if (this.currStatus && this.currSubject) {
+          return this.currStatus === 'W' || this.currSubject.type === 'M'
+        } else {
+          return false
+        }
       }
     },
 
@@ -386,6 +394,13 @@
             this.resetSubjectRecordStatus()
           }
         }
+      },
+
+      'isBottomBtnShow': function () {
+        this.$nextTick(() => {
+          this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+          setTimeout(this.resetScroller, 300)
+        })
       }
     },
 
