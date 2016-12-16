@@ -10,6 +10,7 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="subject-diploma">
+            <img src="../../../static/image/graduationDiploma/diploma.png">
             <p class="user-name">{{userName}}</p>
             <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
             <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
@@ -204,15 +205,18 @@
       width: 674/40rem;
       height: 876/40rem;
       margin: 30/40rem auto 100/40rem;
-      background: url('../../../static/image/graduationDiploma/diploma.png') 50% 50% no-repeat;
-      background-size: 100% 100%;
       text-align: center;
+      img{
+        width: 674/40rem;
+        height: 876/40rem;
+      }
       p{
         margin: 0;
       }
       .user-name{
         width: 100%;
         position: absolute;
+        z-index: 2;
         top: 392/40rem;
         left: 0;
         text-align: center;
@@ -223,6 +227,7 @@
       .subject-name{
         width: 100%;
         position: absolute;
+        z-index: 2;
         top: 510/40rem;
         left: 0;
         text-align: center;
@@ -231,6 +236,7 @@
       }
       .graduation-date{
         position: absolute;
+        z-index: 2;
         top: 690/40rem;
         left: 138/40rem;
         font-size: 22/40rem;
