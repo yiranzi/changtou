@@ -3,48 +3,47 @@
  *
  */
 <template>
-    <div class="strategy-zhishubao">
-      <div>
-        <div class="product-title-container">指数宝策略</div>
-        <div class="content">
-          <div class="recommend-product">
-            <div class="item">
-              <p class="title">重仓买入（指数宝仓位的{{zhishubao && zhishubao.recommondMajor.ratio}}）</p>
-              <div class="row">
-                <span>{{zhishubao && zhishubao.recommondMajor.code}}</span>
-                <span >{{zhishubao && zhishubao.recommondMajor.name}}
-                  <img class="new-img" src="../../../static/image/strategy/newTip.png" :v-if="zhishubao.recommondMajor.isNew">
-                </span>
-                <span>{{zhishubao && zhishubao.recommondMajor.recommondDate}}</span>
-              </div>
-              <div class="row">
-                <span>代码</span>
-                <span>名称</span>
-                <span>起始推荐日期</span>
-              </div>
+  <div class="strategy-zhishubao">
+      <div class="product-flag-container"></div>
+      <div class="product-title-container">指数宝策略</div>
+      <div class="content">
+        <div class="recommend-product">
+          <div class="item">
+            <p class="title">重仓买入（指数宝仓位的{{zhishubao && zhishubao.recommondMajor.ratio}}）</p>
+            <div class="row">
+              <span>{{zhishubao && zhishubao.recommondMajor.code}}</span>
+              <span >{{zhishubao && zhishubao.recommondMajor.name}}
+                <img class="new-img" src="../../../static/image/strategy/newTip.png" :v-if="zhishubao.recommondMajor.isNew">
+              </span>
+              <span>{{zhishubao && zhishubao.recommondMajor.recommondDate}}</span>
             </div>
-            <hr class="line-hr"/>
-            <div class="item">
-              <p class="title">轻仓买入（指数宝仓位的{{zhishubao && zhishubao.recommondMinor.ratio}}）</p>
-              <div class="row">
-                <span>{{zhishubao && zhishubao.recommondMinor.code}}</span>
-                <span>{{zhishubao && zhishubao.recommondMinor.name}}
-                  <img class="new-img" src="../../../static/image/strategy/newTip.png" v-if="zhishubao && zhishubao.recommondMinor.isNew">
-                </span>
-                <span>{{zhishubao && zhishubao.recommondMinor.recommondDate}}</span>
-              </div>
-              <div class="row">
-                <span>代码</span>
-                <span>名称</span>
-                <span>起始推荐日期</span>
-              </div>
+            <div class="row">
+              <span>代码</span>
+              <span>名称</span>
+              <span>起始推荐日期</span>
             </div>
-            <hr class="line-hr"/>
           </div>
-          <div class="tip-time">更新时间{{zhishubao && zhishubao.updateDate}}</div>
-          <p class="tip-title">温馨提示</p>
-          <p class="tip-paragraph" v-for="tip in zhishubao.tips">{{{tip}}}</p>
+          <hr class="line-hr"/>
+          <div class="item">
+            <p class="title">轻仓买入（指数宝仓位的{{zhishubao && zhishubao.recommondMinor.ratio}}）</p>
+            <div class="row">
+              <span>{{zhishubao && zhishubao.recommondMinor.code}}</span>
+              <span>{{zhishubao && zhishubao.recommondMinor.name}}
+                <img class="new-img" src="../../../static/image/strategy/newTip.png" v-if="zhishubao && zhishubao.recommondMinor.isNew">
+              </span>
+              <span>{{zhishubao && zhishubao.recommondMinor.recommondDate}}</span>
+            </div>
+            <div class="row">
+              <span>代码</span>
+              <span>名称</span>
+              <span>起始推荐日期</span>
+            </div>
+          </div>
+          <hr class="line-hr"/>
         </div>
+        <div class="tip-time">更新时间{{zhishubao && zhishubao.updateDate}}</div>
+        <p class="tip-title">温馨提示</p>
+        <p class="tip-paragraph" v-for="tip in zhishubao.tips">{{{tip}}}</p>
       </div>
     </div>
 </template>

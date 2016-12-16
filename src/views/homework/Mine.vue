@@ -34,7 +34,7 @@
                 <span v-for="choice in subject.lessons">
                   <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice)"  class="choice-item">
                     <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index]}}课</span>
-                    <img v-if="isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+                    <img v-if="choice.isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
                   </span>
                 </span>
               </div>
@@ -43,8 +43,8 @@
                 <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
                 <div v-for="essay in subject.lessons">
                   <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
-                      <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
-                    <span class="essay-status">{{essayStatus[essay.essayStatus]}}</span>
+                    <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
+                    <span class="essay-status" v-if="essay.available">{{essayStatus[essay.essayStatus]}}</span>
                   </p>
                 </div>
               </div>
@@ -60,7 +60,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {homeworkListGetters, courseRecordsGetters} from '../../vuex/getters'
-  import {homeworkListActions, essayActions, choiceActions} from '../../vuex/actions'
+  import {homeworkListActions, essayActions, choiceActions, courseRecordActions} from '../../vuex/actions'
   export default {
     vuex: {
       getters: {
@@ -70,7 +70,8 @@
       actions: {
         getMyHomework: homeworkListActions.getHomeworkList,
         getArticle: essayActions.getArticle,
-        getReport: choiceActions.getReport
+        getReport: choiceActions.getReport,
+        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
     data () {
@@ -93,7 +94,8 @@
           'P': '暂停中..',
           'I': ''
         },
-        essayStatus: {0: '已提交', 2: '未通过', 3: '已通过'},
+
+        essayStatus: {'-1': '未答题', 0: '审核中', 1: '草稿', 2: '未通过', 3: '通过'},
         chinaNum: {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九'},
         scrollerHeight: '0px',
         clsList: []
@@ -147,23 +149,37 @@
       }
     },
     route: {
-      data () {
+      data (transition) {
         const me = this
         setTimeout(
           function () {
             me.setScrollerHeight()
           }, 500
         )
-
-        me.getMyHomework().then(
-          (homeworkList) => {
-            me.clsList = homeworkList.map(
-              ({status}) => {
-                return {isUnfold: status === 'N'}
+        if (/\/homework\/choice\/mark/.test(transition.from.path)) {
+          // 做完选择题 返回作业目录 需要重新load课程进度
+          me.loadAllExpenseRecords().then(
+            me.getMyHomework().then(
+              (homeworkList) => {
+                me.clsList = homeworkList.map(
+                  ({status}) => {
+                    return {isUnfold: status === 'N'}
+                  }
+                )
               }
             )
-          }
-        )
+          )
+        } else {
+          me.getMyHomework().then(
+            (homeworkList) => {
+              me.clsList = homeworkList.map(
+                ({status}) => {
+                  return {isUnfold: status === 'N'}
+                }
+              )
+            }
+          )
+        }
       }
     },
     methods: {
@@ -300,7 +316,6 @@
 <style lang="less">
   .my-homework{
     width: 100%;
-    height: 100%;
     background: #fff;
     p{
       margin: 0;

@@ -19,10 +19,7 @@
 export default {
   props: {
     postponeList: Array,
-    value: {
-      type: Array,
-      default: () => []
-    }
+    value: String
   },
   watch: {
     value (newVal) {
@@ -31,19 +28,7 @@ export default {
   },
   methods: {
     isChecked (index) {
-      if (index === 0) {
-        if (this.postponeList[0].disabled) {
-          return false
-        } else {
-          return true
-        }
-      } else {
-        if (this.postponeList[0].disabled) {
-          return true
-        } else {
-          return false
-        }
-      }
+      return this.postponeList.length > 0 ? index === 0 ? !this.postponeList[0].disabled : this.postponeList[0].disabled : false
     },
     getCellSrc (disabled) {
       let src

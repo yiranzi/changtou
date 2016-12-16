@@ -74,6 +74,7 @@
        */
       onCloseTap () {
         this.show = false
+        this.$emit('pay-way-close')
       },
       /**
        * 点击确认支付
