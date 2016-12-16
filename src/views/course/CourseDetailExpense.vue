@@ -155,7 +155,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -183,7 +183,9 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        getDiplomaList: graduationDiplomaActions.getDiplomaList
+        getDiplomaList: graduationDiplomaActions.getDiplomaList,
+
+        syncHomeworkList: homeworkListActions.getHomeworkList
       }
     },
 
@@ -868,6 +870,7 @@
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
+              me.syncHomeworkList()
               me.showToast({message: '激活课程成功', type: 'success'})
             },
             function () {

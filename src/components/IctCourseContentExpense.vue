@@ -189,6 +189,7 @@
 
       'homework': function (newHomework) {
         if (newHomework) {
+          this.lessonHomeworkObj = {}
           const me = this
            newHomework.lessons.forEach(homeworkItem => {
               let homework = Object.assign({}, homeworkItem)
