@@ -129,17 +129,19 @@
       )
     }
   },
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+  },
   methods: {
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 200)
+      }, 500)
     },
 
     /**
