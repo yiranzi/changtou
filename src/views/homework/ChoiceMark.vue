@@ -115,7 +115,7 @@
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_RETEST, {
         lessonid: this.lessonId
       })
-      this.$route.router.replace('/homework/choice/answer/lessonId')
+      this.$route.router.replace(`/homework/choice/answer/${this.lessonId}`)
     },
     /**
      * 点击浮层
