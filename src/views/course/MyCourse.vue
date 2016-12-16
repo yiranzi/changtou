@@ -159,7 +159,15 @@ export default {
                 }
               }
             )
-            myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+
+            if (expenseIndex >= 0) {
+              // 有学习记录
+              myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+            } else {
+              // 无学习记录
+              myCourserItem.status = myCourserItem.studentCount + '人学过'
+            }
+
             courseList.push(myCourserItem)
           } else {
             let myCourserItem = me.myCourseList[i]
@@ -170,7 +178,15 @@ export default {
                 }
               }
             )
-            myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+
+            if (freeIndex >= 0) {
+              // 有学习记录
+              myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+            } else {
+              // 无学习记录
+              myCourserItem.status = myCourserItem.studentCount + '人学过'
+            }
+
             courseList.push(myCourserItem)
           }
         }
