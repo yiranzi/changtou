@@ -8,7 +8,6 @@
       <a slot="right">草稿箱</a>
     </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div v-if="myHomework.length === 0" class="empty-homework"></div>
       <div class="subject-panel" v-for="subject in homeworkList">
         <div  v-if="subject.choiceTotal || subject.essayTotal">
           <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
@@ -303,12 +302,6 @@
     background: #fff;
     p{
       margin: 0;
-    }
-    .empty-homework{
-      width: 100%;
-      height: 100%;
-      /*background: url('empty.png') center center no-repeat;*/ //todo
-      background-size: 50% 50%;
     }
     .subject-panel{
       position: relative;

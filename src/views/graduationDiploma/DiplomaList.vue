@@ -5,9 +5,9 @@
 <template>
     <div class="graduation-diploma-list">
       <ict-titlebar v-el:titlebar>毕业证书</ict-titlebar>
+      <div v-if="diplomaList.length === 0" class="empty-list"></div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div></div>
-        <div v-if="diplomaList.length === 0" class="empty-list"></div>
         <div v-for="item in diplomaList">
           <div class="diploma-item" v-touch:tap="onDiplomaTap(item)">
             <img src="../../assets/styles/image/graduationDiploma/diploma-icon.png">
@@ -79,8 +79,8 @@ export default {
     }
     .empty-list{
       width: 100%;
-      height: 100%;
-      /*background: url('empty.png') center center no-repeat;*/ //todo
+      height: 50%;
+      background: url('../../assets/styles/image/graduationDiploma/empty-diploma.png') center center no-repeat;
       background-size: 50% 50%;
     }
     .diploma-item{
