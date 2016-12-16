@@ -83,5 +83,8 @@
 .strategy-vip-product{
   width: 100%;
   height: 100%;
+  .strategy-zhishubao .product-flag-container{
+    height: 0;
+  }
 }
 </style>
