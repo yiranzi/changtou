@@ -281,8 +281,13 @@
         if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
           me.getDiplomaList().then(
             (newDiploma) => {
-              if (newDiploma) {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
+              const subjectDiploma = newDiploma.find(
+                function (diploma) {
+                  return diploma.subjectId === parseInt(me.subjectId)
+                }
+              )
+              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
               }
             }
           )
