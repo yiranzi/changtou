@@ -213,7 +213,7 @@
               homework.hasChoice = homework.hasChoice === 'Y'
               if (homework.hasChoice) {
                 let tip = ''
-                if (homework.choiceStatus === 'Y') {
+                if (homework.isChoicePassed === 'Y') {
                   tip = '通过'
                 } else {
                   tip = '未通过'

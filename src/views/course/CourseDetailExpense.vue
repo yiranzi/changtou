@@ -281,8 +281,13 @@
         if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
           me.getDiplomaList().then(
             (newDiploma) => {
-              if (newDiploma) {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
+              const subjectDiploma = newDiploma.find(
+                function (diploma) {
+                  return diploma.subjectId === parseInt(me.subjectId)
+                }
+              )
+              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
               }
             }
           )
@@ -507,16 +512,20 @@
           evaluation => {
             if (evaluation && evaluation.status !== null) {
               switch (evaluation.status) {
-                case 0://作业已提交
+                case 0:
+//                   console.log('作业已提交')
                   me.goEssayMark(lessonId)
                   break
-                case 1://草稿已提交 写作业
+                case 1:
+//                   console.log('草稿已提交 写作业')
                   me.goEssayAnswer(lessonId)
                   break
-                case 2://已批改 未通过 查看作业
+                case 2:
+//                   console.log('已批改 未通过 查看作业')
                   me.goEssayMark(lessonId)
                   break
-                case 3://已批改 通过 查看作业
+                case 3:
+//                   console.log('已批改 通过 查看作业')
                   me.goEssayMark(lessonId)
                   break
                 default:
@@ -524,7 +533,7 @@
                   break
               }
             } else {
-              me.showEssayFloat()
+              me.goEssayAnswer(lessonId)
             }
         }).catch(
           err => {
@@ -711,23 +720,24 @@
           confirmHandler = function () {
             me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
-
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
-          confirmText = '去写作业'
           if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
             // 有选择题
+            confirmText = '去测试'
             confirmHandler = function () {
               me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
             }
+            msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
           } else {
+            // 无选择题
+            confirmText = '去写作业'
             confirmHandler = function () {
               me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
             }
+            msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
           }
-
-          msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
 
         // 加入延迟,防止出现msg被点透的情况

@@ -48,7 +48,8 @@
       },
       // 合计 = price-coupon.userBene
       total () {
-        return this.price - this.selectedCouponUserBene
+        const total = this.price - this.selectedCouponUserBene
+        return total >= 0 ? total : 0
       },
       // 使用的投币金额
       toubi () {

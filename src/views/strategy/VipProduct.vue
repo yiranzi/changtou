@@ -90,6 +90,10 @@ export default {
       background-color: #f0eff5;
     }
 
+    .strategy-duoyizi .product-flag-container{
+      height: 0;
+    }
+
     .product-title-container {
       height: 3rem;
       line-height: 3rem;
