@@ -101,6 +101,8 @@
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        this.$broadcast('pay-page-deactive')
       }
     },
     events: {

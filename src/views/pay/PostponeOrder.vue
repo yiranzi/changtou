@@ -107,6 +107,7 @@
         this.misc = ''// 延期的时间
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+        this.$broadcast('pay-page-deactive')
       }
     },
     events: {
