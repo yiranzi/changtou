@@ -8,49 +8,51 @@
       <a slot="right">草稿箱</a>
     </ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div class="subject-panel" v-for="subject in homeworkList">
-        <div  v-if="subject.choiceTotal || subject.essayTotal">
-          <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
-            <p>{{subject.title}}
-              <span class="subject-status">{{subjectStatus[subject.status]}}</span>
-              <span class="subject-info">{{subjectInfo[subject.status]}}</span>
-            </p>
-          </div>
-
-          <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
-            <div class="subject-progress">
-              <p class="modules-title">进度</p>
-              <p v-if="subject.choiceTotal">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
-              <p>{{subject.choiceTotal ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
+      <div>
+        <div class="subject-panel" v-for="subject in homeworkList">
+          <div  v-if="subject.choiceTotal || subject.essayTotal">
+            <div class="subject-item" v-touch:tap="onSubjectTap($index, subject)">
+              <p>{{subject.title}}
+                <span class="subject-status">{{subjectStatus[subject.status]}}</span>
+                <span class="subject-info">{{subjectInfo[subject.status]}}</span>
+              </p>
             </div>
 
-            <div class="latest-notice">
+            <div v-show="clsList ? ((clsList.length > 0 && clsList[$index]) ? clsList[$index].isUnfold : false) : false">
+              <div class="subject-progress">
+                <p class="modules-title">进度</p>
+                <p v-if="subject.choiceTotal">课后测试进度 <span class="curr-progress">{{subject.completeChoiceNum}}</span>/{{subject.choiceTotal}}</p>
+                <p>{{subject.choiceTotal ? '选修作业' : '课后作业'}}进度 <span class="curr-progress">{{subject.completeEssayNum}}</span>/{{subject.essayTotal}}</p>
+              </div>
 
-            </div>
+              <div class="latest-notice">
 
-            <div class="choice-panel"  v-if="subject.choiceTotal">
-              <p class="modules-title">课后测试</p>
-              <span v-for="choice in subject.lessons">
-                <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice)"  class="choice-item">
-                  <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index]}}课</span>
-                  <img v-if="isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+              </div>
+
+              <div class="choice-panel"  v-if="subject.choiceTotal">
+                <p class="modules-title">课后测试</p>
+                <span v-for="choice in subject.lessons">
+                  <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice)"  class="choice-item">
+                    <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index]}}课</span>
+                    <img v-if="isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
+                  </span>
                 </span>
-              </span>
-            </div>
+              </div>
 
-            <div class="essay-panel" v-if="subject.essayTotal">
-              <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
-              <div v-for="essay in subject.lessons">
-                <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
+              <div class="essay-panel" v-if="subject.essayTotal">
+                <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+                <div v-for="essay in subject.lessons">
+                  <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
                     <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
-                  <span class="essay-status">{{essayStatus[essay.essayStatus]}}</span>
-                </p>
+                    <span class="essay-status" v-if="essay.available">{{essayStatus[essay.essayStatus]}}</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div style="height: 2rem"></div>
       </div>
-      <div style="height: 2rem"></div>
     </scroller>
   </div>
 </template>
@@ -91,7 +93,8 @@
           'P': '暂停中..',
           'I': ''
         },
-        essayStatus: {0: '已提交', 2: '未通过', 3: '已通过'},
+
+        essayStatus: {'-1': '未答题', 0: '审核中', 1: '草稿', 2: '未通过', 3: '通过'},
         chinaNum: {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九'},
         scrollerHeight: '0px',
         clsList: []
@@ -298,7 +301,6 @@
 <style lang="less">
   .my-homework{
     width: 100%;
-    height: 100%;
     background: #fff;
     p{
       margin: 0;
