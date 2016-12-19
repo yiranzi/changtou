@@ -217,12 +217,19 @@
       doLogin () {
         this.disabled = true
         const me = this
+
+        // 主动失去焦点, 隐藏键盘
+        const {identity, password} = this.$refs
+        identity.blur()
+        password.blur()
+
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
           this.login(this.identity, this.plainPassword).then(
             (user) => {
               me.disabled = true
               me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-              window.history.back()
+//              window.history.back()
+              setTimeout(() => { window.history.back() }, 300)
             }
           ).catch(
             err => {

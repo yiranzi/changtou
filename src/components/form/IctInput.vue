@@ -115,6 +115,10 @@
         return this.isFocus
       },
 
+      blur () {
+        const {input} = this.$els
+        input.blur()
+      },
       /**
        * 明码 ,暗码转换
        */
