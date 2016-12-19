@@ -9,7 +9,8 @@
         {{title}}
         <span class="close-icon" v-touch:tap="onCloseIconTap"></span>
       </div>
-
+      <!--<div class="arrow left-arrow" v-show="isFloatShow" v-bind:style="leftArrowStyle"></div>-->
+      <!--<div class="arrow right-arrow" v-show="isFloatShow" v-bind:style="rightArrowStyle"></div>-->
       <swiper :style="screenHeight" v-if="isShow">
         <div v-for="ppt in currPpts" class="test-box" track-by="$index">
           <img :src="ppt" alt="" v-bind:style="imgStyle" v-touch:tap="onPptTap">
@@ -78,6 +79,22 @@
           transform: `rotate(90deg) translate3d(-${height}px,-5rem,0)`
         }
       }
+
+//      leftArrowStyle () {
+//        const width = window.document.body.offsetWidth
+//        return {
+//          transformOrigin: '0 0 0',
+//          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+//        }
+//      },
+
+//      rightArrowStyle () {
+//        const height = window.document.body.offsetHeight
+//        return {
+//          transformOrigin: '0 0 0',
+//          transform: `rotate(90deg) translate3d(${height - 40}px,-40px,0)`
+//        }
+//      }
     },
 
     watch: {
@@ -182,6 +199,36 @@
       background: #000;
       opacity: 0.7;
       color: #fff;
+    }
+    .arrow{
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      width: 2rem;
+      height: 100%;
+      &:after{
+        position: absolute;
+        top: 5rem;
+        font-size: 6rem;
+        color: #ccc;
+      }
+    }
+    .left-arrow{
+      left: 0;
+      &:after{
+        left: 0;
+        font-family: 'myicon';
+        content: '\e909';
+      }
+    }
+    .right-arrow{
+      right: 0;
+      &:after{
+        right: 0;
+        font-family: 'myicon';
+        content: '\e908';
+        color: red;
+      }
     }
   }
 </style>
