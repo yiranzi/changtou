@@ -127,6 +127,13 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
+
+      // 执行完毕后, 重置标识
+      const realCallBack = () => {
+        callbackFn()
+        me.isMaskShow = false
+      }
+
       const MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-float-mask" v-touch:tap="onFloatMaskTap"></div>
@@ -136,7 +143,7 @@ const mixin = {
           'mask-component': require('./components/' + component)
         },
         events: {
-          [callbackName]: callbackFn
+          [callbackName]: realCallBack
         },
         methods: {
           onFloatMaskTap: function () {
