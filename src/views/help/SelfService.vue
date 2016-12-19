@@ -20,7 +20,7 @@
         <!--<div style="height: 1rem; width: 100%"></div>-->
       </div>
     </scroller>
-    <div class="ask_more_questions" v-el:helpBottom>
+    <div class="ask_more_questions" v-el:btn>
       <span>还有其他问题</span>
       <span v-touch:tap="goToManualService">向我提问</span>
     </div>
@@ -91,6 +91,7 @@
     .ask_more_questions{
       position: relative;
       width: 90.4%;
+      height: 2.45rem;
       line-height: 2.45rem;
       padding: 0 0.9rem;
       border-top: 1px solid #ddd;
@@ -142,21 +143,20 @@
       }
     },
 
-    watch: {
-      'helpList': function () {
-        this.refreshScroller()
-      }
-    },
-
     route: {
       data (transition) {
         const me = this
         me.loadQAList().then(
           function () {
+            me.refreshScroller()
             transition.next()
           }
         )
       }
+    },
+
+    ready () {
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.btn.offsetHeight) + 'px'
     },
 
     methods: {
@@ -185,7 +185,6 @@
 
       refreshScroller () {
         const me = this
-        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - 51) + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
