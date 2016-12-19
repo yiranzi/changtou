@@ -258,6 +258,22 @@
       },
 
       /**
+       * 展开特定lesson
+       */
+      'unfoldLessonChapters': function (lessonId) {
+        setTimeout(() => {
+          const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lessonId)
+          if (lessonIndex > -1) {
+            const lesson = this.lessons.find(lessonItem => lessonItem.lessonId === lessonId)
+            if (lesson) {
+              this.selectedLesson = lesson
+              this.unfoldLesson(lessonIndex)
+            }
+          }
+        }, 100)
+      },
+
+      /**
        * 播放下一章节
        */
       'playNextCapterExpense': function () {

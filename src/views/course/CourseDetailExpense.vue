@@ -678,7 +678,7 @@
           }
         }
 
-        // 设置当前选中(进度改变后), 课程可不可以听
+        // 设置, 当前选中(进度改变后), 课程可不可以听
         if (this.selectedLesson) {
           // 如果是公开课,永远不受限
           if (this.selectedLesson.type === 'C') {
@@ -688,12 +688,21 @@
               this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === this.selectedLesson.lessonId) === -1
           }
         }
+
+        // 设置完毕, 有进度自动展开
+        if (this.currUseabLessonArr.length > 0) {
+          this.currTabIndex = 1
+          this.$broadcast('unfoldLessonChapters', this.currUseabLessonArr[this.currUseabLessonArr.length - 1])
+          setTimeout(this.resetScroller, 300)
+        }
       },
 
       /**
        * 重置课程进度状态
        */
       resetSubjectRecordStatus () {
+        this.currTabIndex = 0
+
         this.currRecord = null
 
         //设置是否已经提交了作业
