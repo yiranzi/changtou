@@ -402,7 +402,7 @@
 
     .hide-animation {
       transition: 0.5s;
-      transform: translate3d(0,3.1rem,0);
+      transform: translate3d(0,3.5rem,0);
     }
     .third-party-container{
       position: absolute;
