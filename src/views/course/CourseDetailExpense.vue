@@ -780,6 +780,18 @@
        */
       syncRecord () {
         this.loadExpenseRecord(this.subjectId)
+        this.syncRelatedBranchRecord(this.currSubject)
+      },
+
+      /**
+       * 同步相关选修课程进度
+       */
+      syncRelatedBranchRecord (subject) {
+        if (subject) {
+          subject.branchSubjectList.forEach(branch => {
+            this.loadExpenseRecord(branch.subjectId)
+          })
+        }
       },
 
       /**
