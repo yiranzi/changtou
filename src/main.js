@@ -45,22 +45,19 @@ ictData.init()
       //eventBus.emit(eventMap.APP_START)
 
 // =====手机=====
-// const onDeviceReady = function () {
-//  appRouter.start(App, 'app')
-//  setTimeout(function () {
-//    appRouter.app.$emit(eventMap.APP_START)
-//
-//    document.addEventListener('hidekeyboard', () => window.alert('hide'), false)
-//    document.addEventListener('showkeyboard', () => window.alert('show'), false)
-//  }, 50)
-// }
-// document.addEventListener('deviceready', onDeviceReady, false)
+ const onDeviceReady = function () {
+  appRouter.start(App, 'app')
+  setTimeout(function () {
+    appRouter.app.$emit(eventMap.APP_START)
+  }, 50)
+ }
+ document.addEventListener('deviceready', onDeviceReady, false)
 
 // =====网页=====
-appRouter.start(App, 'app')
-setTimeout(function () {
-  appRouter.app.$emit(eventMap.APP_START)
-}, 50)
+//appRouter.start(App, 'app')
+//setTimeout(function () {
+//  appRouter.app.$emit(eventMap.APP_START)
+//}, 50)
 
     //},
     // Update DOM on a Received Event

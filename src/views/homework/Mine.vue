@@ -60,7 +60,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {homeworkListGetters, courseRecordsGetters} from '../../vuex/getters'
-  import {homeworkListActions, essayActions, choiceActions, courseRecordActions} from '../../vuex/actions'
+  import {homeworkListActions, essayActions, choiceActions} from '../../vuex/actions'
   export default {
     vuex: {
       getters: {
@@ -70,8 +70,7 @@
       actions: {
         getMyHomework: homeworkListActions.getHomeworkList,
         getArticle: essayActions.getArticle,
-        getReport: choiceActions.getReport,
-        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        getReport: choiceActions.getReport
       }
     },
     data () {
@@ -149,37 +148,18 @@
       }
     },
     route: {
-      data (transition) {
+      data () {
         const me = this
-        setTimeout(
-          function () {
-            me.setScrollerHeight()
-          }, 500
-        )
-        if (/\/homework\/choice\/mark/.test(transition.from.path)) {
-          // 做完选择题 返回作业目录 需要重新load课程进度
-          me.loadAllExpenseRecords().then(
-            me.getMyHomework().then(
-              (homeworkList) => {
-                me.clsList = homeworkList.map(
-                  ({status}) => {
-                    return {isUnfold: status === 'N'}
-                  }
-                )
+        me.getMyHomework().then(
+          (homeworkList) => {
+            me.clsList = homeworkList.map(
+              ({status}) => {
+                me.setScrollerHeight()
+                return {isUnfold: status === 'N'}
               }
             )
-          )
-        } else {
-          me.getMyHomework().then(
-            (homeworkList) => {
-              me.clsList = homeworkList.map(
-                ({status}) => {
-                  return {isUnfold: status === 'N'}
-                }
-              )
-            }
-          )
-        }
+          }
+        )
       }
     },
     methods: {

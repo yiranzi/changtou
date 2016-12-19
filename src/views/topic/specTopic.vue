@@ -25,10 +25,7 @@
           </div>
 
           <div class="topic-conclusion">
-            <div class="conclusion-top">
-              <span class="learning">学习收获</span>
-              <span class="triangle"></span>
-            </div>
+            <span class="learning">学习收获</span>
             <p>{{specTopicInfo.conclusionTitle}}</p>
             <div class="conclusion-content" v-for="conclusion in specTopicInfo.conclusionContent">
               <img v-bind:src="conclusion.pic" />
@@ -139,28 +136,24 @@
       background: #fff;
       font-size: 0.75rem;
       padding: 0.75rem 1.75rem;
-      .conclusion-top{
+      .learning{
+        position: relative;
+        display: block;
         width: 4.25rem;
         height: 1.5rem;
-        position: relative;
-        left: -0.25rem;
+        line-height: 1.5rem;
+        background-color: #00b0f0;
+        color: #fff;
+        text-align: center;
         margin-bottom: 0.75rem;
-        .learning{
-          width: 5rem;
-          line-height: 1.5rem;
-          background-color: #00b0f0;
-          color: #fff;
-          text-align: center;
-          padding: 0.3rem 0.7rem 0.3rem 0.5rem;
-        }
-        .triangle{
+        &:after{
           position: absolute;
-          left: 4.2rem;
-          top: -0.05rem;
+          right: -1.45rem;
+          content: '';
           height: 0;
-          width: 0.5rem;
-          border: 0.8rem solid transparent;
-          border-left-color: #00b0f0;
+          width: 0;
+          border: 0.75rem solid transparent;
+          border-left: 0.75rem solid #00b0f0;
         }
       }
       p{

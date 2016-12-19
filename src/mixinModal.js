@@ -50,6 +50,35 @@ Vue.mixin({
       })
       new MyComponent({ el: '#mask' })
       this.isMaskShow = false
+    },
+
+    /**
+     * 显示loading
+     * @param message
+       */
+    showLoading: function (message = 'loading...') {
+      let MyComponent = Vue.extend({
+        template: `<div>
+                    <div class="ict-loading-mask" ></div>
+                    <div class="ict-loading-content">
+                      <img src="../static/image/hourglass.svg" class="ict-loading-img">
+                      <p>${message}</p>
+                    </div>
+                  </div>`
+      })
+      new MyComponent({ el: '#mask' })
+      this.isMaskShow = false
+    },
+
+    /**
+     * 隐藏loading
+     */
+    hideLoading: function () {
+      let MyComponent = Vue.extend({
+        template: `<div></div>`
+      })
+      new MyComponent({ el: '#mask' })
+      this.isMaskShow = false
     }
   }
 })
