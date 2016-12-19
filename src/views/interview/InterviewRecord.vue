@@ -25,10 +25,10 @@
         </div>
           <p class="end">-END-</p>
       </div>
-      <div class="load-fail" v-show="!isLoadSuccess">
-        <div>信息加载失败</div>
-        <button v-touch:tap="loadInterviewRecord">请重新加载</button>
-      </div>
+      <!--<div class="load-fail" v-show="!isLoadSuccess">-->
+        <!--<div>加载中...</div>-->
+        <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
+      <!--</div>-->
     </scroller>
     <actionsheet :show.sync="isShowAction" :menus="channelConfig" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
   </div>
@@ -316,18 +316,18 @@
           },
           scene: window.Wechat.Scene.TIMELINE // share to Timeline
         },
-        function () {
-          console.log('分享微信朋友圈成功')
-        },
-        function (reason) {
-          if (reason === '用户点击取消并返回') {
+          function () {
+            console.log('分享微信朋友圈成功')
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
 
-          } else {
-            me.showAlert('分享微信朋友圈失败')
+            } else {
+//              me.showAlert('分享微信朋友圈失败')
+            }
           }
-        }
-      )
-    }
+        )
+      }
     },
 
     components: {
