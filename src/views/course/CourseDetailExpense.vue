@@ -286,6 +286,8 @@
               this.hideLoading()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
+          ).catch(
+            this.hideLoading()
           )
         }
       },
