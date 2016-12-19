@@ -84,6 +84,16 @@
 </style>
 <script>
   export default {
+    route: {
+      data () {
+        this.forbidBackAction()
+      },
+
+      deactivate () {
+        this.resumeBackAction()
+      }
+    },
+
     methods: {
       onCancel () {
         window.history.back()
