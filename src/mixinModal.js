@@ -178,7 +178,6 @@ const mixin = {
           }
         }
       })
-      console.log(5)
       new MyComponent({ el: '#mask' })
     }
   }
