@@ -56,12 +56,12 @@ Vue.mixin({
      * 显示loading
      * @param message
        */
-    showLoading: function (message = 'loading...') {
+    showLoading: function (message = 'loading..') {
       let MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-loading-mask" ></div>
                     <div class="ict-loading-content">
-                      <img src="../static/image/hourglass.svg" class="ict-loading-img">
+                      <img src="./static/image/hourglass.svg" class="ict-loading-img">
                       <p>${message}</p>
                     </div>
                   </div>`

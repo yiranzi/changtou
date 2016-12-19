@@ -266,6 +266,10 @@
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
+          if (this.subjectId !== subjectId) {
+            this.showLoading()
+          }
+
           this.resetView()
 
           const tasks = [this.loadExpenseSubject(subjectId)]
@@ -279,6 +283,7 @@
               return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
             },
             () => {
+              this.hideLoading()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
           )
@@ -360,30 +365,36 @@
        * 设置课程id时, 获取课程信息, 获取进度信息
        */
       'subjectId': function (newSubjectId, oldSubjectId) {
-        //设置课程信息
-        this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
+        // 这里调用 setTimeout  是因为页面切换同时刷新数据会有卡顿
+        setTimeout(() => {
+          // 隐藏loading提示
+          this.hideLoading()
 
-        //设置当前作业
-//        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
+          //设置课程信息
+          this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
-        //设置是否为选修课
-        this.isSubjectBranch = this.currSubject.type === 'B'
+          //设置当前作业
+  //        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
 
-        this.resetScroller()
+          //设置是否为选修课
+          this.isSubjectBranch = this.currSubject.type === 'B'
 
-        //获取进度信息
-        let currSubjectRecord = this.expenseRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+          this.resetScroller()
 
-        if (currSubjectRecord) {
-          // 设置课程进度状态
-          this.setSubjectRecordStatus(currSubjectRecord)
-        } else {
-          //如果没有当前课程的进度
-          //设置第0课可以听
-          this.resetSubjectRecordStatus()
-//          this.currStatus = 'W'
-//          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
-        }
+          //获取进度信息
+          let currSubjectRecord = this.expenseRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+
+          if (currSubjectRecord) {
+            // 设置课程进度状态
+            this.setSubjectRecordStatus(currSubjectRecord)
+          } else {
+            //如果没有当前课程的进度
+            //设置第0课可以听
+            this.resetSubjectRecordStatus()
+  //          this.currStatus = 'W'
+  //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
+          }
+        }, 500)
       },
 
       /**
