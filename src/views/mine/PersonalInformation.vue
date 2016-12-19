@@ -9,31 +9,32 @@
           更改昵称
         </div>
       </div>
-      <group class="phoneBind">
-        <cell title="手机绑定" :value="viewPhone" v-touch:tap="bindPhone" is-link></cell>
-      </group>
-      <group class="update-pwd">
-        <cell title="登录密码" value="修改" v-touch:tap="resetPassword" is-link></cell>
-      </group>
+      <ict-item title="手机绑定"
+                class="bind-phone"
+                :value="viewPhone"
+                link="/bind/phone">
+      </ict-item>
+      <ict-item title="登录密码"
+                class="reset-password"
+                value="修改"
+                link="/reset/password/start">
+      </ict-item>
       <ict-button v-touch:tap="doLogout">退出登录</ict-button>
     </div>
 </template>
-
 <style lang="less">
     .person-info{
-      .phoneBind {
-        margin-top: .5rem;
-      }
       p{
         margin: 0;
         padding: 0;
       }
       .user{
-        width: 93.6%;
+        width: 100%;
         height: 3.354rem;
         background: #fff;
         margin-top: .6rem;
-        padding-left: 1.2rem;
+        padding-left: 15/20rem;
+        box-sizing: border-box;
         font-size: 0.75rem;
         .ict-user-avatar{
           width: 2.8rem;
@@ -45,7 +46,6 @@
         }
         .username,.level{
           display: inline-block;
-
         }
         .username{
           color: #000;
@@ -69,33 +69,31 @@
         display: inline-block;
         -webkit-transform: rotate(45deg);
         transform: rotate(45deg);
-        height: 6px;
-        width: 6px;
-        border-width: 2px 2px 0 0;
-        border-color: #C8C8CD;
+        height: 12px;
+        width: 12px;
+        border-width: 1px 1px 0 0;
+        border-color: #898989;
         border-style: solid;
         position: relative;
-        top: -1px;
+        left: -0.2rem;
         margin-left: .3em;
-      }
-      .weui_cells{
-        margin-top: 0;
-        font-size: 0.7rem;
-      }
-      .update-pwd{
-        margin: 1.25rem 0;
       }
       .ict-btn{
         background: #fff;
         color: #000;
         border-radius: 0;
       }
+      .bind-phone{
+        border-top: #f0eff5 1px solid;
+      }
+      .reset-password{
+        margin: 1.5rem 0;
+      }
     }
 </style>
 <script>
+import IctItem from '../../components/IctItemButton.vue'
 import IctTitlebar from '../../components/IctTitleBar.vue'
-import Cell from 'vux/cell'
-import Group from 'vux/group'
 import IctButton from '../../components/IctButton.vue'
 import {userActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
@@ -134,8 +132,7 @@ export default {
   },
   components: {
     IctTitlebar,
-    Cell,
-    Group,
+    IctItem,
     IctButton
   },
   methods: {
@@ -152,12 +149,6 @@ export default {
           this.$dispatch(eventMap.LOGOUT)
           window.history.back()
         }
-    },
-    resetPassword: function () {
-      this.$route.router.go('/reset/password/start')
-    },
-    bindPhone: function () {
-      this.$route.router.go('/bind/phone')
     },
     gotoResetName: function () {
       this.$route.router.go('/resetNickName')
