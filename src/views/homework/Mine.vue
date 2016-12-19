@@ -60,7 +60,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {homeworkListGetters, courseRecordsGetters} from '../../vuex/getters'
-  import {homeworkListActions, essayActions, choiceActions, courseRecordActions} from '../../vuex/actions'
+  import {homeworkListActions, essayActions, choiceActions} from '../../vuex/actions'
   export default {
     vuex: {
       getters: {
@@ -70,8 +70,7 @@
       actions: {
         getMyHomework: homeworkListActions.getHomeworkList,
         getArticle: essayActions.getArticle,
-        getReport: choiceActions.getReport,
-        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
+        getReport: choiceActions.getReport
       }
     },
     data () {

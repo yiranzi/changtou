@@ -109,7 +109,6 @@
 
     route: {
       data () {
-//        const me = this
         return Promise.resolve().then(this.setScrollerHeight)
       }
     },
