@@ -24,8 +24,8 @@
 </template>
 <script>
   import IctButton from '../../components/IctButton.vue'
-  import { choiceGetters, userGetters } from '../../vuex/getters'
-  import { choiceActions, homeworkListActions } from '../../vuex/actions'
+  import {choiceGetters, userGetters} from '../../vuex/getters'
+  import {choiceActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
@@ -39,7 +39,8 @@ export default {
       getQuestion: choiceActions.getChoiceQuestion,
       updateReport: choiceActions.updateReport,
       submitReport: choiceActions.submitReport,
-      syncHomeworkList: homeworkListActions.getHomeworkList
+      syncHomeworkList: homeworkListActions.getHomeworkList,
+      loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
     }
   },
   data () {
@@ -206,7 +207,10 @@ export default {
         if (this.isLogin && parseInt(this.rightNum / this.totalNum * 10) >= 6) {
           this.submitReport(this.report).then(
             function () {
-              me.syncHomeworkList()
+              me.loadAllExpenseRecords().then(
+                me.syncHomeworkList()
+              )
+
               me.goToMark()
             }
           ).catch(
