@@ -30,8 +30,11 @@
       <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"></ict-button>
       <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"></ict-button>
     </div>
-    <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container style="display: block">
-      <div class="third-text-container">
+
+
+    <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container
+         v-bind:class="{'pop-animation': isPopAuthContainer, 'hide-animation': !isPopAuthContainer}">
+      <div class="third-text-container" v-touch:tap="onToggleShowThirdParty" >
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
         <i class="horizon-line"></i>
@@ -82,6 +85,7 @@
       return {
         errTip: '',
         plainPassword: '',
+        isPopAuthContainer: false,
         identity: '',
         disabled: true,
         isQQShow: false,             // 是否显示qq
@@ -275,6 +279,13 @@
         if (authContainer) {
           authContainer.setAttribute('style', 'display: block')
         }
+      },
+
+      /**
+       * 开关, 弹出或者隐藏(动画)显示三方登录按钮
+       */
+      onToggleShowThirdParty () {
+        this.isPopAuthContainer = !this.isPopAuthContainer
       }
     },
     components: {
@@ -383,6 +394,15 @@
           text-align: right;
         }
       }
+    }
+    .pop-animation {
+      transition: 0.5s;
+      transform: translate3d(0,0,0);
+    }
+
+    .hide-animation {
+      transition: 0.5s;
+      transform: translate3d(0,3.1rem,0);
     }
     .third-party-container{
       position: absolute;
