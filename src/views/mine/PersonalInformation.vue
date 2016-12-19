@@ -15,7 +15,7 @@
       <group class="update-pwd">
         <cell title="登录密码" value="修改" v-touch:tap="resetPassword" is-link></cell>
       </group>
-      <x-button type="primary"  v-touch:tap="doLogout">退出登录</x-button>
+      <ict-button v-touch:tap="doLogout">退出登录</ict-button>
     </div>
 </template>
 
@@ -85,14 +85,10 @@
       .update-pwd{
         margin: 1.25rem 0;
       }
-      .weui_btn_primary{
-        background-color: #fff;
-      }
-      .weui_btn{
+      .ict-btn{
+        background: #fff;
         color: #000;
-        font-family: '微软雅黑';
-        font-size: 0.75rem;
-        padding: 0.3rem 0;
+        border-radius: 0;
       }
     }
 </style>
@@ -100,7 +96,7 @@
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Cell from 'vux/cell'
 import Group from 'vux/group'
-import XButton from 'vux/x-button'
+import IctButton from '../../components/IctButton.vue'
 import {userActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
 import {eventMap} from '../../frame/eventConfig'
@@ -125,7 +121,6 @@ export default {
     },
     actions: {
       logout: userActions.logout
-//      resetRecords: courseRecordActions.resetRecords
     }
   },
   computed: {
@@ -141,7 +136,7 @@ export default {
     IctTitlebar,
     Cell,
     Group,
-    XButton
+    IctButton
   },
   methods: {
     doLogout: function () {
@@ -154,7 +149,6 @@ export default {
         })
         function okHandler () {
           this.logout()
-//          this.resetRecords()
           this.$dispatch(eventMap.LOGOUT)
           window.history.back()
         }
