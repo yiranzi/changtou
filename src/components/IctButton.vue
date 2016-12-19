@@ -76,7 +76,6 @@
     }
     &:not(.ict-btn-disabled):active {
       color: @color-default-pressed-text-color;
-      background-color: @color-default-pressed-background;
     }
   }
 
@@ -96,7 +95,6 @@
     }
     &:not(.ict-btn-disabled):active {
       color: @color-default-pressed-text-color;
-      background-color: @color-default-pressed-background;
     }
   }
 

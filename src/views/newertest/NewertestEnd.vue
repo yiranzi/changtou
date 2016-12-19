@@ -134,14 +134,13 @@
         color: #333;
         .type{
           padding: 0.3rem 1rem;
-          background-image: url("../../assets/styles/image/newertest/end/lableLong.png");
+          background: url("../../assets/styles/image/newertest/end/lableLong.png") no-repeat center;
           background-size: 100%;
         }
         .label{
-          background-repeat: no-repeat;
           margin-left: 0.7rem;
           padding: 0.3rem 1rem;
-          background-image: url("../../assets/styles/image/newertest/end/lable2.png");
+          background: url("../../assets/styles/image/newertest/end/lable2.png") no-repeat center;
           background-size: 100%;
         }
       }

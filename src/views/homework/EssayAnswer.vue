@@ -103,7 +103,7 @@ export default {
      */
     resizeTextarea () {
       const html = document.getElementsByTagName('html')[0]
-      const height = html.offsetHeight - this.$els.titlebar.clientHeight - this.$els.question.clientHeight - this.$els.fold.clientHeight - this.$els.draftbar.clientHeight
+      const height = html.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.question.offsetHeight - this.$els.fold.offsetHeight - this.$els.draftbar.offsetHeight
       this.textareaStyle = `height:${height}px;`
     },
 
@@ -115,7 +115,7 @@ export default {
       this.foldText = this.isFold ? '展开' : '收起'
       setTimeout(
         this.resizeTextarea,
-        50
+        200
       )
     },
 
@@ -184,7 +184,7 @@ export default {
       textarea.blur()
       setTimeout(
         this.resizeTextarea,
-        100
+        200
       )
     },
 
