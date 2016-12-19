@@ -39,7 +39,6 @@
               <p class="course-list-state">{{course.status}}</p>
             </div>
           </div>
-          <div style="height: 4.8rem; background-color: transparent"></div>
         </div>
       </scroller>
     </div>
@@ -127,13 +126,15 @@ export default {
       )
     }
   },
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+  },
   methods: {
     /**
      * 设置滚动高度
      */
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
