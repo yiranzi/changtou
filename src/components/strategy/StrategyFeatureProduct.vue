@@ -59,6 +59,9 @@ export default {
         background: #ffab6d;
         &:nth-of-type(2){
           background: #ffcda7;
+          .play-icon{
+            display: none;
+          }
         }
       }
     }
