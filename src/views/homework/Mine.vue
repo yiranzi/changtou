@@ -149,37 +149,18 @@
       }
     },
     route: {
-      data (transition) {
+      data () {
         const me = this
-        setTimeout(
-          function () {
-            me.setScrollerHeight()
-          }, 500
-        )
-        if (/\/homework\/choice\/mark/.test(transition.from.path)) {
-          // 做完选择题 返回作业目录 需要重新load课程进度
-          me.loadAllExpenseRecords().then(
-            me.getMyHomework().then(
-              (homeworkList) => {
-                me.clsList = homeworkList.map(
-                  ({status}) => {
-                    return {isUnfold: status === 'N'}
-                  }
-                )
+        me.getMyHomework().then(
+          (homeworkList) => {
+            me.clsList = homeworkList.map(
+              ({status}) => {
+                me.setScrollerHeight()
+                return {isUnfold: status === 'N'}
               }
             )
-          )
-        } else {
-          me.getMyHomework().then(
-            (homeworkList) => {
-              me.clsList = homeworkList.map(
-                ({status}) => {
-                  return {isUnfold: status === 'N'}
-                }
-              )
-            }
-          )
-        }
+          }
+        )
       }
     },
     methods: {

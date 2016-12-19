@@ -73,7 +73,8 @@ const mutations = {
       // 设置延期次数
       record.postponeCount = record.lessonSet.postponeCount
       // 设置课程的学习时间
-      record.accumulatedTime = record.lessonSet.finishDate ? parseInt((new Date(record.lessonSet.finishDate.replace(/-/g, '/')) - new Date(record.lessonSet.initDate.replace(/-/g, '/'))) / 1000 / 60) : 0
+      const accumulatedTime = record.lessonSet.finishDate ? parseInt((new Date(record.lessonSet.finishDate.replace(/-/g, '/')) - new Date(record.lessonSet.initDate.replace(/-/g, '/'))) / 1000 / 60) : 0
+      record.accumulatedTime = accumulatedTime >= 0 ? accumulatedTime : 0
     })
 
     state.expenseRecords = records

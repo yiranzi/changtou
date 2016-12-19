@@ -76,20 +76,22 @@
         )
       }
     },
+    ready () {
+      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - this.$els.btns.clientHeight + 'px'
+    },
     methods: {
       /**
        * 设置滚动框高度
        */
       setScrollerHeight () {
         const me = this
-        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
           })
         })
-        }, 200)
+        }, 500)
       },
 
       /**

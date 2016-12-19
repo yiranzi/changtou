@@ -257,9 +257,9 @@
         }, 150)
       },
       onActionTap (event) {
-        if (event.target.src.indexOf('wechat') >= 0) {
+        if (event.target.className === 'wechat') {
           this.shareToFriend() // 分享朋友
-        } else if (event.target.src.indexOf('timeline') >= 0) {
+        } else if (event.target.className === 'timeline') {
           this.shareToFriendCircle() //分享到朋友圈
         }
       },

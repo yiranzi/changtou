@@ -50,20 +50,23 @@ export default {
         )
       }
   },
+  ready () {
+    this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight + 'px'
+  },
   methods: {
     /**
      * 设置 滚动范围高度
      */
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
+
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 200)
+      }, 500)
     }
   },
   components: {
