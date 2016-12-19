@@ -100,7 +100,8 @@ const mixin = {
     },
 
     [eventMap.SHOW_ALERT]: function ({message, btnText}) {
-      this.isMaskShow = true
+      // todo 设置isMaskShow的标识
+      //this.isMaskShow = true
       this.alertBox = {
         show: true,
         message: message,
