@@ -814,7 +814,8 @@
         })
         this.currTabIndex = 1
         // 交给子控件统一处理
-        this.$broadcast('audition', this.currSubject.lessonList[0])
+        // 播放第一个lesson
+        this.$broadcast('listenToLesson', this.currSubject.lessonList[0])
 //        this.selectedLesson = this.currSubject.lessonList[0]
 //        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
       },

@@ -237,9 +237,9 @@
 
     events: {
       /**
-       * 试听事件
+       * 播放特定 lesson
        */
-      'audition': function (lesson) {
+      'listenToLesson': function (lesson) {
         //  展开某(第)一个lesson
         this.selectedLesson = lesson
 
