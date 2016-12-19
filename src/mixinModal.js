@@ -50,7 +50,6 @@ Vue.mixin({
       })
       new MyComponent({ el: '#mask' })
       this.isMaskShow = false
-      this.isMaskShow = false
     }
   }
 })
@@ -118,6 +117,7 @@ const mixin = {
       }
       setTimeout(
         () => {
+          this.isMaskShow = false
           this.toast.show = false
         }, timeout
       )
