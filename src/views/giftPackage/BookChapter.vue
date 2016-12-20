@@ -144,7 +144,6 @@ export default {
       })
     },
     gotoChapterDetails (currChapter) {
-      console.log('currChapter:', currChapter)
       this.hideMask()
       this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
     },
