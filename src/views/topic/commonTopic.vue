@@ -53,6 +53,7 @@
         text-align: center;
       }
       .ict-button{
+        border-radius: 0;
         height: 2.2rem;
       }
     }
