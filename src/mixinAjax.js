@@ -55,7 +55,7 @@ const mixin = {
     responIntercepter: function (res) {
       // 若返回值不是object, 强制转换
       if (this.isSystemUpdate(res.data)) {
-        this.abort()
+        // TODO 终结ajax请求
         this.showSystempUpdatePage()
       }
       if (typeof res.data === 'string') {
