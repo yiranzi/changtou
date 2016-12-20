@@ -81,18 +81,20 @@
       padding: 1rem 0.9rem 0.85rem;
       font-size: 0.7rem;
       color: #444;
-      p {
+      *{
         margin: 0;
+        padding: 0;
+        list-style: none;
       }
     }
     .essay-explain{
+      p {
+        margin: 0;
+      }
       padding: 0.85rem 0.9rem 2.5rem;
       font-size: 0.65rem;
       color: #656565;
       margin-bottom: 2.2rem;
-      p {
-        margin: 0;
-      }
     }
   }
 </style>
