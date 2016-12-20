@@ -10,7 +10,7 @@
 
           <div v-for="course in specTopicInfo.coursePackage">
             <div class="recommend">
-              <div class="recommend-subject" v-touch:tap="onSubjectTap(course)">
+              <div class="recommend-subject" v-touch:tap="onSubjectTap(course, $index)">
                 <img v-bind:src="course.pic">
                 <div class="item-info">
                   <span class="item-count">{{course.purchaseCount}}人学过</span>
@@ -25,10 +25,7 @@
           </div>
 
           <div class="topic-conclusion">
-            <div class="conclusion-top">
-              <span class="learning">学习收获</span>
-              <span class="triangle"></span>
-            </div>
+            <span class="learning">学习收获</span>
             <p>{{specTopicInfo.conclusionTitle}}</p>
             <div class="conclusion-content" v-for="conclusion in specTopicInfo.conclusionContent">
               <img v-bind:src="conclusion.pic" />
@@ -41,7 +38,7 @@
       <div class="bottom-area" v-el:bottom-btn >
         <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
-          <span class="disPrice">￥{{ priceObj.disPriceSum}}</span>
+          <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
         </ict-button>
         <div class="buttom-tip" v-show="isBuySubject">已购买过专题中任意一课，不再享受打包购买优惠价</div>
@@ -139,28 +136,24 @@
       background: #fff;
       font-size: 0.75rem;
       padding: 0.75rem 1.75rem;
-      .conclusion-top{
+      .learning{
+        position: relative;
+        display: block;
         width: 4.25rem;
         height: 1.5rem;
-        position: relative;
-        left: -0.25rem;
+        line-height: 1.5rem;
+        background-color: #00b0f0;
+        color: #fff;
+        text-align: center;
         margin-bottom: 0.75rem;
-        .learning{
-          width: 5rem;
-          line-height: 1.5rem;
-          background-color: #00b0f0;
-          color: #fff;
-          text-align: center;
-          padding: 0.3rem 0.7rem 0.3rem 0.5rem;
-        }
-        .triangle{
+        &:after{
           position: absolute;
-          left: 4.2rem;
-          top: -0.05rem;
+          right: -1.45rem;
+          content: '';
           height: 0;
-          width: 0.5rem;
-          border: 0.8rem solid transparent;
-          border-left-color: #00b0f0;
+          width: 0;
+          border: 0.75rem solid transparent;
+          border-left: 0.75rem solid #00b0f0;
         }
       }
       p{
@@ -193,6 +186,7 @@
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
+        border-radius: 0;
 
         .disPrice{
           padding: 0 0.25rem;
@@ -220,6 +214,9 @@
   import IctButton from '../../components/IctButton.vue'
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
   import {specTopicGetters, myCoursesGetters, userGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -241,6 +238,7 @@
         transition.next()
       },
       data ({to: {params: {stpId}}}) {
+        setLocalCache('statistics-entry-page', {entryPage: '专题'})
         this.stpId = stpId
 
         let taskArr = []
@@ -319,6 +317,10 @@
         return ret
       },
       toBuy () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
+          '商品名称': this.specTopicInfo.name,
+          '价格': this.priceObj.origPriceSum
+        })
         //跳转到订单页面
         const path = '/pay-ST-' + this.$route.params.stpId
         this.$route.router.on(path, {
@@ -329,7 +331,12 @@
       /**
        * 点击课程
        */
-      onSubjectTap (subject) {
+      onSubjectTap (subject, index) {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
+          'type': subject.type,
+          'subjectid': subject.subjectId,
+          'index': index
+        })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       }
     },

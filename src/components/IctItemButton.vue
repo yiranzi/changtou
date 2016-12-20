@@ -3,7 +3,7 @@
  * 类似个人中心 的条目 按钮
  */
 <template>
-  <div class="ict-item" :disabled="disabled" :class="{'ict-item-disabled': disabled}" v-touch:tap="onClick">
+  <div class="ict-item" :disabled="disabled" :class="{'ict-item-disabled': disabled, 'ict-item-active': btnActive}" v-touch:tap="onClick">
     <div class="ict-item-title">
       <p>
         {{title}}
@@ -33,9 +33,19 @@ export default {
       type: [String, Object]
     }
   },
+  data () {
+    return {
+      btnActive: false //是否被点击
+    }
+  },
   methods: {
     onClick () {
       if (!this.disabled) {
+        this.btnActive = true
+        setTimeout(
+          () => { this.btnActive = false },
+          100
+        )
         this.$route.router.go(this.link)
       }
     }
@@ -83,6 +93,14 @@ export default {
       height: 1px;
       border-bottom: 1px solid #f0eff5;
       color: #ccc;
+    }
+  }
+  .ict-item-active{
+    background-color: #000;
+    opacity: 0.3;
+    color: #fff;
+    .ict-item-title,.ict-item-value,&:after {
+      color: #fff;
     }
   }
 

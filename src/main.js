@@ -5,13 +5,14 @@ import VueTouch from 'vue-touch'
 import VueResource from 'vue-resource'
 import {appRouter} from './util/appRouter'
 import {eventMap} from './frame/eventConfig'
+import ictData from './statistics/ictData'
 require('es6-promise').polyfill()
 
 Vue.use(VueTouch)
 Vue.use(VueResource)
 
 Vue.config.debug = process.env.NODE_ENV === 'dev'
-
+ictData.init()
 // start run app
 //if ((Device.platform === platformMap.WEB)) {
   // on develop environment
@@ -44,19 +45,19 @@ Vue.config.debug = process.env.NODE_ENV === 'dev'
       //eventBus.emit(eventMap.APP_START)
 
 // =====手机=====
-// const onDeviceReady = function () {
-//  appRouter.start(App, 'app')
-//  setTimeout(function () {
-//    appRouter.app.$emit(eventMap.APP_START)
-//  }, 50)
-// }
-// document.addEventListener('deviceready', onDeviceReady, false)
+ const onDeviceReady = function () {
+  appRouter.start(App, 'app')
+  setTimeout(function () {
+    appRouter.app.$emit(eventMap.APP_START)
+  }, 50)
+ }
+ document.addEventListener('deviceready', onDeviceReady, false)
 
 // =====网页=====
-appRouter.start(App, 'app')
-setTimeout(function () {
-  appRouter.app.$emit(eventMap.APP_START)
-}, 50)
+//appRouter.start(App, 'app')
+//setTimeout(function () {
+//  appRouter.app.$emit(eventMap.APP_START)
+//}, 50)
 
 
 

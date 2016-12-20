@@ -103,10 +103,16 @@
 
 <script>
   export default{
-    props: [
-      'subject',
-      'record'
-    ],
+    props: {
+      subject: {
+        type: Object,
+        default: null
+      },
+      record: {
+        type: Object,
+        default: null
+      }
+    },
 
     data () {
       return {
@@ -146,6 +152,9 @@
               timeTip = `${resumeDays}天后将自动解锁开启`
               break
           }
+        } else {
+          timeTip = `课程有效期${this.subject.period}天`
+          priceTip = `￥${this.subject.price}`
         }
 //
         this.timeTip = timeTip
@@ -153,8 +162,10 @@
       },
 
       'subject': function (newSubject) {
-        this.priceTip = `￥${newSubject.price}`
-        this.timeTip = `课程有效期${newSubject.period}天`
+        if (!this.record) {
+          this.priceTip = `￥${newSubject.price}`
+          this.timeTip = `课程有效期${newSubject.period}天`
+        }
       }
     },
 

@@ -42,7 +42,7 @@ export default {
       scrollerHeight: '0px'
     }
   },
-  router: {
+  route: {
       data () {
         // 每一次进入页面都能获取实时的通知文本
         return Promise.all([this.getVipProduct(), this.getVipNotice()]).then(
@@ -50,20 +50,23 @@ export default {
         )
       }
   },
+  ready () {
+    this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight + 'px'
+  },
   methods: {
     /**
      * 设置 滚动范围高度
      */
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
+
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 200)
+      }, 500)
     }
   },
   components: {
@@ -88,6 +91,10 @@ export default {
       height: 0.5rem;
       width: 100%;
       background-color: #f0eff5;
+    }
+
+    .strategy-duoyizi .product-flag-container{
+      height: 0;
     }
 
     .product-title-container {

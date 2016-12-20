@@ -21,7 +21,7 @@
       width: 100%;
       padding: 0.75rem 1rem;
       background-color: #fff;
-      border-bottom: 1.05rem #f0eff5 solid;
+      border-bottom: 1rem #f0eff5 solid;
       position: relative;
       .pic{
         width: 16.75rem;
@@ -54,6 +54,8 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -100,6 +102,9 @@
     },
     methods: {
       goToInterviewRecord (interviewId) {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
+          '访谈Id': interviewId
+        })
         this.$route.router.go(`/interview/interview-record/${interviewId}`)
       }
     },

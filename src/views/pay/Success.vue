@@ -22,7 +22,7 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import IctButton from '../../components/IctButton.vue'
-
+import {getLocalCache, clearLocalCache} from '../../util/cache'
   const messages = {
     'S': {
       name: '课程',
@@ -90,6 +90,14 @@ export default {
   },
   methods: {
     setMessage (type) {
+      let message = messages[type]
+      let period = getLocalCache('strategy-period') && getLocalCache('strategy-period').period
+      clearLocalCache('strategy-period')
+      if (type === 'VS' || type === 'PS') {
+        message.content = message.content.map(
+          (item) => item.replace(/{period}/g, period)
+        )
+      }
       this.message = messages[type]
     },
     onConfirm () {

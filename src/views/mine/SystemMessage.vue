@@ -3,7 +3,7 @@
     <ict-titlebar v-el:titlebar>系统消息</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y :bounce="true" v-ref:scroller :height="scrollerHeight">
       <div>
-        <div class="ios-tip" v-show="tip">
+        <div class="ios-tip" v-show="isTipShow">
           <p>想要第一时间收到课程的提醒推送，请确保系统通知处于开启状态。
             若要开启，请在iPhone系统的“设置”-“通知”中，找到“长投学堂”并开启通知</p>
           <p class="tip" v-touch:tap="onTapTip">不再提示</p>
@@ -72,6 +72,9 @@
   import Scroller from 'vux/scroller'
   import {messageGetters} from '../../vuex/getters'
   import {messageActions} from '../../vuex/actions'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
+  import {platformMap, Device} from '../../plugin/device'
+
   export default {
     vuex: {
       actions: {
@@ -81,6 +84,7 @@
         msgArr: messageGetters.msgArr
       }
     },
+
     route: {
       data (transition) {
         this.loadMsgArr().then(
@@ -91,6 +95,22 @@
             transition.next()
           }
         )
+      }
+    },
+
+    /**
+     *
+     * @returns {{isTipShow: boolean}}
+     */
+    data () {
+      let isTipShow = false
+      if (Device.platform === platformMap.IOS && !getLocalCache('IS_IOS_MSG_TIP_SHOW')) {
+        isTipShow = true
+      }
+
+      return {
+        isTipShow,
+        scrollerHeight: '590px'
       }
     },
 
@@ -106,23 +126,18 @@
             })
           })
         }, 1500)
-      },
-      'tip': function (newTip) {
-        this.tip = newTip
       }
+//      'tip': function (newTip) {
+//        this.tip = newTip
+//      }
     },
     methods: {
       onTapTip () {
-        this.tip = false
-        return this.tip
+        this.isTipShow = false
+        setLocalCache('IS_IOS_MSG_TIP_SHOW', {isShow: false})
       }
     },
-    data () {
-      return {
-        scrollerHeight: '590px',
-        tip: true
-      }
-    },
+
     components: {
       IctTitlebar,
       Scroller

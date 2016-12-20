@@ -39,7 +39,6 @@
               <p class="course-list-state">{{course.status}}</p>
             </div>
           </div>
-          <div style="height: 4.8rem; background-color: transparent"></div>
         </div>
       </scroller>
     </div>
@@ -50,7 +49,7 @@
   import Scroller from 'vux/scroller'
   import {myCoursesActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
-
+  import {setLocalCache} from '../../util/cache'
 export default {
   vuex: {
     getters: {
@@ -108,6 +107,7 @@ export default {
   },
   route: {
     data () {
+      setLocalCache('statistics-entry-page', {entryPage: '我的课程'})
       let promiseArray = []
       const me = this
       if (this.isLogin) {
@@ -126,13 +126,15 @@ export default {
       )
     }
   },
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+  },
   methods: {
     /**
      * 设置滚动高度
      */
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
@@ -158,7 +160,15 @@ export default {
                 }
               }
             )
-            myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+
+            if (expenseIndex >= 0) {
+              // 有学习记录
+              myCourserItem.status = me.graduatedType[me.expenseRecords[expenseIndex].status]
+            } else {
+              // 无学习记录
+              myCourserItem.status = myCourserItem.studentCount + '人学过'
+            }
+
             courseList.push(myCourserItem)
           } else {
             let myCourserItem = me.myCourseList[i]
@@ -169,7 +179,15 @@ export default {
                 }
               }
             )
-            myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+
+            if (freeIndex >= 0) {
+              // 有学习记录
+              myCourserItem.status = '已学习到' + me.freeRecords[freeIndex].sequence + '/' + me.freeRecords[freeIndex].count + '课'
+            } else {
+              // 无学习记录
+              myCourserItem.status = myCourserItem.studentCount + '人学过'
+            }
+
             courseList.push(myCourserItem)
           }
         }

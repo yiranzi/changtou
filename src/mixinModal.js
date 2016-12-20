@@ -50,6 +50,34 @@ Vue.mixin({
       })
       new MyComponent({ el: '#mask' })
       this.isMaskShow = false
+    },
+
+    /**
+     * 显示loading
+     * @param message
+       */
+    showLoading: function (message = 'loading..') {
+      let MyComponent = Vue.extend({
+        template: `<div>
+                    <div class="ict-loading-mask" ></div>
+                    <div class="ict-loading-content">
+                      <img src="./static/image/hourglass.svg" class="ict-loading-img">
+                      <p>${message}</p>
+                    </div>
+                  </div>`
+      })
+      new MyComponent({ el: '#mask' })
+      this.isMaskShow = false
+    },
+
+    /**
+     * 隐藏loading
+     */
+    hideLoading: function () {
+      let MyComponent = Vue.extend({
+        template: `<div></div>`
+      })
+      new MyComponent({ el: '#mask' })
       this.isMaskShow = false
     }
   }
@@ -101,7 +129,8 @@ const mixin = {
     },
 
     [eventMap.SHOW_ALERT]: function ({message, btnText}) {
-      this.isMaskShow = true
+      // todo 设置isMaskShow的标识
+      //this.isMaskShow = true
       this.alertBox = {
         show: true,
         message: message,
@@ -118,6 +147,7 @@ const mixin = {
       }
       setTimeout(
         () => {
+          this.isMaskShow = false
           this.toast.show = false
         }, timeout
       )
@@ -126,6 +156,13 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
+
+      // 执行完毕后, 重置标识
+      const realCallBack = () => {
+        callbackFn()
+        me.isMaskShow = false
+      }
+
       const MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-float-mask" v-touch:tap="onFloatMaskTap"></div>
@@ -135,7 +172,7 @@ const mixin = {
           'mask-component': require('./components/' + component)
         },
         events: {
-          [callbackName]: callbackFn
+          [callbackName]: realCallBack
         },
         methods: {
           onFloatMaskTap: function () {

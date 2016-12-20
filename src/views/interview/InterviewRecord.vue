@@ -25,10 +25,10 @@
         </div>
           <p class="end">-END-</p>
       </div>
-      <div class="load-fail" v-show="!isLoadSuccess">
-        <div>信息加载失败</div>
-        <button v-touch:tap="loadInterviewRecord">请重新加载</button>
-      </div>
+      <!--<div class="load-fail" v-show="!isLoadSuccess">-->
+        <!--<div>加载中...</div>-->
+        <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
+      <!--</div>-->
     </scroller>
     <actionsheet :show.sync="isShowAction" :menus="channelConfig" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
   </div>
@@ -187,6 +187,8 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -255,14 +257,19 @@
         }, 150)
       },
       onActionTap (event) {
-        if (event.target.src.indexOf('wechat') >= 0) {
+        if (event.target.className === 'wechat') {
           this.shareToFriend() // 分享朋友
-        } else if (event.target.src.indexOf('timeline') >= 0) {
+        } else if (event.target.className === 'timeline') {
           this.shareToFriendCircle() //分享到朋友圈
         }
       },
       //分享朋友
       shareToFriend () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+          '访谈Id': this.interviewRecord.interviewId,
+          '分享渠道': '微信-会话'
+        })
+
         const me = this
         window.Wechat.share({
             message: {
@@ -291,6 +298,11 @@
 
       //分享到朋友圈
       shareToFriendCircle () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+          '访谈Id': this.interviewRecord.interviewId,
+          '分享渠道': '微信-朋友圈'
+        })
+
         const me = this
         window.Wechat.share({
           message: {
@@ -304,18 +316,18 @@
           },
           scene: window.Wechat.Scene.TIMELINE // share to Timeline
         },
-        function () {
-          console.log('分享微信朋友圈成功')
-        },
-        function (reason) {
-          if (reason === '用户点击取消并返回') {
+          function () {
+            console.log('分享微信朋友圈成功')
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
 
-          } else {
-            me.showAlert('分享微信朋友圈失败')
+            } else {
+//              me.showAlert('分享微信朋友圈失败')
+            }
           }
-        }
-      )
-    }
+        )
+      }
     },
 
     components: {

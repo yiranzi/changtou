@@ -9,7 +9,7 @@
         <a slot="right">完成</a>
       </ict-titlebar>
       <div class="choice-score">
-        <rater :value.sync="score" slot="value" active-color="#04BE02" :font-size="40" disabled></rater>
+        <rater :value.sync="score" slot="value" active-color="#fbc02d" :font-size="40" disabled></rater>
         <p class="tip-up">知识点掌握度</p>
         <p class="tip-down">{{{choiceScoreTip}}}</p>
       </div>
@@ -17,7 +17,7 @@
         <p class="knowledge-tip">此次作业小测试设计知识点{{pointNum}}个</p>
         <div v-for="point in report.kpScore" class="item">
           <cell :title="pointContent($index)">
-            <rater :class="point-score" :value="pointScore($index)" slot="value" active-color="#04BE02" :font-size="20" disabled></rater>
+            <rater :class="point-score" :value="pointScore($index)" slot="value" active-color="#fbc02d" :font-size="20" disabled></rater>
           </cell>
         </div>
         <hr>
@@ -42,6 +42,8 @@
   import Rater from 'vux/rater'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import { choiceGetters, userGetters } from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
   vuex: {
     getters: {
@@ -110,7 +112,10 @@
      * 重测
      */
     reTest () {
-      this.$route.router.replace('/homework/choice/answer/lessonId')
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_RETEST, {
+        lessonid: this.lessonId
+      })
+      this.$route.router.replace(`/homework/choice/answer/${this.lessonId}`)
     },
     /**
      * 点击浮层

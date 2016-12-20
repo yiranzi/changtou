@@ -63,6 +63,8 @@
   import IctButton from '../../components/IctButton.vue'
   import {commonTopicActions} from '../../vuex/actions'
   import {commonTopicGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       actions: {
@@ -125,6 +127,10 @@
         window.history.back()
       },
       toBuy () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TICKET_CONFIRM_TAP, {
+          '商品名称': this.commonTopicInfo.title,
+          '价格': this.commonTopicInfo.price
+        })
         //跳转到订单页面
         const path = '/pay-CT-' + this.ctpId
         this.$route.router.on(path, {

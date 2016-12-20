@@ -8,10 +8,10 @@
         <a slot="right">提交</a>
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
-      <p class="fold-panel"><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea"></textarea>
+      <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
+      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()"></textarea>
         <div v-el:draftbar class="draft-box">
-          <span v-touch:tap="submitDraft">存草稿</span>
+          <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
         </div>
     </div>
@@ -22,6 +22,8 @@
   import xTextarea from 'vux/x-textarea'
   import { essayGetters } from '../../vuex/getters'
   import { essayActions } from '../../vuex/actions'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
   vuex: {
     getters: {
@@ -36,6 +38,7 @@ export default {
   },
   data () {
     return {
+      canDraft: false, //是否可以保存草稿
       lessonId: 0,
       rightOptions: { //titlebar
         callback: '',
@@ -44,19 +47,28 @@ export default {
       foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
-      answer: this.essayAnswer, // 填写的答案
-      isSubmit: false //是否是提交作业 不是退出时保存草稿
+      answer: '', // 填写的答案
+      isAnswerChange: false //作业或草稿是否有关系,有更新退出时保存草稿
     }
   },
   watch: {
     'answer' (answer) {
       if (/\S/.test(answer)) {
         //非空合法内容
+        if (this.essayAnswer) {
+          // 修改草稿
+          this.isAnswerChange = answer !== this.essayAnswer
+        } else {
+          // 新写作业
+          this.isAnswerChange = true
+        }
+        this.canDraft = true
         this.rightOptions = {
           callback: this.submitEssay,
           disabled: false
         }
       } else {
+        this.canDraft = false
         this.rightOptions.disabled = true
       }
       this.resizeTextarea()
@@ -66,21 +78,23 @@ export default {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.getQuestion(this.lessonId)
+      this.answer = this.essayAnswer
       setTimeout(
         this.resizeTextarea,
         300
       )
     },
     deactivate () {
-      if (!this.submit) {
+      if (this.isAnswerChange && this.essayAnswer) {
         this.submitDraft()
       }
-      this.submit = false
+      this.isAnswerChange = false
       this.lessonId = 0
       this.foldText = '收起' //折叠 文案
       this.isFold = false // 是否折叠题目
       this.textareaStyle = '' //textarea样式
-      this.answer = this.essayAnswer // 填写的答案
+      this.answer = '' // 填写的答案
+      this.canDraft = false
     }
   },
   methods: {
@@ -89,8 +103,7 @@ export default {
      */
     resizeTextarea () {
       const html = document.getElementsByTagName('html')[0]
-      const { titlebar, question, draftbar } = this.$els
-      const height = html.offsetHeight - titlebar.clientHeight - question.clientHeight - draftbar.clientHeight
+      const height = html.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.question.offsetHeight - this.$els.fold.offsetHeight - this.$els.draftbar.offsetHeight
       this.textareaStyle = `height:${height}px;`
     },
 
@@ -102,7 +115,7 @@ export default {
       this.foldText = this.isFold ? '展开' : '收起'
       setTimeout(
         this.resizeTextarea,
-        50
+        200
       )
     },
 
@@ -110,7 +123,10 @@ export default {
      * 提交作业
      */
     submitEssay () {
-      this.submit = true
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBMIT_HOMEWORK, {
+        lessonId: this.lessonId
+      })
+      this.isAnswerChange = false
       this.rightOptions.disabled = true
       const essayContent = {
         articleId: this.articleId,
@@ -136,6 +152,13 @@ export default {
        * 保存草稿
        */
     submitDraft () {
+      if (!this.canDraft) {
+        return
+      }
+      this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SAVE_DRAFT, {
+        lessonId: this.lessonId
+      })
+      this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,
         content: this.answer,
@@ -161,7 +184,23 @@ export default {
       textarea.blur()
       setTimeout(
         this.resizeTextarea,
-        50
+        200
+      )
+    },
+
+    onTextFocus () {
+      this.$els.draftbar.setAttribute('style', 'position: relative')
+      setTimeout(
+        this.resizeTextarea,
+        100
+      )
+    },
+
+    onTextBlur () {
+      this.$els.draftbar.setAttribute('style', 'position: absolute')
+      setTimeout(
+        this.resizeTextarea,
+        100
       )
     }
   },
@@ -174,7 +213,9 @@ export default {
 </script>
 <style lang="less">
   .essay-answer{
+    width: 100%;
     height: 100%;
+    position: relative;
     p{
       margin: 0;
     }
@@ -192,21 +233,24 @@ export default {
       *{
         margin: 0;
         padding: 0;
+        list-style: none;
       }
     }
     .fold-panel{
       position: relative;
       width: 100%;
-      height: 30/40rem;
+      height: 60/40rem;
       background: #f0eff5;
       .fold-icon{
         position: absolute;
-        padding: 0.5rem 1rem;
+        padding: 0 0.5rem;
+        line-height: 60/40rem;
         right: 0;
         bottom: 0;
         display: block;
         font-size: 0.65rem;
         color: #00b0f0;
+        background: #f0eff5;
       }
     }
     textarea{
@@ -223,7 +267,9 @@ export default {
     }
 
     .draft-box{
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       height: 2.2rem;
       line-height: 2.2rem;
       padding: 0;
@@ -239,6 +285,9 @@ export default {
         display: inline-block;
         padding: 0 1rem;
         text-align: center;
+      }
+      .draft-disabled{
+        color: #898989;
       }
       .keyboard-icon:before{
         position: absolute;

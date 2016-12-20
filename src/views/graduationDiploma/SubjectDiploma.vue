@@ -10,6 +10,7 @@
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
           <div class="subject-diploma">
+            <img src="../../../static/image/graduationDiploma/diploma.png">
             <p class="user-name">{{userName}}</p>
             <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
             <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
@@ -128,17 +129,19 @@
       )
     }
   },
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+  },
   methods: {
     setScrollerHeight () {
       const me = this
-      me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 200)
+      }, 500)
     },
 
     /**
@@ -204,15 +207,18 @@
       width: 674/40rem;
       height: 876/40rem;
       margin: 30/40rem auto 100/40rem;
-      background: url('../../assets/styles/image/graduationDiploma/diploma.png') 50% 50% no-repeat;
-      background-size: 100%;
       text-align: center;
+      img{
+        width: 674/40rem;
+        height: 876/40rem;
+      }
       p{
         margin: 0;
       }
       .user-name{
         width: 100%;
         position: absolute;
+        z-index: 2;
         top: 392/40rem;
         left: 0;
         text-align: center;
@@ -223,6 +229,7 @@
       .subject-name{
         width: 100%;
         position: absolute;
+        z-index: 2;
         top: 510/40rem;
         left: 0;
         text-align: center;
@@ -231,6 +238,7 @@
       }
       .graduation-date{
         position: absolute;
+        z-index: 2;
         top: 690/40rem;
         left: 138/40rem;
         font-size: 22/40rem;
@@ -310,7 +318,7 @@
       .conservative{
         background: #d3ebfb;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/conservative.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/conservative.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){
@@ -323,7 +331,7 @@
       .robustness{
         background: #fdf1d4;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/robustness.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/robustness.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){
@@ -336,7 +344,7 @@
       .radical{
         background: #fee1e4;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/radical.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/radical.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){
@@ -400,7 +408,7 @@
       .conservative{
         background: #f2f2f2;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/conservative-disabled.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/conservative-disabled.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){
@@ -414,7 +422,7 @@
       .robustness{
         background: #f2f2f2;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/robustness-disabled.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/robustness-disabled.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){
@@ -428,7 +436,7 @@
       .radical{
         background: #f2f2f2;
         span{
-          background: url('../../assets/styles/image/graduationDiploma/radical-disabled.png') 50% 50% no-repeat;
+          background: url('../../../static/image/graduationDiploma/radical-disabled.png') 50% 50% no-repeat;
           background-size: 100% 100%;
         }
         p:nth-of-type(1){

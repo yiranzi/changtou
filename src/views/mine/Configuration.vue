@@ -34,11 +34,11 @@
         border: 1px solid #c3c3c3;
       }
       .weui_switch:after{
-        width: 1.5em;
-        height: 1.25rem;
-        top: -0.03rem;
-        left: 0.1rem;
-        border-radius: .75rem;
+        width: 1.15rem;
+        height: 1.15rem;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
       }
       .weui_switch:checked{
         border-color: #00b0f0;

@@ -21,16 +21,20 @@
     </ict-input>
 
     <div style="height: 3rem" class="spacer"></div>
-    <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
 
-    <flexbox>
-      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ictBtn regi-btn"></ict-button>
-      <flexbox-item></flexbox-item>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ictBtn forgetPwd-btn"></ict-button>
-    </flexbox>
+    <div class="btn-box">
+      <ict-button type="default"  v-touch:tap="doLogin" :disabled="disabled">登录</ict-button>
+    </div>
 
-    <div class="third-party-container" v-if="showWx || showQQ" v-el:auth-container style="display: block">
-      <div class="third-text-container">
+    <div class="other-entry">
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"></ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"></ict-button>
+    </div>
+
+
+    <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container
+         v-bind:class="{'pop-animation': isPopAuthContainer, 'hide-animation': !isPopAuthContainer}">
+      <div class="third-text-container" v-touch:tap="onToggleShowThirdParty" >
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
         <i class="horizon-line"></i>
@@ -54,8 +58,6 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
-  import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import Group from 'vux/group'
   import IctInput from '../../components/form/IctInput.vue'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
@@ -83,6 +85,7 @@
       return {
         errTip: '',
         plainPassword: '',
+        isPopAuthContainer: false,
         identity: '',
         disabled: true,
         isQQShow: false,             // 是否显示qq
@@ -182,7 +185,7 @@
                   )
               }
           ).catch(
-              err => { me.errTip = err }
+//              err => { me.errTip = err }
           )
         } else {
           this.showAlert({message: '请安装QQ客户端'})
@@ -205,7 +208,7 @@
               )
             }
           ).catch(
-            err => { me.errTip = err }
+//            err => { me.errTip = err }
           )
         } else {
           this.showAlert({message: '请安装微信客户端'})
@@ -218,12 +221,19 @@
       doLogin () {
         this.disabled = true
         const me = this
+
+        // 主动失去焦点, 隐藏键盘
+        const {identity, password} = this.$refs
+        identity.blur()
+        password.blur()
+
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
           this.login(this.identity, this.plainPassword).then(
             (user) => {
               me.disabled = true
               me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-              window.history.back()
+//              window.history.back()
+              setTimeout(() => { window.history.back() }, 300)
             }
           ).catch(
             err => {
@@ -236,11 +246,15 @@
           me.disabled = true
         }
       },
-
+      /**
+       * 进入注册页面
+       */
       doRegister () {
         this.$route.router.go('/register/start')
       },
-
+      /**
+       * 进入重置密码页面
+       */
       doResetPassword () {
         this.$route.router.go('/reset/password/start')
       },
@@ -265,15 +279,18 @@
         if (authContainer) {
           authContainer.setAttribute('style', 'display: block')
         }
+      },
+
+      /**
+       * 开关, 弹出或者隐藏(动画)显示三方登录按钮
+       */
+      onToggleShowThirdParty () {
+        this.isPopAuthContainer = !this.isPopAuthContainer
       }
     },
-
     components: {
       IctTitlebar,
       IctButton,
-      Flexbox,
-      FlexboxItem,
-      Group,
       IctInput
     }
   }
@@ -283,17 +300,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-    .ictBtn{
-      font-size: .65rem;
-    }
-    .regi-btn{
-      text-align: left;
-      padding-left: 1.5rem;
-    }
-    .forgetPwd-btn{
-      text-align: right;
-      padding-right: 1.5rem;
-    }
     p{
       margin: 0;
     }
@@ -351,10 +357,52 @@
         font-size: 0.75rem;
       }
     }
+    .validation-box{
+      position: relative;
+      margin: 0 12%;
+      .ict-input-component{
+        margin: 0!important;
+      }
+      .ict-btn-mini{
+        height: 2rem;
+        border-radius: 0;
+        font-size: 0.7rem;
+        position: absolute;
+        top: 1px;
+        right: 0;
+      }
+    }
+    .btn-box{
+      width: 84%;
+      margin: 0 auto;
+    }
   }
   .login-entry{
-    .ict-btn{
+    .other-entry{
       width: 84%;
+      margin: 0 auto;
+      font-size: 0;
+      .ict-btn-string{
+        display: inline-block;
+        width: 50%;
+        padding: 0;
+        font-size: 0.65rem;
+        &:nth-of-type(1){
+          text-align: left;
+        }
+        &:nth-of-type(2){
+          text-align: right;
+        }
+      }
+    }
+    .pop-animation {
+      transition: 0.5s;
+      transform: translate3d(0,0,0);
+    }
+
+    .hide-animation {
+      transition: 0.5s;
+      transform: translate3d(0,3.5rem,0);
     }
     .third-party-container{
       position: absolute;

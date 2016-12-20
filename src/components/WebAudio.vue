@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="audio-box">
+    <div v-show="isEmptyTipShow" class="audio-box" style="padding-left:1rem;font-size: 0.65rem; color: #fff;">本节无音频</div>
+    <div class="audio-box" v-show="!isEmptyTipShow">
       <div class="btn" v-touch:tap="toggle">
 
         <img v-show="status !== 'play'" :src="'./static/image/audio/play.png'"
@@ -121,6 +122,7 @@
 
     data () {
       return {
+        isEmptyTipShow: false,
         isInitListeners: false,
         intervalId: 0,
         currentTime: '00:00',
@@ -139,6 +141,15 @@
 
     watch: {
       'src': function (val, oldVal) {
+        // 若是空音频文件, 不播放
+        var regExp = new RegExp(/empty.mp3/)
+        if (regExp.test(val)) {
+          this.pause()
+          this.isEmptyTipShow = true
+        } else {
+          this.isEmptyTipShow = false
+        }
+
         if (val && !this.isInitListeners) {
           this.isInitListeners = true
           this.addDragEvents()

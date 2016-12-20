@@ -32,7 +32,7 @@
       </scroller>
 
       <div class="send_message" v-el:btns>
-        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion">
+        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion" v-el:input>
         <div class="send_box" :disabled="isSendDisabled" :class="{'notSend':isSendDisabled,'send':!isSendDisabled}" v-touch:tap="sendUserQuestion">
           <span>发送</span>
         </div>
@@ -163,12 +163,18 @@
         if (this.isDisabled) {
           return
         }
+
+        const {input} = this.$els
+        input.blur()
+
         const me = this
         me.submitQuestion(me.userQuestion).then(
           function () {   //发送信息成功后重新加载问答记录
             me.loadRecords().then(
               function () {
                 me.userQuestion = ''
+                // 发送之后,键盘收起, 重置页面
+                setTimeout(me.refreshScroller, 800)
               },
               function () {
                 me.showAlert('加载信息失败，请重试！')

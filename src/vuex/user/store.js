@@ -93,7 +93,7 @@ const mutations = {
     state.strategy = ''
     state.userName = ''
     state.userId = ''
-    state.newMsgNum = 0
+    //state.newMsgNum = 0
     clearLocalCache('frame-user')
   },
   /**

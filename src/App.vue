@@ -67,9 +67,12 @@
   import mixinModal from './mixinModal'
   import mixinBackHandler from './mixinBackHandler'
   import mixinNetwork from './mixinNetwork'
+  import mixinStatistics from './mixinStatistics'
+
+  import {eventMap} from './frame/eventConfig'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork, mixinStatistics],
 
     store,
 
@@ -89,6 +92,12 @@
     data () {
       return {
         isShowNewTestPop: false
+      }
+    },
+
+    watch: {
+      route (newRoute) {
+        this.$dispatch(eventMap.VIEW_CHANGE, newRoute.path)
       }
     },
 
@@ -396,5 +405,29 @@
       }
       padding: 0.5rem 1rem;
     }
+  }
+  .ict-loading-mask{
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #fff;
+    opacity: 0.6;
+  }
+  .ict-loading-content{
+    position: fixed;
+    z-index: 5000;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #087685;
+  }
+  .ict-loading-img{
+    width: 2rem;
+    height: 2rem;
   }
 </style>

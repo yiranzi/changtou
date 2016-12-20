@@ -22,24 +22,24 @@
         </div>
 
         <!--选择题作业-->
-        <div v-if="lesson.choiceQuestion.length > 0 && lesson.type !== 'C'" class="chapter-title"
+        <div v-if="lesson.choiceQuestion.length > 0 " class="chapter-title"
              v-touch:tap="onHomeworkChoiceTap()">
           <span style="width: 85%">
             <span class="number">{{lesson.lessonDetailsList.length + 1}}</span>
             <span class="chioce-icon"></span>
             &nbsp;&nbsp;课后作业
           </span>
-          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomework.length > 0 ? lessonHomework[$index].choiceTip : ''}}</span>
+          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomeworkObj[lesson.lessonId] ? lessonHomeworkObj[lesson.lessonId].choiceTip : ''}}</span>
         </div>
 
         <!--问答题作业-->
-        <div v-if="lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C'" class="chapter-title"
+        <div v-if="lesson.essayQuestion.assignmentType !== 'N'" class="chapter-title"
              v-touch:tap="onHomeworkEssayTap()">
           <span style="width: 85%">
             <span class="number">{{lesson.lessonDetailsList.length + 1 + (lesson.choiceQuestion.length > 0 ? 1: 0)}}</span>
             <span class="homework-icon"></span>&nbsp;&nbsp;{{lesson.choiceQuestion.length > 0 ? '选修作业 (补充习题)' : '课程作业'}}
           </span>
-          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomework.length > 0 ? lessonHomework[$index].essayTip : ''}}</span>
+          <span style="color: #00b0f0; font-size:0.6rem">{{lessonHomeworkObj[lesson.lessonId] ? lessonHomeworkObj[lesson.lessonId].essayTip : ''}}</span>
         </div>
 
       </div>
@@ -175,7 +175,8 @@
       return {
         lessonListType: [],
         selectChapterIndex: -1,
-        lessonHomework: []
+//        lessonHomework: []
+        lessonHomeworkObj: {}
       }
     },
 
@@ -188,7 +189,9 @@
 
       'homework': function (newHomework) {
         if (newHomework) {
-          this.lessonHomework = newHomework.lessons.map(homeworkItem => {
+          this.lessonHomeworkObj = {}
+          const me = this
+           newHomework.lessons.forEach(homeworkItem => {
               let homework = Object.assign({}, homeworkItem)
 
               // 简答题设置状态
@@ -213,16 +216,17 @@
               homework.hasChoice = homework.hasChoice === 'Y'
               if (homework.hasChoice) {
                 let tip = ''
-                if (homework.choiceStatus === 'Y') {
+                if (homework.isChoicePassed === 'Y') {
                   tip = '通过'
                 } else {
                   tip = '未通过'
                 }
                 homework.choiceTip = tip
               }
-
-              return homework
+              me.lessonHomeworkObj[homework.lessonId] = homework
             })
+        } else {
+          this.lessonHomeworkObj = {}
         }
       }
     },
@@ -233,9 +237,9 @@
 
     events: {
       /**
-       * 试听事件
+       * 播放特定 lesson
        */
-      'audition': function (lesson) {
+      'listenToLesson': function (lesson) {
         //  展开某(第)一个lesson
         this.selectedLesson = lesson
 
@@ -251,6 +255,22 @@
         setTimeout(function () {
           me.updateSelectedChapter(lesson.lessonDetailsList[0], 0)
         }, 200)
+      },
+
+      /**
+       * 展开特定lesson
+       */
+      'unfoldLessonChapters': function (lessonId) {
+        setTimeout(() => {
+          const lessonIndex = this.lessonListType.findIndex((lessonTypeItem) => lessonTypeItem.lessonId === lessonId)
+          if (lessonIndex > -1) {
+            const lesson = this.lessons.find(lessonItem => lessonItem.lessonId === lessonId)
+            if (lesson) {
+              this.selectedLesson = lesson
+              this.unfoldLesson(lessonIndex)
+            }
+          }
+        }, 100)
       },
 
       /**

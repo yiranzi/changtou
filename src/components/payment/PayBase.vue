@@ -15,8 +15,8 @@
         <fast-login @login-tap="onLoginTap" @code-confirm="onCodeConfirm"></fast-login>
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
-      <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns></pay-button>
-      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
+      <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns v-show="isShowBottomBtn"></pay-button>
+      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
     </div>
 </template>
 <script>
@@ -28,6 +28,9 @@
   import PayButton from '../../components/payment/PayButtons.vue'
   import FastLogin from '../../components/payment/PayFastLogin.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
+  import {userGetters} from '../../vuex/getters'
+
+  let isKeyboardPop = false
 
 export default {
   props: {
@@ -62,6 +65,12 @@ export default {
     },
     sheetShow: Boolean
   },
+
+  vuex: {
+    getters: {
+      islogin: userGetters.isLogin
+    }
+  },
   data () {
     return {
       scrollerHeight: '0px',
@@ -70,7 +79,8 @@ export default {
           wechat: '微信支付',
           ali: '支付宝支付'
         }
-      }
+      },
+      isShowBottomBtn: true
     }
   },
   computed: {
@@ -81,18 +91,48 @@ export default {
       }
     }
   },
+
+  watch: {
+    'islogin': function (val) {
+      this.isShowBottomBtn = true
+    }
+  },
+
   ready () {
     // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
     const me = this
     me.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.btns.offsetHeight - this.$els.tip.offsetHeight) + 'px'
     setTimeout(function () {
       me.$nextTick(() => {
-        me.$refs.scroller.reset({
-        top: 0
+          me.$refs.scroller.reset({
+          top: 0
+        })
       })
-    })
     }, 150)
   },
+
+  events: {
+    /**
+     * input控件被选中
+     */
+    'ictInputFocus': function (inputId) {
+      isKeyboardPop = true
+      this.hideBtnWhenKeyboardShow()
+    },
+
+    /**
+     * input控件失去焦点
+     */
+    'ictInputBlur': function (inputId) {
+      isKeyboardPop = false
+      setTimeout(() => {
+        if (!isKeyboardPop) {
+        this.showBtnWhenKeyboardHide()
+        }
+      }, 500)
+    }
+  },
+
   methods: {
     onCouponChange (newCouponIndex) {
       this.$emit('pay-coupons-change', this.coupons[newCouponIndex])
@@ -100,11 +140,30 @@ export default {
     onPayChannelChange (payWay) {
       this.$dispatch('payChannelChange', payWay)
     },
+    onPayWayClose () {
+      this.$dispatch('payChannelClose')
+    },
     onCodeConfirm () {
       this.$dispatch('codeConfirm')
     },
     onLoginTap () {
       this.$dispatch('loginTap')
+    },
+
+    /**
+     * 键盘弹出
+     * 隐藏 下方确认订单
+     */
+    hideBtnWhenKeyboardShow () {
+      this.isShowBottomBtn = false
+    },
+
+    /**
+     * 键盘隐藏
+     * 显示 下方确认订单
+     */
+    showBtnWhenKeyboardHide () {
+      this.isShowBottomBtn = true
     }
   },
   components: {

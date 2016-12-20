@@ -52,7 +52,7 @@
     </scroller>
 
     <!--底部的btn-->
-    <div class="bottom-area" v-el:bottom-btn>
+    <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
       <!--<div v-if="currStatus === 'L'" class="btn-box">-->
         <!--<ict-button class="right">加载中..</ict-button>-->
       <!--</div>-->
@@ -62,20 +62,20 @@
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
 
-      <div v-if="currStatus === 'I'" class="btn-box">
+      <div v-if="currStatus === 'I' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
-      <div v-if="currStatus === 'N'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed" v-touch:tap="suspend">暂停课程</ict-button>
+      <div v-if="currStatus === 'N' && currSubject.type == 'M'" class="btn-box">
+        <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
-      <div v-if="currStatus === 'P'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
       </div>
 
-      <div v-if="currStatus === 'Y' || currStatus === 'E'" class="btn-box">
+      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
@@ -155,10 +155,11 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
       getters: {
@@ -182,7 +183,9 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        getDiplomaList: graduationDiplomaActions.getDiplomaList
+        getDiplomaList: graduationDiplomaActions.getDiplomaList,
+
+        syncHomeworkList: homeworkListActions.getHomeworkList
       }
     },
 
@@ -236,6 +239,14 @@
        */
       currHomework () {
         return this.homeworkList.find(homework => (homework.subjectId + '') === this.subjectId)
+      },
+
+      isBottomBtnShow () {
+        if (this.currStatus && this.currSubject) {
+          return this.currStatus === 'W' || this.currSubject.type === 'M'
+        } else {
+          return false
+        }
       }
     },
 
@@ -255,6 +266,10 @@
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
+          if (this.subjectId !== subjectId) {
+            this.showLoading()
+          }
+
           this.resetView()
 
           const tasks = [this.loadExpenseSubject(subjectId)]
@@ -268,8 +283,11 @@
               return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
             },
             () => {
+              this.hideLoading()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
+          ).catch(
+            this.hideLoading()
           )
         }
       },
@@ -280,8 +298,13 @@
         if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
           me.getDiplomaList().then(
             (newDiploma) => {
-              if (newDiploma) {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, newDiploma)
+              const subjectDiploma = newDiploma.find(
+                function (diploma) {
+                  return diploma.subjectId === parseInt(me.subjectId)
+                }
+              )
+              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
               }
             }
           )
@@ -344,30 +367,36 @@
        * 设置课程id时, 获取课程信息, 获取进度信息
        */
       'subjectId': function (newSubjectId, oldSubjectId) {
-        //设置课程信息
-        this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
+        // 这里调用 setTimeout  是因为页面切换同时刷新数据会有卡顿
+        setTimeout(() => {
+          // 隐藏loading提示
+          this.hideLoading()
 
-        //设置当前作业
-//        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
+          //设置课程信息
+          this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
-        //设置是否为选修课
-        this.isSubjectBranch = this.currSubject.type === 'B'
+          //设置当前作业
+  //        console.log('newSubjectId', newSubjectId, typeof newSubjectId, this.homeworkList[0].subjectId, typeof this.homeworkList[0].subjectId)
 
-        this.resetScroller()
+          //设置是否为选修课
+          this.isSubjectBranch = this.currSubject.type === 'B'
 
-        //获取进度信息
-        let currSubjectRecord = this.expenseRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+          this.resetScroller()
 
-        if (currSubjectRecord) {
-          // 设置课程进度状态
-          this.setSubjectRecordStatus(currSubjectRecord)
-        } else {
-          //如果没有当前课程的进度
-          //设置第0课可以听
-          this.resetSubjectRecordStatus()
-//          this.currStatus = 'W'
-//          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
-        }
+          //获取进度信息
+          let currSubjectRecord = this.expenseRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
+
+          if (currSubjectRecord) {
+            // 设置课程进度状态
+            this.setSubjectRecordStatus(currSubjectRecord)
+          } else {
+            //如果没有当前课程的进度
+            //设置第0课可以听
+            this.resetSubjectRecordStatus()
+  //          this.currStatus = 'W'
+  //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
+          }
+        }, 500)
       },
 
       /**
@@ -385,6 +414,13 @@
             this.resetSubjectRecordStatus()
           }
         }
+      },
+
+      'isBottomBtnShow': function () {
+        this.$nextTick(() => {
+          this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+          setTimeout(this.resetScroller, 300)
+        })
       }
     },
 
@@ -506,16 +542,20 @@
           evaluation => {
             if (evaluation && evaluation.status !== null) {
               switch (evaluation.status) {
-                case 0://作业已提交
+                case 0:
+//                   console.log('作业已提交')
                   me.goEssayMark(lessonId)
                   break
-                case 1://草稿已提交 写作业
+                case 1:
+//                   console.log('草稿已提交 写作业')
                   me.goEssayAnswer(lessonId)
                   break
-                case 2://已批改 未通过 查看作业
+                case 2:
+//                   console.log('已批改 未通过 查看作业')
                   me.goEssayMark(lessonId)
                   break
-                case 3://已批改 通过 查看作业
+                case 3:
+//                   console.log('已批改 通过 查看作业')
                   me.goEssayMark(lessonId)
                   break
                 default:
@@ -523,7 +563,7 @@
                   break
               }
             } else {
-              me.showEssayFloat()
+              me.goEssayAnswer(lessonId)
             }
         }).catch(
           err => {
@@ -576,6 +616,9 @@
       confirmEssay () {
         this.resumeHomework()
         if (this.selectedLesson.essayQuestion.assignmentType === 'S') {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
+            lessonid: this.selectedLesson.lessonId
+          })
           this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
         }
       },
@@ -585,6 +628,9 @@
        */
       confirmChoice () {
         this.resumeHomework()
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
+          lessonid: this.selectedLesson.lessonId
+        })
         this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
       },
 
@@ -598,6 +644,7 @@
       resetView () {
         this.hasVaildChapterCicked = false
         this.pause()
+        this.resetScroller()
       },
 
       /**
@@ -633,7 +680,7 @@
           }
         }
 
-        // 设置当前选中(进度改变后), 课程可不可以听
+        // 设置, 当前选中(进度改变后), 课程可不可以听
         if (this.selectedLesson) {
           // 如果是公开课,永远不受限
           if (this.selectedLesson.type === 'C') {
@@ -643,12 +690,21 @@
               this.currUseabLessonArr.findIndex((useableLesson) => useableLesson === this.selectedLesson.lessonId) === -1
           }
         }
+
+        // 设置完毕, 有进度自动展开
+        if (this.currUseabLessonArr.length > 0) {
+          this.currTabIndex = 1
+          this.$broadcast('unfoldLessonChapters', this.currUseabLessonArr[this.currUseabLessonArr.length - 1])
+          setTimeout(this.resetScroller, 300)
+        }
       },
 
       /**
        * 重置课程进度状态
        */
       resetSubjectRecordStatus () {
+        this.currTabIndex = 0
+
         this.currRecord = null
 
         //设置是否已经提交了作业
@@ -704,23 +760,24 @@
           confirmHandler = function () {
             me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
           }
-
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
           // 如果没有提交作业
-          confirmText = '去写作业'
           if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
             // 有选择题
+            confirmText = '去测试'
             confirmHandler = function () {
               me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
             }
+            msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
           } else {
+            // 无选择题
+            confirmText = '去写作业'
             confirmHandler = function () {
               me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
             }
+            msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
           }
-
-          msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
         }
 
         // 加入延迟,防止出现msg被点透的情况
@@ -745,15 +802,31 @@
        */
       syncRecord () {
         this.loadExpenseRecord(this.subjectId)
+        this.syncRelatedBranchRecord(this.currSubject)
+      },
+
+      /**
+       * 同步相关选修课程进度
+       */
+      syncRelatedBranchRecord (subject) {
+        if (subject) {
+          subject.branchSubjectList.forEach(branch => {
+            this.loadExpenseRecord(branch.subjectId)
+          })
+        }
       },
 
       /**
        * 试听
        */
       audition () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_AUDITION_TAP, {
+          '商品名称': this.currSubject.title
+        })
         this.currTabIndex = 1
         // 交给子控件统一处理
-        this.$broadcast('audition', this.currSubject.lessonList[0])
+        // 播放第一个lesson
+        this.$broadcast('listenToLesson', this.currSubject.lessonList[0])
 //        this.selectedLesson = this.currSubject.lessonList[0]
 //        this.selectedChapter = this.selectedLesson.lessonDetailsList[0]
       },
@@ -832,6 +905,7 @@
           me.activeSubject(me.subjectId).then(
             function () {
               me.syncRecord()
+              me.syncHomeworkList()
               me.showToast({message: '激活课程成功', type: 'success'})
             },
             function () {
@@ -854,6 +928,9 @@
        * 购买
        */
       buy () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBJECT_BUY_NOW_TAP, {
+          '商品名称': this.currSubject.title
+        })
         // 如果是选修课
         if (this.isSubjectBranch) {
           // 先判断主线课程是否购买
@@ -908,7 +985,7 @@
       resetScroller () {
         this.$nextTick(() => {
           this.$refs.scroller.reset({
-//              top: 0
+              top: 0
           })
         })
       }

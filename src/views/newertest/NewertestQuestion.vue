@@ -225,6 +225,9 @@
 
     route: {
       data (transition) {
+        // 此页面禁止back回退
+        this.forbidBackAction()
+
         const me = this
         this.loadQuestion().then(
           function (question) {
@@ -234,6 +237,11 @@
             me.showAlert('加载信息失败，请重新加载')
           }
         )
+      },
+
+      deactivate () {
+        // 回复back回退
+        this.resumeBackAction()
       }
     },
     methods: {

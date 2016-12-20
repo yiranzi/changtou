@@ -36,7 +36,7 @@ export default {
 </script>
 <style lang="less">
   .featured-strategy{
-    .strategy-suitable-product{
+    .strategy-suitable-product .strategy-options{
       .strategy-header{
         color:#fcbd00;
         span{
@@ -59,6 +59,9 @@ export default {
         background: #ffab6d;
         &:nth-of-type(2){
           background: #ffcda7;
+          .play-icon{
+            display: none;
+          }
         }
       }
     }

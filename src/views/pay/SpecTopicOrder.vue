@@ -20,6 +20,9 @@
   import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
       getters: {
@@ -34,14 +37,16 @@
         courseList: [], //课程列表
         coupons: [],  // 优惠列表
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
-        sheetShow: false // 显示支付sheet
+        sheetShow: false, // 显示支付sheet
+        statisticData: null //统计数据
       }
     },
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -111,17 +116,24 @@
         this.courseList = [] //课程列表
         this.coupons = []  // 优惠列表
         this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
+        this.statisticData = null //统计数据
+        this.$broadcast('pay-page-deactive')
       }
     },
     events: {
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
+        this.sheetShow = false
+      },
+      'payChannelClose' () {
         this.sheetShow = false
       },
       'codeConfirm' () {
@@ -168,6 +180,11 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        this.statisticData = {
+          '实付': this.sum,
+          '商品名称': this.title
+        }
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
@@ -200,6 +217,11 @@
        * @param channel
        */
       payByChannel (channel) {
+        Object.assign(this.statisticData, {
+          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
           sum: this.sum,
@@ -233,6 +255,7 @@
        * 跳转到 支付成功页
        */
       goToPaySuccess () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/pay/success/ST/${this.stpId}`)
       },
 
@@ -243,7 +266,12 @@
         window.history.go(-2)
       },
       onPayFail (err) {
+        Object.assign(this.statisticData, {
+          '原因': err.reason
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CANCEL, this.statisticData)
         if (err.type === errorType.FAIL) {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
       }

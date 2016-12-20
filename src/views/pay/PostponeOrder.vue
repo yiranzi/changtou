@@ -12,7 +12,7 @@
               :btn-options="btnOptions"
               :tip="tip"
               :sheet-show="sheetShow">
-      <pay-postpone :postpone-list="postponeList"></pay-postpone>
+      <pay-postpone :postpone-list="postponeList" :value.sync="postponeValue"></pay-postpone>
     </pay-base>
   </div>
 </template>
@@ -22,6 +22,9 @@
   import {getPostponeOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
       getters: {
@@ -36,20 +39,22 @@
           callback: this.goToPostponeExplain.bind(this),
           disabled: false
         },
-        price: 0, // 价格
+        postponeValue: '0',
         postponeList: [], //延期列表
         coupons: [],  // 优惠列表
         selectedPostponeIndex: 0, //选择的延期类型的index
         selectedCoupon: null, // 选择的优惠
+        selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         misc: '', // 延期的时间
-        sheetShow: false // 显示支付sheet
+        sheetShow: false, // 显示支付sheet
+        statisticData: null //统计数据
       }
     },
     computed: {
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
-        return this.selectedCoupon ? this.selectedCoupon.userBene : 0
+        return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
       },
       // 合计 = price-deduction-coupon.userBene
       total () {
@@ -78,6 +83,31 @@
             callback: this.onConfirmTap
           }
         }
+      },
+      // 价格
+      price () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].price : 0
+      },
+      //
+      misc () {
+        return this.postponeList.length > 0 ? this.postponeList[this.selectedPostponeIndex].misc : 0
+      },
+      // 优惠信息
+      coupons () {
+        if (parseInt(this.selectedPostponeIndex) && this.card) {
+          return [{
+            couponNo: 1,
+            name: '长投卡(7折)',
+            userBene: Math.ceil(this.postponeList[this.selectedPostponeIndex].price * 0.3),
+            holderBene: 0
+          }]
+        } else {
+          return []
+        }
+      },
+      // 选择的优惠信息
+      selectedCoupon () {
+        return parseInt(this.selectedPostponeIndex) && this.card ? this.coupons[0] : null
       }
     },
     route: {
@@ -94,45 +124,35 @@
         )
       },
       deactivate () {
-        this.price = 0// 价格
-        this.postponeList = []//延期列表
+        this.postponeValue = '0'
+        this.postponeList = [] //延期列表
         this.coupons = [] // 优惠列表
-        this.selectedPostponeIndex = 0//选择的延期类型的index
-        this.selectedCoupon = null// 选择的优惠
+        this.selectedPostponeIndex = 0 //选择的延期类型的index
+        this.selectedCoupon = null // 选择的优惠
+        this.selectedCouponIndex = 0
         this.currentBalance = 0 // 投币余额
-        this.misc = ''// 延期的时间
+        this.misc = '' // 延期的时间
         this.sheetShow = false // 显示支付sheet
+        this.statisticData = null //统计数据
+        this.$broadcast('pay-page-deactive')
       }
     },
     events: {
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
+        this.selectedCouponIndex = couponsIndex
         this.selectedCoupon = this.coupons[couponsIndex]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
         this.sheetShow = false
       },
+      'payChannelClose' () {
+        this.sheetShow = false
+      },
       // 延期时间 选择
       'postponeChange' (postponeIndex) {
-        this.price = this.postponeList[postponeIndex].price
-        this.misc = this.postponeList[postponeIndex].misc
-        // 有长投卡
-
-        if (parseInt(postponeIndex) && this.card) {
-          this.coupons = [{
-            couponNo: 1,
-            name: '长投卡(7折)',
-            userBene: Math.ceil(this.postponeList[1].price * 0.3),
-            holderBene: 0
-          }]
-          this.selectedCoupon = this.coupons[0]
-        } else {
-          this.coupons = []
-          this.selectedCoupon = null
-        }
-
-        this.currPostponeIndex = postponeIndex
+        this.selectedPostponeIndex = postponeIndex
       },
       'codeConfirm' () {
         const me = this
@@ -163,6 +183,11 @@
         this.currentBalance = currentBalance
       },
       onConfirmTap () {
+        this.statisticData = {
+          '实付': this.sum,
+          '商品名称': this.postponeList[this.selectedPostponeIndex].name
+        }
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.ORDER_CONFIRM_TAP, this.statisticData)
         if (this.sum > 0) {
           this.sheetShow = true
         } else {
@@ -174,6 +199,11 @@
        * @param channel
        */
       payByChannel (channel) {
+        Object.assign(this.statisticData, {
+          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
           sum: this.sum,
@@ -212,10 +242,16 @@
       )
       },
       goToPaySuccess () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.go(`/subject/detail/P/${this.subjectId}/0`)
       },
       onPayFail (err) {
+        Object.assign(this.statisticData, {
+          '原因': err.reason
+        })
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CANCEL, this.statisticData)
         if (err.type === errorType.FAIL) {
+          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
       },
