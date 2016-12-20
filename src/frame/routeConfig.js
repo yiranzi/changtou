@@ -272,7 +272,7 @@ export function configRouter (router) {
      * 图书内容页                  // 使用动态匹配向内传值更改 DATA
      */
     'giftPackage/bookChapter/:currIndex': {
-      component: require('../components/giftPackage/bookChapter3.vue')
+      component: require('../views/giftPackage/BookChapter.vue')
     }
   })
 

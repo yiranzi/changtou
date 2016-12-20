@@ -1,10 +1,9 @@
 <template>
   <div class="chapter-detail-container">
-    <ict-titlebar v-el:titlebar >阅读材料</ict-titlebar>
-    <div class="scroller-container">
-    <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container">
+    <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
+    <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container" :bounce='false'>
     <div class="swiper-container">
-      <swiper height="100px" :index="book_index" @on-index-change="bookChapterIndexChange" >
+      <swiper height="100px" :index="book_index" @on-index-change="bookChapterIndexChange">
         <swiper-item class="black" v-for="chapter in currBookChapter">
           <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
           {{{chapter.index}}} {{{chapter.title}}}
@@ -21,7 +20,6 @@
       {{book_index+1}} / {{currBookChapter.length}}
     </p>
     </scroller>
-    </div>
   </div>
 </template>
 <style lang="less">
@@ -32,9 +30,6 @@
     }
     .ict-titlebar{
       z-index: 5001 !important;
-    }
-    .scroller-container{
-      height: 37rem !important;
     }
     .toggle-index-btn{
       position: fixed;
@@ -101,7 +96,7 @@
 <script>
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
-  import IctTitlebar from '../IctTitleBar.vue'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
 
 export default {
@@ -110,6 +105,19 @@ export default {
     SwiperItem,
     IctTitlebar,
     Scroller
+  },
+  data () {
+    return {
+      book_index: 0,   // 此参数做翻页显示用
+      currIndex: 0,
+      bookChapterList: [bookChapter1, bookChapter2, bookChapter3, bookChapter4, bookChapter5, bookChapter6],
+      scrollerHeight: '0px',
+      leftOptions: { //titlebar
+          callback: this.gotoNavigator,
+          disabled: false,
+          showBack: true
+        }
+    }
   },
   route: {
       data ({to: {params: {currIndex}}}) {
@@ -120,20 +128,25 @@ export default {
     this.setScrollerHeight()
   },
   methods: {
+    gotoNavigator () {
+     this.$route.router.go('/main')
+    },
     bookChapterIndexChange (index) {
       this.book_index = index
     },
     gotoChoseIndex () {
+      const me = this
       this.showMask({
           component: 'giftPackage/toggleIndexChapter.vue',
           hideOnMaskTap: true,
           callbackName: 'gotoChapterDetails',
-          callbackFn: this.gotoChapterDetails.bind(this)
+          callbackFn: me.gotoChapterDetails.bind(me)
       })
     },
-    gotoChapterDetails (currIndex) {
+    gotoChapterDetails (currChapter) {
+      console.log('currChapter:', currChapter)
       this.hideMask()
-      this.$route.router.go(`/giftPackage/bookChapter/${currIndex}`)
+      this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
     },
     setScrollerHeight () {
         // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
@@ -150,14 +163,6 @@ export default {
     },
     gotoBookDetail () {
       this.$route.router.go('giftPackage/newerBookDetails')
-    }
-  },
-  data () {
-    return {
-      book_index: 0,   // 此参数做翻页显示用
-      currIndex: 0,
-      bookChapterList: [bookChapter1, bookChapter2, bookChapter3, bookChapter4, bookChapter5, bookChapter6],
-      scrollerHeight: '0px'
     }
   },
   computed: {

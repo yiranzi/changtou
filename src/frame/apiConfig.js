@@ -162,7 +162,7 @@ const apiUrl = {
    'get_gift_package': '/homepage/newcomer/gift',    // 获取新手礼包
    'get_gift_qualify': '/homepage/newcomer/gift-qualification',   // 判断是否有领取新手礼包资格
   /**
-   * 积分券
+   * 优惠信息 新手礼包劵
    */
   'loading_coupon_list': '/integral/user/ticket-list'      // 渲染积分券列表
 }

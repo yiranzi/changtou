@@ -6,6 +6,7 @@
         完成
       </div>
     </ict-titlebar>
+    <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight">
     <div class="gift-container">
       <div class="gift-item-container">
         <h3>1/  <span>入门读物</span> </h3>
@@ -39,7 +40,7 @@
             1. 积分抵用券在首次下单时进行抵扣，不适用于购买实战策略类课程
           </p>
           <p class="user-explain-item">
-            2. 可在”个人中心“----“优惠信息”查看已领取的积分抵用券
+            2. 可在“个人中心”----“优惠信息”查看已领取的积分抵用券
           </p>
           <p class="user-explain-item">
             3. 购买课程时，系统将自动匹配积分抵用券进行抵扣
@@ -47,19 +48,20 @@
         </div>
       </div>
     </div>
+    </scroller>
   </div>
 </template>
 <style lang="less">
   body{
-    background: #fff !important;
+    background: #fff ;
   }
   .gift-package-details{
-    background: white !important;
+    background: white ;
     .left-arrow{
-      display: none !important;
+      display: none ;
     }
     .complete-btn{
-      color:white !important;
+      color:white ;
     }
     .gift-container {
       background: white;
@@ -107,9 +109,6 @@
         font-size: .6rem;
         margin-left: 1.5rem;
       }
-      .user-explain-item {
-      /*  margin-top: -.6rem !important;*/
-      }
     }
     h3{
       color: #444;
@@ -123,16 +122,39 @@
 </style>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
+  import Scroller from 'vux/scroller'
   export default {
-  components: {
-    IctTitlebar
-  },
-  methods: {
-    goToIndexPage () {
+    data () {
+      return {
+        scrollerHeight: '0px'
+      }
+    },
+    ready () {
+    this.setScrollerHeight()
+    },
+    components: {
+      IctTitlebar,
+      Scroller
+    },
+    methods: {
+      goToIndexPage () {
       this.$route.router.go('/main')
     },
-    gotoBookDetails () {
+      gotoBookDetails () {
       this.$route.router.go('/giftPackage/newerBookDetails')
+    },
+      setScrollerHeight () {
+        // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
+        const me = this
+        const {titlebar} = this.$els
+        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 150)
     }
   }
 }

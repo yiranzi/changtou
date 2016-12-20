@@ -158,8 +158,8 @@ const mixin = {
       me.isMaskShow = true
 
       // 执行完毕后, 重置标识
-      const realCallBack = () => {
-        callbackFn()
+      const realCallBack = (args) => {
+        callbackFn(args)
         me.isMaskShow = false
       }
 

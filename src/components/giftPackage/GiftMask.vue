@@ -1,20 +1,20 @@
 <template>
   <div>
-    <swiper auto height="100px" :auto='false' class="gift-mask-swiper" dots-class="dots-class">
+    <swiper height="100px" :auto='false' class="gift-mask-swiper" dots-class="dots-class">
       <swiper-item class="item-white">
         <p>拒绝独自学习</p>
         <p>有趣的读物伴你入门</p>
-        <img src="../../assets/styles/image/giftPackage/1.png" width="230" height="138" alt="" v-bind:style="imgStyle">
+        <img src="../../assets/styles/image/giftPackage/1.png" width="230" height="138" v-bind:style="imgStyle">
       </swiper-item>
       <swiper-item class="item-white">
         <p>拒绝默默无闻</p>
         <p>诸多成就等你达成</p>
-        <img src="../../assets/styles/image/giftPackage/2.png" width="230" height="138" alt="" v-bind:style="imgStyle">
+        <img src="../../assets/styles/image/giftPackage/2.png" width="230" height="138" v-bind:style="imgStyle">
       </swiper-item>
       <swiper-item class="item-white">
         <p>拒绝形单影只</p>
         <p>专属抵用券助你一程</p>
-        <img src="../../assets/styles/image/giftPackage/3.png" width="230" height="138" alt="" v-bind:style="imgStyle">
+        <img src="../../assets/styles/image/giftPackage/3.png" width="230" height="138" v-bind:style="imgStyle">
       </swiper-item>
       <p v-touch:tap="gotoReceiveGift" class="receive-gift-btn">领取伴学礼包</p>
     </swiper>

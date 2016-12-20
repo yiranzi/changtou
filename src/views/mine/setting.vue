@@ -1,51 +1,50 @@
 <template>
   <div class="ict-setting-view">
-    <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>个人中心</ict-titlebar>
-    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div>
-        <div class="ict-user-info">
-          <img v-bind:src="avatarUrl" class="ict-user-avatar" v-touch:tap="gotoPersonalInfo"/>
-          <p class="ict-user-name" v-touch:tap="gotoPersonalInfo">
-            {{name}}
-            <span class="reset-nick-name" v-if="isLogin"></span>
-          </p>
-          <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
-          <flexbox v-if="!isLogin">
-            <flexbox-item :span="1/10"></flexbox-item>
-            <ict-button text="登录"
-                        v-touch:tap="doLogin">
-            </ict-button>
-            <flexbox-item :span="1/10"></flexbox-item>
-            <ict-button text="注册"
-                        v-touch:tap="doRegister">
-            </ict-button>
-            <flexbox-item :span="1/10"></flexbox-item>
-          </flexbox>
-        </div>
-        <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
-                  :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
-                  v-touch:tap="onStrategyTap">
-        </ict-item>
-        <div style="height: 1rem" class="spacer"></div>
-        <ict-item title="系统消息"
-                  :disabled="!isLogin"
-                  link="/system/message">
-          <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
-        </ict-item>
-        <ict-item title="小投答疑"
-                  link="/self/service">
-          <badge :text="badgeSuggestionNum" slot="badge" v-show="badgeSuggestionNum"></badge>
-        </ict-item>
-        <ict-item title="关于我们"
-                  link="/contact/us">
-        </ict-item>
-        <div style="height: 1rem" class="spacer"></div>
-        <ict-item title="设置"
-                  :disabled="!isLogin"
-                  link="/configuration">
-        </ict-item>
-      </div>
-    </scroller>
+    <ict-titlebar :left-options="{showBack: false}">个人中心</ict-titlebar>
+    <div class="ict-user-info">
+      <img v-bind:src="avatarUrl" class="ict-user-avatar"/>
+      <p class="ict-user-name">
+        {{name}}
+        <span class="resetNickName" v-touch:tap="gotoPersonalInfo"  v-if="isLogin"></span>
+      </p>
+      <div v-if="!isLogin" style="height: 0.75rem" class="spacer"></div>
+      <flexbox v-if="!isLogin">
+        <flexbox-item :span="1/10"></flexbox-item>
+        <ict-button text="登录"
+                    v-touch:tap="doLogin">
+        </ict-button>
+        <flexbox-item :span="1/10"></flexbox-item>
+        <ict-button text="注册"
+                    v-touch:tap="doRegister">
+        </ict-button>
+        <flexbox-item :span="1/10"></flexbox-item>
+      </flexbox>
+    </div>
+    <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
+              :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
+              v-touch:tap="onStrategyTap">
+    </ict-item>
+    <ict-item title="优惠信息"
+              link="coupon/details"  v-if='isCouponShow'>
+    </ict-item>
+    <div style="height: 1rem" class="spacer"></div>
+    <ict-item title="系统消息"
+              :disabled="!isLogin"
+              link="/system/message">
+      <badge :text="badgeMessageNum" slot="badge" v-show="badgeMessageNum"></badge>
+    </ict-item>
+    <ict-item title="小投答疑"
+              link="/self/service">
+      <badge :text="badgeSuggestionNum" slot="badge" v-show="badgeSuggestionNum"></badge>
+    </ict-item>
+    <ict-item title="关于我们"
+              link="/contact/us">
+    </ict-item>
+    <div style="height: 1rem" class="spacer"></div>
+    <ict-item title="设置"
+              :disabled="!isLogin"
+              link="/configuration">
+    </ict-item>
   </div>
 </template>
 <script>
@@ -54,14 +53,15 @@
   import IctButton from '../../components/IctButton.vue'
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
-  import Scroller from 'vux/scroller'
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        jpushAddOpenHandler
+        jpushAddOpenHandler,
+        loadingCouponList: giftActions.loadingCouponList
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -72,13 +72,11 @@
         newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
-
     data () {
       return {
-        scrollerHeight: '480px'
+        isCouponShow: false
       }
     },
-
     computed: {
       badgeMessageNum () {
         let number = this.newMessageNum + ''
@@ -106,22 +104,26 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
-
     route: {
-      data () {
-        return Promise.resolve().then(this.setScrollerHeight)
+      data (transition) {
+        const me = this
+        this.loadingCouponList().then(
+            function (couponList) {
+              if (JSON.stringify(couponList).length > 0) {
+               me.isCouponShow = true
+              }
+            }
+          )
+        transition.next()
       }
     },
-
     methods: {
-      doLogin () {
+      doLogin   () {
         this.$route.router.go('/entry')
       },
-
       doRegister () {
         this.$route.router.go('/register/start')
       },
-
       onStrategyTap () {
         if (!this.strategy || this.strategy.strategyLevel === strategyLevel.COMMON) {
           this.$route.router.go('/strategy/professional/intro')
@@ -131,31 +133,8 @@
           this.$route.router.go('/strategy/professional/product')
         }
       },
-
       gotoPersonalInfo () {
-        if (this.isLogin) {
           this.$route.router.go('/personal/information')
-        }
-      },
-
-      /**
-       * 设置滚动条高度
-       */
-      setScrollerHeight () {
-        // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
-        const me = this
-        const {titlebar} = this.$els
-        const {tabBar} = me.$parent.$els
-
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight -
-          (tabBar ? tabBar.offsetHeight : 0)) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-            top: 0
-          })
-        })
-        }, 150)
       }
     },
     components: {
@@ -164,8 +143,7 @@
       IctItem,
       Flexbox,
       FlexboxItem,
-      Badge,
-      Scroller
+      Badge
     }
   }
 </script>
@@ -181,12 +159,10 @@
     }
     .ict-user-name {
       font-size: 0.8rem;
-      .reset-nick-name {
-        position: relative;
+      .resetNickName {
         background: url("../../assets/styles/image/pen.png") no-repeat center center / 70%;
         width: 1rem;
         height:1rem;
-        top: 2px;
         display: inline-block;
       }
     }

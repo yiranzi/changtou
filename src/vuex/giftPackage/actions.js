@@ -1,6 +1,3 @@
-/**
- * Created by dongdong on 2016/10/14.
- */
 import {getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 /**
@@ -56,9 +53,9 @@ export const loadingCouponList = ({ dispatch }) => {
       getWithinAuth({
         url: getUrl('loading_coupon_list')
       }).then(
-        function (isQualify) {   // 优惠券
-          dispatch('LOADING_COUPON_LIST', isQualify)
-          resolve(isQualify)
+        function (couponList) {   // 优惠券
+          dispatch('LOADING_COUPON_LIST', couponList)
+          resolve(couponList)
         },
         function (err) {
           reject(err)

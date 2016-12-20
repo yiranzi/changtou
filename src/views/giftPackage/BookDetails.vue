@@ -4,10 +4,9 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div class="book-info-container">
         <img class="book-avatar" src="../../assets/styles/image/giftPackage/bookCover.png" width="230" height="300">
-        <p class="book-name">{{bookName}}大雄股市历险记</p>
-        <p class="book-status">{{bookStatus}}连载中</p>
+        <p class="book-name">大雄股市历险记</p>
+        <p class="book-status">连载中</p>
         <div class="book-intro">
-          {{bookIntro}}
           大雄萌发学习股票投资的念头，可是这个念头差点被曾经投资失败的爸爸妈妈扼杀在摇篮里。幸好神通广大的小叮当支持大雄，为大雄找了一个神秘的老师。
         </div>
       </div>

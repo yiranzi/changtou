@@ -85,9 +85,9 @@ export default {
     $event.target.parentNode.className += ' chapter-fold'
     this.hideMask()
    },
-   gotoChapterDetails (currIndex) {
-   // 向外派发事件
-     this.$dispatch('gotoChapterDetails', currIndex)
+   gotoChapterDetails (currChapter) {
+     // 向外派发事件
+     this.$dispatch('gotoChapterDetails', currChapter)
    }
   }
 }
