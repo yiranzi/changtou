@@ -134,7 +134,7 @@
               timeTip = `激活后${this.subject.period}天有效`
               break
             case 'N':
-              let remainDays = parseInt(new Date(newRecord.startDate.replace(/\-/g, '/')) / (24 * 3600 * 1000)) + parseInt(this.subject.period) - parseInt(new Date() / (24 * 3600 * 1000))
+              let remainDays = parseInt(new Date(newRecord.startDate.replace(/\-/g, '/')) / (24 * 3600 * 1000)) + parseInt(newRecord.period) - parseInt(new Date() / (24 * 3600 * 1000))
               priceTip = `正在学该课程`
               timeTip = `课程有效期还有${remainDays}天`
               break
