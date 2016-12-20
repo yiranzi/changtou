@@ -23,6 +23,7 @@ import * as strategyIntroActions from './strategy/intro/actions'
 import * as strategyProductActions from './strategy/product/actions'
 import * as strategyNoticeActions from './strategy/notice/actions'
 import * as graduationDiplomaActions from './graduationDiploma/actions'
+import * as giftActions from './giftPackage/actions'
 export {
   userActions,
   navigatorActions,
@@ -45,5 +46,6 @@ export {
   strategyIntroActions, // 策略产品 宣传
   strategyProductActions, // 策略产品 数据
   strategyNoticeActions, //策略产品 通知
-  graduationDiplomaActions // 毕业证
+  graduationDiplomaActions, // 毕业证
+  giftActions          // 新手礼包
 }

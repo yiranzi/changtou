@@ -24,6 +24,9 @@
               :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
               v-touch:tap="onStrategyTap">
     </ict-item>
+    <ict-item title="优惠信息"
+              link="coupon/details"  v-if='isCouponShow'>
+    </ict-item>
     <div style="height: 1rem" class="spacer"></div>
     <ict-item title="系统消息"
               :disabled="!isLogin"
@@ -53,10 +56,12 @@
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        jpushAddOpenHandler
+        jpushAddOpenHandler,
+        loadingCouponList: giftActions.loadingCouponList
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -65,6 +70,11 @@
         strategy: userGetters.strategy,
         newMessageNum: messageGetters.newMsgNum,
         newSuggestionNum: helpGetters.newSuggestionNum
+      }
+    },
+    data () {
+      return {
+        isCouponShow: false
       }
     },
     computed: {
@@ -94,7 +104,16 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
-
+    ready () {
+      const me = this
+      this.loadingCouponList().then(
+        function (isQualify) {
+          if (JSON.stringify(isQualify).length > 0) {
+           me.isCouponShow = true
+          }
+        }
+      )
+    },
     methods: {
       doLogin   () {
         this.$route.router.go('/entry')
