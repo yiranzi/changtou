@@ -286,11 +286,11 @@
     .ict-btn{
       font-size: .65rem;
     }
-    .regi-btn{
+    .regiBtn{
       text-align: left;
       padding-left: 1.5rem;
     }
-    .forgetPwd-btn{
+    .forgetPwd{
       text-align: right;
       padding-right: 1.5rem;
     }
