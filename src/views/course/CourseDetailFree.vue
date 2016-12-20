@@ -180,11 +180,7 @@
       },
 
       'currTabIndex': function () {
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-//              top: 0
-          })
-        })
+        this.resetScroller()
       },
 
       /**
@@ -193,13 +189,7 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         //设置课程信息
         this.currSubject = this.freeSubjectArr.find(subject => subject.subjectId === newSubjectId)
-
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-          top: 0
-        })
-      })
-
+        this.resetScroller()
         //获取进度信息
         let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
         this.setSubjectRecordStatus(currSubjectRecord)
@@ -241,9 +231,11 @@
 
           return Promise.all(tasks).then(
             () => {
+              this.resetScroller()
               return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
             },
             () => {
+              this.resetScroller()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
           )
@@ -306,6 +298,14 @@
     },
 
     methods: {
+      resetScroller () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+              top: 0
+        })
+      })
+      },
+
       back () {
         window.history.back()
       },
