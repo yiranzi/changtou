@@ -62,20 +62,20 @@
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
 
-      <div v-if="currStatus === 'I' && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
       </div>
 
-      <div v-if="currStatus === 'N' && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
-      <div v-if="currStatus === 'P' && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
       </div>
 
-      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject.type == 'M'" class="btn-box">
+      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
@@ -559,11 +559,11 @@
                   me.goEssayMark(lessonId)
                   break
                 default:
-                  me.goEssayMark(lessonId)
+                  me.showEssayFloat()
                   break
               }
             } else {
-              me.goEssayAnswer(lessonId)
+              me.showEssayFloat()
             }
         }).catch(
           err => {
@@ -758,7 +758,8 @@
           // 如果提交作业
           confirmText = '查看作业'
           confirmHandler = function () {
-            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+            me.setEssayQuestion(essayQuestion)
+            me.goEssayMark(me.lastSubmitlessonId)
           }
           msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
         } else {
@@ -774,7 +775,8 @@
             // 无选择题
             confirmText = '去写作业'
             confirmHandler = function () {
-              me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+              me.setEssayQuestion(essayQuestion)
+              me.goEssayAnswer(me.lastSubmitlessonId)
             }
             msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
           }
