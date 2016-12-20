@@ -87,9 +87,19 @@
     },
     route: {
       data ({to: {params}}) {
+        clearInterval(this.timer)
+        this.phone = params.phone
+        this.plainPassword = params.plainPassword
+        this.errTip = ''
+        this.validationCode = ''
+        this.isPhoneReadonly = true
+        this.validationBtnText = '再次发送'
+        this.isValidationBtnDisable = false
+        this.leftTime = 120
+        this.isDisabled = true
+        this.timer = null
+
         const me = this
-        me.phone = params.phone
-        me.plainPassword = params.plainPassword
         me.timer = setInterval(
           () => {
             if (me.leftTime > 0) {
@@ -103,16 +113,6 @@
             clearInterval(me.timer)
           }
         }, 1000)
-      },
-
-      /**
-       * 重置
-       */
-      deactivate () {
-        clearInterval(this.timer)
-        this.validationBtnText = '获取验证码'
-        this.isValidationBtnDisable = false
-        this.leftTime = 120
       }
     },
 
