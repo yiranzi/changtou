@@ -58,6 +58,7 @@ setTimeout(function () {
   appRouter.app.$emit(eventMap.APP_START)
 }, 50)
 
+
     //},
     // Update DOM on a Received Event
     //receivedEvent: function (id) {
