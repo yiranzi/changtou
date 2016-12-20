@@ -5,21 +5,20 @@ import {getWithoutAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
- * 下载 用户 我的课程信息
+ * 提交问卷
  * @param dispatch
  * @returns {Promise}
  */
-export const loadUserCourses = ({ dispatch }) => {
+export const commitQuestionNaire = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('my_course')
+          url: getUrl('commit_question_naire')
         }
       ).then(
-        myCourses => {
+        () => {
           resolve()
-          dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {
           reject(err)
@@ -29,21 +28,21 @@ export const loadUserCourses = ({ dispatch }) => {
 }
 
 /**
- * 下载 默认 我的课程信息
+ * 是否提交过问卷
  * @param dispatch
  * @returns {Promise}
  */
-export const loadDefaultCourses = ({ dispatch }) => {
+export const isCommitQuestionNaire = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithoutAuth(
         {
-          url: getUrl('my_course')
+          url: getUrl('is_fillout_naire')
         }
       ).then(
-        myCourses => {
-          resolve(myCourses)
-          dispatch('UPDATE_MY_COURSES', myCourses)
+        () => {
+          resolve()
+          //  dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {
           reject(err)
