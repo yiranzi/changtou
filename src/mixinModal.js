@@ -20,6 +20,10 @@ Vue.mixin({
         {title, message, okText, okCallback, cancelText, cancelCallback})
     },
 
+    /**
+     * 显示 alert
+     * @param args
+       */
     showAlert: function (args) {
       if (typeof args === 'string') {
         this.$dispatch(eventMap.SHOW_ALERT, {message: args, btnText: '确定'})
@@ -29,6 +33,17 @@ Vue.mixin({
       }
     },
 
+    /**
+     * 隐藏 alert时
+     */
+    hideAlert: function () {
+      this.isMaskShow = false
+    },
+
+    /**
+     * 显示 toast
+     * @param args
+       */
     showToast: function (args) {
       if (typeof args === 'string') {
         this.$dispatch(eventMap.SHOW_TOAST, {message: args, type: 'text'})
@@ -38,9 +53,18 @@ Vue.mixin({
       }
     },
 
+    /**
+     * 显示 带mask的浮层
+     * @param component
+     * @param hideOnMaskTap
+     * @param data
+     * @param callbackName
+       * @param callbackFn
+       */
     showMask: function ({component, hideOnMaskTap = true, data, callbackName, callbackFn}) {
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, data, callbackName, callbackFn})
     },
+
     /**
      * 隐藏 mask
      */
@@ -177,7 +201,6 @@ const mixin = {
         methods: {
           onFloatMaskTap: function () {
             if (hideOnMaskTap) {
-              const me = this
               let EmptyComponent = Vue.extend({
                 template: `<div></div>`
               })

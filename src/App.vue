@@ -20,6 +20,7 @@
 
     <alert :show.sync="alertBox.show"
            :button-text="alertBox.btnText"
+           @on-hide="hideAlert"
            class="ict-alert">{{alertBox.message}}</alert>
     <confirm
              :show.sync="confirmBox.show"
