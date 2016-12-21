@@ -13,7 +13,7 @@
             <div class="row">
               <span>{{zhishubao && zhishubao.recommondMajor.code}}</span>
               <span >{{zhishubao && zhishubao.recommondMajor.name}}
-                <img class="new-img" src="../../../static/image/strategy/newTip.png" :v-if="zhishubao.recommondMajor.isNew">
+                <img class="new-img" src="../../../static/image/strategy/newTip.png" v-if="zhishubao.recommondMajor.isNew">
               </span>
               <span>{{zhishubao && zhishubao.recommondMajor.recommondDate}}</span>
             </div>
