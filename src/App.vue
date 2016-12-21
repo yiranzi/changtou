@@ -61,7 +61,6 @@
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
-  import {setLocalCache, getLocalCache} from './util/cache'
 
   import mixinEvent from './mixinEvent'
   import mixinAjax from './mixinAjax'
@@ -90,12 +89,6 @@
       }
     },
 
-    data () {
-      return {
-        isShowNewTestPop: false
-      }
-    },
-
     watch: {
       route (newRoute) {
         this.$dispatch(eventMap.VIEW_CHANGE, newRoute.path)
@@ -114,7 +107,7 @@
     },
 
     created () {
-      this.showNewTestPopIf()
+//      this.showNewTestPopIf()
     },
 
     methods: {
@@ -131,20 +124,6 @@
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
-      },
-
-      //判断是否显示新手测试弹框
-      showNewTestPopIf () {
-        if (getLocalCache('first-test')) {
-          this.isShowNewTestPop = false
-        } else {
-          this.isShowNewTestPop = true
-        }
-      },
-      //关闭新手测试弹框
-      closeNewerTestPop () {
-        this.isShowNewTestPop = false
-        setLocalCache('first-test', true)
       }
     },
 

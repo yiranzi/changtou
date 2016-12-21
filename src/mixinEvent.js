@@ -62,8 +62,8 @@ const mixin = {
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
-        .then(this.hideSplashscreen)
-        .catch(this.hideSplashscreen)
+        //.then(() => {})
+        //.catch(this.hideSplashscreen)
 
       initVerNum()
 
@@ -106,6 +106,9 @@ const mixin = {
       this.doWhenUserNotValid(user)
     },
 
+    /**
+     * 毕业
+     */
     [eventMap.SUBJECT_GRADUATION]: function ({subjectId}) {
       this.showMask({
         component: 'graduationDiploma/Congratulation.vue',
@@ -115,6 +118,13 @@ const mixin = {
           this.$route.router.go(`/graduation/subject/diploma/${subjectId}`)
         }
       })
+    },
+
+    /**
+     * 首屏加载完毕
+     */
+    [eventMap.NAVIGATOR_LOADED]: function () {
+      this.hideSplashscreen()
     },
 
     /**
@@ -143,7 +153,7 @@ const mixin = {
 
       tasks.push(this.getHomeworkList())
       return Promise.all(tasks).then(
-        () => {}
+        //this.hideSplashscreen
       ).catch(
         () => {}
       )
