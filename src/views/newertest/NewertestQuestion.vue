@@ -17,10 +17,12 @@
         </div>
       </div>
     </div>
-    <div class="question-floating" v-show="isFloat">
-      <div class="feedback-img"></div>
-      <div class="feedback-content">{{questionArr[this.currQuIndex-1] ? questionArr[this.currQuIndex-1].feedback : ''}}</div>
-      <div class="feedback-btn" v-touch:tap="hideAnswerPop">原来如此，下一题</div>
+    <div class="question-floating-container" v-show="isFloatShow" :style="floatingStyleObject">
+      <div class="question-floating">
+        <div class="feedback-img"></div>
+        <div class="feedback-content">{{questionArr[this.currQuIndex-1] ? questionArr[this.currQuIndex-1].feedback : ''}}</div>
+        <div class="feedback-btn" v-touch:tap="hideAnswerPop">原来如此，下一题</div>
+      </div>
     </div>
   </div>
 </template>
@@ -130,15 +132,23 @@
     overflow: hidden;
     position: relative;
   }
+  .question-floating-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+  }
   .question-floating{
     width: 90%;
     height: 18.7rem;
-    margin: -9.35rem -8.43rem;
+    margin: auto auto;
+    margin-top: 40%;
     background-image: url("../../assets/styles/image/newertest/feedbackBg.png");
     background-size: 100%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    padding-top: 1px;
+    /*position: absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
     .feedback-img{
       width: 100%;
       height: 3.5rem;
@@ -186,11 +196,15 @@
         currOpsIndex: -1, //当前选项
         maxQuIndex: 7, //最大的题目序号
         isClicked: false, // 是否点击选项
-        isFloat: false, // 是否显示浮层
+        isFloatShow: false, // 是否显示浮层
         answer: [], //答案
         comboId: 0, //模板id
         level: 0, //等级
-        questionArr: []
+        questionArr: [],
+        floatingStyleObject: {
+          height: window.document.body.offsetHeight + 'px',
+          width: window.document.body.offsetWidth + 'px'
+        }
       }
     },
 
@@ -257,7 +271,7 @@
           return
         } else {
           if (this.currQuestion.feedback) {
-            this.isFloat = true
+            this.isFloatShow = true
           }
           this.answer.push(this.currOpsIndex)
           this.currOpsIndex = -1
@@ -285,7 +299,7 @@
       },
       //隐藏浮层
       hideAnswerPop () {
-        this.isFloat = false
+        this.isFloatShow = false
       },
       //计算等级，模板id
       computeLevelId () {
