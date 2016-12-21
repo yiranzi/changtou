@@ -256,7 +256,7 @@
        */
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/pay/success/ST/${this.stpId}`)
+        this.$route.router.replace(`/pay/success/ST/${this.stpId}`)
       },
 
       /**
