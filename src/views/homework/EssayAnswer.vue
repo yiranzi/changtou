@@ -263,6 +263,10 @@ export default {
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
+      p{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       *{
         margin: 0;
         padding: 0;
