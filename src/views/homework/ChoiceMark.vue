@@ -9,7 +9,7 @@
         <a slot="right">完成</a>
       </ict-titlebar>
       <div class="choice-score">
-        <rater :value.sync="score" slot="value" active-color="#fbc02d" :font-size="40" disabled></rater>
+        <ict-star :value="score" slot="value" :font-size="1.5"></ict-star>
         <p class="tip-up">知识点掌握度</p>
         <p class="tip-down">{{{choiceScoreTip}}}</p>
       </div>
@@ -17,7 +17,7 @@
         <p class="knowledge-tip">此次作业小测试设计知识点{{pointNum}}个</p>
         <div v-for="point in report.kpScore" class="item">
           <cell :title="pointContent($index)">
-            <rater :class="point-score" :value="pointScore($index)" slot="value" active-color="#fbc02d" :font-size="20" disabled></rater>
+            <ict-star :value="pointScore($index)" slot="value" :font-size="0.7"></ict-star>
           </cell>
         </div>
         <hr>
@@ -39,9 +39,9 @@
 </template>
 <script>
   import Cell from 'vux/cell'
-  import Rater from 'vux/rater'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import { choiceGetters, userGetters } from '../../vuex/getters'
+  import IctStar from '../../components/IctStar.vue'
+  import {choiceGetters, userGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
@@ -137,13 +137,17 @@
      * @returns {number}
        */
     pointScore (index) {
-      return this.report.kpScore[index].score * 0.5
+      if (this.report && this.report.kpScore.length > 0) {
+        return this.report.kpScore[index].score * 0.5
+      } else {
+        return 0
+      }
     }
   },
   components: {
-    Rater,
     Cell,
-    IctTitlebar
+    IctTitlebar,
+    IctStar
   }
 }
 </script>

@@ -9,7 +9,7 @@
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
       <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()"></textarea>
+      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
@@ -20,8 +20,8 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
-  import { essayGetters } from '../../vuex/getters'
-  import { essayActions } from '../../vuex/actions'
+  import {essayGetters} from '../../vuex/getters'
+  import {essayActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
 export default {
@@ -33,7 +33,9 @@ export default {
     },
     actions: {
       getQuestion: essayActions.getEssayQuestion,
-      submitArticle: essayActions.submitArticle
+      submitArticle: essayActions.submitArticle,
+      syncHomeworkList: homeworkListActions.getHomeworkList,
+      loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
     }
   },
   data () {
@@ -140,6 +142,9 @@ export default {
             this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
             this.rightOptions.disabled = false
           }
+          this.loadAllExpenseRecords().then(
+            this.syncHomeworkList()
+          )
           window.history.back()
         }).catch(
         () => {
@@ -167,40 +172,39 @@ export default {
       }
       this.submitArticle(essay).then(
         result => {
+          this.loadAllExpenseRecords().then(
+            this.syncHomeworkList()
+          )
           this.showToast('你的草稿已保存')
         }
       )
-    },
-
-    onAlertHide () {
-      window.history.back()
     },
 
     /**
      * 关闭 keyboard
      */
     resumeKeyboard () {
-      const textarea = document.getElementById('essay-textarea')
+      const textarea = this.$els.textarea
       textarea.blur()
+    },
+
+    /**
+     * textarea 聚焦
+     */
+    onTextFocus () {
       setTimeout(
         this.resizeTextarea,
         200
       )
     },
 
-    onTextFocus () {
-      this.$els.draftbar.setAttribute('style', 'position: relative')
-      setTimeout(
-        this.resizeTextarea,
-        100
-      )
-    },
-
+    /**
+     * textarea 失焦
+     */
     onTextBlur () {
-      this.$els.draftbar.setAttribute('style', 'position: absolute')
       setTimeout(
         this.resizeTextarea,
-        100
+        500
       )
     }
   },
