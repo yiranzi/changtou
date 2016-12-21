@@ -1,7 +1,7 @@
 /**
  * Created by dongdong on 2016/10/8.
  */
-import {getWithinAuth} from '../../frame/ajax'
+import {getWithoutAuth, getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
@@ -10,7 +10,7 @@ import {getUrl} from '../../frame/apiConfig'
 export const loadCommonTopic = ({ dispatch }, ctpId) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth({
+      getWithoutAuth({
         url: getUrl('common_topic').replace(':ctpId', ctpId)
       }).then(
         function (commonTopic) {
