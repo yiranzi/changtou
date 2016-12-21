@@ -190,7 +190,9 @@
               }
           ).catch(
             err => {
-              me.showAlert({message: err.message})
+              if (err !== 'cancelled by user') {
+                me.showAlert({message: err})
+              }
             }
           )
         } else {
@@ -219,7 +221,7 @@
             }
           ).catch(
             err => {
-                me.showAlert({message: err.message})
+                if (err !== '用户点击取消并返回') { me.showAlert({message: err}) }
             }
           )
         } else {
