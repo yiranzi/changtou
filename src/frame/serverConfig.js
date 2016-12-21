@@ -4,9 +4,9 @@
 
 import {debug} from '../util/environment'
 
-//var SEVER_URL = isDev ? 'http://app.ichangtou.com.cn' : 'http://m.ichangtou.net'
+//var SEVER_URL = debug ? 'http://app.ichangtou.com.cn' : 'http://m.ichangtou.net'
 
-var SEVER_URL = debug ? 'http://app.ichangtou.com.cn' : 'http://app.ichangtou.com.cn'
+var SEVER_URL = debug ? 'http://dev.ichangtou.com.cn' : 'http://app.ichangtou.com.cn'
 
 const API_TOKEN = debug ? 'XX:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e' : 'XX:_:w2qlJFV@ccOeiq41ENp><ETXh3o@aX8M<[_QOsZ<d8[Yz:NIMcKwpjtBk0e'
 

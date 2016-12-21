@@ -15,7 +15,7 @@
             </ict-input>
           </flexbox-item>
           <ict-button type="mini"
-                      :disabled="isValidationBtnDisable"
+                      :disabled="isPhoneValid"
                       @click="getValidationCode"
                       :text="validationBtnText">
           </ict-button>
@@ -73,7 +73,7 @@ export default {
     show () {
       return !this.isLogin
     },
-    isValidationBtnDisable () {
+    isPhoneValid () {
       return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
     }
   },

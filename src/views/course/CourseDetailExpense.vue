@@ -286,8 +286,6 @@
               this.hideLoading()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
-          ).catch(
-            this.hideLoading()
           )
         }
       },
@@ -369,9 +367,6 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         // 这里调用 setTimeout  是因为页面切换同时刷新数据会有卡顿
         setTimeout(() => {
-          // 隐藏loading提示
-          this.hideLoading()
-
           //设置课程信息
           this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
@@ -396,6 +391,11 @@
   //          this.currStatus = 'W'
   //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
           }
+
+          // 隐藏loading提示
+          this.$nextTick(() => {
+            this.hideLoading()
+          })
         }, 500)
       },
 
