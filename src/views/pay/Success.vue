@@ -110,6 +110,8 @@ export default {
 </script>
 <style lang="less">
   .pay-success{
+    width: 100%;
+    height: 100%;
     background: #f0eff5;
     .tip{
       width: 100%;
