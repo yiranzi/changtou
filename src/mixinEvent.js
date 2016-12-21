@@ -62,8 +62,8 @@ const mixin = {
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
-        //.then(() => {})
-        //.catch(this.hideSplashscreen)
+        .then(() => {})
+        .catch(() => {})
 
       initVerNum()
 

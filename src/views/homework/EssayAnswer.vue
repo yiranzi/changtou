@@ -24,6 +24,11 @@
   import {essayActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+
+  // 页面原有高度, 用来处理键盘弹出事件
+  const _originHtmlHeight = window.document.body.offsetHeight
+  let isKeyboardPop = false
+
 export default {
   vuex: {
     getters: {
@@ -40,6 +45,7 @@ export default {
   },
   data () {
     return {
+      timer: 0,
       canDraft: false, //是否可以保存草稿
       lessonId: 0,
       rightOptions: { //titlebar
@@ -85,6 +91,7 @@ export default {
         this.resizeTextarea,
         300
       )
+      this.startListenToHeightChange()
     },
     deactivate () {
       if (this.isAnswerChange && this.essayAnswer) {
@@ -97,6 +104,8 @@ export default {
       this.textareaStyle = '' //textarea样式
       this.answer = '' // 填写的答案
       this.canDraft = false
+
+      this.stopListenToHeightChange()
     }
   },
   methods: {
@@ -206,6 +215,26 @@ export default {
         this.resizeTextarea,
         500
       )
+    },
+
+    /**
+     * 开始监听页面高度改变事件
+     */
+    startListenToHeightChange () {
+      this.timer = setInterval(() => {
+        // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
+        if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
+          this.resizeTextarea()
+        }
+        isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
+      }, 500)
+    },
+
+    /**
+     * 停止监听页面高度改变事件
+     */
+    stopListenToHeightChange () {
+      clearInterval(this.timer)
     }
   },
   components: {
@@ -234,6 +263,10 @@ export default {
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
+      p{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       *{
         margin: 0;
         padding: 0;
