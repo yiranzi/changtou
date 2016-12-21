@@ -218,6 +218,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.resetScroller()
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
@@ -231,11 +232,9 @@
 
           return Promise.all(tasks).then(
             () => {
-              this.resetScroller()
               return {subjectId: subjectId, isLoadedFail: false, isResponsive: true}
             },
             () => {
-              this.resetScroller()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
           )
@@ -299,11 +298,12 @@
 
     methods: {
       resetScroller () {
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         this.$nextTick(() => {
           this.$refs.scroller.reset({
               top: 0
+          })
         })
-      })
       },
 
       back () {
