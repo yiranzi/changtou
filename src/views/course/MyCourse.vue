@@ -36,7 +36,7 @@
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state">{{course.status}}</p>
+              <p class="course-list-state">{{course.status}} <span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
             </div>
           </div>
         </div>
