@@ -1,8 +1,4 @@
 /**
- * Created by jun on 2016/11/16.
- *
- */
-/**
 * Created by jun on 2016/11/16.
 *
 */
@@ -53,7 +49,7 @@
         }
     },
     ready () {
-      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight + 'px'
+      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - (this.notice ? 35 : 0) + 'px'
     },
     methods: {
       /**
@@ -62,6 +58,7 @@
       setScrollerHeight () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.clientHeight - (me.notice ? 35 : 0) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

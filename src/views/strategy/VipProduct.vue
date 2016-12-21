@@ -51,7 +51,7 @@ export default {
       }
   },
   ready () {
-    this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight + 'px'
+    this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - (this.notice ? 35 : 0) + 'px'
   },
   methods: {
     /**
@@ -59,8 +59,8 @@ export default {
      */
     setScrollerHeight () {
       const me = this
-
       setTimeout(function () {
+        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.clientHeight - (me.notice ? 35 : 0) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
