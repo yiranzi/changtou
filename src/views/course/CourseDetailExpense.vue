@@ -675,8 +675,8 @@
 
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubjectRecord.lessonSet.lessonIds.length) {
-            this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < this.currSubject.lessonList.length) {
+            this.currUseabLessonArr.push(this.currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
           }
         }
 
