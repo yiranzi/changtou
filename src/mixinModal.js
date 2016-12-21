@@ -91,7 +91,7 @@ Vue.mixin({
                   </div>`
       })
       new MyComponent({ el: '#mask' })
-      this.isMaskShow = false
+      this.isMaskShow = true
     },
 
     /**
