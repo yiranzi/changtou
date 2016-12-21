@@ -127,6 +127,9 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
+          setTimeout(() => {
+            me.$dispatch(eventMap.NAVIGATOR_LOADED)
+          }, 200)
         }
       )
     },
