@@ -15,6 +15,7 @@
                 link="/bind/phone">
       </ict-item>
       <ict-item title="登录密码"
+                :disabled="!userPhone"
                 class="reset-password"
                 value="修改"
                 link="/reset/password/start">
