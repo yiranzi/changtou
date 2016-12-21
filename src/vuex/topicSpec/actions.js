@@ -1,12 +1,12 @@
 /**
  * Created by dongdong on 2016/10/8.
  */
-import {getWithinAuth} from '../../frame/ajax'
+import {getWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 export const loadSpecTopic = ({ dispatch }, stpId) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth({
+      getWithoutAuth({
         url: getUrl('spec_topic').replace(':stpId', stpId)
       }).then(
         function (specTopic) {

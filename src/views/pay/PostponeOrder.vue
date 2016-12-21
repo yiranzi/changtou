@@ -243,7 +243,7 @@
       },
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/subject/detail/P/${this.subjectId}/0`)
+        window.history.back()
       },
       onPayFail (err) {
         Object.assign(this.statisticData, {

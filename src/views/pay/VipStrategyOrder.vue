@@ -260,7 +260,7 @@
        */
       goToPaySuccess () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/pay/success/VS/0`)
+        this.$route.router.replace(`/pay/success/VS/0`)
         this.syncUser().then(
           user => {
             this.$dispatch(eventMap.SYNC_USER, user)
