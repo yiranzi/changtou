@@ -178,11 +178,11 @@
           ({integral}) => {
             this.reloadDiploma()
             this.showMask({
-              component: 'graduationDiploma/DrawVolume.vue',
+              component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
               data: `${integral}`,
-              callbackName: null,
-              callbackFn: null
+              callbackName: 'graduationVolumeConfirm',
+              callbackFn: () => {}
             })
           }
         )
