@@ -41,11 +41,15 @@
       display: block;
     }
     .bottom-area{
+      position: relative;
+      height: 2.2rem;
       width: 100%;
       font-family: '微软雅黑';
+
       .ticket-tip{
-        position: relative;
-        top: -3.45rem;
+        width: 100%;
+        position: absolute;
+        top: -1.25rem;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -53,6 +57,7 @@
         text-align: center;
       }
       .ict-button{
+        border-radius: 0;
         height: 2.2rem;
       }
     }

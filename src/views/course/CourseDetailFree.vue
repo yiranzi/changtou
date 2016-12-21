@@ -180,11 +180,7 @@
       },
 
       'currTabIndex': function () {
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-//              top: 0
-          })
-        })
+        this.resetScroller()
       },
 
       /**
@@ -193,13 +189,7 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         //设置课程信息
         this.currSubject = this.freeSubjectArr.find(subject => subject.subjectId === newSubjectId)
-
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-          top: 0
-        })
-      })
-
+        this.resetScroller()
         //获取进度信息
         let currSubjectRecord = this.freeRecordsArr.find(subject => (subject.subjectId + '') === newSubjectId)
         this.setSubjectRecordStatus(currSubjectRecord)
@@ -228,6 +218,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.resetScroller()
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
@@ -306,6 +297,15 @@
     },
 
     methods: {
+      resetScroller () {
+        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+              top: 0
+          })
+        })
+      },
+
       back () {
         window.history.back()
       },

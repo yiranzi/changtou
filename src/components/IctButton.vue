@@ -34,7 +34,7 @@
 </script>
 <style lang="less">
   @height-ict-button: 2.2rem;
-  @font-ict-button: 0.9rem;
+  @font-ict-button: 0.7rem;
   @radius-ict-border: 5px;
 
   //background color
@@ -62,6 +62,7 @@
     margin-right: auto;
     padding-left: 0.7rem;
     padding-right: 0.7rem;
+    font-family: "Microsoft YaHei" ! important;
     font-size: @font-ict-button;
     text-align: center;
     text-decoration: none;

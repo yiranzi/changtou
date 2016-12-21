@@ -40,7 +40,7 @@
   import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
-
+  import {setSessionCache} from '../../../util/cache'
   export default {
     vuex: {
       actions: {
@@ -68,7 +68,8 @@
       }
     },
     route: {
-      data () {
+      data ({from}) {
+        setSessionCache('register-sources-page', {sourcesPage: from.path})
         this.phone = ''
         this.plainPassword = ''
       }

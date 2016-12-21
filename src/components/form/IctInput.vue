@@ -142,6 +142,7 @@
 
       .title {
         font-size: 0.75rem;
+        font-weight: bold;
         width: 4.5rem;
       }
 
@@ -165,7 +166,7 @@
         outline-style: initial;
         outline-width: 0px;
         line-height: 0.75rem;
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         color: inherit;
         background-color: transparent;
       }
