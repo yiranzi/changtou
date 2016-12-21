@@ -182,10 +182,16 @@
                           me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                           window.history.back()
                       }
+                  ).catch(
+                    err => {
+                      me.showAlert({message: err.message})
+                    }
                   )
               }
           ).catch(
-//              err => { me.errTip = err }
+            err => {
+              me.showAlert({message: err.message})
+            }
           )
         } else {
           this.showAlert({message: '请安装QQ客户端'})
@@ -205,10 +211,16 @@
                   me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                   window.history.back()
                 }
+              ).catch(
+                err => {
+                  me.showAlert({message: err.message})
+                }
               )
             }
           ).catch(
-//            err => { me.errTip = err }
+            err => {
+                me.showAlert({message: err.message})
+            }
           )
         } else {
           this.showAlert({message: '请安装微信客户端'})
