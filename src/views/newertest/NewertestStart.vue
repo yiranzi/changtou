@@ -31,7 +31,7 @@
       width: 157/20rem;
       height: 1.8rem;
       margin: 0 1.75rem;
-      background-image: url("../../assets/styles/image/newertest/title.png");
+      background: url("../../assets/styles/image/newertest/title.png") center no-repeat;
       background-size: 100%;
     }
     .introduce-img{

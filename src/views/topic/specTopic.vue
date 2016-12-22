@@ -284,14 +284,14 @@
     watch: {
       'specTopicInfo': function () {
         var me = this
-        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
               top: 0
           })
         })
-        }, 300)
+        }, 500)
       }
     },
     methods: {

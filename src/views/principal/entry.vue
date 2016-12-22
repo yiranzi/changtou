@@ -182,10 +182,18 @@
                           me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                           window.history.back()
                       }
+                  ).catch(
+                    err => {
+                      me.showAlert({message: err.message})
+                    }
                   )
               }
           ).catch(
-//              err => { me.errTip = err }
+            err => {
+              if (err !== 'cancelled by user') {
+                me.showAlert({message: err})
+              }
+            }
           )
         } else {
           this.showAlert({message: '请安装QQ客户端'})
@@ -205,10 +213,16 @@
                   me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                   window.history.back()
                 }
+              ).catch(
+                err => {
+                  me.showAlert({message: err.message})
+                }
               )
             }
           ).catch(
-//            err => { me.errTip = err }
+            err => {
+                if (err !== '用户点击取消并返回') { me.showAlert({message: err}) }
+            }
           )
         } else {
           this.showAlert({message: '请安装微信客户端'})

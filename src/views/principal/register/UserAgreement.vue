@@ -1,8 +1,8 @@
 <template>
   <div class="agreement">
-    <ict-titlebar>用户协议</ict-titlebar>
+    <ict-titlebar v-el:titlebar>用户协议</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div  v-el:agreement>
+      <div>
         <div v-for="item in agreement" class="agreement-item">
           <p class="item-title">{{item.title}}</p>
           <p v-for="content in item.contents">{{content}}</p>
@@ -140,8 +140,7 @@
       setScrollerHeight () {
         // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
         const me = this
-        const { agreement } = this.$els
-        me.scrollerHeight = agreement.offsetHeight + 'px'
+        me.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.offsetHeight + 'px'
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({

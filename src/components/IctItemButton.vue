@@ -124,7 +124,11 @@ export default {
     .ict-item-title{
       color: @color-ict-item-disabled-font;
     }
+    .ict-item-value{
+      color: @color-ict-item-disabled-font;
+    }
     .ict-item-value.with-arrow:after {
+      color: @color-ict-item-disabled-font;
       border-color: @color-ict-item-disabled-font;
     }
   }

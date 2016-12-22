@@ -13,7 +13,7 @@
             <div class="row">
               <span>{{zhishubao && zhishubao.recommondMajor.code}}</span>
               <span >{{zhishubao && zhishubao.recommondMajor.name}}
-                <img class="new-img" src="../../../static/image/strategy/newTip.png" :v-if="zhishubao.recommondMajor.isNew">
+                <img class="new-img" src="../../../static/image/strategy/newTip.png" v-if="zhishubao.recommondMajor.isNew">
               </span>
               <span>{{zhishubao && zhishubao.recommondMajor.recommondDate}}</span>
             </div>
@@ -24,7 +24,7 @@
             </div>
           </div>
           <hr class="line-hr"/>
-          <div class="item">
+          <div class="item" v-if="zhishubao && zhishubao.recommondMinor && zhishubao.recommondMajor && zhishubao.recommondMinor.code !== zhishubao.recommondMajor.code">
             <p class="title">轻仓买入（指数宝仓位的{{zhishubao && zhishubao.recommondMinor.ratio}}）</p>
             <div class="row">
               <span>{{zhishubao && zhishubao.recommondMinor.code}}</span>
@@ -39,7 +39,7 @@
               <span>起始推荐日期</span>
             </div>
           </div>
-          <hr class="line-hr"/>
+          <hr class="line-hr" v-if="zhishubao && zhishubao.recommondMinor && zhishubao.recommondMajor && zhishubao.recommondMinor.code !== zhishubao.recommondMajor.code"/>
         </div>
         <div class="tip-time">更新时间{{zhishubao && zhishubao.updateDate}}</div>
         <p class="tip-title">温馨提示</p>

@@ -675,8 +675,8 @@
 
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubjectRecord.lessonSet.lessonIds.length) {
-            this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < this.currSubject.lessonList.length) {
+            this.currUseabLessonArr.push(this.currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
           }
         }
 
@@ -754,42 +754,51 @@
         const lessonTitle = lastSubmitLesson.title
         const essayQuestion = lastSubmitLesson.essayQuestion
 
-        if (this.isAssignmentSubmitted) {
-          // 如果提交作业
-          confirmText = '查看作业'
-          confirmHandler = function () {
-            me.setEssayQuestion(essayQuestion)
-            me.goEssayMark(me.lastSubmitlessonId)
-          }
-          msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
-        } else {
-          // 如果没有提交作业
-          if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
-            // 有选择题
-            confirmText = '去测试'
-            confirmHandler = function () {
-              me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
-            }
-            msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
-          } else {
-            // 无选择题
-            confirmText = '去写作业'
+        if (essayQuestion.assignmentType === 'S') {
+          // 简单作业
+          if (this.isAssignmentSubmitted) {
+            // 如果提交作业
+            confirmText = '查看作业'
             confirmHandler = function () {
               me.setEssayQuestion(essayQuestion)
-              me.goEssayAnswer(me.lastSubmitlessonId)
+              me.goEssayMark(me.lastSubmitlessonId)
             }
-            msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
+            msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
+          } else {
+            // 如果没有提交作业
+            if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
+              // 有选择题
+              confirmText = '去测试'
+              confirmHandler = function () {
+                me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+              }
+              msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
+            } else {
+              // 无选择题
+              confirmText = '去写作业'
+              confirmHandler = function () {
+                  me.setEssayQuestion(essayQuestion)
+                  me.goEssayAnswer(me.lastSubmitlessonId)
+              }
+              msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
+            }
           }
+            // 加入延迟,防止出现msg被点透的情况
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: confirmText,
+            cancelText: '继续听课',
+            okCallback: confirmHandler
+          })
+        } else if (essayQuestion.assignmentType === 'H') {
+          me.showAlert(
+            {
+              message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
+              btnText: '知道了'
+            }
+          )
         }
-
-        // 加入延迟,防止出现msg被点透的情况
-        me.showConfirm({
-          title: '',
-          message: msg,
-          okText: confirmText,
-          cancelText: '继续听课',
-          okCallback: confirmHandler
-        })
       },
 
       /**

@@ -201,7 +201,7 @@
                 if (homework.essayStatus === -1) {
                   tip = '未答题'
                 } else if (homework.essayStatus === 0) {
-                  tip = '审核中'
+                  tip = '已提交'
                 } else if (homework.essayStatus === 1) {
                   tip = '草稿'
                 } else if (homework.essayStatus === 2) {

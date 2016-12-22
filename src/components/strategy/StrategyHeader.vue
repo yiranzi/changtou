@@ -16,7 +16,7 @@ export default {
 }
 </script>
 <style lang="less">
-  .strategy-header{
+  p.strategy-header{
     margin: 2rem 0 1rem;
     text-align: center;
     font-size: 0.8rem;

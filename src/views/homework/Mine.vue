@@ -40,7 +40,7 @@
               </div>
 
               <div class="essay-panel" v-if="subject.essayTotal">
-                <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+                <p  class="modules-title">{{subject.choiceTotal ? '选修作业' : '课后作业'}}</p>
                 <div v-for="essay in subject.lessons">
                   <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
                     <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
@@ -94,7 +94,7 @@
           'I': ''
         },
 
-        essayStatus: {'-1': '未答题', 0: '审核中', 1: '草稿', 2: '未通过', 3: '通过'},
+        essayStatus: {'-1': '未答题', 0: '已提交', 1: '草稿', 2: '未通过', 3: '通过'},
         chinaNum: {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九'},
         scrollerHeight: '0px',
         clsList: []
@@ -172,8 +172,8 @@
 
       setScrollerHeight () {
         const me = this
-        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

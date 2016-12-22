@@ -155,10 +155,6 @@
       }
     },
 
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.btn.offsetHeight) + 'px'
-    },
-
     methods: {
       lookAnswer (index) {
         const me = this
@@ -186,12 +182,13 @@
       refreshScroller () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
           })
         })
-        }, 300)
+        }, 500)
       }
     },
     components: {

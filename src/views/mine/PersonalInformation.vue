@@ -16,6 +16,7 @@
       </ict-item>
       <ict-item title="登录密码"
                 class="reset-password"
+                :disabled="!!!userPhone"
                 value="修改"
                 link="/reset/password/start">
       </ict-item>
