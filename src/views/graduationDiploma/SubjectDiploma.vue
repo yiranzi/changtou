@@ -129,18 +129,16 @@
       )
     }
   },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-  },
   methods: {
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
-          top: 0
+            top: 0
+          })
         })
-      })
       }, 500)
     },
 
@@ -176,14 +174,14 @@
           }
         ).then(
           ({integral}) => {
-            this.reloadDiploma()
             this.showMask({
-              component: 'graduationDiploma/DrawVolume.vue',
+              component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
               data: `${integral}`,
-              callbackName: null,
-              callbackFn: null
+              callbackName: 'graduationVolumeConfirm',
+              callbackFn: () => {}
             })
+            this.reloadDiploma()
           }
         )
       }
@@ -233,7 +231,8 @@
         top: 510/40rem;
         left: 0;
         text-align: center;
-        font-size: 28/40rem;
+        font-size: 0.8rem;
+        font-weight: bold;
         color: #666;
       }
       .graduation-date{

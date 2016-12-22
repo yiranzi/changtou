@@ -34,7 +34,7 @@
 </script>
 <style lang="less">
   @height-ict-button: 2.2rem;
-  @font-ict-button: 0.7rem;
+  @font-ict-button: 0.85rem;
   @radius-ict-border: 5px;
 
   //background color

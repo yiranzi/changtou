@@ -14,6 +14,7 @@ export default {
   methods: {
     onConfirmTap () {
       this.hideMask()
+      this.$dispatch('graduationVolumeConfirm')
     }
   }
 }

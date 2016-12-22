@@ -1,8 +1,4 @@
 /**
- * Created by jun on 2016/11/16.
- *
- */
-/**
 * Created by jun on 2016/11/16.
 *
 */
@@ -52,9 +48,6 @@
             )
         }
     },
-    ready () {
-      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight + 'px'
-    },
     methods: {
       /**
        * 设置 滚动范围高度
@@ -62,6 +55,7 @@
       setScrollerHeight () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.clientHeight - (me.notice ? 35 : 0) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

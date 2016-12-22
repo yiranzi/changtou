@@ -16,7 +16,7 @@
     .scroll-Container{
       background: #fefef0;
       width: 100%;
-      height : 1.75rem;
+      height : 35px;
     }
 
     .scroll-Text{
@@ -24,7 +24,7 @@
       font-size: .65rem;
       width:100% !important;
       -webkit-animation: moveIn 6s infinite;
-      line-height: 1.5rem;
+      line-height: 35px;
       white-space:nowrap;
     }
 

@@ -260,11 +260,12 @@
   }
 
   .weui_tabbar{
-    height: 2.45rem;
+    height: 2.5rem;
     & &_item{
       padding-top: 2px;
       text-decoration: initial;
       .weui_tabbar_icon{
+        margin: 0.2rem auto 0;
         display: block;
         width: 1.4rem;
         height: 1.4rem;
@@ -278,10 +279,10 @@
       }
     }
     .weui_tabbar_item .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
     }
     .weui_tabbar_item.weui_bar_item_on .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-size: 0.5rem;
       line-height: 0.7rem;
       color: #409af4;
@@ -404,10 +405,14 @@
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #087685;
+    font-size: 24/40rem;
+    color: #aaa;
+    p{
+      margin: 20/40rem 0;
+    }
   }
   .ict-loading-img{
-    width: 2rem;
-    height: 2rem;
+    width: 4rem;
+    height: 4rem;
   }
 </style>

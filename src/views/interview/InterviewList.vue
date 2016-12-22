@@ -73,11 +73,7 @@
     },
     watch: {
       'interviewList': function () {
-          this.$nextTick(() => {
-            this.$refs.scroller.reset({
-//              top: 0
-          })
-        })
+        this.setScrollerHeight()
       }
     },
     route: {
@@ -97,10 +93,21 @@
         )
       }
     },
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-    },
+
     methods: {
+      setScrollerHeight () {
+        const me = this
+        setTimeout(
+          function () {
+            me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
+            me.$nextTick(() => {
+              me.$refs.scroller.reset({
+                top: 0
+              })
+            })
+          }, 500
+        )
+      },
       goToInterviewRecord (interviewId) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
           '访谈Id': interviewId

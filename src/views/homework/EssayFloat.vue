@@ -5,7 +5,7 @@
 <template>
     <ict-sheet title="课后作业" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
-        <div class="essay-content" v-if="essayType === 'S'">{{{essayQuestion}}}</div>
+        <div class="essay-content" v-if="assignmentType === 'S'">{{{essayQuestion}}}</div>
         <div class="essay-explain">
           {{{explain}}}
         </div>
@@ -40,7 +40,7 @@
     },
     vuex: {
       getters: {
-        essayType: essayGetters.essayType,
+        assignmentType: essayGetters.assignmentType,
         essayQuestion: essayGetters.essayQuestion,
         essayLessonId: essayGetters.essayLessonId,
         articleId: essayGetters.articleId
@@ -48,15 +48,15 @@
     },
     data () {
       return {
-        btnText: ''
+
       }
     },
     computed: {
       btnText () {
-        return this.essayType ? tpl[this.essayType].btnText : null
+        return this.assignmentType ? tpl[this.assignmentType].btnText : null
       },
       explain () {
-        return this.essayType ? tpl[this.essayType].explain : null
+        return this.assignmentType ? tpl[this.assignmentType].explain : null
       }
     },
     methods: {

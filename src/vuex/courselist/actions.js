@@ -7,15 +7,23 @@ import {getWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 export const loadCourseList = ({ dispatch }) => {
-  //获取所有课程列表
-  getWithoutAuth(
-    {
-      url: getUrl('course_list')
+  return new Promise(
+    (resolve, reject) => {
+      //获取所有课程列表
+      getWithoutAuth(
+        {
+          url: getUrl('course_list')
+        }
+      ).then(
+        list => {
+          dispatch('DISPLAY_UPDATE_TOTAL_LIST', list)
+          resolve(list)
+        }
+      ).catch(
+        err => {
+          reject(err)
+        }
+      )
     }
-  ).then(
-    list => {
-      dispatch('DISPLAY_UPDATE_TOTAL_LIST', list)
-    },
-    err => console.warn(err)
   )
 }

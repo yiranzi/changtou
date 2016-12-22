@@ -28,7 +28,7 @@ export default {
       }
     }
     .content{
-      padding: 1.5rem 2rem 2rem;
+      padding: 0 2rem 2rem;
       font-size: 0.65rem;
       color: #bbb;
     }
