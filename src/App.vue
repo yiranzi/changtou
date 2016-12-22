@@ -279,7 +279,7 @@
       }
     }
     .weui_tabbar_item .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
     }
     .weui_tabbar_item.weui_bar_item_on .weui_tabbar_label{
       margin: 0;
