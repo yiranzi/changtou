@@ -23,7 +23,7 @@
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
           </p>
-          <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
+          <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">
             <div class="box-container" >
                 <div class="box-item" v-for="item in recommends"
                      v-touch:tap="goToRecommendDetail(item,$index)">
@@ -111,6 +111,9 @@
           this.$refs.scroller.reset({
           top: 0
           })
+          this.$refs.vscroller.reset({
+            left: 0
+          })
         })
       }
     },
@@ -163,6 +166,9 @@
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
+          })
+          me.$refs.vscroller.reset({
+            left: 0
           })
         })
         }, 150)
