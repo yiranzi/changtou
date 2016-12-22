@@ -3,8 +3,8 @@
  */
 
   //作业类型
-export const essayType = (state) => {
-  return state.homeworkEssay.essayType
+export const assignmentType = (state) => {
+  return state.homeworkEssay.assignmentType
 }
 
 //作业题目
