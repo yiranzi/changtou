@@ -4,6 +4,13 @@
  * 版本号控制
  */
 
-const appVersion = '2.0.0' //功能版本号
+import {getNativeVersion} from '../plugin/version'
 
-const nativeVersion = '' //原生版本号
+const appVersion = '2.4.0' //功能版本号
+
+//const nativeVersion = '0' //原生版本号
+
+export {
+  appVersion,
+  getNativeVersion
+}

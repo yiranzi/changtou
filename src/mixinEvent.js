@@ -12,8 +12,6 @@ import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {getKnowledgePointMap} from './vuex/homework/choice/actions'
-//import {Device} from './plugin/device'
-import {initVerNum} from './plugin/version'
 
 const mixin = {
   vuex: {
@@ -64,8 +62,6 @@ const mixin = {
       this.syncUser().then(this.doWhenUserValid)
         .then(() => {})
         .catch(() => {})
-
-      initVerNum()
 
       // 延迟获取对应知识点, 增加页面的响应速度
       const me = this
