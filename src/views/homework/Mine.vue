@@ -40,7 +40,7 @@
               </div>
 
               <div class="essay-panel" v-if="subject.essayTotal">
-                <p  class="modules-title">{{subject.hasChoice ? '选修作业' : '课后作业'}}</p>
+                <p  class="modules-title">{{subject.choiceTotal ? '选修作业' : '课后作业'}}</p>
                 <div v-for="essay in subject.lessons">
                   <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
                     <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>

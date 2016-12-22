@@ -112,6 +112,7 @@
     }
     .promote-panel{
       position: relative;
+      height: 4rem;
       .close-icon{
         position: absolute;
         top: 0.4rem;

@@ -28,11 +28,11 @@
           </div>
           <div class="teacher-detail">
             <div class="left">
-              <img v-bind:src="subject.portrait" alt="" class="portrait"></im>
+              <img v-bind:src="subject.portrait" class="portrait">
             </div>
             <div class="right">
-              <p style="font-size: 0.75rem">{{subject.teacher}}</p>
-              <p style="font-size: 0.6rem">{{subject.background}}</p>
+              <p style="font-size: 0.75rem color:#000">{{subject.teacher}}</p>
+              <p style="font-size: 0.7rem color:#000">{{subject.background}}</p>
             </div>
           </div>
         </div>
@@ -59,7 +59,8 @@
             <img v-bind:src="qu.pic" alt="" class="a-img">
           </div>
           <div class="a-right">
-            {{qu.content}}
+            <p>{{qu.content.split('--')[0]}}</p>
+            <p>{{qu.content.split('--')[1]}}</p>
           </div>
         </div>
       </div>
@@ -68,8 +69,8 @@
         <div class="title-babel" style="margin-top: 1.25rem">
           <span>学员评价</span>
         </div>
-        <div style="margin-top: 0.75rem; padding-left: 0.5rem">
-          <img v-bind:src="subject.studentFeedbackUrl" alt="" style="height: 100%; width: 90%">
+        <div style="margin-top: 0.75rem; text-align: center">
+          <img v-bind:src="subject.studentFeedbackUrl" style="height: 15rem; width: 13rem;">
         </div>
       </div>
 
@@ -186,220 +187,242 @@
 
 <style lang="less">
   .detail-specific {
-  .divider-line {
-    height: 0.5rem;
-    background-color: #f0eff5;
-  }
+    .divider-line {
+      height: 0.5rem;
+      background-color: #f0eff5;
+    }
 
-  .custom-divider {
-    margin-top: 60/40rem;
-    margin-right: 50/40rem;
-    display: flex;
-    font-size: 30/40rem;
-    color: #00b0f0;
-  .line {
-    height: 1px;
-    background-color: #00b0f0;
-    border: none;
-  }
-  .left {
-    flex: 1;
-  }
-  .right{
-    flex: 1;
-  }
-  }
-  .title-box {
-    padding-left: 1.25rem;
-  .title {
-    margin-top: 1.25rem;
-    font-size: 34/40rem;
-    color: #000;
-  }
-  .price {
-    margin-top: 30/40rem;
-    font-size: 30/40rem;
-    color: #ff5b45;
-  }
-  .tip {
-    margin-top: 30/40rem;
-    margin-bottom: 1rem;
-    font-size: 26/40rem;
-    color: #00b0f0;
-  .number-tip {
-    margin-right: 1rem;
-  }
-  .timer-icon:before {
-    font-family: 'myicon';
-    content: '\e906';
-    color: #00b0f0;
-    font-size: 26/40rem !important;
-  }
-  }
-  }
+    .custom-divider {
+      margin-top: 60/40rem;
+      margin-right: 50/40rem;
+      display: flex;
+      font-size: 30/40rem;
+      color: #00b0f0;
+      .line {
+        height: 1px;
+        background-color: #00b0f0;
+        border: none;
+      }
+      .left, .right{
+        flex: 1;
+        margin: auto;
+      }
 
-  .specific-items-box{
-    padding-left: 50/40rem;
+    }
+    .title-box {
+      padding-left: 1.25rem;
+    .title {
+      margin-top: 1.25rem;
+      font-size: 34/40rem;
+      color: #000;
+    }
+    .price {
+      margin-top: 30/40rem;
+      font-size: 30/40rem;
+      color: #ff5b45;
+    }
+    .tip {
+      margin-top: 30/40rem;
+      margin-bottom: 1rem;
+      font-size: 26/40rem;
+      color: #00b0f0;
+    .number-tip {
+      margin-right: 1rem;
+    }
+    .timer-icon:before {
+      font-family: 'myicon';
+      content: '\e906';
+      color: #00b0f0;
+      font-size: 26/40rem !important;
+    }
+    }
+    }
 
-  .content-position {
-    margin-left: 20/40rem;
-    margin-right: 70/40rem;
-  }
+    .specific-items-box{
+      padding-left: 50/40rem;
+      box-sizing: border-box;
 
-  /*课程简介*/
-  .title-babel {
-    position: relative;
-    height: 60/40rem;
-    width: 135/40rem;
-    display: flex;
-    align-items: center;
-    padding-left: 0.5rem;
-    font-size: 30/40rem;
-    color: #fff;
-    background-color: #00b0f0;
-  }
+    .content-position {
+      margin-left: 20/40rem;
+      margin-right: 70/40rem;
+    }
 
-  .title-babel:after {
-    position: absolute;
-    right: -58/40rem;
-    content: '';
-    height: 0;
-    width: 0;
-    border: 30/40rem solid transparent;
-    border-left: 30/40rem solid #00b0f0;
-  }
+    /*课程简介*/
+    .title-babel {
+      position: relative;
+      height: 60/40rem;
+      width: 135/40rem;
+      display: flex;
+      align-items: center;
+      padding-left: 0.5rem;
+      font-size: 30/40rem;
+      color: #fff;
+      background-color: #00b0f0;
+    }
 
-  .title-sub-specific {
-    /*margin-left: ;*/
-    margin-top: 30/40rem;
-  .detail-content {
-    font-size: 28/40rem;
-  }
-  }
+    .title-babel:after {
+      position: absolute;
+      right: -58/40rem;
+      content: '';
+      height: 0;
+      width: 0;
+      border: 30/40rem solid transparent;
+      border-left: 30/40rem solid #00b0f0;
+    }
 
-  .teacher-introduce-box {
-    margin-top: 50/40rem;
-  .teacher-detail {
-    margin-top: 30/40rem;
-    margin-right: 50/40rem;
-    display: flex;
-    color: #656565;
-  .left {
-    font-size: 30/40rem;
-    width: 130/40rem;
-  .portrait {
-    width: 110/40rem;
-    height: 110/40rem;
-  }
-  }
-  .right {
-    font-size: 36/40rem;
-    flex: 1;
-  }
-  }
-  }
+    .title-sub-specific {
+      /*margin-left: ;*/
+      margin-top: 30/40rem;
+    .detail-content {
+      font-size: 28/40rem;
+    }
+    }
 
-  .featrue-box {
-    margin-top: 50/40rem;
+    .teacher-introduce-box {
+      margin-top: 50/40rem;
+      .teacher-detail {
+        margin-top: 30/40rem;
+        margin-right: 50/40rem;
+        display: flex;
+        color: #656565;
+        .left {
+          font-size: 30/40rem;
+          width: 130/40rem;
+          .portrait {
+            width: 110/40rem;
+            height: 110/40rem;
+          }
+        }
+        .right {
+          font-size: 36/40rem;
+          flex: 1;
+        }
+      }
+    }
 
-  .feature-detail {
-    margin-top: 30/50rem;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
+    .featrue-box {
+      margin-top: 50/40rem;
 
-  .feature-item {
-    flex: 0 0 50%;
-    text-align:center;
-    margin-bottom: 50/40rem;
+    .feature-detail {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
 
-  .f-img {
-    width: 110/40rem;
-    height: 110/40rem;
-  }
-  .f-title {
-    margin-top: 30/40rem;
-    font-size: 28/40rem;
-    color: #656565;
-  }
-  .f-content {
-    margin-top: 10/40rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    font-size: 24/40rem;
-    color: #aaa;
-  }
-  }
-  }
-  }
+    .feature-item {
+      flex: 0 0 50%;
+      text-align:center;
+      margin-bottom: 50/40rem;
 
-  .acquisition-box {
-  .acquisition-item {
-    margin-top: 40/40rem;
+    .f-img {
+      width: 110/40rem;
+      height: 110/40rem;
+    }
+    .f-title {
+      margin-top: 0.25rem;
+      font-size: 28/40rem;
+      color: #656565;
+    }
+    .f-content {
+      margin-top: 10/40rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      font-size: 24/40rem;
+      color: #aaa;
+    }
+    }
+    }
+    }
 
-  .a-left {
-    display: inline-block;
-    width: 2rem;
-    vertical-align: middle;
+    .acquisition-box {
+      .acquisition-item {
+        margin-top: 40/40rem;
+        padding: 0 1rem;
+        .a-left {
+          display: inline-block;
+          width: 2rem;
+          vertical-align: middle;
+          padding-right: 0.5rem;
+          .a-img {
+            height: 2rem;
+            width: 2rem;
+          }
+        }
+        .a-right {
+          display: inline-block;
+          width: 80%;
+          vertical-align: middle;
+          /*flex: 1;*/
+          font-size: 28/40rem;
+          p{
+            margin: 0;
+          }
+          p:nth-of-type(1){
+            font-size: 0.7rem;
+            line-height: 1rem;
+            color: #00b0f0;
+          }
+          p:nth-of-type(2){
+            font-size: 0.65rem;
+            line-height: 1rem;
+            color: #656565;
+          }
+        }
+      }
+    }
 
-  .a-img {
-    height: 2rem;
-    width: 2rem;
-  }
-  }
-  .a-right {
-    display: inline-block;
-    width: 80%;
-    vertical-align: middle;
-    /*flex: 1;*/
-    font-size: 28/40rem;
-  }
-  }
-  }
+      .notice-box {
+        margin-top: 50/40rem;
+        font-size: 28/40rem;
+        color: #656565;
+        .title-babel{
+          margin-bottom: 0.75rem;
+        }
+        p{
+          margin: 0;
+        }
+        .notice-item {
+          padding-left: 20/40rem;
+          padding-right: 70/40rem;
+          span {
+            color: #00b0f0;
+          }
+        }
+      }
+    }
 
-  .notice-box {
-    margin-top: 50/40rem;
-    font-size: 28/40rem;
-    color: #656565;
-  .notice-item {
-    padding-left: 20/40rem;
-    padding-right: 70/40rem;
-  span {
-    color: #00b0f0;
-  }
-  }
-  }
-  }
+    .lessons-box {
+      position: relative;
+      left: -0.6rem;
+      margin-top: 30/40rem;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      .lesson-item {
+        margin-top: 20/40rem;
+        flex: 0 0 48%;
+        text-align:center;
 
-  .lessons-box {
-    margin-top: 30/40rem;
-    margin-right: 50/40rem;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-
-  .lesson-item {
-    margin-top: 20/40rem;
-    flex: 0 0 50%;
-    text-align:center;
-
-  .l-img {
-    width: 95%;
-  }
-  .l-title {
-    text-align: left;
-    margin-top: 10/40rem;
-    font-size: 28/40rem;
-    color: #000;
-  }
-  .l-price {
-    text-align: left;
-    margin-top: 10/40rem;
-    font-size: 28/40rem;
-    color: #ff5b45;
-  }
-  }
-  }
+        .l-img {
+          width: 95%;
+        }
+        .l-title {
+          text-align: left;
+          margin-top: 10/40rem;
+          font-size: 28/40rem;
+          color: #000;
+        }
+        .l-price {
+          text-align: left;
+          margin-top: 10/40rem;
+          font-size: 28/40rem;
+          color: #ff5b45;
+        }
+      }
+      .lesson-item:nth-of-type(2n+1) {
+        margin: 20/40rem 2% 0 0;
+      }
+    }
   }
 
 

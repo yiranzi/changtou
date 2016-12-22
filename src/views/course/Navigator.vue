@@ -345,7 +345,7 @@
     /*新增理财揭秘，院生访谈的样式*/
     .financial-interview{
       width: 100%;
-      line-height: 4rem;
+      line-height: 3.5rem;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -462,8 +462,9 @@
     }
     .strategy-entry{
       width: 100%;
-      margin-top: 1.25rem;
+      padding: 1.25rem 0 1rem;
       text-align: center;
+      background: #fff;
       img{
         width: 100%;
         height: 6.75rem;
@@ -495,7 +496,7 @@
     .daily-anpic-container {
       width: 1.725rem;
       height: 1.05rem;
-      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / 70%;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / contain;
       display: inline-block;
       position: absolute;
       left: 86%;
@@ -503,19 +504,18 @@
     }
 
     .finan-icon{
-      width: 1.725rem;
-      height: 1.725rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      vertical-align: middle;
       display: inline-block;
-      margin-bottom: -.3rem;
     }
 
-  .finan-icon.finan-icon-jiemi{
-    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / 70%;
-  }
+    .finan-icon.finan-icon-jiemi{
+      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / contain;
+    }
 
     .finan-icon.finan-icon-fangtan{
-      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / 70%;
-      margin-bottom: -.5rem;
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / contain;
     }
 
     .vertical-line-yan{

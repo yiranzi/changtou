@@ -28,8 +28,8 @@
     width: 100%;
     height: 100%;
     .detail {
-      width: 84%;
-      margin: 1rem 8% 0;
+      width: 76%;
+      margin: 1rem 12% 0;
       font-size: .5rem;
       color: #888;
     }

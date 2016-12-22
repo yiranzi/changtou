@@ -260,11 +260,12 @@
   }
 
   .weui_tabbar{
-    height: 2.45rem;
+    height: 2.5rem;
     & &_item{
       padding-top: 2px;
       text-decoration: initial;
       .weui_tabbar_icon{
+        margin: 0.2rem auto 0;
         display: block;
         width: 1.4rem;
         height: 1.4rem;
@@ -281,7 +282,7 @@
       margin: 0 0 0.5rem;
     }
     .weui_tabbar_item.weui_bar_item_on .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-size: 0.5rem;
       line-height: 0.7rem;
       color: #409af4;

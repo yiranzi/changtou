@@ -233,7 +233,8 @@
         top: 510/40rem;
         left: 0;
         text-align: center;
-        font-size: 28/40rem;
+        font-size: 0.8rem;
+        font-weight: bold;
         color: #666;
       }
       .graduation-date{
