@@ -3,21 +3,19 @@
  */
 
 const state = {
-  information: '',
-  myCourses: []
+  isSubmit: false
 }
 
 const mutations = {
 
   /**
-   * 更新 我的课程
+   * 更新 做过的问卷
    * @param state
    * @param courses
    * @constructor
    */
-  UPDATE_MY_COURSES (state, courses) {
-    state.information = courses.information
-    state.myCourses = courses.myCourses
+  UPDATE_MY_QUESTIONNAIRE (state, isSubmit) {
+    state.isSubmit = isSubmit
   }
 }
 

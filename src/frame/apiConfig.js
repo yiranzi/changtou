@@ -168,8 +168,8 @@ const apiUrl = {
   /**
    *  问卷调查
    */
-  'commit_question_naire': '/person/questionnaire',   // 提交问卷调查
-  'is_fillout_naire': '/person/questionnaire/state-done/{questionnaireId}'  //是否提交过问卷
+  'submit_question_naire': '/person/questionnaire',   // 提交问卷调查
+  'is_questionnaire_submit': '/person/questionnaire/state-done/:questionnaireId'  //是否提交过问卷
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

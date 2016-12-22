@@ -273,11 +273,13 @@ export function configRouter (router) {
      */
     'giftPackage/bookChapter/:currIndex': {
       component: require('../views/giftPackage/BookChapter.vue')
-    }
+    },
     /**
      * 问卷调查
      */
-    // TODO
+    'questionNaire/:naireId': {
+      component: require('../views/questionnaire/questionDetail1.vue')
+    }
   })
 
   // redirect

@@ -1,7 +1,4 @@
-/**
- * Created by jun on 2016/9/2.
- */
-import {getWithoutAuth, getWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
@@ -9,12 +6,16 @@ import {getUrl} from '../../frame/apiConfig'
  * @param dispatch
  * @returns {Promise}
  */
-export const commitQuestionNaire = ({ dispatch }) => {
+export const submitQuestionNaire = ({ dispatch }, answer, questionnaireId) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth(
+      postWithinAuth(
         {
-          url: getUrl('commit_question_naire')
+          url: getUrl('submit_question_naire'),
+          data: {
+            answer,
+            questionnaireId
+          }
         }
       ).then(
         () => {
@@ -32,21 +33,21 @@ export const commitQuestionNaire = ({ dispatch }) => {
  * @param dispatch
  * @returns {Promise}
  */
-export const isCommitQuestionNaire = ({ dispatch }) => {
+export const issubmitQuestionNaire = ({ dispatch }, questionnaireId) => {
   return new Promise(
     (resolve, reject) => {
-      getWithoutAuth(
+      getWithinAuth(
         {
-          url: getUrl('is_fillout_naire')
+          url: getUrl('is_questionnaire_submit').replace(':questionnaireId', questionnaireId)
         }
       ).then(
-        () => {
-          resolve()
-          //  dispatch('UPDATE_MY_COURSES', myCourses)
+        (isSubmit) => {
+          dispatch('UPDATE_MY_QUESTIONNAIRE', isSubmit)
+          resolve(isSubmit)
         },
-        err => {
+        (err) => {
           reject(err)
         }
       )
-    })
+   })
 }

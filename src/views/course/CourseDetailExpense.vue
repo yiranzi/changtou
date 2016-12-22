@@ -81,10 +81,22 @@
     </div>
     <essay-float :show="showEssay" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
+    <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
   </div>
 </template>
 <style lang="less">
   .subject-detail {
+    .question-naire-btn{
+      width:2.025rem;
+      height: 2.075rem;
+      position: relative;
+      left: 88%;
+      bottom: 9%;
+      background: url("../../assets/styles/image/questionNaire/qsBtn.png") no-repeat center center /95%;
+    }
+    .question-naire-btn:active{
+      background: url("../../assets/styles/image/questionNaire/qsBtnActice.png") no-repeat center center /95%;
+    }
     .top-back-btn {
       position: absolute;
       height: 2rem;
@@ -155,7 +167,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -185,7 +197,8 @@
 
         getDiplomaList: graduationDiplomaActions.getDiplomaList,
 
-        syncHomeworkList: homeworkListActions.getHomeworkList
+        syncHomeworkList: homeworkListActions.getHomeworkList,
+        isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire
       }
     },
 
@@ -222,7 +235,8 @@
 
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
-        showChoice: false
+        showChoice: false,
+        isQuestionPlaced: false  //是否放置提问按钮
       }
     },
 
@@ -426,6 +440,18 @@
 
     ready () {
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+      const me = this
+      // 暂时定为问卷一
+      const questionnaireId = 1
+      this.isSubmitQuestionNaire(questionnaireId).then(
+      function (isSubmit) {
+      if (!isSubmit) {
+        if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+          me.isQuestionPlaced = true
+        }
+      }
+      }
+    )
     },
 
     /**
@@ -988,6 +1014,11 @@
               top: 0
           })
         })
+      },
+      gotoQuestionNaire () {
+        // 暂定为 问卷一
+        const naireId = 1
+        this.$route.router.go(`/questionNaire/${naireId}`)
       }
     },
 
