@@ -90,14 +90,14 @@
     watch: {
       'commonTopicInfo.content': function () {
         var me = this
-        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-//              top: 0
+              top: 0
               })
             })
-         }, 5000)
+         }, 500)
       }
     },
     route: {

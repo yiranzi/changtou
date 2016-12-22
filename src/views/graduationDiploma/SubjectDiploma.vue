@@ -129,18 +129,16 @@
       )
     }
   },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-  },
   methods: {
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
-          top: 0
+            top: 0
+          })
         })
-      })
       }, 500)
     },
 
@@ -176,7 +174,6 @@
           }
         ).then(
           ({integral}) => {
-            this.reloadDiploma()
             this.showMask({
               component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
@@ -184,6 +181,7 @@
               callbackName: 'graduationVolumeConfirm',
               callbackFn: () => {}
             })
+            this.reloadDiploma()
           }
         )
       }

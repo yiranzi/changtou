@@ -126,9 +126,6 @@ export default {
       )
     }
   },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
-  },
   methods: {
     /**
      * 设置滚动高度
@@ -136,12 +133,13 @@ export default {
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 200)
+      }, 500)
     },
     /**
      * 整理课程列表

@@ -208,14 +208,14 @@
 
       refreshScroller: function () {
         const me = this
-        me.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.btns.offsetHeight) + 'px'
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
               top: me.scrollerHeight
           })
         })
-        }, 200)
+        }, 500)
       }
     },
 

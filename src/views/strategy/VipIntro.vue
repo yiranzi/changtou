@@ -70,9 +70,6 @@
         )
       }
     },
-    ready () {
-      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - this.$els.btns.clientHeight + 'px'
-    },
     methods: {
       /**
        * 设置 滚动范围高度
@@ -80,6 +77,7 @@
       setScrollerHeight () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.clientHeight - me.$els.btns.clientHeight + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

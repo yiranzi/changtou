@@ -172,8 +172,8 @@
 
       setScrollerHeight () {
         const me = this
-        me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

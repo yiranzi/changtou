@@ -48,9 +48,6 @@
             )
         }
     },
-    ready () {
-      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - (this.notice ? 35 : 0) + 'px'
-    },
     methods: {
       /**
        * 设置 滚动范围高度
