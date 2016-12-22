@@ -405,10 +405,14 @@
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #087685;
+    font-size: 24/40rem;
+    color: #aaa;
+    p{
+      margin: 20/40rem 0;
+    }
   }
   .ict-loading-img{
-    width: 2rem;
-    height: 2rem;
+    width: 4rem;
+    height: 4rem;
   }
 </style>
