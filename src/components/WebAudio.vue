@@ -154,6 +154,7 @@
           this.isInitListeners = true
           this.addDragEvents()
           this.addAudioListens()
+          this.initStatus()
           this.startTimerTask()
         }
 
@@ -273,6 +274,11 @@
         webAudio.on(webAudio.events.loadMediaDuration, () => {
           me.totalTime = convertAudioTimeToString(webAudio.duration)
         })
+      },
+
+      // 初始化音频状态
+      initStatus () {
+        this.status = webAudio.status
       },
 
       /**
