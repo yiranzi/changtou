@@ -117,7 +117,7 @@
                 return record.subjectId === item.subjectId
               }
             )
-            let lessonIds = subjectRecords ? (subjectRecords.lessonSet.lessonIds || []): []
+            let lessonIds = subjectRecords ? (subjectRecords.lessonSet.lessonIds || []) : []
 
             for (let i = 0, lessonLength = item.lessons.length; i < lessonLength; i++) {
               // 作业是否可以进入
