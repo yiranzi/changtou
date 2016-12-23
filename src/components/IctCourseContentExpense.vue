@@ -10,7 +10,7 @@
       <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false): false"
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
-           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C' ? 1 : 0)) * 11/4 + 'rem'}" >
+           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assignmentType === 'N' || lesson.type === 'C' ? 0 : 1)) * 11/4 + 'rem'}" >
         <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
           <span style="width: 85%">

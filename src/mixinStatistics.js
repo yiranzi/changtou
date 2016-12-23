@@ -7,6 +7,7 @@ import {userId, userName} from './vuex/user/getters'
 import ictData from './statistics/ictData'
 import {Device} from './plugin/device'
 import {statisticsMap} from './statistics/statisticsMap'
+import {appVersion, getNativeVersion} from './frame/versionConfig'
 
 const mixin = {
   data () {
@@ -84,6 +85,14 @@ const mixin = {
       ictData.register({
         'userId': this.userId || '00'
       })
+      ictData.register({
+        'jsVersion': appVersion
+      })
+      getNativeVersion().then(nativeNum => {
+        ictData.register({
+          'nativeVersion': nativeNum
+        })
+      }).catch(() => {})
     },
 
     /**

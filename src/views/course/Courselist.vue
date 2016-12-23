@@ -59,7 +59,7 @@
     route: {
       data () {
         setLocalCache('statistics-entry-page', {entryPage: '全部课程列表'})
-        this.setScrollerHeight()
+//        this.setScrollerHeight()
       }
     },
     methods: {
