@@ -5,7 +5,7 @@
  */
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
-import {jpushInit, jpushSetAlias, jpushAddReceiveHandler} from './vuex/jpush/actions'
+import {jpushInit, jpushSetAlias, jpushAddReceiveHandler, jpushOnOpenNotification} from './vuex/jpush/actions'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
@@ -25,6 +25,7 @@ const mixin = {
       jpushInit,
       jpushSetAlias,
       jpushAddReceiveHandler,
+      jpushOnOpenNotification,
       getDiplomaList,
       getHomeworkList,
       syncUser
@@ -59,6 +60,8 @@ const mixin = {
       this.jpushSetAlias('00')
       // 增加推送消息接收处理
       this.jpushAddReceiveHandler(this.onReceiveNotification)
+      // 添加点击通知事件
+      this.jpushOnOpenNotification()
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
