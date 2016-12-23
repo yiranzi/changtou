@@ -85,7 +85,7 @@
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import IctOption from '../../components/IctOption.vue'
+  import IctOption from '../../components/questionnaire/IctOption.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import {questionNaireActions} from '../../vuex/actions'
@@ -107,11 +107,7 @@ export default {
   },
   computed: {
     isAccordSubmit () {
-      if (this.activeList.indexOf('A') >= 0 && this.activeList.indexOf('B') >= 0 && this.activeList.indexOf('C') >= 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.activeList.indexOf('A') >= 0 && this.activeList.indexOf('B') >= 0 && this.activeList.indexOf('C') >= 0
     }
   },
   components: {
@@ -140,7 +136,8 @@ export default {
       for (var i = 0; i < optLen; i++) {
         this.answer += activeOptArr[i].getAttribute('order')
       }
-      this.submitQuestionNaire(this.answer, this.naireId).then(
+      this.answer = this.answer.substring(0, this.answer.length - 1)
+      this.submitQuestionNaire(this.answer, Number(this.naireId)).then(
         () => {
          this.showToast({message: '提交成功'})
         },
@@ -148,7 +145,7 @@ export default {
           console.log('err', err)
         }
       )
-      window.history.back()
+      this.$route.router.go('/main')
     }
   },
   events: {

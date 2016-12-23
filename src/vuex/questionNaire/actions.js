@@ -33,16 +33,15 @@ export const submitQuestionNaire = ({ dispatch }, answer, questionnaireId) => {
  * @param dispatch
  * @returns {Promise}
  */
-export const issubmitQuestionNaire = ({ dispatch }, questionnaireId) => {
+export const isSubmitQuestionNaire = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('is_questionnaire_submit').replace(':questionnaireId', questionnaireId)
+          url: getUrl('is_questionnaire_submit').replace(':questionnaireId', 1)
         }
       ).then(
         (isSubmit) => {
-          dispatch('UPDATE_MY_QUESTIONNAIRE', isSubmit)
           resolve(isSubmit)
         },
         (err) => {
@@ -51,3 +50,4 @@ export const issubmitQuestionNaire = ({ dispatch }, questionnaireId) => {
       )
    })
 }
+

@@ -280,6 +280,20 @@
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
+        // 用于查询是否提交过问卷
+        const me = this
+        const questionnaireId = 1
+        // 暂时定为问卷一
+        this.isSubmitQuestionNaire(questionnaireId).then(
+          function (isSubmit) {
+            if (!isSubmit) {
+              if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                me.isQuestionPlaced = true
+              }
+            }
+          }
+         )
+
           if (this.subjectId !== subjectId) {
             this.showLoading()
           }
@@ -440,18 +454,6 @@
 
     ready () {
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-      const me = this
-      // 暂时定为问卷一
-      const questionnaireId = 1
-      this.isSubmitQuestionNaire(questionnaireId).then(
-      function (isSubmit) {
-      if (!isSubmit) {
-        if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
-          me.isQuestionPlaced = true
-        }
-      }
-      }
-    )
     },
 
     /**

@@ -49,5 +49,5 @@ export {
   strategyNoticeGetters,  //策略产品 通知
   graduationDiplomaGetters,  //毕业证
   giftGetters,                           // 新手礼包
-  questionNaireGetters
+  questionNaireGetters          // 问卷调查
 }
