@@ -12,7 +12,9 @@
       </div>
 
       <div class="circleCtr" v-el:ctr
-           v-bind:style="{ transform: ctrTranslate}"></div>
+           v-bind:style="{ transform: ctrTranslate}">
+        <div class="circle-content"></div>
+      </div>
 
       <div class="progress-box" v-el:progress>
         <div class="progress" v-bind:style="{ width: ctrOffset + 'px' }"></div>
@@ -57,11 +59,21 @@
   }
 
   .circleCtr {
-    height: 12px;
-    width: 12px;
+    position: relative;
+    left: 4px;
+    height: 20px;
+    width: 20px;
     /*position: absolute;*/
-    border-radius: 6px;
-    background: rgb(0, 176, 240);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    .circle-content {
+      height: 12px;
+      width: 12px;
+      border-radius: 6px;
+      background: rgb(0, 176, 240);
+    }
     /*top: -8px;*/
   }
 
