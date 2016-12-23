@@ -177,6 +177,7 @@
 
     methods: {
       toggle () {
+        console.log('x', this.status)
         if (this.status === 'play') {
           this.pause()
         } else if (this.status === 'pause') {
@@ -254,6 +255,7 @@
        * 监听音频播放事件
        */
       addAudioListens () {
+        console.log('add event')
         const me = this
 
         webAudio.on(webAudio.events.play, () => {

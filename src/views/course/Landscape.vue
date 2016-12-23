@@ -26,6 +26,7 @@
   import WebAudio from '../../components/WebAudio.vue'
   import Swiper from 'vue-swiper'
   import {getSessionCache, clearSessionCache} from '../../util/cache'
+  import {Device, platformMap} from '../../plugin/device'
   export default {
     data () {
       return {
@@ -40,44 +41,16 @@
         currChapter: null, //当前chapter,
         currAudioSrc: '', // 音频地址
         currPpts: [], //ppt
-        isFloatShow: false //是否显示浮层
+        isFloatShow: false, //是否显示浮层
+        imgStyle: null,
+        titleStyle: null,
+        audioStyle: null
       }
     },
 
     computed: {
       title () {
         return this.currChapter ? this.currChapter.title : ''
-      },
-
-      imgStyle () {
-        const height = window.document.body.offsetHeight
-        const width = window.document.body.offsetWidth
-        return {
-          width: height + 'px',
-          height: width + 'px',
-          transformOrigin: '0 0 0',
-          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-        }
-      },
-
-      titleStyle () {
-        const height = window.document.body.offsetHeight
-        const width = window.document.body.offsetWidth
-        return {
-          width: height + 'px',
-          transformOrigin: '0 0 0',
-          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-        }
-      },
-
-      audioStyle () {
-        const height = window.document.body.offsetHeight
-        return {
-          height: '5rem',
-          width: height + 'px',
-          transformOrigin: '0 0 0',
-          transform: `rotate(90deg) translate3d(-${height}px,-5rem,0)`
-        }
       }
 
 //      leftArrowStyle () {
@@ -114,20 +87,75 @@
 
     route: {
       data ({to: {params: {subjectId, lessonId}}}) {
+        // 隐藏电池栏
+        if (Device.platform !== platformMap.WEB) {
+          window.StatusBar.hide()
+        }
+
         const {lesson, chapterIndex, currChapter} = getSessionCache('landscapeSrc')
         clearSessionCache('landscapeSrc')
 
-        return Promise.resolve({
-          lesson,
-          chapterIndex,
-          currChapter,
-          isFloatShow: true,
-          isResponsive: true
-        })
+//        const delay = new Promise((resolve, reject) => {
+//            setTimeout(() => {
+//              console.log('ssssss')
+//              resolve()
+//            }, 5000)
+//          })
+
+        setTimeout(() => {
+          console.log('x', window.document.body.offsetHeight)
+          const height = window.document.body.offsetHeight
+          const width = window.document.body.offsetWidth
+
+          this.screenHeight = 'height: ' + height + 'px'
+          this.isFloatShow = true
+          this.isResponsive = true
+
+          this.imgStyle = {
+            width: height + 'px',
+            height: width + 'px',
+            transformOrigin: '0 0 0',
+            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+          }
+
+          this.titleStyle = {
+            width: height + 'px',
+            transformOrigin: '0 0 0',
+            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+          }
+
+          this.audioStyle = {
+            height: '5rem',
+            width: height + 'px',
+            transformOrigin: '0 0 0',
+            transform: `rotate(90deg) translate3d(-${height}px,-5rem,0)`
+          }
+        }, 500)
+
+        setTimeout(() => {
+          this.lesson = lesson
+          this.chapterIndex = chapterIndex
+          this.currChapter = currChapter
+        }, 700)
+
+//        return delay.then(() => {
+//          return {
+//            screenHeight: 'height: ' + window.document.body.offsetHeight + 'px',
+//            lesson,
+//            chapterIndex,
+//            currChapter,
+//            isFloatShow: true,
+//            isResponsive: true
+//          }
+//        })
       },
 
       deactivate () {
         this.isResponsive = false
+        // 显示电池栏
+        if (Device.platform !== platformMap.WEB) {
+          window.StatusBar.show()
+        }
       }
     },
 
