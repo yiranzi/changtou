@@ -85,7 +85,7 @@
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions} from '../../vuex/actions'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions} from '../../vuex/actions'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -100,7 +100,9 @@
       actions: {
         loadData: navigatorActions.loadNavigatorData,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
-        loadNewertestReport: newertestActions.loadNewertestReport
+        loadNewertestReport: newertestActions.loadNewertestReport,
+        receiveGiftPackage: giftActions.receiveGiftPackage,
+        isQualifyGiftPackage: giftActions.isQualifyGiftPackage
       }
     },
 
@@ -127,6 +129,13 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
+        }
+      )
+      this.isQualifyGiftPackage().then(
+        function (isQualify) {
+          if (isQualify.qualification) {
+            me.showPackage()
+          }
         }
       )
     },
@@ -238,6 +247,23 @@
           position: '策略宣传'
         })
         this.$route.router.go('/strategy/professional/intro')
+      },
+      showPackage () {
+        this.showMask({
+          component: 'giftPackage/GiftMask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'gotoGiftPackageDetails',
+          callbackFn: this.gotoGiftPackageDetails.bind(this)
+      })
+      },
+      gotoGiftPackageDetails () {
+        const me = this
+        me.hideMask()
+        me.receiveGiftPackage().then(function () {
+            me.$route.router.go('/giftPackage/giftPackageDetails')
+        }).catch(function (err) {
+            me.showAlert(err.message)
+        })
       }
     },
     components: {
