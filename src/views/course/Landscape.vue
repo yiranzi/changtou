@@ -103,7 +103,6 @@
 //          })
 
         setTimeout(() => {
-          console.log('x', window.document.body.offsetHeight)
           const height = window.document.body.offsetHeight
           const width = window.document.body.offsetWidth
 
@@ -111,12 +110,12 @@
           this.isFloatShow = true
           this.isResponsive = true
 
-          this.imgStyle = {
-            width: height + 'px',
-            height: width + 'px',
-            transformOrigin: '0 0 0',
-            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-          }
+        this.imgStyle = {
+          width: height + 'px',
+          height: width + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+        }
 
           this.titleStyle = {
             width: height + 'px',
@@ -130,13 +129,13 @@
             transformOrigin: '0 0 0',
             transform: `rotate(90deg) translate3d(-${height}px,-5rem,0)`
           }
-        }, 500)
+        }, 300)
 
         setTimeout(() => {
           this.lesson = lesson
           this.chapterIndex = chapterIndex
           this.currChapter = currChapter
-        }, 700)
+        }, 300)
 
 //        return delay.then(() => {
 //          return {
@@ -156,6 +155,11 @@
         if (Device.platform !== platformMap.WEB) {
           window.StatusBar.show()
         }
+        this.isFloatShow = false
+        this.lesson = '' //当前lesson
+        this.chapterIndex = '' //当前chapter index
+        this.currChapter = null //当前chapter,
+        this.currPpts = [] //ppt
       }
     },
 
