@@ -263,8 +263,23 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
+        const me = this
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
+        } else if (from.path && /\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
+          //做完课程最后一课选择题 拉取毕业奖状列表
+          me.getDiplomaList().then(
+            (newDiploma) => {
+              const subjectDiploma = newDiploma.find(
+                function (diploma) {
+                  return diploma.subjectId === parseInt(me.subjectId)
+                }
+              )
+              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
+                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
+              }
+            }
+          )
         } else {
           if (this.subjectId !== subjectId) {
             this.showLoading()
@@ -288,26 +303,6 @@
             }
           )
         }
-      },
-
-      activate ({from, next}) {
-        //做完课程最后一课选择题 拉取毕业奖状列表
-        const me = this
-        if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
-          me.getDiplomaList().then(
-            (newDiploma) => {
-              const subjectDiploma = newDiploma.find(
-                function (diploma) {
-                  return diploma.subjectId === parseInt(me.subjectId)
-                }
-              )
-              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
-              }
-            }
-          )
-        }
-        next()
       },
 
       /**

@@ -25,6 +25,16 @@
     var html = document.getElementsByTagName('html')[0];
 
     html.style.fontSize = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM + 'px';
+
+    /**
+     * 用户有可能设置了系统字体，此时等比例反缩放 //todo
+     */
+//    var sizeTester = Ext.get('appLoadingIndicator');
+//    var scale = sizeTester.getWidth() / SCREEN_WIDTH;
+//    if( scale !== 1 ){
+//      domHtml.style.fontSize = parseFloat(domHtml.style.fontSize) / scale + 'px';
+//    }
+//    window.SCALE = scale;
   }
 
   init();
