@@ -155,7 +155,16 @@ const apiUrl = {
   /**
    * 积分券
    */
-  'integral_list': '/integral/user/ticket-list' //毕业积分券
+  'integral_list': '/integral/user/ticket-list', //毕业积分券
+  /**
+   * 新手礼包
+   */
+   'get_gift_package': '/homepage/newcomer/gift',    // 获取新手礼包
+   'get_gift_qualify': '/homepage/newcomer/gift-qualification',   // 判断是否有领取新手礼包资格
+  /**
+   * 优惠信息 新手礼包劵
+   */
+  'loading_coupon_list': '/integral/user/ticket-list'      // 渲染积分券列表
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

@@ -26,6 +26,9 @@
                   :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
                   v-touch:tap="onStrategyTap">
         </ict-item>
+        <ict-item title="优惠信息"
+                  link="coupon/details"  v-if='isCouponShow'>
+        </ict-item>
         <div style="height: 1rem" class="spacer"></div>
         <ict-item title="系统消息"
                   :disabled="!isLogin"
@@ -58,10 +61,12 @@
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        jpushAddOpenHandler
+        jpushAddOpenHandler,
+        loadingCouponList: giftActions.loadingCouponList
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -72,13 +77,12 @@
         newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
-
     data () {
       return {
+        isCouponShow: false,
         scrollerHeight: '480px'
       }
     },
-
     computed: {
       badgeMessageNum () {
         let number = this.newMessageNum + ''
@@ -106,22 +110,27 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
-
     route: {
-      data () {
-        return Promise.resolve().then(this.setScrollerHeight)
+      data (transition) {
+        this.setScrollerHeight()
+        const me = this
+        this.loadingCouponList().then(
+            function (couponList) {
+              if (JSON.stringify(couponList).length > 0) {
+               me.isCouponShow = true
+              }
+            }
+          )
+        transition.next()
       }
     },
-
     methods: {
-      doLogin () {
+      doLogin   () {
         this.$route.router.go('/entry')
       },
-
       doRegister () {
         this.$route.router.go('/register/start')
       },
-
       onStrategyTap () {
         if (!this.strategy || this.strategy.strategyLevel === strategyLevel.COMMON) {
           this.$route.router.go('/strategy/professional/intro')
