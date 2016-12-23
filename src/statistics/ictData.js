@@ -3,11 +3,11 @@
  */
 
 import 'whatwg-fetch'
-import {D_PLUS_ID} from '../frame/serverConfig'
+import {D_PLUS_ID, ICT_DATA_SERVER} from '../frame/serverConfig'
 const cacheItem = 'ictSessionProps'
 
-let server = 'http://121.40.131.112:3000'
 let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) || {} //全局的超级属性, 仅在本次会话内有效
+let server = ICT_DATA_SERVER
 
 /**
  * 是否支持dplus统计
@@ -19,12 +19,8 @@ const isDplusSupport = () => {
 
 /**
  * 初始化 设置服务器地址(若需要)
- * @param serverUrl
  */
-const init = function (serverUrl) {
-    if (serverUrl) {
-     server = serverUrl
-    }
+const init = function () {
   if (isDplusSupport()) {
     window.dplus.init(D_PLUS_ID, {
       //"disable_cookie": true,
@@ -55,22 +51,21 @@ const track = function (eventName, properties = {}) {
   }
 
   // ict
-  //var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
-  //console.log('server', server)
-  //window.fetch(server + '/event', {
-  //  method: 'POST',
-  //  headers: {
-  //    'Accept': 'application/json',
-  //    'Content-Type': 'application/json'
-  //  },
-  //  body: JSON.stringify(trackData)
-  //}).then(function (response) {
-  //  return response.json()
-  //}).then(function (json) {
-  //  //console.log('parsed json', json)
-  //}).catch(function (ex) {
-  //  console.warn('ictdata parsing failed', ex)
-  //})
+  var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
+  window.fetch(ICT_DATA_SERVER + '/event', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(trackData)
+  }).then(function (response) {
+    return response.json()
+  }).then(function (json) {
+    //console.log('parsed json', json)
+  }).catch(function (ex) {
+    console.warn('ictdata parsing failed', ex)
+  })
 }
 
 /**
