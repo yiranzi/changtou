@@ -95,13 +95,6 @@
         const {lesson, chapterIndex, currChapter} = getSessionCache('landscapeSrc')
         clearSessionCache('landscapeSrc')
 
-//        const delay = new Promise((resolve, reject) => {
-//            setTimeout(() => {
-//              console.log('ssssss')
-//              resolve()
-//            }, 5000)
-//          })
-
         setTimeout(() => {
           const height = window.document.body.offsetHeight
           const width = window.document.body.offsetWidth
@@ -110,12 +103,12 @@
           this.isFloatShow = true
           this.isResponsive = true
 
-        this.imgStyle = {
-          width: height + 'px',
-          height: width + 'px',
-          transformOrigin: '0 0 0',
-          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-        }
+          this.imgStyle = {
+            width: height + 'px',
+            height: width + 'px',
+            transformOrigin: '0 0 0',
+            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+          }
 
           this.titleStyle = {
             width: height + 'px',
@@ -136,17 +129,6 @@
           this.chapterIndex = chapterIndex
           this.currChapter = currChapter
         }, 300)
-
-//        return delay.then(() => {
-//          return {
-//            screenHeight: 'height: ' + window.document.body.offsetHeight + 'px',
-//            lesson,
-//            chapterIndex,
-//            currChapter,
-//            isFloatShow: true,
-//            isResponsive: true
-//          }
-//        })
       },
 
       deactivate () {
