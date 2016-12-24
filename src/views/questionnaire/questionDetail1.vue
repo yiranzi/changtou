@@ -145,7 +145,7 @@ export default {
           console.log('err', err)
         }
       )
-      this.$route.router.go('/main')
+      window.history.back()
     }
   },
   events: {
