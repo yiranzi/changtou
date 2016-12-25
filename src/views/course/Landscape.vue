@@ -9,16 +9,21 @@
         {{title}}
         <span class="close-icon" v-touch:tap="onCloseIconTap"></span>
       </div>
-      <!--<div class="arrow left-arrow" v-show="isFloatShow" v-bind:style="leftArrowStyle"></div>-->
-      <!--<div class="arrow right-arrow" v-show="isFloatShow" v-bind:style="rightArrowStyle"></div>-->
-      <swiper :style="screenHeight" v-if="isShow">
+
+      <!--箭头-->
+      <div class="arrow left-arrow" v-show="isFloatShow && isLeftArrowShow" v-bind:style="leftArrowStyle"
+           v-touch:tap="onLeftArrowTap"></div>
+      <div class="arrow right-arrow" v-show="isFloatShow && isRightArrowShow" v-bind:style="rightArrowStyle"
+           v-touch:tap="onRightArrowTap"></div>
+
+      <swiper :style="screenHeight" v-if="isPptShow" v-ref:swiper @slide-change-end="onSlideChange">
         <div v-for="ppt in currPpts" class="test-box" track-by="$index">
           <img :src="ppt" alt="" v-bind:style="imgStyle" v-touch:tap="onPptTap">
         </div>
       </swiper>
 
       <web-audio :src.sync="currAudioSrc" v-el:audio direction="vertical"
-                  v-show="isFloatShow"  v-bind:style="audioStyle">
+                  v-show="isFloatShow"  v-bind:style="audioStyle" v-ref:audio>
       </web-audio>
     </div>
 </template>
@@ -32,42 +37,36 @@
       return {
         isResponsive: false,
         direction: 'vertical',
-        isShow: false,
+        isPptShow: false,
         screenHeight: 'height: ' + window.document.body.offsetHeight + 'px',
-        width: '',
-        height: '',
         lesson: '', //当前lesson
         chapterIndex: '', //当前chapter index
         currChapter: null, //当前chapter,
         currAudioSrc: '', // 音频地址
         currPpts: [], //ppt
+        currPptIndex: 0,
         isFloatShow: false, //是否显示浮层
         imgStyle: null,
         titleStyle: null,
-        audioStyle: null
+        audioStyle: null,
+        leftArrowStyle: null,
+        rightArrowStyle: null,
+        timer: 0 // 浮框消失的倒计时
       }
     },
 
     computed: {
       title () {
         return this.currChapter ? this.currChapter.title : ''
+      },
+
+      isLeftArrowShow () {
+        return this.currPptIndex !== 0
+      },
+
+      isRightArrowShow () {
+        return this.currPptIndex !== this.currPpts.length - 1
       }
-
-//      leftArrowStyle () {
-//        const width = window.document.body.offsetWidth
-//        return {
-//          transformOrigin: '0 0 0',
-//          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-//        }
-//      },
-
-//      rightArrowStyle () {
-//        const height = window.document.body.offsetHeight
-//        return {
-//          transformOrigin: '0 0 0',
-//          transform: `rotate(90deg) translate3d(${height - 40}px,-40px,0)`
-//        }
-//      }
     },
 
     watch: {
@@ -78,9 +77,10 @@
         if (chapter) {
           this.currAudioSrc = chapter.audio
           this.currPpts = chapter.ppts
-          this.isShow = false
+          this.isPptShow = false
+          this.currPptIndex = 0
 
-          setTimeout(() => { this.isShow = true }, 1000)
+          setTimeout(() => { this.isPptShow = true }, 1000)
         }
       }
     },
@@ -97,41 +97,25 @@
 
         setTimeout(() => {
           const height = window.document.body.offsetHeight
-          const width = window.document.body.offsetWidth
 
           this.screenHeight = 'height: ' + height + 'px'
           this.isFloatShow = true
           this.isResponsive = true
 
-          this.imgStyle = {
-            width: height + 'px',
-            height: width + 'px',
-            transformOrigin: '0 0 0',
-            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-          }
-
-          this.titleStyle = {
-            width: height + 'px',
-            transformOrigin: '0 0 0',
-            transform: `rotate(90deg) translate3d(0,-${width}px,0)`
-          }
-
-          this.audioStyle = {
-            height: '5rem',
-            width: height + 'px',
-            transformOrigin: '0 0 0',
-            transform: `rotate(90deg) translate3d(-${height}px,-5rem,0)`
-          }
+         // 设置横屏的样式
+         this.setLandscapeStyle()
         }, 300)
 
         setTimeout(() => {
           this.lesson = lesson
           this.chapterIndex = chapterIndex
           this.currChapter = currChapter
+          this.beginTimerToHideFloat()
         }, 300)
       },
 
       deactivate () {
+        this.stopTimer()
         this.isResponsive = false
         // 显示电池栏
         if (Device.platform !== platformMap.WEB) {
@@ -142,7 +126,18 @@
         this.chapterIndex = '' //当前chapter index
         this.currChapter = null //当前chapter,
         this.currPpts = [] //ppt
+        this.currPptIndex = 0
       }
+    },
+
+    /**
+     *
+     */
+    ready () {
+      // 绑定音频事件(动态显示或者隐藏控件)
+      const {audio} = this.$refs
+      audio.setTouchStartHandler(this.doWhenAutioTouchStart.bind(this))
+      audio.setTouchEndHandler(this.doWhenAutioTouchEnd.bind(this))
     },
 
     events: {
@@ -162,6 +157,7 @@
        */
       onPptTap () {
         this.isFloatShow = true
+        this.resetTimerToHideFloat()
       },
 
       /**
@@ -169,6 +165,86 @@
        */
       onCloseIconTap () {
         window.history.back()
+      },
+
+      onLeftArrowTap () {
+        const {swiper} = this.$refs
+        swiper.prev()
+      },
+
+      onRightArrowTap () {
+        const {swiper} = this.$refs
+        swiper.next()
+      },
+
+      /**
+       * ppt滑动
+       */
+      onSlideChange (pageNum) {
+        this.currPptIndex = pageNum - 1
+        this.resetTimerToHideFloat()
+      },
+
+      doWhenAutioTouchStart () {
+        this.stopTimer()
+      },
+
+      doWhenAutioTouchEnd () {
+        this.beginTimerToHideFloat()
+      },
+
+      resetTimerToHideFloat () {
+        this.stopTimer()
+        this.beginTimerToHideFloat()
+      },
+
+      beginTimerToHideFloat () {
+        this.timer = setTimeout(() => {
+          this.isFloatShow = false
+        }, 5000)
+      },
+
+      stopTimer () {
+        clearTimeout(this.timer)
+      },
+
+      /**
+       * 设置横屏模式样式
+       */
+      setLandscapeStyle () {
+        const height = window.document.body.offsetHeight
+        const width = window.document.body.offsetWidth
+        this.imgStyle = {
+          width: height + 'px',
+          height: width + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+        }
+
+        this.titleStyle = {
+          width: height + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(0,-${width}px,0)`
+        }
+
+        this.audioStyle = {
+          height: '2.2rem',
+          width: height + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(-${height}px,-2.2rem,0)`
+        }
+
+        const arrowHeight = window.document.body.offsetWidth - (3.2 + 2.2) * window.fontScale
+        this.leftArrowStyle = {
+          height: arrowHeight + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(0,-${arrowHeight + 2.2 * window.fontScale}px,0)`
+        }
+        this.rightArrowStyle = {
+          height: arrowHeight + 'px',
+          transformOrigin: '0 0 0',
+          transform: `rotate(90deg) translate3d(${height - 2 * window.fontScale}px,${(3.2 - 2) * window.fontScale}px,0)`
+        }
       }
     },
     components: {
@@ -216,13 +292,13 @@
     }
     .arrow{
       position: absolute;
-      z-index: 10;
+      z-index: 9;
       top: 0;
       width: 2rem;
       height: 100%;
       &:after{
         position: absolute;
-        top: 5rem;
+        top: 3rem;
         font-size: 6rem;
         color: #ccc;
       }
@@ -241,7 +317,6 @@
         right: 0;
         font-family: 'myicon';
         content: '\e908';
-        color: red;
       }
     }
   }
