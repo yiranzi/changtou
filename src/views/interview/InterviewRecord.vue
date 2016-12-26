@@ -23,7 +23,23 @@
           </div>
           <img class="pic" v-bind:src="paragraph.image">
         </div>
-          <p class="end">-END-</p>
+
+        <div class="share-article">
+          <div><hr/><span>好文共赏</span><hr/></div>
+          <div class="share-btn">
+            <span class="share-icon timeline" v-touch:tap="shareToFriendCircle"></span>
+            <p>朋友圈</p>
+          </div>
+          <div class="share-btn">
+            <span class="share-icon wechat" v-touch:tap="shareToFriend"></span>
+            <p>微信好友</p>
+          </div>
+          <!--<div class="share-btn">-->
+          <!--<img class="share-icon"  src="">-->
+          <!--<p>QQ</p>-->
+          <!--</div>-->
+        </div>
+
       </div>
       <!--<div class="load-fail" v-show="!isLoadSuccess">-->
         <!--<div>加载中...</div>-->
@@ -174,10 +190,38 @@
         position: relative;
       }
     }
-    .end{
-      font-size: 0.7rem;
+    .share-article{
+      margin-bottom: 80/40rem;
+      font-size: 26/40rem;
       color: #aaa;
       text-align: center;
+      hr{
+        margin: 0.32rem .5rem;
+        width: 4.5rem;
+        height: 1px;
+        background: #aaa;
+        border: 0;
+        display: inline-block;
+      }
+      p{
+        margin: 0;
+      }
+      .share-btn{
+        display: inline-block;
+        margin: 60/40rem 40/40rem;
+        .share-icon{
+          display: block;
+          width: 100/40rem;
+          height: 100/40rem;
+          margin-bottom: 24/40rem;
+        }
+        .wechat{
+          background: #fff url("../../../static/image/interview/wechat.png") no-repeat center center / 100%;
+        }
+        .timeline{
+          background: #fff url("../../../static/image/interview/timeline.png") no-repeat center center / 100%;
+        }
+      }
     }
   }
 </style>
