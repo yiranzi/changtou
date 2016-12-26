@@ -8,11 +8,11 @@
         </div>
       </div>
     </scroller>
-    <div class="bottom-area" v-el:bottom-btn>
+    <div class="bottom-area" v-el:bottomBtn v-if="commonTopicInfo.price > 0">
       <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy">
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买2016年{{commonTopicInfo.title}},不可重复购买</div>
+      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
-        line-height:  1.25rem;
+        line-height: 1.25rem;
         text-align: center;
       }
       .ict-button{
@@ -67,7 +67,7 @@
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {commonTopicActions} from '../../vuex/actions'
-  import {commonTopicGetters} from '../../vuex/getters'
+  import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
@@ -77,13 +77,14 @@
         booleanMeetingTicket: commonTopicActions.booleanMeetingTicket
       },
       getters: {
+        isLogin: userGetters.isLogin,
         commonTopicInfo: commonTopicGetters.commonTopic,
         isBuyTicket: commonTopicGetters.isBuyTicket
       }
     },
     data () {
       return {
-        scrollerHeight: '0px',
+        scrollerHeight: '500px',
         ctpId: this.$route.params.ctpId
       }
     },
@@ -91,7 +92,7 @@
       'commonTopicInfo.content': function () {
         var me = this
         setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
+          me.scrollerHeight = (window.document.body.offsetHeight - (me.$els.bottomBtn ? me.$els.bottomBtn.offsetHeight : 0)) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
               top: 0
@@ -109,22 +110,10 @@
       },
       data (transition) {
         const ctpId = transition.to.params.ctpId
-        this.loadCommonTopic(ctpId).then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
-        this.booleanMeetingTicket().then(
-          function () {
-//            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
+        this.loadCommonTopic(ctpId)
+        if (this.isLogin) {
+          this.booleanMeetingTicket()
+        }
       }
     },
     methods: {
