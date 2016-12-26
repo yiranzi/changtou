@@ -172,6 +172,8 @@
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+  import moment from 'moment'
+  moment().format()     // 引入 moment.js 对时间格式化
   export default {
     vuex: {
       getters: {
@@ -236,7 +238,9 @@
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
         showChoice: false,
-        isQuestionPlaced: false  //是否放置提问按钮
+        isQuestionPlaced: false,  //是否放置提问按钮
+        expireDate: null, // 课程过期时间
+        currDate: null    // 当前日期
       }
     },
 
@@ -284,10 +288,13 @@
         const me = this
         const questionnaireId = 1
         // 暂时定为问卷一
+
+        this.currDate = Number(new Date().getTime())
+        this.expireDate = Number(new Date(this.expenseRecordsArr[0].lessonSet.startDate).getTime()) + 2592000000  // 加上一个月
         this.isSubmitQuestionNaire(questionnaireId).then(
           function (isSubmit) {
-            if (!isSubmit) {
-              if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+            if (!isSubmit) {  // 未提交放置按钮
+              if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15 && this.currDate < this.expireDate) {
                 me.isQuestionPlaced = true
               }
             }
@@ -454,6 +461,7 @@
 
     ready () {
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+       //       console.log(this.currRecord.startDate)
     },
 
     /**
