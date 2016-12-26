@@ -14,6 +14,9 @@
   <!--<script type="text/javascript">!function(a,b){var c,d;window.__dplusDefineCacheQueue=[],b.define=function(){window.__dplusDefineCacheQueue.push(Array.prototype.slice.call(arguments))},c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="http://w.cnzz.com/dplus.define.php",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}(document,window.dplus);</script>-->
 
 </head>
+
+<body>
+<div id="appFontTester" style="width: 18.75rem;height: 1px"></div>
 <script>
 
   /**
@@ -24,23 +27,25 @@
     var DEFAULT_REM = 20;
     var html = document.getElementsByTagName('html')[0];
 
-    html.style.fontSize = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM + 'px';
+    // 字体缩放比(1rem = fontScale px)
+    window.fontScale = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM
+    html.style.fontSize = window.fontScale + 'px';
 
     /**
      * 用户有可能设置了系统字体，此时等比例反缩放 //todo
      */
-//    var sizeTester = Ext.get('appLoadingIndicator');
-//    var scale = sizeTester.getWidth() / SCREEN_WIDTH;
-//    if( scale !== 1 ){
-//      domHtml.style.fontSize = parseFloat(domHtml.style.fontSize) / scale + 'px';
-//    }
-//    window.SCALE = scale;
+    var appFontTester = document.getElementById('appFontTester')
+    var scale = appFontTester.offsetWidth / html.offsetWidth;
+
+    document.body.removeChild(appFontTester)
+    if( scale !== 1 ){
+      html.style.fontSize = parseFloat(window.fontScale) / scale + 'px';
+    }
   }
 
   init();
 </script>
 <script type="text/javascript" src="cordova.js"></script>
-<body>
 <app></app>
 <!-- built files will be auto injected -->
 </body>
