@@ -47,7 +47,7 @@
 
         <!--</swiper>-->
         <!--<div style="height: 1000px;background: #00b0f0"></div>-->
-      </div>
+        </div>
       </div>
     </scroller>
 
