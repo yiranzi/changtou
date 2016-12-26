@@ -7,12 +7,10 @@
              alt="" style="height: 12rem; width: 100%; display: block">
 
         <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
-          <img :src="ppt" alt="" style="height: 100%; width: 100%">
-        </swiper-item>
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">你无处可藏</h2></swiper-item>-->
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">不是它可恶</h2></swiper-item>-->
-      </swiper>
+          <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
+            <img :src="ppt" alt="" style="height: 100%; width: 100%">
+          </swiper-item>
+        </swiper>
 
         <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc"></web-audio>
 
@@ -28,25 +26,15 @@
             </tab>
           </sticky>
 
+          <!--简介-->
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
+
+          <!--目录-->
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []"
                    :homework="currHomework"
                    :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-        <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
-          <!--<swiper-item>-->
-            <!--<specific :subject="currSubject"></specific>-->
-          <!--</swiper-item>-->
-
-          <!--<swiper-item>-->
-            <!--<content :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"-->
-                     <!--:selected-chapter.sync="selectedChapter">-->
-            <!--</content>-->
-          <!--</swiper-item>-->
-
-        <!--</swiper>-->
-        <!--<div style="height: 1000px;background: #00b0f0"></div>-->
         </div>
       </div>
     </scroller>
