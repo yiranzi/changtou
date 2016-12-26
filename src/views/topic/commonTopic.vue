@@ -8,8 +8,8 @@
         </div>
       </div>
     </scroller>
-    <div class="bottom-area" v-el:bottomBtn v-if="commonTopicInfo.price > 0">
-      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy">
+    <div class="bottom-area" v-if="commonTopicInfo.price > 0">
+      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy" v-el:ictbtn>
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
       <div class="ticket-tip" v-show="isBuyTicket">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
@@ -92,13 +92,13 @@
       'commonTopicInfo.content': function () {
         var me = this
         setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - (me.$els.bottomBtn ? me.$els.bottomBtn.offsetHeight : 0)) + 'px'
           me.$nextTick(() => {
+            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.ictbtn.offsetHeight : 0) + 'px'
             me.$refs.scroller.reset({
               top: 0
               })
             })
-         }, 500)
+         }, 2000)
       }
     },
     route: {
