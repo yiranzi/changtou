@@ -188,6 +188,15 @@
     },
 
     methods: {
+      resetScroller () {
+//        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+        this.$nextTick(() => {
+            this.$refs.scroller.reset({
+            top: 0
+          })
+        })
+      },
+
       back () {
         window.history.back()
       },
@@ -218,6 +227,8 @@
         this.currAudioSrc = lesson.audio
         this.currPpts = lesson.ppts
         this.$dispatch('chapterPlay', lesson)
+
+        this.resetScroller()
       },
 
       /**

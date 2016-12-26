@@ -426,6 +426,7 @@
           this.updateRecord()
         }
         this.$dispatch('chapterPlay', chapter)
+        this.resetScroller()
       }
     },
 

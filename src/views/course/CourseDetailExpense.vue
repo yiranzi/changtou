@@ -969,6 +969,7 @@
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
         this.$dispatch('chapterPlay', chapter)
+        this.resetScroller()
       },
 
       /**
