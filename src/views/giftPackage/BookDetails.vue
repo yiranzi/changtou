@@ -44,6 +44,7 @@
         position: absolute;
         top: 8rem;
         left: 12.2rem;
+        line-height: .8rem;
       }
       .book-intro{
         margin:1rem 1.25rem 1.5rem 1.25rem;
