@@ -124,6 +124,7 @@
       height: 110/40rem;
       font-size: 28/40rem;
       color: #656565;
+      box-sizing: border-box;
       border-bottom: 1px solid #f0eff5;
 
       .number {
