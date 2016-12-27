@@ -3,18 +3,14 @@
     <div class="top-back-btn" v-touch:tap="back"></div>
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
-        <img v-if="!hasVaildChapterCicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
+        <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
              alt="" style="height: 12rem; width: 100%; display: block">
 
-        <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
-          <img :src="ppt" alt="" style="height: 100%; width: 100%">
-        </swiper-item>
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">你无处可藏</h2></swiper-item>-->
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">不是它可恶</h2></swiper-item>-->
-      </swiper>
+        <!--ppt-->
+        <ppt-panel v-if="hasValidChapterClicked" :ppts="currPpts"></ppt-panel>
 
-        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc"></web-audio>
+        <!--音频-->
+        <web-audio v-show="hasValidChapterClicked" :src.sync="currAudioSrc"></web-audio>
 
         <!--没有获取到课程内容时显示-->
         <div v-show="0">没有内容</div>
@@ -28,26 +24,16 @@
             </tab>
           </sticky>
 
+          <!--简介-->
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
+
+          <!--目录-->
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []"
                    :homework="currHomework"
                    :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-        <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
-          <!--<swiper-item>-->
-            <!--<specific :subject="currSubject"></specific>-->
-          <!--</swiper-item>-->
-
-          <!--<swiper-item>-->
-            <!--<content :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"-->
-                     <!--:selected-chapter.sync="selectedChapter">-->
-            <!--</content>-->
-          <!--</swiper-item>-->
-
-        <!--</swiper>-->
-        <!--<div style="height: 1000px;background: #00b0f0"></div>-->
-      </div>
+        </div>
       </div>
     </scroller>
 
@@ -103,6 +89,7 @@
       width: 2rem;
       color: #999;
     }
+
     .vux-tab-item {
       font-size: 0.85rem;
     }
@@ -145,13 +132,12 @@
 </style>
 <script>
   import WebAudio from '../../components/WebAudio.vue'
+  import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
   import essayFloat from '../homework/essayFloat.vue'
   import choiceFloat from '../homework/ChoiceFloat.vue'
-  import Swiper from 'vux/swiper'
-  import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
@@ -199,7 +185,7 @@
 
         isLoadedFail: false, //数据是否加载完毕
         subjectId: '', //课程Id
-        hasVaildChapterCicked: false,
+        hasValidChapterClicked: false,
 
         isSubjectBranch: false, // 当前课程是否为选修课
         currSubject: null, // 当前课程
@@ -465,7 +451,7 @@
             this.buy()
           }
         } else if (type === 'common') { //当前课程可以听
-          this.hasVaildChapterCicked = true
+          this.hasValidChapterClicked = true
           this.playChapter(chapter)
         } else if (type === 'choice') {
           this.onChoiceTap()
@@ -637,7 +623,7 @@
        * 重置页面
        */
       resetView () {
-        this.hasVaildChapterCicked = false
+        this.hasValidChapterClicked = false
         this.pause()
         this.resetScroller()
       },
@@ -983,6 +969,7 @@
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
         this.$dispatch('chapterPlay', chapter)
+        this.resetScroller()
       },
 
       /**
@@ -999,8 +986,6 @@
 
     components: {
       WebAudio,
-      Swiper,
-      SwiperItem,
       Tab,
       TabItem,
       Scroller,
@@ -1009,7 +994,8 @@
       Content,
       IctButton,
       choiceFloat,
-      essayFloat
+      essayFloat,
+      PptPanel
     }
   }
 </script>

@@ -100,7 +100,7 @@
   }
 
   .timer {
-    width: 4rem;
+    width: 4.2rem;
     font-size: 12/20rem;
     font-weight: bold;
     color: #fff
@@ -134,6 +134,8 @@
 
     data () {
       return {
+        touchStartHandler: () => {},
+        touchEndHandler: () => {},
         isEmptyTipShow: false,
         isInitListeners: false,
         intervalId: 0,
@@ -240,6 +242,7 @@
 
         ctr.addEventListener('touchstart', ({changedTouches}) => {
           this.stopTimerTask()
+          this.touchStartHandler()
         })
 
         ctr.addEventListener('touchmove', ({changedTouches, target}) => {
@@ -260,6 +263,7 @@
         ctr.addEventListener('touchend', ({changedTouches, target}) => {
           this.startTimerTask()
           webAudio.seekToAmplitude(amplitude)
+          this.touchEndHandler()
         })
       },
 
@@ -327,6 +331,14 @@
 
       onFullScreenTap () {
         this.$dispatch('fullScreenTap')
+      },
+
+      setTouchStartHandler (handler) {
+        this.touchStartHandler = handler || this.touchStartHandler
+      },
+
+      setTouchEndHandler (handler) {
+        this.touchEndHandler = handler || this.touchStartHandler
       }
     },
 

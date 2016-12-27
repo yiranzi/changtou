@@ -16,7 +16,7 @@
           <span style="width: 85%">
             <span class="number">{{$index+1}}</span>
             <span class="play-icon"></span>
-            <span>{{chapter.title}}</span>
+            <span class="chapter-item-title">{{chapter.title}}</span>
           </span>
           <span v-if="lesson.type === 'C'" style="color: #00b0f0; font-size:0.6rem">可试听</span>
         </div>
@@ -129,14 +129,21 @@
       .number {
         display: inline-block;
         margin-right: 30/40rem;
+        vertical-align: top;
       }
       .play-icon {
         margin-right: 10/40rem;
+        display: inline-block;
+        vertical-align: top;
       }
       .play-icon:before {
         font-family: 'myicon';
         content: '\e907';
         font-size: 0.7rem !important;
+      }
+      .chapter-item-title {
+        display: inline-block;
+        width: 78%;
       }
     }
   }

@@ -7,16 +7,12 @@
     <div class="top-back-btn" v-touch:tap="back"></div>
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
-        <img v-if="!hasVaildChapterCicked" v-bind:src="seminar ? seminar.promotion : './static/image/subject/intro-mini-pic.png'"
+        <img v-if="!hasValidChapterClicked" v-bind:src="seminar ? seminar.promotion : './static/image/subject/intro-mini-pic.png'"
              alt="" style="height: 12rem; width: 100%; display: block">
 
-        <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-          <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
-            <img :src="ppt" alt="" style="height: 100%; width: 100%">
-          </swiper-item>
-        </swiper>
+        <ppt-panel v-if="hasValidChapterClicked" :ppts="currPpts"></ppt-panel>
 
-        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc" :is-show.sync="hasVaildChapterCicked" :direction="horizon"></web-audio>
+        <web-audio v-show="hasValidChapterClicked" :src.sync="currAudioSrc"></web-audio>
 
         <!--简介和目录-->
         <div style="height: 100%; background-color: #fff">
@@ -91,9 +87,8 @@
 
 <script>
   import WebAudio from '../../components/WebAudio.vue'
+  import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Content from '../../components/IctSeminarContent.vue'
-  import Swiper from 'vux/swiper'
-  import SwiperItem from 'vux/swiper-item'
   import Scroller from 'vux/scroller'
   import {getWithoutAuth} from '../../frame/ajax'
   import {getUrl} from '../../frame/apiConfig'
@@ -107,7 +102,7 @@
         seminar: null, //讲座
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',  // 0px ?
-        hasVaildChapterCicked: false,
+        hasValidChapterClicked: false,
         selectedLesson: null, //当前选中的lesson
         selectedChapterIndex: 0, //当前选中的chapter
         currAudioSrc: null, //当前音频地址
@@ -193,6 +188,15 @@
     },
 
     methods: {
+      resetScroller () {
+//        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
+        this.$nextTick(() => {
+            this.$refs.scroller.reset({
+            top: 0
+          })
+        })
+      },
+
       back () {
         window.history.back()
       },
@@ -202,7 +206,7 @@
        */
       resetView () {
         this.seminar = null
-        this.hasVaildChapterCicked = false
+        this.hasValidChapterClicked = false
         this.pause()
       },
 
@@ -219,10 +223,12 @@
        */
       playChapter (lesson) {
         //显示ppt,音频
-        this.hasVaildChapterCicked = true
+        this.hasValidChapterClicked = true
         this.currAudioSrc = lesson.audio
         this.currPpts = lesson.ppts
         this.$dispatch('chapterPlay', lesson)
+
+        this.resetScroller()
       },
 
       /**
@@ -236,10 +242,9 @@
     },
     components: {
       WebAudio,
-      Swiper,
-      SwiperItem,
       Scroller,
-      Content
+      Content,
+      PptPanel
     }
   }
 </script>

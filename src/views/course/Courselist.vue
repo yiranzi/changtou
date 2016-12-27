@@ -59,7 +59,7 @@
     route: {
       data () {
         setLocalCache('statistics-entry-page', {entryPage: '全部课程列表'})
-//        this.setScrollerHeight()
+        this.setScrollerHeight()
       }
     },
     methods: {
@@ -75,7 +75,7 @@
             top: 0
           })
         })
-        }, 500)
+        }, 100)
       },
       onPromoteCloseTap () {
         this.promoteShow = false
