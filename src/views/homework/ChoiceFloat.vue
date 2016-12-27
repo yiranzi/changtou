@@ -40,7 +40,6 @@ export default {
 </script>
 <style lang="less">
   .choice-float{
-    position: relative;
     .float-icon:before{
       position: absolute;
       top: 0.85rem;

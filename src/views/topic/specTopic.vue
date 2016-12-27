@@ -48,7 +48,6 @@
 </template>
 <style lang="less">
   .spec-topic{
-    position: relative;
     width: 100%;
     height: 100%;
     .top-back-btn {
