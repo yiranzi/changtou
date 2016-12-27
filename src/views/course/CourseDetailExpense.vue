@@ -172,8 +172,6 @@
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-  import moment from 'moment'
-  moment().format()     // 引入 moment.js 对时间格式化
   export default {
     vuex: {
       getters: {
@@ -280,26 +278,45 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.isQuestionPlaced = false
+        console.log('start', parseInt(this.subjectId))
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
+        // TODO code muse be more concise
+         if (from.path && from.path.indexOf('questionNaire/') > -1) {
+          this.isQuestionPlaced = false
+        }
         // 用于查询是否提交过问卷
         const me = this
         const questionnaireId = 1
         // 暂时定为问卷一
+        this.currDate = parseInt(new Date().getTime())
+        setTimeout(function () {
+          if (me.currStatus !== 'N') {
+           me.isQuestionPlaced = false
+           } else {
+        if (me.expenseRecordsArr.length !== 0) {
+          for (var i = 0; i < me.expenseRecordsArr.length; i++) {
+          if (parseInt(me.expenseRecordsArr[i]['subjectId']) === parseInt(me.subjectId)) {
+            me.expireDate = parseInt(new Date(me.expenseRecordsArr[i]['lessonSet'].initDate).getTime() + 2592000000)
+            }
+          }
+        }
 
-        this.currDate = Number(new Date().getTime())
-        this.expireDate = Number(new Date(this.expenseRecordsArr[0].lessonSet.startDate).getTime()) + 2592000000  // 加上一个月
-        this.isSubmitQuestionNaire(questionnaireId).then(
+          me.isSubmitQuestionNaire(questionnaireId).then(
           function (isSubmit) {
-            if (!isSubmit) {  // 未提交放置按钮
-              if (me.isUserLogin && parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15 && this.currDate < this.expireDate) {
-                me.isQuestionPlaced = true
+            if (!isSubmit && me.isUserLogin && me.currDate < me.expireDate) {  // 未提交放置按钮
+              if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                  me.isQuestionPlaced = true
               }
             }
           }
          )
+           }
+       }
+       , 300)
 
           if (this.subjectId !== subjectId) {
             this.showLoading()
