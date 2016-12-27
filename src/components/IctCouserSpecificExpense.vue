@@ -31,8 +31,8 @@
               <img v-bind:src="subject.portrait" class="portrait">
             </div>
             <div class="right">
-              <p style="font-size: 0.75rem color:#000">{{subject.teacher}}</p>
-              <p style="font-size: 0.7rem color:#000">{{subject.background}}</p>
+              <p>{{subject.teacher}}</p>
+              <p>{{subject.background}}</p>
             </div>
           </div>
         </div>
@@ -294,7 +294,11 @@
           }
         }
         .right {
-          font-size: 36/40rem;
+          p:nth-of-type(1){
+            font-size: 0.75rem;
+          }
+          font-size: 0.7rem;
+          color:#000;
           flex: 1;
         }
       }
