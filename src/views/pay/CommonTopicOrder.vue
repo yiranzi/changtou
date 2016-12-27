@@ -175,6 +175,7 @@
        * @param channel
        */
       payByChannel (channel) {
+        this.showLoading()
         Object.assign(this.statisticData, {
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
@@ -216,10 +217,12 @@
       )
       },
       goToPaySuccess () {
+        this.hideLoading()
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.replace(`/pay/success/CT/${this.ctpId}`)
       },
       onPayFail (err) {
+        this.hideLoading()
         Object.assign(this.statisticData, {
           '原因': err.reason
         })
