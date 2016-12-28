@@ -98,11 +98,14 @@ export default {
     isShowHomeWorkPanel () {
       if (!this.isLogin) {
         return false
+      } else {
+        for (let i = 0, length = this.expenseRecords.length; i < length; i++) {
+          if (this.expenseRecords[i] && this.expenseRecords[i].lessonSet.graduated !== 'I') {
+            return true
+          }
+        }
+        return false
       }
-      if (this.expenseRecords.length > 0) {
-        return true
-      }
-       return false
     }
   },
   route: {

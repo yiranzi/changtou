@@ -122,7 +122,8 @@
 </script>
 <style lang="less">
   .strategy-vip-intro{
-    position: relative;
+    width: 100%;
+    height: 100%;
     background: #fff;
     .intro-promotion{
       width: 18.75rem;

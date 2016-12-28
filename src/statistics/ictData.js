@@ -55,22 +55,22 @@ const track = function (eventName, properties = {}) {
   }
 
   // ict
-  var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
-  //console.log('server', server)
-  window.fetch(server + '/event', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(trackData)
-  }).then(function (response) {
-    return response.json()
-  }).then(function (json) {
-    //console.log('parsed json', json)
-  }).catch(function (ex) {
-    console.warn('ictdata parsing failed', ex)
-  })
+  //var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
+  ////console.log('server', server)
+  //window.fetch(server + '/event', {
+  //  method: 'POST',
+  //  headers: {
+  //    'Accept': 'application/json',
+  //    'Content-Type': 'application/json'
+  //  },
+  //  body: JSON.stringify(trackData)
+  //}).then(function (response) {
+  //  return response.json()
+  //}).then(function (json) {
+  //  //console.log('parsed json', json)
+  //}).catch(function (ex) {
+  //  console.warn('ictdata parsing failed', ex)
+  //})
 }
 
 /**
