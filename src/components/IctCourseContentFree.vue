@@ -4,10 +4,10 @@
          class="chapter-title" v-bind:class="{'active': lesson.title === (selectedLesson && selectedLesson.title)}">
         <!--<div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter)"-->
              <!--class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">-->
-      <span style="width: 85%">
+      <span style="width: 85%; display: inline-flex; align-items:flex-start;line-height: 0.7rem;font-size: 0.7rem">
         <span class="number">{{$index+1}}</span>
         <span class="play-icon"></span>
-        <span>{{lesson.title}}</span>
+        <span class="chapter-item-title">{{lesson.title}}</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@
       border-bottom: 1px solid #f0eff5;
 
       .number {
-        display: inline-block;
+        width: 0.25rem;
         margin-right: 30/40rem;
       }
       .play-icon {
@@ -84,6 +84,9 @@
         font-family: 'myicon';
         content: '\e907';
         font-size: 0.7rem !important;
+      }
+      .chapter-item-title {
+        width: 78%;
       }
     }
   }

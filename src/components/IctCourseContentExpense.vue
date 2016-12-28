@@ -13,7 +13,7 @@
            (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assignmentType === 'N' || lesson.type === 'C' ? 0 : 1)) * 11/4 + 'rem'}" >
         <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
-          <span style="width: 85%">
+          <span style="width: 85%; display: inline-flex; align-items:flex-start;line-height: 0.7rem;font-size: 0.7rem ">
             <span class="number">{{$index+1}}</span>
             <span class="play-icon"></span>
             <span class="chapter-item-title">{{chapter.title}}</span>
@@ -128,14 +128,11 @@
       border-bottom: 1px solid #f0eff5;
 
       .number {
-        display: inline-block;
+        width: 0.25rem;
         margin-right: 30/40rem;
-        vertical-align: top;
       }
       .play-icon {
         margin-right: 10/40rem;
-        display: inline-block;
-        vertical-align: top;
       }
       .play-icon:before {
         font-family: 'myicon';
@@ -143,7 +140,6 @@
         font-size: 0.7rem !important;
       }
       .chapter-item-title {
-        display: inline-block;
         width: 78%;
       }
     }
