@@ -199,6 +199,11 @@ export default {
     p {
       margin: 0;
     }
+
+    .ict-input-component .line {
+      opacity: 0;
+    }
+
     .fast-login-title{
       height: 2rem;
       line-height: 2rem;
