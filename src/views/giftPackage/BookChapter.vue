@@ -109,7 +109,7 @@
   import Swiper from 'vux/Swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import bookMask from '../../components/giftPackage/book-mask.vue'
+  import bookMask from '../../components/giftPackage/BookMask.vue'
   import Scroller from 'vux/scroller'
   import {giftActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
@@ -159,10 +159,15 @@ export default {
     }
   },
   route: {
-      data ({to: {params: {currIndex}}}) {
+      data ({to: {params: {currIndex}}, from}) {
+        if (from.path && from.path.indexOf('giftPackage/bookChapter/') > -1 ||
+        from.path && from.path.indexOf('giftPackage/newerBookDetails') > -1) {
+         this.lastReadPage = 0
+        }
        this.currIndex = currIndex
    //    console.log('chapter', this.currIndex)
       /***************************************/
+
        const me = this
        const bookId = 1
        this.getBookProgress(bookId).then(
@@ -216,11 +221,6 @@ export default {
     bookChapterIndexChange (index) {
       this.book_index = index
     },
-    gotoChapterDetails (currChapter) {
-      console.log('currChapter2', currChapter)
-      console.log('this.curr', this.currChapter)
-      this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
-    },
     setScrollerHeight () {
         // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
         const me = this
@@ -239,6 +239,15 @@ export default {
     },
     gotoSetMask () {
       this.showIndexMask = !this.showIndexMask
+    }
+  },
+  events: {
+    /**
+     * 去另外的章节
+     */
+    'gotoChapterDetails': function (currChapter) {
+      console.log('currChapter2', currChapter)
+      this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
     }
   }
 }
