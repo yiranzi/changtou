@@ -297,13 +297,13 @@
           if (me.currStatus !== 'N') {
            me.isQuestionPlaced = false
            } else {
-        if (me.expenseRecordsArr.length !== 0) {
-          for (var i = 0; i < me.expenseRecordsArr.length; i++) {
-          if (parseInt(me.expenseRecordsArr[i]['subjectId']) === parseInt(me.subjectId)) {
-            me.expireDate = parseInt(new Date(me.expenseRecordsArr[i]['lessonSet'].initDate).getTime() + 2592000000)
+          if (me.expenseRecordsArr.length !== 0) {
+            for (var i = 0; i < me.expenseRecordsArr.length; i++) {
+            if (parseInt(me.expenseRecordsArr[i]['subjectId']) === parseInt(me.subjectId)) {
+              me.expireDate = parseInt(new Date(me.expenseRecordsArr[i]['lessonSet'].initDate).getTime() + 2592000000)
+              }
             }
           }
-        }
 
           me.isSubmitQuestionNaire(questionnaireId).then(
           function (isSubmit) {

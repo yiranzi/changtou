@@ -30,6 +30,18 @@
             <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
 
+          <!-- 设置 电子书 入口 可记录阅读进度-->
+        <div class="read-book-list" v-if="isShowEBook">
+          <div class="course-list" v-for="course in readBookList">
+            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png'>
+            <div class="course-list-info" v-touch:tap="gotoReadBook">
+              <p class="course-list-title">{{course.title}}</p>
+              <p class="course-list-subtitle">{{course.subtitle}}</p>
+              <p class="course-list-state">{{course.status}}</p>
+            </div>
+          </div>
+        </div>
+          <!--                            end-->
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList">
             <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
@@ -47,10 +59,11 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import {myCoursesActions} from '../../vuex/actions'
+  import {myCoursesActions, giftActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
-export default {
+
+ export default {
   vuex: {
     getters: {
       graduatedType: myCoursesGetters.graduatedType, //课程状态类型
@@ -64,13 +77,24 @@ export default {
     },
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
-      loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
+      loadUserCourses: myCoursesActions.loadUserCourses, // 下载 用户 我的课程 信息
+      getBookProgress: giftActions.getBookProgress,   // 得到上次阅读进度
+      receiveGiftPackage: giftActions.receiveGiftPackage  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
     }
   },
   data () {
     return {
       scrollerHeight: '0px',
-      courseList: [] //课程列表
+      courseList: [], //课程列表
+      isShowEBook: false, // 是否显示电子书
+      readBookList: [  //
+        {
+          'pic': '../../assets/styles/image/giftPackage/readIcon.png',
+          'title': '大熊股市历险记',
+          'subtitle': '阅读材料',
+          'status': '15648人读过'
+        }
+      ]
     }
   },
   computed: {
@@ -115,6 +139,19 @@ export default {
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
+
+      // 是否显示电子书
+        me.receiveGiftPackage().then(
+           (message) => {
+            console.log(message)
+           }).catch(function (err) {
+            console.log(err)
+            if (err.message === '您已领取过新手礼包') {
+              console.log('ok show')
+              me.isShowEBook = true
+            }
+        })
+      // 是否显示电子书
       return Promise.all(promiseArray).then(
         function () {
           setTimeout(
@@ -130,6 +167,29 @@ export default {
     this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
   },
   methods: {
+    /**
+     *  去阅读电子书 若有阅读进度 则去上次阅读进度处
+     */
+    gotoReadBook () {
+       const me = this
+       const bookId = 1
+       this.getBookProgress(bookId).then(
+        res => {   // bookId, createTime, sectionIndex
+          if (res === '' || res === undefined) {
+            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
+          } else {
+        console.log(res)
+        let currIndex = parseInt(res.sectionIndex)
+            // 阅读页数应该到 书籍阅读页获取而不是入口处
+        me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
+   //     this.$route.router.go(`/giftPackage/bookChapter/${currIndex}`)
+          }
+        }).catch(
+        err => {
+          console.log(err.message)
+        }
+      )
+    },
     /**
      * 设置滚动高度
      */

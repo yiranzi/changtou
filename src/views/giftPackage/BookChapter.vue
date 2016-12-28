@@ -3,7 +3,7 @@
     <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container" :bounce='false' :lock-y="true">
     <div class="swiper-container">
-      <swiper height="300px" :index.sync='last_progress' @on-index-change="bookChapterIndexChange">
+      <swiper height="300px" :index.sync='lastReadPage' @on-index-change="bookChapterIndexChange">
         <swiper-item class="black" v-for="chapter in currBookChapter">
           <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
           {{{chapter.index}}} {{{chapter.title}}}
@@ -16,6 +16,7 @@
     <div class="toggle-index-btn" v-touch:tap="gotoChoseIndex">
       <img src="../../assets/styles/image/giftPackage/indexBtn.png" width="3.25rem" height="3.15rem" />
     </div>
+    <book-mask></book-mask>
     <p style="text-align:'right';" class="book-paganition">
       {{book_index+1}} / {{currBookChapter.length}}
     </p>
@@ -99,13 +100,13 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {giftActions} from '../../vuex/actions'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
 
 export default {
    vuex: {
       getters: {
       },
       actions: {
-        getBookProgress: giftActions.getBookProgress,
         updateBookProgress: giftActions.updateBookProgress
       }
    },
@@ -121,6 +122,7 @@ export default {
       currIndex: 0,
       bookChapterList: [bookChapter1, bookChapter2, bookChapter3, bookChapter4, bookChapter5, bookChapter6],
       scrollerHeight: '0px',
+      lastReadPage: 0,
       leftOptions: { //titlebar
           callback: this.updateChapterProgress,
           disabled: false,
@@ -128,41 +130,35 @@ export default {
         }
     }
   },
+  computed: {
+    currBookChapter () {
+      return this.bookChapterList[this.currIndex]
+    }
+  },
   route: {
       data ({to: {params: {currIndex}}}) {
        this.currIndex = currIndex
-       console.log('chapter', this.currIndex)
-       const me = this
-       const bookId = 1
-       setTimeout(function () {
-         me.getBookProgress(bookId).then(
-          res => {   // bookId, createTime, sectionIndex
-            if (res === '') {
-              me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态到详情页
-            } else {
-              // 获取到上次的章节信息，然后传一个页数进去
-        //      let currIndex = res.sectionIndex
-        //      me.$route.router.go('giftPackage/bookChapter/:currIndex').replace(':currIndex', currIndex)
-            }
-          }).catch(
-          err => {
-            console.log(err.message)
-          }
-        )
-       }
-       , 30000)
-      }
-    },
+   //    console.log('chapter', this.currIndex)
+      const me = this
+      setTimeout(function () {
+        console.log('page:', getLocalCache('last_read_page'))
+        me.lastReadPage = parseInt(getLocalCache('last_read_page').pageNum - 1)
+      }, 300)
+    }
+  },
   ready () {
     this.setScrollerHeight()
   },
   methods: {
     updateChapterProgress () {
+     const me = this
      const bookId = 1
      const sectionIndex = parseInt(this.currIndex) + 1 // TODO set
      this.updateBookProgress(bookId, sectionIndex).then(
       res => {
-        console.log(res)
+      //  console.log(me.book_index)
+        setLocalCache('last_read_page', {pageNum: parseInt(me.book_index) + 1})
+        console.log(getLocalCache('last_read_page'))
         // TODO should set the localstorage to contain the page
       }
      ).catch(
@@ -170,7 +166,7 @@ export default {
         console.log(err.message)
       }
      )
-     this.$route.router.go('/main')
+     this.$route.router.go('/giftPackage/newerBookDetails')
     },
     bookChapterIndexChange (index) {
       this.book_index = index
@@ -203,11 +199,6 @@ export default {
     },
     gotoBookDetail () {
       this.$route.router.go('giftPackage/newerBookDetails')
-    }
-  },
-  computed: {
-    currBookChapter () {
-      return this.bookChapterList[this.currIndex]
     }
   }
 }

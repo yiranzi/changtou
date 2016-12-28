@@ -71,8 +71,6 @@ export const loadingCouponList = ({ dispatch }) => {
  * update/book/progress
  */
 export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
-  console.log(bookId)
-  console.log(sectionIndex)
   return new Promise(
     (resolve, reject) => {
       putWithinAuth({
@@ -97,7 +95,7 @@ export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
 export const getBookProgress = ({ dispatch }, bookId) => {
   return new Promise(
     (resolve, reject) => {
-      putWithinAuth({
+      getWithinAuth({
         url: getUrl('get/book/progress').replace(':bookId', bookId)
       }).then(
         function (message) {   // 信息: Id, createTime, Chapter

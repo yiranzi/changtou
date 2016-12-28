@@ -1,6 +1,6 @@
 <template>
   <div class="book-info">
-    <ict-titlebar v-el:titlebar>阅读材料</ict-titlebar>
+    <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div class="book-info-container">
         <img class="book-avatar" src="../../assets/styles/image/giftPackage/bookCover.png" width="230" height="300">
@@ -76,7 +76,15 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
+import {giftActions} from '../../vuex/actions'
 export default {
+  vuex: {
+    getters: {
+    },
+    actions: {
+      getBookProgress: giftActions.getBookProgress   // 得到上次阅读进度的时间然后对比当前时间，渲染章节列表
+    }
+  },
   data () {
     return {
       scrollerHeight: '0px',
@@ -87,7 +95,39 @@ export default {
         '资产负债大盘点',
         '钱从哪儿来，又到哪去',
         '投资的路才刚刚开始'
-        ]
+        ],
+      leftOptions: { //titlebar
+          callback: this.backtoMyCourse,
+          disabled: false,
+          showBack: true
+        }
+    }
+  },
+  route: {
+    data () {
+       const me = this
+       const bookId = 1
+       this.getBookProgress(bookId).then(
+        res => {   // bookId, createTime, sectionIndex
+          if (res === '' || res === undefined) {
+            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
+          } else {
+     //   console.log(res.createTime)
+        let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 604800000)
+        // TODO 时间可能有少许的差错
+     //   console.log(setChapterNum)
+        if (setChapterNum < 1 && setChapterNum >= 0) {
+          me.bookTitleList = me.bookTitleList.splice(0, 1)
+          } else {
+          // 截取此数据之前的数据
+           me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+          }
+        }
+        }).catch(
+        err => {
+          console.log(err.message)
+        }
+      )
     }
   },
   ready () {
@@ -113,7 +153,10 @@ export default {
           })
         })
         }, 150)
-      }
+      },
+    backtoMyCourse () {
+      this.$route.router.go('/mycourse')
+    }
   }
 }
 </script>
