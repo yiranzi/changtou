@@ -4,7 +4,8 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi"
+    <pay-base v-ref:pay-base
+              :coupons="coupons" :toubi="toubi"
               :total="total" :sum="sum"
               :btn-options="btnOptions" :tip="tip"
               :sheet-show="sheetShow">
@@ -84,6 +85,11 @@
         const me = this
         this.type = pathArr[1]
         this.ctpId = parseInt(pathArr[2])
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getOrder(this.type, this.ctpId)]).then(
           ([order]) => {
             me.arrangeOrder(order)
@@ -103,6 +109,10 @@
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
 
         this.$broadcast('pay-page-deactive')
       }

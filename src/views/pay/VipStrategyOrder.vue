@@ -4,7 +4,7 @@
 */
 <template>
   <div class="order-vip-strategy">
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
+    <pay-base v-ref:pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
       <pay-period :periods="periods"></pay-period>
       <div v-if="proLeftDays && selectedDeduction" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
@@ -115,6 +115,11 @@
     route: {
       data () {
         const me = this
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getStrategyOrder(goodsType.VIP_STRATEGY)]).then(
             ([order]) => {
             me.order = order
@@ -140,6 +145,11 @@
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
+
         this.$broadcast('pay-page-deactive')
       }
     },

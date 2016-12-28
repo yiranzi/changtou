@@ -21,7 +21,7 @@
       width: 100%;
       padding: 0.75rem 1rem;
       background-color: #fff;
-      border-bottom: 1rem #f0eff5 solid;
+      border-bottom: 0.5rem #f0eff5 solid;
       position: relative;
       .pic{
         width: 16.75rem;

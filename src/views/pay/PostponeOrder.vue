@@ -5,6 +5,7 @@
 <template>
   <div>
     <pay-base :bar-right-options="barRightOption"
+              v-ref:pay-base
               :coupons="coupons"
               :toubi="toubi"
               :total="total"
@@ -112,10 +113,15 @@
     },
     route: {
       data ({to: {path}}) {
-          const pathArr = path.split('-')
-          const me = this
-          this.type = pathArr[1]
-          this.subjectId = parseInt(pathArr[2])
+        const pathArr = path.split('-')
+        const me = this
+        this.type = pathArr[1]
+        this.subjectId = parseInt(pathArr[2])
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getPostponeOrder(this.type, this.subjectId)]).then(
             ([order]) => {
             me.arrangeOrder(order)
@@ -134,6 +140,11 @@
         this.misc = '' // 延期的时间
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
+
         this.$broadcast('pay-page-deactive')
       }
     },

@@ -76,7 +76,7 @@ Vue.mixin({
      * 显示loading
      * @param message
        */
-    showLoading: function (message = '努力加载...') {
+    showLoading: function (message = '努力加载中..') {
       let MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-loading-mask" ></div>
