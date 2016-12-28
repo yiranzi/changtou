@@ -3,7 +3,7 @@
     <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container" :bounce='false' :lock-y="true">
     <div class="swiper-container">
-      <swiper height="300px" :index='test_index' @on-index-change="bookChapterIndexChange">
+      <swiper height="300px" :index.sync='last_progress' @on-index-change="bookChapterIndexChange">
         <swiper-item class="black" v-for="chapter in currBookChapter">
           <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
           {{{chapter.index}}} {{{chapter.title}}}
@@ -94,13 +94,21 @@
   }
 </style>
 <script>
-  import Swiper from '../../components/swiperItemReset/Swiper.vue'
+  import Swiper from 'vux/Swiper'
   import SwiperItem from 'vux/swiper-item'
- // import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
+  import {giftActions} from '../../vuex/actions'
 
 export default {
+   vuex: {
+      getters: {
+      },
+      actions: {
+        getBookProgress: giftActions.getBookProgress,
+        updateBookProgress: giftActions.updateBookProgress
+      }
+   },
   components: {
     Swiper,
     SwiperItem,
@@ -109,13 +117,12 @@ export default {
   },
   data () {
     return {
-      test_index: 10,
       book_index: 0,   // 此参数做翻页显示用
       currIndex: 0,
       bookChapterList: [bookChapter1, bookChapter2, bookChapter3, bookChapter4, bookChapter5, bookChapter6],
       scrollerHeight: '0px',
       leftOptions: { //titlebar
-          callback: this.updateBookProgress,
+          callback: this.updateChapterProgress,
           disabled: false,
           showBack: true
         }
@@ -124,14 +131,45 @@ export default {
   route: {
       data ({to: {params: {currIndex}}}) {
        this.currIndex = currIndex
+       console.log('chapter', this.currIndex)
+       const me = this
+       const bookId = 1
+       setTimeout(function () {
+         me.getBookProgress(bookId).then(
+          res => {   // bookId, createTime, sectionIndex
+            if (res === '') {
+              me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态到详情页
+            } else {
+              // 获取到上次的章节信息，然后传一个页数进去
+        //      let currIndex = res.sectionIndex
+        //      me.$route.router.go('giftPackage/bookChapter/:currIndex').replace(':currIndex', currIndex)
+            }
+          }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
+       }
+       , 30000)
       }
     },
   ready () {
     this.setScrollerHeight()
   },
   methods: {
-    updateBookProgress () {
-     // TODO updateBookProgress
+    updateChapterProgress () {
+     // TODO updateBookProgress   bookId, sectionIndex
+     const bookId = 1
+    // const sectionIndex = 3  // TODO set
+     this.updateBookProgress(bookId, 2).then(
+      res => {
+        console.log(res)
+      }
+     ).catch(
+      err => {
+        console.log(err.message)
+      }
+     )
      this.$route.router.go('/main')
     },
     bookChapterIndexChange (index) {
