@@ -445,6 +445,11 @@
           color: #ddd;
         }
       }
+      .animated-border,.animated-border-top,.animated-border-bottom,.animated-border-right,.animated-border-left{
+        background: none;
+        animation-name: none;
+        -webkit-animation-name: none;
+      }
     }
     .draw-stamps{
       position: relative;
