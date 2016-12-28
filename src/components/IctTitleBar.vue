@@ -12,16 +12,19 @@ titlebar
   }
 **/
 <template>
-  <div class="ict-titlebar"  v-el:titlebar>
-    <div class="ict-titlebar-left" v-touch:tap="leftTapCallback">
-      <div class="left-arrow" v-show="isBackShow"></div>
-      <slot name="left" ></slot>
-    </div>
+  <div>
+    <div style="height: 20px;background-color: #00b0f0" v-show="isIos"></div>
+    <div class="ict-titlebar" style="height: 44px">
+      <div class="ict-titlebar-left" v-touch:tap="leftTapCallback">
+        <div class="left-arrow" v-show="isBackShow"></div>
+        <slot name="left" ></slot>
+      </div>
 
-    <h1 class="ict-titlebar-title" ><span v-show="title" :transition="transition">{{ title }}</span><slot></slot></h1>
+      <h1 class="ict-titlebar-title" ><span v-show="title" :transition="transition">{{ title }}</span><slot></slot></h1>
 
-    <div class="ict-titlebar-right" v-touch:tap="rightTapCallback" v-bind:class="{'disabled': isRightDisabled}">
-      <slot name="right" ></slot>
+      <div class="ict-titlebar-right" v-touch:tap="rightTapCallback" v-bind:class="{'disabled': isRightDisabled}">
+        <slot name="right" ></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -43,9 +46,13 @@ titlebar
         disabled: Boolean
       }
     },
-    ready () {
-      this.setTitlebarHeight()
+
+    data () {
+      return {
+        isIos: Device.platform !== platformMap.IOS
+      }
     },
+
     computed: {
       isBackShow () {
         return this.leftOptions ? this.leftOptions.showBack : true
@@ -54,16 +61,8 @@ titlebar
         return this.rightOptions ? this.rightOptions.disabled : true
       }
     },
+
     methods: {
-      /**
-       * 设置titlebar的高度
-       */
-      setTitlebarHeight () {
-        let titlebar = this.$els.titlebar
-        let height = Device.platform === platformMap.IOS ? (44 + 20) : 44
-        titlebar.style.height = height + 'px'
-        titlebar.style.lineHeight = height + 'px'
-      },
       /**
        * 左侧按钮的回调
        */
