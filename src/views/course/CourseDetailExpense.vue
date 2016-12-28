@@ -171,7 +171,8 @@
 
         getDiplomaList: graduationDiplomaActions.getDiplomaList,
 
-        syncHomeworkList: homeworkListActions.getHomeworkList
+        syncHomeworkList: homeworkListActions.getHomeworkList,
+        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
 
@@ -208,7 +209,9 @@
 
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
-        showChoice: false
+        showChoice: false,
+
+        currChapterRecord: null //当前课程chapter记录
       }
     },
 
@@ -632,6 +635,9 @@
        * 设置课程状态
        */
       setSubjectRecordStatus (currSubjectRecord) {
+        //设置当前chapter进度
+        this.currChapterRecord = currSubjectRecord.studentChapter
+
         this.currRecord = currSubjectRecord.lessonSet
 
         //设置是否已经提交了作业
@@ -968,8 +974,77 @@
       playChapter (chapter) {
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
+        if (this.isUserLogin) {
+          this.uploadChapterRecord(chapter)
+        }
         this.$dispatch('chapterPlay', chapter)
         this.resetScroller()
+      },
+
+      /**
+       * 上传chapter进度
+       */
+      uploadChapterRecord (chapter) {
+        const me = this
+        if (me.canChapterUpload(chapter.chapterId)) {
+          me.updateExpenseChapterRecord({
+            subjectId: me.subjectId,
+            chapterId: chapter.chapterId,
+            lessonId: me.selectedLesson.lessonId
+          }).then(
+            () => {
+              me.currChapterRecord = {
+                subjectId: me.subjectId,
+                chapterId: chapter.chapterId,
+                lessonId: me.selectedLesson.lessonId
+              }
+            }
+          )
+        }
+      },
+
+      /**
+       * 当前chapter进度是否可以上传
+       * @params chapterId
+       */
+      canChapterUpload (selectedChapterId) {
+        if (!this.currChapterRecord) {
+          // 服务器上没有进度进入,直接上传
+          return true
+        } else {
+          //chapterId 为当前点击的chapterId
+          const selectedLessonId = this.selectedLesson.lessonId
+
+          //this.currChapterRecord 为服务器上的进度 包括lessonId和chapterId
+          const currChapterId = this.currChapterRecord.chapterId
+          const currLessonId = this.currChapterRecord.lessonId
+          // 当前点击的进度大于服务器上的进度时,可以上传
+          return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
+
+        }
+      },
+
+      /**
+       * 获取lesson在ids中的index
+       * @params lessonId
+       */
+      getLessonIndexOfIds (lessonId) {
+        const ids = this.currRecord.lessonIds
+        const index = ids.findIndex(
+                (itemId) => itemId === lessonId
+              )
+        return index >= 0 ? index : ids.length  //不在ids中的lesson为新学的lesson
+      },
+
+      /**
+       * 获取chapter的sequences
+       * @params chapterId
+       */
+      getChapterSequences (chapterId) {
+        const chapters = this.selectedLesson.lessonDetailsList
+        return chapters.find(
+          (chapter) => chapter.chapterId === chapterId
+        ).sequence
       },
 
       /**
