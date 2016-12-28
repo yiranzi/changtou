@@ -30,6 +30,8 @@
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
   import {userGetters} from '../../vuex/getters'
 
+  // 页面原有高度, 用来处理键盘弹出事件
+  const _originHtmlHeight = window.document.body.offsetHeight
   let isKeyboardPop = false
 
 export default {
@@ -80,7 +82,8 @@ export default {
           ali: '支付宝支付'
         }
       },
-      isShowBottomBtn: true
+      isShowBottomBtn: true,
+      timer: 0
     }
   },
   computed: {
@@ -116,20 +119,24 @@ export default {
      * input控件被选中
      */
     'ictInputFocus': function (inputId) {
+      this.stopListenToHeightChange()
+
       isKeyboardPop = true
       this.hideBtnWhenKeyboardShow()
+
+      this.startListenToHeightChange()
     },
 
     /**
      * input控件失去焦点
      */
     'ictInputBlur': function (inputId) {
-      isKeyboardPop = false
-      setTimeout(() => {
-        if (!isKeyboardPop) {
-        this.showBtnWhenKeyboardHide()
-        }
-      }, 500)
+//      isKeyboardPop = false
+//      setTimeout(() => {
+//        if (!isKeyboardPop) {
+//        this.showBtnWhenKeyboardHide()
+//        }
+//      }, 500)
     }
   },
 
@@ -164,6 +171,26 @@ export default {
      */
     showBtnWhenKeyboardHide () {
       this.isShowBottomBtn = true
+    },
+
+    /**
+     * 开始监听页面高度改变事件
+     */
+    startListenToHeightChange () {
+      this.timer = setInterval(() => {
+          // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
+          if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
+            this.showBtnWhenKeyboardHide()
+          }
+          isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
+      }, 500)
+    },
+
+    /**
+     * 停止监听页面高度改变事件
+     */
+    stopListenToHeightChange () {
+      clearInterval(this.timer)
     }
   },
   components: {

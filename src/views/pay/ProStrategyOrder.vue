@@ -5,6 +5,7 @@
 <template>
   <div>
     <pay-base :coupons="coupons"
+              v-ref:pay-base
               :toubi="toubi"
               :total="total"
               :sum="sum"
@@ -114,6 +115,11 @@
     route: {
       data () {
         const me = this
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getStrategyOrder(goodsType.PRO_STRATEGY)]).then(
           ([order]) => {
             me.order = order
@@ -136,6 +142,11 @@
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
+
         this.$broadcast('pay-page-deactive')
       }
     },
