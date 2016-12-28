@@ -158,12 +158,12 @@ export default {
   },
   methods: {
     updateChapterProgress () {
-     // TODO updateBookProgress   bookId, sectionIndex
      const bookId = 1
-    // const sectionIndex = 3  // TODO set
-     this.updateBookProgress(bookId, 2).then(
+     const sectionIndex = parseInt(this.currIndex) + 1 // TODO set
+     this.updateBookProgress(bookId, sectionIndex).then(
       res => {
         console.log(res)
+        // TODO should set the localstorage to contain the page
       }
      ).catch(
       err => {

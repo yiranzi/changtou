@@ -71,6 +71,8 @@ export const loadingCouponList = ({ dispatch }) => {
  * update/book/progress
  */
 export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
+  console.log(bookId)
+  console.log(sectionIndex)
   return new Promise(
     (resolve, reject) => {
       putWithinAuth({
