@@ -196,6 +196,7 @@ const mixin = {
           'mask-component': require('./components/' + component)
         },
         events: {
+          hideMask: me.hideMask,
           [callbackName]: realCallBack
         },
         methods: {

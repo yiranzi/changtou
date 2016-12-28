@@ -260,6 +260,7 @@
 
 <style lang="less">
   .course-navigator{
+    background: #fff;
     .popularSpe{
       padding-bottom: .8rem;
     }
@@ -486,11 +487,10 @@
       width: 325/375;
       height: 3rem;
       padding: 1.5rem 5.5rem;
-      background-color: #f2f2f2;
       font-size: .75rem;
       color:#444;
       line-height: 1.2rem;
-      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      background: #f2f2f2 url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
       position: relative;
     }
 

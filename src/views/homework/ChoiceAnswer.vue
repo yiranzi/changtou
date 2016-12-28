@@ -333,6 +333,7 @@ export default {
       position: relative;
       margin: 0 2rem .75rem;
       padding: .75rem 1rem;
+      box-sizing: border-box;
       background: #f1f1f1;
       border-radius: 10px;
       font-size: .7rem;

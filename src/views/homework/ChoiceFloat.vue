@@ -3,6 +3,7 @@
  *
  */
 <template>
+  <div>
     <ict-sheet title="课后作业" :show="show" btn-text="开始测试" @confirm="onConfirmTap" @close="onClose">
       <div class="choice-float">
         <span class="float-icon"></span>
@@ -17,6 +18,7 @@
         </div>
       </div>
     </ict-sheet>
+  </div>
 </template>
 <script>
   import IctSheet from '../../components/IctActionSheet.vue'
@@ -40,13 +42,15 @@ export default {
 </script>
 <style lang="less">
   .choice-float{
-    .float-icon:before{
+    .float-icon{
       position: absolute;
-      top: 0.85rem;
+      top: 3.355rem;
       left: 1rem;
-      font-family: 'myicon';
-      content: '\e920';
-      font-size: 1.5rem !important;
+      &:before{
+        font-family: 'myicon';
+        content: '\e920';
+        font-size: 1.5rem !important;
+      }
     }
     .float-content{
       padding: 0.85rem 3rem 2.5rem;

@@ -74,7 +74,7 @@
       color: #bbb;
     }
     .question_box{
-      border: 1px solid #f0eff5;
+      border-bottom: 1px solid #f0eff5;
       background-color: #fff;
       .question{
         padding: 1rem 0.9rem 0.75rem 0.9rem;

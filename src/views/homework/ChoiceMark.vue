@@ -14,7 +14,7 @@
         <p class="tip-down">{{{choiceScoreTip}}}</p>
       </div>
       <div class="point-score">
-        <p class="knowledge-tip">此次作业小测试设计知识点{{pointNum}}个</p>
+        <p class="knowledge-tip">此次作业小测试设计知识点 <span class="blue-number">{{pointNum}}</span>个</p>
         <div v-for="point in report.kpScore" class="item">
           <cell :title="pointContent($index)">
             <ict-star :value="pointScore($index)" slot="value" :font-size="0.7"></ict-star>
@@ -22,9 +22,9 @@
         </div>
         <hr>
         <div class="score-summary">
-          <p class="defeat-num">同期战胜{{defeatNum}}%的人</p>
-          <p class="correct-rate">小测试共{{report.totalNum}}道 正确率{{score * 20}}%</p>
-          <p class="right-num">答对{{report.rightNum}}道 答错{{report.totalNum-report.rightNum}}道</p>
+          <p class="defeat-num">同期战胜<span class="yellow-text">{{defeatNum}}%</span>的人</p>
+          <p class="correct-rate">小测试共<span class="blue-number">{{report.totalNum}}</span>道 正确率<span class="blue-number">{{score * 20}}%</span></p>
+          <p class="right-num">答对<span class="blue-number">{{report.rightNum}}</span>道 答错<span class="blue-number">{{report.totalNum-report.rightNum}}</span>道</p>
           <span class="retest-btn" v-touch:tap="reTest">重测</span>
         </div>
       </div>
@@ -233,6 +233,12 @@
         font-size: 0.75rem;
         color: #007aff;
       }
+    }
+    .blue-number{
+      color: #007aff;
+    }
+    .yellow-text{
+      color: #fbc02d;
     }
   }
 </style>

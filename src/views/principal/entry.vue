@@ -27,27 +27,31 @@
     </div>
 
     <div class="other-entry">
-      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"></ict-button>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"></ict-button>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"> </ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"> </ict-button>
     </div>
 
 
-    <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container
+    <div class="third-party-container"
+        v-if="isQQShow || isWxShow"
+         v-el:auth-container
          v-bind:class="{'pop-animation': isPopAuthContainer, 'hide-animation': !isPopAuthContainer}">
       <div class="third-text-container" v-touch:tap="onToggleShowThirdParty" >
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
         <i class="horizon-line"></i>
       </div>
+      <div v-if="isPopAuthContainer">
       <div style="height: 0.5rem" class="spacer"></div>
-      <div class="third-icon-container">
-        <div class="third-icon" v-if="isQQShow">
-          <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
-          <p>QQ登录</p>
-        </div>
-        <div class="third-icon" v-if="isWxShow">
-          <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
-          <p>微信登录</p>
+        <div class="third-icon-container">
+          <div class="third-icon" v-if="isQQShow">
+            <span class="third-icon-qq" v-touch:tap='onQQLoginTap'> </span>
+            <p>QQ登录</p>
+          </div>
+          <div class="third-icon" v-if="isWxShow">
+            <span class="third-icon-wx" v-touch:tap='onWxLoginTap'> </span>
+            <p>微信登录</p>
+          </div>
         </div>
       </div>
     </div>
@@ -410,12 +414,12 @@
     }
     .pop-animation {
       transition: 0.5s;
-      transform: translate3d(0,0,0);
+      transform: translate3d(0,-3.5rem,0);
     }
 
     .hide-animation {
       transition: 0.5s;
-      transform: translate3d(0,3.5rem,0);
+      transform: translate3d(0,0,0);
     }
     .third-party-container{
       position: absolute;

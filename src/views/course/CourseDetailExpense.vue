@@ -65,7 +65,7 @@
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
-    <essay-float :show="showEssay" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
+    <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
   </div>
 </template>
@@ -123,7 +123,10 @@
           color: #fff;
           background-color: #00b0f0;
           flex: 51;
-          /*flex-grow: 2;*/
+
+          &:active,&:visited{
+            color: #898989;
+          }
         }
       }
     }
@@ -1020,7 +1023,6 @@
           const currLessonId = this.currChapterRecord.lessonId
           // 当前点击的进度大于服务器上的进度时,可以上传
           return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
-
         }
       },
 

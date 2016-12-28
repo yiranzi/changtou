@@ -73,8 +73,8 @@
     background-color: @color-default-normal-background;
 
     &:not(.ict-btn-disabled):visited {
-      color: @color-default-pressed-text-color;
-    }
+           color: @color-default-pressed-text-color;
+         }
     &:not(.ict-btn-disabled):active {
       color: @color-default-pressed-text-color;
     }

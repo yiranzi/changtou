@@ -3,8 +3,10 @@
       <ict-titlebar>我的信息</ict-titlebar>
       <div class="user">
         <img class="ict-user-avatar" src="http://www.ichangtou.com/images/per-tx.png">
-        <p class="username">{{name}}</p>
-        <p class="level">{{levelName}}</p>
+        <div class="user-box">
+          <p class="username">{{name}}</p>
+          <p class="level">{{levelName}}</p>
+        </div>
         <div class="changeNickName" v-touch:tap="gotoResetName">
           更改昵称
         </div>
@@ -34,8 +36,8 @@
         width: 100%;
         height: 3.354rem;
         background: #fff;
-        margin-top: .6rem;
-        padding-left: 15/20rem;
+        margin-top: 1rem;
+        padding: 0 1rem;
         box-sizing: border-box;
         font-size: 0.75rem;
         .ict-user-avatar{
@@ -45,26 +47,35 @@
           margin-top: .3rem;
           float: left;
           margin-right: .54rem;
+          vertical-align: top;
         }
-        .username,.level{
+        .user-box,.username,.level{
           display: inline-block;
         }
-        .username{
-          color: #000;
-          width: 70%;
-          margin: .5rem 0;
-        }
-        .level{
-          color: #898989;
+        .user-box{
+          vertical-align: top;
+          .username{
+            color: #000;
+            width: 70%;
+            margin: .5rem 0;
+            font-size: 0.7rem;
+          }
+          .level{
+            color: #898989;
+            font-size: 0.6rem;
+          }
         }
       }
       .changeNickName{
-        height: 1rem;
         color: #888;
         display: inline-block;
-        margin-left: 6.4rem;
-        position: relative;
-        top: -.8rem;
+        padding-right: 1.5rem;
+        text-align: right;
+        font-size: 0.6rem;
+        line-height: 3.354rem;
+        vertical-align: top;
+        position: absolute;
+        right: 1rem;
       }
       .changeNickName:after{
         content: " ";
@@ -76,8 +87,8 @@
         border-width: 1px 1px 0 0;
         border-color: #898989;
         border-style: solid;
-        position: relative;
-        left: -0.2rem;
+        position: absolute;
+        top: 1.35rem;
         margin-left: .3em;
       }
       .ict-btn{
@@ -89,7 +100,7 @@
         border-top: #f0eff5 1px solid;
       }
       .reset-password{
-        margin: 1.5rem 0;
+        margin: 1rem 0;
       }
     }
 </style>

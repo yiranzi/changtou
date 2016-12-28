@@ -158,8 +158,8 @@
       p{
         padding: 0;
         margin-bottom: 0.1rem;
-        color: #898989;
-        border-bottom: 1px solid #898989;
+        color: #aaa;
+        border-bottom: 1px solid #ccc;
       }
       .conclusion-content{
         width: 15rem;

@@ -36,7 +36,7 @@
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state">{{course.status}} <span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
+              <p class="course-list-state" :class="{'course-list-state-unlogin': !isLogin}">{{course.status}} <span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
             </div>
           </div>
         </div>
@@ -418,6 +418,13 @@ export default {
           color: #00b0f0;
           font-size: 0.7rem !important;
           vertical-align: bottom;
+        }
+      }
+      &-state-unlogin{
+        color: #898989;
+        &:before{
+          content: '';
+          margin-right: 0;
         }
       }
     }
