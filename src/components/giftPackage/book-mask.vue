@@ -2,7 +2,7 @@
   <div class="book-container">
     <div class="book-chapter">
       <p class="book-chapter-title book-chapter-item">目录</p>
-      <p class="book-chapter-item" v-for="bookItem in bookTitleList" v-touch:tap="gotoChapterDetails($index)">
+      <p class="book-chapter-item" v-for="bookItem in bookTitleListSub" v-touch:tap="gotoChapterDetails($index)">
         第{{$index+1}}章   {{bookItem}}
       </p>
       <p class="book-chapter-fold book-chapter-item" v-touch:tap="foldChapterList($event)" >收起</p>
@@ -11,14 +11,12 @@
 </template>
 
 <style lang="less">
-  .ict-float-component{
-    position: fixed !important;
-    z-index: 5000;
-    top: 36%;
-    left: 50%;
-    width: 100%;
-  }
   .book-container{
+    position: absolute;
+    top: 0rem;
+    /* margin: 0 auto; */
+    left: 0rem;
+    width: 100%;
     .chapter-fold{
       display: none;
     }
@@ -68,25 +66,20 @@
 </style>
 <script>
 export default {
+  props: {
+    bookTitleListSub: Array
+    },
   data () {
     return {
-      bookTitleList: [
-        '认识一个好老师',
-        '了解是投资的基础',
-        '赚多赚少大不同',
-        '资产负债大盘点',
-        '钱从哪儿来，又到哪去',
-        '投资的路才刚刚开始'
-        ]
     }
   },
   methods: {
    foldChapterList ($event) {
-    $event.target.parentNode.className += ' chapter-fold'
-    this.hideMask()
+    this.$dispatch('gotoSetMask')
    },
    gotoChapterDetails (currChapter) {
      // 向外派发事件
+     console.log('currChapter1', currChapter)
      this.$dispatch('gotoChapterDetails', currChapter)
    }
   }

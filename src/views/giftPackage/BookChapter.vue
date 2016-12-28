@@ -13,10 +13,12 @@
         </swiper-item>
       </swiper>
     </div>
-    <div class="toggle-index-btn" v-touch:tap="gotoChoseIndex">
+    <div class="toggle-index-btn" v-touch:tap="gotoSetMask">
       <img src="../../assets/styles/image/giftPackage/indexBtn.png" width="3.25rem" height="3.15rem" />
     </div>
-    <book-mask></book-mask>
+    <div id="mask" v-touch:tap="gotoSetMask" v-if="showIndexMask">
+      <book-mask :book-title-list-sub="bookTitleList"></book-mask>
+    </div>
     <p style="text-align:'right';" class="book-paganition">
       {{book_index+1}} / {{currBookChapter.length}}
     </p>
@@ -92,12 +94,22 @@
         }
       }
     }
+    #mask{
+      background: rgba(0, 0, 0, 0.6);
+      position:absolute;
+      left:0;
+      top:0;
+      z-index:1000;
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
 <script>
   import Swiper from 'vux/Swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
+  import bookMask from '../../components/giftPackage/book-mask.vue'
   import Scroller from 'vux/scroller'
   import {giftActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
@@ -107,19 +119,22 @@ export default {
       getters: {
       },
       actions: {
-        updateBookProgress: giftActions.updateBookProgress
+        updateBookProgress: giftActions.updateBookProgress,
+        getBookProgress: giftActions.getBookProgress
       }
    },
   components: {
     Swiper,
     SwiperItem,
     IctTitlebar,
-    Scroller
+    Scroller,
+    bookMask
   },
   data () {
     return {
       book_index: 0,   // 此参数做翻页显示用
       currIndex: 0,
+      showIndexMask: false,  // 显示目录章节
       bookChapterList: [bookChapter1, bookChapter2, bookChapter3, bookChapter4, bookChapter5, bookChapter6],
       scrollerHeight: '0px',
       lastReadPage: 0,
@@ -127,7 +142,15 @@ export default {
           callback: this.updateChapterProgress,
           disabled: false,
           showBack: true
-        }
+        },
+      bookTitleList: [
+        '认识一个好老师',
+        '了解是投资的基础',
+        '赚多赚少大不同',
+        '资产负债大盘点',
+        '钱从哪儿来，又到哪去',
+        '投资的路才刚刚开始'
+      ]
     }
   },
   computed: {
@@ -139,7 +162,29 @@ export default {
       data ({to: {params: {currIndex}}}) {
        this.currIndex = currIndex
    //    console.log('chapter', this.currIndex)
-      const me = this
+      /***************************************/
+       const me = this
+       const bookId = 1
+       this.getBookProgress(bookId).then(
+        res => {   // bookId, createTime, sectionIndex
+          if (res === '' || res === undefined) {
+            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
+          } else {
+        let setChapterNum = parseInt(parseInt(new Date().getTime() + 1604800000 - new Date(res.createTime).getTime()) / 604800000)
+        // TODO 时间可能有少许的差错
+        if (setChapterNum < 1 && setChapterNum >= 0) {
+          me.bookTitleList = me.bookTitleList.splice(0, 1)
+          } else {
+          // 截取此数据之前的数据
+           me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+          }
+        }
+        }).catch(
+        err => {
+          console.log(err.message)
+        }
+      )
+      /***************************************/
       setTimeout(function () {
         console.log('page:', getLocalCache('last_read_page'))
         me.lastReadPage = parseInt(getLocalCache('last_read_page').pageNum - 1)
@@ -171,17 +216,9 @@ export default {
     bookChapterIndexChange (index) {
       this.book_index = index
     },
-    gotoChoseIndex () {
-      const me = this
-      this.showMask({
-          component: 'giftPackage/toggleIndexChapter.vue',
-          hideOnMaskTap: true,
-          callbackName: 'gotoChapterDetails',
-          callbackFn: me.gotoChapterDetails.bind(me)
-      })
-    },
     gotoChapterDetails (currChapter) {
-      this.hideMask()
+      console.log('currChapter2', currChapter)
+      console.log('this.curr', this.currChapter)
       this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
     },
     setScrollerHeight () {
@@ -199,6 +236,9 @@ export default {
     },
     gotoBookDetail () {
       this.$route.router.go('giftPackage/newerBookDetails')
+    },
+    gotoSetMask () {
+      this.showIndexMask = !this.showIndexMask
     }
   }
 }
