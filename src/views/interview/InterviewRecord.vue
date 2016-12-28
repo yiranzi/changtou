@@ -153,7 +153,7 @@
           height: 2rem;
           border-radius: 0.5rem;
           padding: 0.75rem;
-          background: #fff url("../../../static/image/interview/wechat.png") no-repeat center center / 50%;
+          background: #fff url("../../../static/image/interview/share-wechat.png") no-repeat center center / 50%;
         }
       }
       .share-picture-right{
@@ -168,7 +168,7 @@
           height: 2rem;
           border-radius: 0.5rem;
           padding: 0.75rem;
-          background: #fff url("../../../static/image/interview/timeline.png") no-repeat center center / 50%;
+          background: #fff url("../../../static/image/interview/share-timeline.png") no-repeat center center / 50%;
         }
       }
       img {
@@ -216,10 +216,10 @@
           margin-bottom: 24/40rem;
         }
         .wechat{
-          background: #fff url("../../../static/image/interview/wechat.png") no-repeat center center / 100%;
+          background: #fff url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
         }
         .timeline{
-          background: #fff url("../../../static/image/interview/timeline.png") no-repeat center center / 100%;
+          background: #fff url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
         }
       }
     }

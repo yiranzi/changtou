@@ -61,8 +61,8 @@ Vue.mixin({
      * @param callbackName
        * @param callbackFn
        */
-    showMask: function ({component, hideOnMaskTap = true, data, callbackName, callbackFn}) {
-      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, data, callbackName, callbackFn})
+    showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
+      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
 
     /**
@@ -177,7 +177,7 @@ const mixin = {
       )
     },
 
-    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {
+    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, componentData, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
 
@@ -190,12 +190,13 @@ const mixin = {
       const MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-float-mask" v-touch:tap="onFloatMaskTap"></div>
-                    <div class="ict-float-component"><mask-component data="data"><a slot="data">${data}</a></mask-component></div>
+                    <div class="ict-float-component"><mask-component :component-data="componentData"><a slot="data">${componentData}</a></mask-component></div>
                   </div>`,
         components: {
           'mask-component': require('./components/' + component)
         },
         events: {
+          hideMask: me.hideMask,
           [callbackName]: realCallBack
         },
         methods: {
@@ -210,7 +211,12 @@ const mixin = {
           }
         }
       })
-      new MyComponent({ el: '#mask' })
+      new MyComponent({
+          el: '#mask',
+          data: {
+            componentData: componentData
+          }
+        })
     },
 
     [eventMap.HIDE_MASK]: function () {

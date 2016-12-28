@@ -35,7 +35,7 @@
           <input class="cell_check" type="radio" value="{{key}}" checked="{{!$index}}" v-model="value" id="{{key}}">
           <span class="cell_checked"></span>
         </label>
-        <div class="pay_actionsheet_cell pay_actionsheet_confirm" v-touch:tap="onConfirmTap">{{{confirmText}}}</div>
+        <div class="pay_actionsheet_cell pay_actionsheet_confirm" v-touch:tap="onConfirmTap">{{{confirmText}}} ￥<span>{{sum}}</span></div>
       </div>
     </div>
   </div>
@@ -49,6 +49,7 @@
         required: true,
         twoWay: true
       },
+      sum: Number,
       menus: {
         type: Object,
         default: {}
@@ -146,7 +147,8 @@
             text-align: center;
             font-family: 'myicon';
             content: '\e90d';
-            font-size: 0.8rem !important;
+            font-size: 0.5rem !important;
+            color: #aaa;
           }
         }
       }
@@ -165,7 +167,7 @@
         color: #aaa;
         line-height: 3rem;
         &_img {
-          width: 1.6rem;
+          width: 1.25rem;
           vertical-align: middle;
           margin-right: 1rem;
         }
@@ -222,6 +224,10 @@
         line-height: 2.45rem;
         background: #00b0f0;
         color: #fff;
+        font-size: 0.85rem;
+        span{
+          font-size: 1rem;
+        }
         &:after {
           border: 0;
         }

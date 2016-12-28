@@ -16,7 +16,7 @@
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
       <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns v-show="isShowBottomBtn"></pay-button>
-      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
+      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange" :sum="sum"></pay-action-sheet>
     </div>
 </template>
 <script>
@@ -65,7 +65,8 @@ export default {
         }
       }
     },
-    sheetShow: Boolean
+    sheetShow: Boolean,
+    sum: Number
   },
 
   vuex: {
@@ -78,8 +79,8 @@ export default {
       scrollerHeight: '0px',
       actionSheet: {
         menus: {
-          wechat: '微信支付',
-          ali: '支付宝支付'
+          ali: '支付宝支付',
+          wechat: '微信支付'
         }
       },
       isShowBottomBtn: true,
