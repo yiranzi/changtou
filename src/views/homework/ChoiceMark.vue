@@ -28,13 +28,6 @@
           <span class="retest-btn" v-touch:tap="reTest">重测</span>
         </div>
       </div>
-      <div class="choice-mark-mask" v-touch:tap="onMaskTap" v-show="isFloatShow"></div>
-      <div class="choice-mark-float" v-show="isFloatShow">
-        <div class="title">{{100 - score * 20}}%错误</div>
-        <img class="rate" src="../../assets/styles/image/homework/notPassed/failRate.png">
-        <img class="backImg" src="../../assets/styles/image/homework/notPassed/failBg.png">
-        <img class="btn" src="../../assets/styles/image/homework/notPassed/reTestBtn.png" v-touch:tap="reTest">
-      </div>
     </div>
 </template>
 <script>
@@ -92,12 +85,16 @@
       }
     }
   },
-  watch: {
-    score (newScore) {
-      if (newScore >= 0 && newScore < 3) {
-        this.isFloatShow = true
-      } else {
-        this.isFloatShow = false
+  route: {
+    data () {
+      if (!(parseInt(this.report.rightNum / this.report.totalNum * 10) * 0.5 >= 3)) {
+        this.showMask({
+          component: 'homework/ChoiceAnswerFailed.vue',
+          hideOnMaskTap: true,
+          componentData: parseInt(this.report.rightNum / this.report.totalNum * 10) * 0.5,
+          callbackName: 'onChoiceReTestTap',
+          callbackFn: this.reTest.bind(this) //组件上的
+        })
       }
     }
   },
@@ -236,56 +233,6 @@
         font-size: 0.75rem;
         color: #007aff;
       }
-    }
-  }
-  .choice-mark-mask{
-    /*display: none;*/
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,.6);
-  }
-  .choice-mark-float{
-    /*display: none;*/
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    z-index: 1001;
-    width: 14rem;
-    height: 17.5rem;
-    .title{
-      position: absolute;
-      top: -2.5rem;
-      z-index: 8;
-      width: 100%;
-      color: #ffcc00;
-      text-align: center;
-    }
-    .rate{
-      width: 14rem;
-      position: absolute;
-      display: block;
-      top: -3.5rem;
-    }
-    .backImg{
-      width: 14rem;
-      height: 17.5rem;
-    }
-    .btn{
-      position: absolute;
-      display: block;
-      width: 7rem;
-      height: 2.5rem;
-      bottom: 1rem;
-      transform: translate3d(50%, 0, 0);
-      -moz-transform: translate3d(50%, 0, 0);
-      -webkit-transform: translate3d(50%, 0, 0);
     }
   }
 </style>
