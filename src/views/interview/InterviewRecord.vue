@@ -111,7 +111,7 @@
       padding-top: 40%;
     }
     .weui_actionsheet_cell{
-      height: 9rem;
+      height: 7rem;
       background-color: #DCDCDC;
     }
     .vux-actionsheet-gap{
@@ -136,8 +136,8 @@
       }
       .wechat,.timeline{
         display: inline-block;
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
       }
       .wechat{
         background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
