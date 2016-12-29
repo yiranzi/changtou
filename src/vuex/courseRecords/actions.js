@@ -265,37 +265,6 @@ export const updateSubjectRecord = ({ dispatch }, {lessonId, prevLessonId}) => {
 }
 
 /**
- * 上传 付费课程 chapter进度
- * @param dispatch
- * @param subjectId
- * @param lessonId
- * @param chapterId
- * @returns {Promise}
- */
-export const updateExpenseChapterRecord = ({ dispatch }, {subjectId, lessonId, chapterId}) => {
-  return new Promise((resolve, reject) => {
-    putWithinAuth(
-      {
-        url: getUrl('update_expense_chapter_record'),
-        data: {
-          subjectId,
-          lessonId,
-          chapterId
-        }
-      }
-    ).then(
-      () => {
-        resolve()
-      },
-      err => {
-        console.warn(err)
-        reject(err.Msg)
-      }
-    )
-  })
-}
-
-/**
  * 清空课程进度
  * @param dispatch
  */

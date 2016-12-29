@@ -44,63 +44,6 @@
   </div>
 </template>
 <style lang="less">
-  .subject-detail {
-    .top-back-btn {
-      position: absolute;
-      height: 2rem;
-      width: 2rem;
-      top: 0.3rem;
-      left: 1rem;
-      z-index: 20;
-    }
-    .top-back-btn:before {
-      position: absolute;
-      display: inline-block;
-      font-family: 'myicon';
-      content: '\e91b';
-      font-size: 1.6rem !important;
-      line-height: 2rem;
-      width: 2rem;
-      color: #999;
-    }
-    .vux-tab-item {
-      font-size: 0.85rem;
-    }
-    .bottom-area {
-      position: fixed;
-      /*background: red;*/
-      width: 100%;
-      height: 2.1rem;
-      bottom: 0;
-      /*font-size: 0;*/
-      z-index: 101;
-
-      .btn-box {
-        display: flex;
-
-        .ict-btn {
-          border-radius: 0 !important;
-        }
-
-        .left {
-          background: #f0eff5;
-          color: #00b0f0;
-          font-size: 34/40rem;
-          flex: 24;
-          /*flex-grow: 1;*/
-        }
-
-        .right {
-          /*border-left: 1px solid #898989;*/
-          font-size: 34/40rem;
-          color: #fff;
-          background-color: #00b0f0;
-          flex: 51;
-          /*flex-grow: 2;*/
-        }
-      }
-    }
-  }
 
 </style>
 

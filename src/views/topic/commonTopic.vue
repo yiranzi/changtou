@@ -8,11 +8,11 @@
         </div>
       </div>
     </scroller>
-    <div class="bottom-area" v-if="commonTopicInfo.price > 0">
-      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy" v-el:ictbtn>
+    <div class="bottom-area" v-el:btn v-show="isTopicLoaded">
+      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy">
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
+      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买2016年{{commonTopicInfo.title}},不可重复购买</div>
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
-        line-height: 1.25rem;
+        line-height:  1.25rem;
         text-align: center;
       }
       .ict-button{
@@ -84,27 +84,31 @@
     },
     data () {
       return {
-        scrollerHeight: '500px',
+        scrollerHeight: '580px',
+        isTopicLoaded: false,
         ctpId: this.$route.params.ctpId
       }
     },
     watch: {
-      'commonTopicInfo.content': function () {
+      'commonTopicInfo.content' () {
+        this.isTopicLoaded = true
+      },
+      'isTopicLoaded' () {
         var me = this
         setTimeout(function () {
           me.$nextTick(() => {
-            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.ictbtn.offsetHeight : 0) + 'px'
+            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.btn.offsetHeight : 0) + 'px'
             me.$refs.scroller.reset({
               top: 0
-              })
             })
-         }, 2000)
+        })
+        }, 2000)
       }
     },
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/CT\//.test(transition.from.path)) {
-          transition.redirect('/mycourse')
+          window.history.go(-1)
         }
         transition.next()
       },
