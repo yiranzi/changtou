@@ -97,8 +97,7 @@
           <div class="l-price">￥{{item.price}}</div>
         </div>
       </div>
-  </div>
-    <div style="height:1rem; background-color: #fff"></div>
+    </div>
   </div>
 </template>
 

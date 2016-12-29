@@ -5,7 +5,7 @@
     <div class="arrow right-arrow" v-touch:tap="onTapNext" v-show="isRightArrowShow">>&nbsp;&nbsp;&nbsp;</div>
     <swiper :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem"
             :index.sync="index">
-      <swiper-item v-for="ppt in ppts" class="black" style="height: 12rem" track-by="$index">
+      <swiper-item v-for="ppt in ppts" class="black" style="height: 13rem" track-by="$index">
         <img :src="ppt" alt="" style="height: 100%; width: 100%">
       </swiper-item>
     </swiper>
@@ -58,6 +58,9 @@
 
 <style lang="less">
   .ict-course-ppt {
+    .vux-slider {
+      height: 13rem !important;
+    }
     .arrow {
       width: 1.6rem;
       height: 6rem;
