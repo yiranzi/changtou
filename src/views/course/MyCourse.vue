@@ -40,8 +40,6 @@
               <p class="course-list-state">{{readTotalNum}}人阅读过</p>
             </div>
             <span class="read-book-tip">伴学礼包</span>
-
-
           </div>
         </div>
           <!--                            end-->
@@ -146,15 +144,15 @@
       // 是否显示电子书
         me.receiveGiftPackage().then(
            (message) => {
-            console.log(message)
            }).catch(function (err) {
-            console.log(err)
             if (err.message === '您已领取过新手礼包') {
-              console.log('ok show')
               me.isShowEBook = true
+              if (me.expenseRecords.length > 0) {
+                let readBookList = document.getElementsByClassName('read-book-list')[0]
+                me.priInsertAfter(readBookList, document.getElementsByClassName('course-list')[parseInt(me.expenseRecords.length)])
+              }
             }
         })
-      // 是否显示电子书
 
       // 获取电子书阅读人数
        const bookId = 1
@@ -163,7 +161,6 @@
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
-        console.log(res)
         me.readTotalNum = res.totalOwnerNum
           }
         }).catch(
@@ -171,7 +168,6 @@
           console.log(err.message)
         }
       )
-      // 获取电子书阅读人数
 
       return Promise.all(promiseArray).then(
         function () {
@@ -199,11 +195,9 @@
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
-        console.log(res)
         let currIndex = parseInt(res.sectionIndex)
             // 阅读页数应该到 书籍阅读页获取而不是入口处
         me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
-   //     this.$route.router.go(`/giftPackage/bookChapter/${currIndex}`)
           }
         }).catch(
         err => {
@@ -211,6 +205,19 @@
         }
       )
     },
+    /**
+     *  插入DOM方法，用来显示电子书在不同状态下情况。
+     */
+     priInsertAfter (newElement, targetElement) {
+        let parent = targetElement.parentNode
+        if (parent.lastChild === targetElement) {
+        // 如果最后的节点是目标元素，则直接添加。因为默认是最后
+        parent.appendChild(newElement)
+        } else {
+        parent.insertBefore(newElement, targetElement.nextSibling)
+        //如果不是，则插入在目标元素的下一个兄弟节点 的前面。也就是目标元素的后面
+        }
+     },
     /**
      * 设置滚动高度
      */

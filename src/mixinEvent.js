@@ -5,7 +5,7 @@
  */
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
-import {jpushInit, jpushSetAlias, jpushAddReceiveHandler, jpushOpenNotification} from './vuex/jpush/actions'
+import {jpushInit, jpushSetAlias, jpushAddReceiveHandler, jpushOpenNotification, jpushSetRouter} from './vuex/jpush/actions'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
@@ -26,6 +26,7 @@ const mixin = {
       jpushSetAlias,
       jpushAddReceiveHandler,
       jpushOpenNotification,
+      jpushSetRouter,
       getDiplomaList,
       getHomeworkList,
       syncUser
@@ -58,6 +59,9 @@ const mixin = {
       this.jpushInit()
       // 默认用户 设置成'00'
       this.jpushSetAlias('00')
+      //
+      this.jpushSetRouter(this.$route.router)
+
       // 增加推送消息接收处理
       this.jpushAddReceiveHandler(this.onReceiveNotification)
       // 添加点击通知事件

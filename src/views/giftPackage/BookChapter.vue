@@ -205,47 +205,41 @@ export default {
   },
   route: {
       data ({to: {params: {currIndex}}, from}) {
+        this.currIndex = currIndex
+
         if (from.path && from.path.indexOf('mycourse') > -1) {
           setTimeout(function () {
-          console.log('page:', getLocalCache('last_read_page'))
           if (getLocalCache('last_read_page') !== null) {
             me.lastReadPage = parseInt(getLocalCache('last_read_page').pageNum - 1)
           } else {
             me.lastReadPage = 0
           }
-      }, 300)
+        }, 300)
         } else {
          this.lastReadPage = 0
         }
         /**************************************/
+        // 监听物理键back
         const me = this
-
+        backHandler.setHandler(onBackKeyDown.bind(me))
         function onBackKeyDown () {
-        //  window.alert('second')
-          console.log('go', me.$route)
           me.$route.router.go('/giftPackage/newerBookDetails')
           backHandler.resetHandler()
         }
-        backHandler.setHandler(onBackKeyDown.bind(me))
+        /**************************************/
 
         /**************************************/
-       this.currIndex = currIndex
-   //    console.log('chapter', this.currIndex)
-      /***************************************/
-
+        // 处理阅读进度
        const bookId = 1
        this.getBookProgress(bookId).then(
-        res => {   // bookId, createTime, sectionIndex
+        res => {
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
-          console.log(res)
         let setChapterNum = parseInt(parseInt(new Date().getTime() + 1604800000 - new Date(res.createTime).getTime()) / 604800000)
-        // TODO 时间可能有少许的差错
         if (setChapterNum < 1 && setChapterNum >= 0) {
           me.bookTitleList = me.bookTitleList.splice(0, 1)
           } else {
-          // 截取此数据之前的数据
            me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
           }
         }
@@ -254,6 +248,7 @@ export default {
           console.log(err.message)
         }
       )
+      /**************************************/
     }
   },
   ready () {
@@ -263,7 +258,7 @@ export default {
     updateChapterProgress () {
      const me = this
      const bookId = 1
-     const sectionIndex = parseInt(this.currIndex) + 1 // TODO set
+     const sectionIndex = parseInt(this.currIndex) + 1
      this.updateBookProgress(bookId, sectionIndex).then(
       res => {
         setLocalCache('last_read_page', {pageNum: parseInt(me.book_index) + 1})
@@ -273,7 +268,6 @@ export default {
         console.log(err.message)
       }
      )
-     console.log(this.$route.router.go)
      this.$route.router.go('/giftPackage/newerBookDetails')
     },
     bookChapterIndexChange (index) {
@@ -304,7 +298,6 @@ export default {
      * 去另外的章节
      */
     'gotoChapterDetails': function (currChapter) {
-      console.log('currChapter2', currChapter)
       this.$route.router.go(`/giftPackage/bookChapter/${currChapter}`)
     }
   }

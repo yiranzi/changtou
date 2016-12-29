@@ -115,18 +115,14 @@ export default {
        const me = this
        const bookId = 1
        this.getBookProgress(bookId).then(
-        res => {   // bookId, createTime, sectionIndex
+        res => {
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
-     //   console.log(res.createTime)
         let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 604800000)
-        // TODO 时间可能有少许的差错
-     //   console.log(setChapterNum)
         if (setChapterNum < 1 && setChapterNum >= 0) {
           me.bookTitleList = me.bookTitleList.splice(0, 1)
           } else {
-          // 截取此数据之前的数据
            me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
           }
         }
@@ -153,7 +149,6 @@ export default {
         const me = this
         const {titlebar} = this.$els
         me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
-        console.log('scr', me.scrollerHeight)
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({

@@ -79,7 +79,6 @@ export default {
    },
    gotoChapterDetails (currChapter) {
      // 向外派发事件
-     console.log('currChapter1', currChapter)
      this.$dispatch('gotoChapterDetails', currChapter)
    }
   }
