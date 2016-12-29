@@ -32,13 +32,16 @@
 
           <!-- 设置 电子书 入口 可记录阅读进度-->
         <div class="read-book-list" v-if="isShowEBook">
-          <div class="course-list" v-for="course in readBookList">
+          <div class="course-list read-book-item" v-for="course in readBookList">
             <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png'>
             <div class="course-list-info" v-touch:tap="gotoReadBook">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state">{{course.status}}</p>
+              <p class="course-list-state">{{readTotalNum}}人阅读过</p>
             </div>
+            <span class="read-book-tip">伴学礼包</span>
+
+
           </div>
         </div>
           <!--                            end-->
@@ -87,12 +90,12 @@
       scrollerHeight: '0px',
       courseList: [], //课程列表
       isShowEBook: false, // 是否显示电子书
+      readTotalNum: 0,  // 阅读电子书人数
       readBookList: [  //
         {
           'pic': '../../assets/styles/image/giftPackage/readIcon.png',
           'title': '大熊股市历险记',
-          'subtitle': '阅读材料',
-          'status': '15648人读过'
+          'subtitle': '阅读材料'
         }
       ]
     }
@@ -152,6 +155,24 @@
             }
         })
       // 是否显示电子书
+
+      // 获取电子书阅读人数
+       const bookId = 1
+       this.getBookProgress(bookId).then(
+        res => {   // bookId, createTime, sectionIndex
+          if (res === '' || res === undefined) {
+            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
+          } else {
+        console.log(res)
+        me.readTotalNum = res.totalOwnerNum
+          }
+        }).catch(
+        err => {
+          console.log(err.message)
+        }
+      )
+      // 获取电子书阅读人数
+
       return Promise.all(promiseArray).then(
         function () {
           setTimeout(
@@ -320,6 +341,24 @@
     p{
       margin: 0;
     }
+    .read-book-item{
+  //    position: relative;
+      background: #e3f7fe !important;
+      position: relative;
+      .read-book-tip{
+        background: #ff9800;
+        height: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        font-size: .6rem;
+        color: #fff;
+        top: 0.5rem;
+        left: 5.5rem;
+        /* position: relative; */
+        position: absolute;
+        width: 2.75rem;
+      }
+    }
     .my-course-drfts{
       width: 5rem;
       color: #fff;
@@ -479,6 +518,12 @@
           vertical-align: bottom;
         }
       }
+    }
+  }
+
+  @media all and (max-width: 320px) {
+    .read-book-tip{
+
     }
   }
 </style>

@@ -1,7 +1,8 @@
 <template>
-  <div class="book-info">
+  <div class="book-info" style="height: 100%;">
     <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <div class="set-height" style="height: 100%;">
       <div class="book-info-container">
         <img class="book-avatar" src="../../assets/styles/image/giftPackage/bookCover.png" width="230" height="300">
         <p class="book-name">大雄股市历险记</p>
@@ -15,6 +16,7 @@
         <p class="book-chapter-item" v-for="bookItem in bookTitleList" v-touch:tap="gotoChapterDetails($index)"
         >第{{$index+1}}章  {{bookItem}}</p>
       </div>
+     </div>
     </scroller>
   </div>
 </template>
@@ -23,55 +25,60 @@
     .book-info{
       background: white !important;
     }
-    .book-info-container{
-      margin-top: 1.75rem;
-      text-align: center;
-      .book-avatar{
-        width: 5.75rem;
-        height: 7.5rem;
-      }
-      .book-name{
-        font-size: .75rem;
-        color: #444;
-        margin-top: 1.25rem;
-      }
-      .book-status{
-        width: 3rem;
-        height:.8rem;
-        font-size: 60%;
-        color:#00b0f0;
-        border: 1px solid #00b0f0;
-        position: absolute;
-        top: 8rem;
-        left: 12.2rem;
-        line-height: .8rem;
-      }
-      .book-intro{
-        margin:1rem 1.25rem 1.5rem 1.25rem;
-        color: #888;
-        font-size: .65rem;
-      }
-    }
-    .book-chapter{
-      background: white !important;
-      border-top: .5rem solid #f0eff5;
-      .book-chapter-title{
-        background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
+    .set-height{
+    //  margin-bottom: 2rem;
+      padding-bottom: 1.4rem;
+      .book-info-container{
+        margin-top: 1.75rem;
         text-align: center;
-        font-size: .75rem;
-        color: #00b0f0;
-        height: 2.2rem;
-        line-height: 2.2rem;
+        .book-avatar{
+          width: 5.75rem;
+          height: 7.5rem;
+        }
+        .book-name{
+          font-size: .75rem;
+          color: #444;
+          margin-top: 1.25rem;
+        }
+        .book-status{
+          width: 3rem;
+          height:.8rem;
+          font-size: 60%;
+          color:#00b0f0;
+          border: 1px solid #00b0f0;
+          position: absolute;
+          top: 8rem;
+          left: 12.2rem;
+          line-height: .8rem;
+        }
+        .book-intro{
+          margin:1rem 1.25rem 1.5rem 1.25rem;
+          color: #888;
+          font-size: .65rem;
+        }
       }
-      .book-chapter-item{
-        border-bottom: 1px solid #f0eff5;
-        font-size: .7rem;
-        color: #666;
-        padding-left: 1.25rem;
-        height: 2.2rem;
-        line-height: 2.2rem;
+      .book-chapter{
+        background: white !important;
+        border-top: .5rem solid #f0eff5;
+        .book-chapter-title{
+          background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
+          text-align: center;
+          font-size: .75rem;
+          color: #00b0f0;
+          height: 2.2rem;
+          line-height: 2.2rem;
+        }
+        .book-chapter-item{
+          border-bottom: 1px solid #f0eff5;
+          font-size: .7rem;
+          color: #666;
+          padding-left: 1.25rem;
+          height: 2.2rem;
+          line-height: 2.2rem;
+        }
       }
     }
+
 </style>
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
@@ -146,6 +153,7 @@ export default {
         const me = this
         const {titlebar} = this.$els
         me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        console.log('scr', me.scrollerHeight)
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({

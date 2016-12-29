@@ -3,12 +3,14 @@
     <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container" :bounce='false' :lock-y="true">
     <div class="swiper-container">
-      <swiper height="300px" :index.sync='lastReadPage' @on-index-change="bookChapterIndexChange">
+      <swiper height="300px" :index.sync='lastReadPage' @on-index-change="bookChapterIndexChange" :duration=100>
         <swiper-item class="black" v-for="chapter in currBookChapter">
-          <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
-          {{{chapter.index}}} {{{chapter.title}}}
-          <div class="book-content">
-            {{{chapter.content}}}
+          <div class="book-use-top">
+            <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
+            {{{chapter.index}}} {{{chapter.title}}}
+            <div class="book-content">
+              {{{chapter.content}}}
+            </div>
           </div>
         </swiper-item>
       </swiper>
@@ -46,7 +48,7 @@
     .book-paganition{
       position: fixed;
       left: 83%;
-      top: 72%;
+      top: 27.5rem !important;
       color: #ccc;
       font-size: .6rem;
       z-index: 400;
@@ -103,6 +105,48 @@
       width: 100%;
       height: 100%;
     }
+    @media (min-height: 480px)  and (max-height: 480px) {
+      .book-content{
+        -webkit-transform: scaleY(.9);
+        margin-top: -2rem;
+      }
+      .book-paganition{
+        top: 63% !important;
+      }
+      .book-use-top{
+        margin-top: -1rem;
+      }
+      .book-title:nth-child(3){
+        margin-bottom: 1.5rem !important;
+      }
+    }
+    @media (min-height: 640px) and (max-height: 640px) {
+      .book-paganition{
+        top: 68% !important;
+      }
+    }
+    @media all and (min-height: 960px) {
+      .book-content{
+        font-size: .65rem !important;
+      }
+      .book-paganition{
+        top: 71%;
+      }
+      .book-title:nth-child(3){
+        margin-bottom: .5rem !important;
+      }
+    }
+    @media (min-height: 1024px) and (max-height: 1366px) {
+      .book-content{
+        font-size: .5rem !important;
+      }
+      .book-paganition{
+        top: 59%;
+      }
+      .book-title:nth-child(3){
+        margin-bottom: .5rem !important;
+      }
+    }
   }
 </style>
 <script>
@@ -113,6 +157,7 @@
   import Scroller from 'vux/scroller'
   import {giftActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
+  import backHandler from '../../plugin/backHandler'
 
 export default {
    vuex: {
@@ -160,21 +205,41 @@ export default {
   },
   route: {
       data ({to: {params: {currIndex}}, from}) {
-        if (from.path && from.path.indexOf('giftPackage/bookChapter/') > -1 ||
-        from.path && from.path.indexOf('giftPackage/newerBookDetails') > -1) {
+        if (from.path && from.path.indexOf('mycourse') > -1) {
+          setTimeout(function () {
+          console.log('page:', getLocalCache('last_read_page'))
+          if (getLocalCache('last_read_page') !== null) {
+            me.lastReadPage = parseInt(getLocalCache('last_read_page').pageNum - 1)
+          } else {
+            me.lastReadPage = 0
+          }
+      }, 300)
+        } else {
          this.lastReadPage = 0
         }
+        /**************************************/
+        const me = this
+
+        function onBackKeyDown () {
+        //  window.alert('second')
+          console.log('go', me.$route)
+          me.$route.router.go('/giftPackage/newerBookDetails')
+          backHandler.resetHandler()
+        }
+        backHandler.setHandler(onBackKeyDown.bind(me))
+
+        /**************************************/
        this.currIndex = currIndex
    //    console.log('chapter', this.currIndex)
       /***************************************/
 
-       const me = this
        const bookId = 1
        this.getBookProgress(bookId).then(
         res => {   // bookId, createTime, sectionIndex
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
+          console.log(res)
         let setChapterNum = parseInt(parseInt(new Date().getTime() + 1604800000 - new Date(res.createTime).getTime()) / 604800000)
         // TODO 时间可能有少许的差错
         if (setChapterNum < 1 && setChapterNum >= 0) {
@@ -189,11 +254,6 @@ export default {
           console.log(err.message)
         }
       )
-      /***************************************/
-      setTimeout(function () {
-        console.log('page:', getLocalCache('last_read_page'))
-        me.lastReadPage = parseInt(getLocalCache('last_read_page').pageNum - 1)
-      }, 300)
     }
   },
   ready () {
@@ -206,16 +266,14 @@ export default {
      const sectionIndex = parseInt(this.currIndex) + 1 // TODO set
      this.updateBookProgress(bookId, sectionIndex).then(
       res => {
-      //  console.log(me.book_index)
         setLocalCache('last_read_page', {pageNum: parseInt(me.book_index) + 1})
-        console.log(getLocalCache('last_read_page'))
-        // TODO should set the localstorage to contain the page
       }
      ).catch(
       err => {
         console.log(err.message)
       }
      )
+     console.log(this.$route.router.go)
      this.$route.router.go('/giftPackage/newerBookDetails')
     },
     bookChapterIndexChange (index) {
@@ -320,7 +378,7 @@ const bookChapter1 = [
    {
     'index': '<p class="book-index">第一章</p>',
     'title': '<p class="book-title">认识一个好老师</p>',
-    'content': '<p>　　　大雄点点头：“明白啦！”</p><p>　　　</p><p>　　　#小测试#</p><p>　　　买入一家公司的股票之后，我们就成为这家公司的股东，这种说法对吗？</p><p>　　　A.对</p><p>　　　B.错误</p>'
+    'content': '</p><p></p><p></p><p><p>　　　大雄点点头：“明白啦！”</p><p>　　　</p><p>　　　#小测试#</p><p>　　　买入一家公司的股票之后，我们就成为这家公司的股东，这种说法对吗？</p><p>　　　A.对</p><p>　　　B.错误</p>'
   },
    {
     'index': '<p class="book-index">第一章</p>',
@@ -345,12 +403,12 @@ const bookChapter1 = [
    {
     'index': '<p class="book-index">第一章</p>',
     'title': '<p class="book-title">认识一个好老师</p>',
-    'content': '<p>　　　“这个，应该不会吧，就好像铜锣烧一样，就算很好吃，可是它最多也就值那么多钱啊，如果太贵了也没人买吧。”</p><p>　　　巴菲特赞许的看着大雄：“你说到了一个很关键的问题，也就是公司的市值和内在价值的问题。不过今天的时间已经到了，我还有一个很重要的会议要开，这个话题就留着我们下次再讨论吧，好吗？”</p><p>　　　“公司的市值和内在价值？”大雄点点头，在心里打了一个大大的问号。</p><p>　　　</p><p>　　　#小测试#</p><p>　　　一家公司的股价会无限制的上涨吗？</p><p>　　　A.不会</p><p>　　　B.会</p> <p>1.1.5  买股票=买打折商品</p><p>　　　上次学习结束的时候，巴菲特留了一个小小的悬念，一周以来大雄常常念叨这个问题，可是他才刚刚接触股票投资，脑子里除了巴菲特告诉他的那些知识之外还是一片空白，关于公司的市值和内在价值,究竟有什么秘密呢？</p>'
+    'content': '<p>　　　“这个，应该不会吧，就好像铜锣烧一样，就算很好吃，可是它最多也就值那么多钱啊，如果太贵了也没人买吧。”</p><p>　　　巴菲特赞许的看着大雄：“你说到了一个很关键的问题，也就是公司的市值和内在价值的问题。不过今天的时间已经到了，我还有一个很重要的会议要开，这个话题就留着我们下次再讨论吧，好吗？”</p><p>　　　“公司的市值和内在价值？”大雄点点头，在心里打了一个大大的问号。</p><p>　　　</p><p>　　　#小测试#</p><p>　　　一家公司的股价会无限制的上涨吗？</p><p>　　　A.不会</p><p>　　　B.会</p> <p>1.1.5  买股票=买打折商品</p><p>　　　上次学习结束的时候，巴菲特留了一个小小的悬念，一周以来大雄常常念叨这个问题，可是他才刚刚接触股票投资，？</p>'
   },
    {
     'index': '<p class="book-index">第一章</p>',
     'title': '<p class="book-title">认识一个好老师</p>',
-    'content': ' <p>　　　一周一次的学习如约开始了，大雄一见巴菲特就心急地问道：“巴菲特先生，我们能开始学习关于公司市值和内在价值的知识了吗？”</p><p>　　　“当然可以，上次我们说过一家铜锣烧很好吃而且每天只限量出售100个，那么它可能会比普通的铜锣烧卖得贵一些，但是如果它卖1万元一个，肯定也没有人买，对吧？因为大家会觉得太贵了，一个铜锣烧不可能值这个价钱的。每一样事物都有其内在价值，一家公司也是。那什么是市值呢？市值就是市场认为一家公司值多少钱。”</p><p>　　　“市场？”</p><p>　　　“对，市场虽然看不见摸不着，但是它却对我们的投资有很重要的影响。有的时候它就像一个人一样喜怒无常。市场看一家公司就像妈妈看自己的儿子一样，高兴的时候会觉得自己的儿子是全世界最聪明最可爱最能干的人，有的时候又觉得自己的儿子是全世界最调皮捣蛋最没出息的那个人。”</p>'
+    'content': '脑子里除了巴菲特告诉他的那些知识之外还是一片空白，关于公司的市值和内在价值,究竟有什么秘密呢 <p>　　　一周一次的学习如约开始了，大雄一见巴菲特就心急地问道：“巴菲特先生，我们能开始学习关于公司市值和内在价值的知识了吗？”</p><p>　　　“当然可以，上次我们说过一家铜锣烧很好吃而且每天只限量出售100个，那么它可能会比普通的铜锣烧卖得贵一些，但是如果它卖1万元一个，肯定也没有人买，对吧？因为大家会觉得太贵了，一个铜锣烧不可能值这个价钱的。每一样事物都有其内在价值，一家公司也是。那什么是市值呢？市值就是市场认为一家公司值多少钱。”</p><p>　　　“市场？”</p><p>　　　“对，市场虽然看不见摸不着，但是它却对我们的投资有很重要的影响。有的时候它就像一个人一样喜怒无常。市场看一家公司就像妈妈看自己的儿子一样，高兴的时候会觉得自己的儿子是全世界最聪明最可爱最能干的人，有的时候又觉得自己的儿子是全世界最调皮捣蛋最没出息的那个人。”</p>'
   },
    {
     'index': '<p class="book-index">第一章</p>',
@@ -370,7 +428,7 @@ const bookChapter1 = [
   {
     'index': '<p class="book-index">第一章</p>',
     'title': '<p class="book-title">认识一个好老师</p>',
-    'content': '<p>拓展学习：股票投资初级课第三课-公司的护城河分析。</p><p></p><p>拓展阅读：长投学堂免费课-变成有钱人的第一堂课第三课《投资的欲望》，讲了长投学堂创始人小熊的投资学习之路，看一个IT 男是如何通过自学投资逆袭的。</p><p></p>'
+    'content': '<p style="height:1rem;"></p><p></p><p>拓展学习：股票投资初级课第三课-公司的护城河分析。</p><p></p><p>拓展阅读：长投学堂免费课-变成有钱人的第一堂课第三课《投资的欲望》，讲了长投学堂创始人小熊的投资学习之路，看一个IT 男是如何通过自学投资逆袭的。</p><p></p>'
   }
 ]
 const bookChapter2 = [
@@ -462,13 +520,13 @@ const bookChapter2 = [
   {
     'index': '<p class="book-index">第二章</p>',
     'title': '<p class="book-title">了解是投资的基础</p>',
-    'content': '  <p>　　　巴菲特笑了：“还记得我们之前说过的话吗？人们买商品的时候常常货比三家，可是买股票的时候却很少了解一下自己买的究竟是什么。大部分人在股市上是不够理性的，这种不理性会让人们看不到一些真正的好机会。”</p> <p>　　　“你的意思是说像你这样对企业真正进行分析评估的其实不多，所以很多投资的机会被很多人白白错过了，真可惜呢。”大雄又想起爸爸，如果在买股票之前爸爸能对股票做一些研究，可能也不会亏损这么多吧。</p> '
+    'content': '  <p>　　　巴菲特笑了：“还记得我们之前说过的话吗？人们买商品的时候常常货比三家，可是买股票的时候却很少了解一下自己买的究竟是什么。大部分人在股市上是不够理性的，这种不理性会让人们看不到一些真正的好机会。”</p> <p>　　　“你的意思是说像你这样对企业真正进行分析评估的其实不多，所以很多投资的机会被很多人白白错过了，真可惜呢。”大雄又想起爸爸，如果在买股票之前爸爸能对股票做一些研究，可能也不会亏损这么多吧。</p><p>　　　“对，而且我们说过市场是喜怒无常的，如果一家好公司在一段时间内不被市场看好，大部分人会跟随市场，远离这家好公司，这也是投资的好机会。所以你不用担心找不到合适的机会，只要能分辨出哪些是好的公司，再加上一些耐心，我们就可以找到合适的投资机会的。”</p> '
   },
 
   {
     'index': '<p class="book-index">第二章</p>',
     'title': '<p class="book-title">了解是投资的基础</p>',
-    'content': '<p>　　　“对，而且我们说过市场是喜怒无常的，如果一家好公司在一段时间内不被市场看好，大部分人会跟随市场，远离这家好公司，这也是投资的好机会。所以你不用担心找不到合适的机会，只要能分辨出哪些是好的公司，再加上一些耐心，我们就可以找到合适的投资机会的。”</p><p>　　　#思考#</p><p>　　　你是否也在以下情况下盲目的买入过一些自己并不了解或并不需要的东西么：</p><p>　　　A.双十一狂欢，买了一堆自己其实不需要的东西</p><p>　　　B.被银行工作人员说服，买了一些自己并不了解的理财产品</p><p>　　　C.商场打折，大家都在抢购，自己不买好像亏了</p><p>　　　D.同事们都在买的自行车，跟风买来，结果一次也没骑过</p>'
+    'content': '  <p>　　　#思考#</p><p>　　　你是否也在以下情况下盲目的买入过一些自己并不了解或并不需要的东西么：</p><p>　　　A.双十一狂欢，买了一堆自己其实不需要的东西</p><p>　　　B.被银行工作人员说服，买了一些自己并不了解的理财产品</p><p>　　　C.商场打折，大家都在抢购，自己不买好像亏了</p><p>　　　D.同事们都在买的自行车，跟风买来，结果一次也没骑过</p>'
   },
   {
     'index': '<p class="book-index">第二章</p>',
