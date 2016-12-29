@@ -69,7 +69,7 @@
         this.isIntroLoaded = true
         this.setScrollerHeight()
       }
-    }
+    },
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/PS\//.test(transition.from.path)) {
