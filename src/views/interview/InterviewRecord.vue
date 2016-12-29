@@ -122,13 +122,13 @@
     .load-fail{
       width: 100%;
       height: 623px;
-      background-color: #ffffff;
+      background-color: #fff;
       text-align: center;
       padding-top: 40%;
     }
     .weui_actionsheet_cell{
-      height: 9rem;
-      background-color: #DCDCDC;
+      height: 7rem;
+      background-color: #f0eff5;
     }
     .vux-actionsheet-gap{
       height: 0;
@@ -139,8 +139,7 @@
     }
     .share-box{
       width: 100%;
-      height: 4.45rem;
-      margin: 2rem 0;
+      padding: 1.2rem 0;
       font-size: 0.6rem;
       text-align: center;
       .share-item{
