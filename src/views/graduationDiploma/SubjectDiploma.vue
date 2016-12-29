@@ -177,7 +177,7 @@
             this.showMask({
               component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
-              data: `${integral}`,
+              componentData: `${integral}`,
               callbackName: 'graduationVolumeConfirm',
               callbackFn: () => {}
             })
