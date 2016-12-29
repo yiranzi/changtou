@@ -104,7 +104,7 @@
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/CT\//.test(transition.from.path)) {
-          window.history.go(-1)
+          transition.redirect('/mycourse')
         }
         transition.next()
       },

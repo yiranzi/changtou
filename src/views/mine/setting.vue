@@ -180,14 +180,21 @@
       color:black;
     }
     .ict-user-name {
+      position: relative;
       font-size: 0.8rem;
       .reset-nick-name {
-        position: relative;
-        background: url("../../assets/styles/image/pen.png") no-repeat center center / 70%;
+        position: absolute;
         width: 1rem;
         height:1rem;
         top: 2px;
+        margin-left: 0.2rem;
         display: inline-block;
+        &:after{
+          font-family: 'myicon';
+          content: '\e926';
+          font-size: 0.8rem;
+          color: #000;
+        }
       }
     }
     .ict-user-info {

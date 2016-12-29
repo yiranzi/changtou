@@ -29,13 +29,13 @@
                 <span class="type">{{subjectArr.type}}</span>
                 <span class="label">{{subjectArr.label}}</span>
               </div>
-              <div class="recommend">{{subjectArr.recommend}}</div>
               <div class="sub-box">
                 <img class="pic" v-bind:src="subjectArr.pic"  v-touch:tap="gotoSubjectDetail(subjectArr, $index)">
                 <div class="purchase">{{subjectArr.purchaseCount}}人学过
                   <span class="play-icon"></span>
                 </div>
               </div>
+              <div class="recommend">{{subjectArr.recommend}}</div>
             </div>
           </div>
           <div class="try-again" v-touch:tap="tryAgain">再来一次</div>
@@ -145,15 +145,15 @@
         }
       }
       .recommend{
-        margin-top: 0.75rem;
         font-size: 0.65rem;
         color: #444;
+        margin-bottom: 2rem;
       }
       .sub-box{
         position: relative;
         width: 15.25rem;
         height: 6.6rem;
-        margin-bottom: 2rem;
+        margin-top: 0.75rem;
         .pic{
           width: 15.25rem;
           height: 6.6rem;

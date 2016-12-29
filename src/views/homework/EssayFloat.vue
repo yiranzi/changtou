@@ -3,7 +3,8 @@
  * 问答题 浮框
  */
 <template>
-    <ict-sheet title="课后作业" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
+  <div>
+    <ict-sheet :title="title" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
         <div class="essay-content" v-if="assignmentType === 'S'">{{{essayQuestion}}}</div>
         <div class="essay-explain">
@@ -11,6 +12,7 @@
         </div>
       </div>
     </ict-sheet>
+  </div>
 </template>
 <script>
   import IctSheet from '../../components/IctActionSheet.vue'
@@ -36,6 +38,7 @@
   }
   export default {
     props: {
+      hasChoice: Boolean,
       show: Boolean
     },
     vuex: {
@@ -52,6 +55,9 @@
       }
     },
     computed: {
+      title () {
+        return this.hasChoice ? '选修作业' : '课后作业'
+      },
       btnText () {
         return this.assignmentType ? tpl[this.assignmentType].btnText : null
       },
