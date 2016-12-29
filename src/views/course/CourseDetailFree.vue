@@ -284,17 +284,15 @@
       },
 
       /**
-       * 激活
+       * 更新免费课程进度
        */
       updateRecord () {
         const me = this
         me.updateSubject({prevLessonId: me.recentLessonId, lessonId: me.selectedLesson.lessonId}).then(
           function () {
-            me.showToast({message: '激活课程成功', type: 'success'})
             me.syncRecord()
           },
           function () {
-            me.showToast({message: '激活失败,请重试'})
           }
         )
       },
