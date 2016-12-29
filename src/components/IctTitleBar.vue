@@ -49,7 +49,7 @@ titlebar
 
     data () {
       return {
-        isIos: Device.platform !== platformMap.IOS
+        isIos: Device.platform === platformMap.IOS
       }
     },
 
