@@ -216,18 +216,21 @@
     .title-box {
       padding-left: 1.25rem;
     .title {
-      margin-top: 1.25rem;
+      margin: 0;
+      margin-top: 1.0rem;
       font-size: 34/40rem;
       color: #000;
     }
     .price {
-      margin-top: 30/40rem;
+      margin: 0;
+      margin-top: 20/40rem;
       font-size: 30/40rem;
       color: #ff5b45;
     }
     .tip {
-      margin-top: 30/40rem;
-      margin-bottom: 1rem;
+      margin: 0;
+      margin-top: 20/40rem;
+      margin-bottom: 0.8rem;
       font-size: 26/40rem;
       color: #00b0f0;
     .number-tip {
