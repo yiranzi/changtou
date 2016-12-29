@@ -144,7 +144,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -171,8 +171,6 @@
 
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
-
-        getDiplomaList: graduationDiplomaActions.getDiplomaList,
 
         syncHomeworkList: homeworkListActions.getHomeworkList
       }
@@ -252,23 +250,8 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
-        const me = this
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
-        } else if (from.path && /\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
-          //做完课程最后一课选择题 拉取毕业奖状列表
-          me.getDiplomaList().then(
-            (newDiploma) => {
-              const subjectDiploma = newDiploma.find(
-                function (diploma) {
-                  return diploma.subjectId === parseInt(me.subjectId)
-                }
-              )
-              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
-              }
-            }
-          )
         } else {
           if (this.subjectId !== subjectId) {
             this.showLoading()
@@ -502,7 +485,7 @@
           report => {
             if (report.kpScore) {
               // 做过选择题
-              me.$route.router.go('/homework/choice/mark')
+              me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
             } else {
               // 没做过
               me.showChoice = true
@@ -561,7 +544,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-            () => me.$route.router.go(`/homework/essay/answer/${lessonId}`)
+            () => me.$route.router.go(`/homework/essay/answer/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -581,7 +564,7 @@
         const me = this
         const lessonId = LimitedLessonId || this.selectedLesson
         this.getArticle(lessonId).then(
-            () => me.$route.router.go('/homework/essay/mark')
+            () => me.$route.router.go(`/homework/essay/mark/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -603,7 +586,7 @@
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
             lessonid: this.selectedLesson.lessonId
           })
-          this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
+          this.$route.router.go(`/homework/essay/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
         }
       },
 
@@ -615,7 +598,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
           lessonid: this.selectedLesson.lessonId
         })
-        this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
+        this.$route.router.go(`/homework/choice/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
       },
 
       back () {
@@ -754,7 +737,7 @@
               // 有选择题
               confirmText = '去测试'
               confirmHandler = function () {
-                me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
               }
               msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
             } else {

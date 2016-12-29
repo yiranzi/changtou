@@ -35,19 +35,24 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctStar from '../../components/IctStar.vue'
   import {choiceGetters, userGetters} from '../../vuex/getters'
+  import {graduationDiplomaActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
   vuex: {
     getters: {
       isLogin: userGetters.isLogin,
-      lessonId: choiceGetters.lessonId,
       report: choiceGetters.report,
       knowledgeMap: choiceGetters.knowledgeMap
+    },
+    actions: {
+      getDiplomaList: graduationDiplomaActions.getDiplomaList
     }
   },
   data () {
     return {
+      subjectId: 0,
+      lessonId: 0,
       rightOptions: {
         callback: this.onFinish,
         disabled: false
@@ -86,7 +91,9 @@
     }
   },
   route: {
-    data () {
+    data ({to: {params}}) {
+      this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       if (!(parseInt(this.report.rightNum / this.report.totalNum * 10) * 0.5 >= 3)) {
         this.showMask({
           component: 'homework/ChoiceAnswerFailed.vue',
@@ -104,6 +111,20 @@
      */
     onFinish () {
       window.history.back()
+      const me = this
+      //做完课程最后一课选择题 拉取毕业奖状列表
+      me.getDiplomaList().then(
+        (newDiploma) => {
+          const subjectDiploma = newDiploma.find(
+            function (diploma) {
+              return diploma.subjectId === parseInt(me.subjectId)
+            }
+          )
+          if (subjectDiploma && !subjectDiploma.show) {
+            me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
+          }
+        }
+      )
     },
     /**
      * 重测
@@ -112,7 +133,7 @@
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_RETEST, {
         lessonid: this.lessonId
       })
-      this.$route.router.replace(`/homework/choice/answer/${this.lessonId}`)
+      this.$route.router.replace(`/homework/choice/answer/${this.subjectId}/${this.lessonId}`)
     },
     /**
      * 点击浮层

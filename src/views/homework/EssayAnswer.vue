@@ -45,9 +45,10 @@ export default {
   },
   data () {
     return {
+      subjectId: 0,
+      lessonId: 0,
       timer: 0,
       canDraft: false, //是否可以保存草稿
-      lessonId: 0,
       rightOptions: { //titlebar
         callback: '',
         disabled: true
@@ -85,6 +86,7 @@ export default {
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       this.getQuestion(this.lessonId)
       this.answer = this.essayAnswer
       setTimeout(

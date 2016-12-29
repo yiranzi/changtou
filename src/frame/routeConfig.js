@@ -196,19 +196,19 @@ export function configRouter (router) {
       component: require('../views/homework/Drafts.vue')
     },
     //问答题 写作业
-    '/homework/essay/answer/:lessonId': {
+    '/homework/essay/answer/:subjectId/:lessonId': {
       component: require('../views/homework/EssayAnswer.vue')
     },
     //问答题 看分数
-    '/homework/essay/mark': {
+    '/homework/essay/mark/:subjectId/:lessonId': {
       component: require('../views/homework/EssayMark.vue')
     },
     //选择题 做测试
-    '/homework/choice/answer/:lessonId': {
+    '/homework/choice/answer/:subjectId/:lessonId': {
       component: require('../views/homework/ChoiceAnswer.vue')
     },
     //选择题 看分数
-    '/homework/choice/mark': {
+    '/homework/choice/mark/:subjectId/:lessonId': {
       component: require('../views/homework/ChoiceMark.vue')
     },
     /**
