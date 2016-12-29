@@ -18,7 +18,7 @@
       </div>
     </scroller>
     <div class="tip-on-btn" v-el:tip>{{tip}}</div>
-    <ict-button v-touch:tap="buyNow" v-el:btns>立即购买</ict-button>
+    <ict-button v-touch:tap="buyNow" v-el:btns v-show="isIntroLoaded">立即购买</ict-button>
   </div>
 </template>
 <script>
@@ -48,13 +48,20 @@
     },
     data () {
       return {
-        scrollerHeight: '0px'
+        scrollerHeight: '580px',
+        isIntroLoaded: false
       }
     },
     computed: {
       // 按钮上方提示语
       tip () {
         return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP) ? `已购买长投宝VIP版,剩余有效期${this.strategy.strategyLeftDay}天` : ''
+      }
+    },
+    watch: {
+      'vipIntro' () {
+        this.isIntroLoaded = true
+        this.setScrollerHeight()
       }
     },
     route: {
@@ -65,9 +72,7 @@
         transition.next()
       },
       data () {
-        this.getVipIntro().then(
-          () => this.setScrollerHeight()
-        )
+        this.getVipIntro()
       }
     },
     methods: {

@@ -35,7 +35,7 @@
 
         </div>
       </scroller>
-      <div class="bottom-area" v-el:bottom-btn >
+      <div class="bottom-area" v-el:bottom-btn v-show="isTopicLoaded">
         <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
           <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
@@ -198,7 +198,6 @@
       }
       .buttom-tip{
         position: relative;
-        top: -3.45rem;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -224,7 +223,7 @@
       },
       getters: {
         specTopicInfo: specTopicGetters.specTopic, //打包课程信息
-        myCourses: myCoursesGetters.myCourses, //我的课程列表
+        myCourses: myCoursesGetters.myCourseList, //我的课程列表
         isUserLogin: userGetters.isLogin  //登录情况
       }
     },
@@ -246,16 +245,7 @@
         if (this.isUserLogin) {
           taskArr.push(this.loadUserCourses())
         }
-        const me = this
-        return Promise.all(taskArr).then(
-          function () {
-            return {isBuySubject: me.isBuy(), isLoadedFail: false}
-          }
-        ).catch(
-          function () {
-            return {isLoadedFail: true}
-          }
-        )
+        Promise.all(taskArr).then()
       }
     },
 
@@ -264,7 +254,7 @@
         stpId: '',
         scrollerHeight: '0px',
         isBuySubject: false,
-        isLoadedFail: false //数据是否加载完毕
+        isTopicLoaded: false //数据是否加载完毕
       }
     },
 
@@ -282,29 +272,14 @@
     },
     watch: {
       'specTopicInfo': function () {
-        var me = this
-        setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-              top: 0
-          })
-        })
-        }, 500)
-      }
-    },
-    methods: {
-      back () {
-        window.history.back()
+        this.isTopicLoaded = true
+        this.resetScrollerHeight()
       },
-      isBuy () {
-        let myCourses = this.myCourses
-        let coursePackage = this.specTopicInfo.coursePackage
+      'myCourses' () {
         let ret = false
-
-        for (let i = 0; i < coursePackage.length; i++) {
-          for (let j = 0; j < myCourses.length; j++) {
-            if (coursePackage[i].subjectId === myCourses[j].subjectId) {
+        for (let i = 0; i < this.specTopicInfo.coursePackage.length; i++) {
+          for (let j = 0; j < this.myCourses.length; j++) {
+            if (this.specTopicInfo.coursePackage[i].subjectId === this.myCourses[j].subjectId) {
               ret = true
               break
             }
@@ -313,7 +288,23 @@
             break
           }
         }
-        return ret
+        this.isBuySubject = ret
+      }
+    },
+    methods: {
+      resetScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 500)
+      },
+      back () {
+        window.history.back()
       },
       toBuy () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
