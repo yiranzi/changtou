@@ -23,23 +23,7 @@
           </div>
           <img class="pic" v-bind:src="paragraph.image">
         </div>
-
-        <div class="share-article">
-          <div><hr/><span>好文共赏</span><hr/></div>
-          <div class="share-btn">
-            <span class="share-icon timeline" v-touch:tap="shareToFriendCircle"></span>
-            <p>朋友圈</p>
-          </div>
-          <div class="share-btn">
-            <span class="share-icon wechat" v-touch:tap="shareToFriend"></span>
-            <p>微信好友</p>
-          </div>
-          <!--<div class="share-btn">-->
-          <!--<img class="share-icon"  src="">-->
-          <!--<p>QQ</p>-->
-          <!--</div>-->
-        </div>
-
+          <p class="end">-END-</p>
       </div>
       <!--<div class="load-fail" v-show="!isLoadSuccess">-->
         <!--<div>加载中...</div>-->
@@ -122,13 +106,13 @@
     .load-fail{
       width: 100%;
       height: 623px;
-      background-color: #ffffff;
+      background-color: #fff;
       text-align: center;
       padding-top: 40%;
     }
     .weui_actionsheet_cell{
-      height: 9rem;
-      background-color: #DCDCDC;
+      height: 7rem;
+      background-color: #f0eff5;
     }
     .vux-actionsheet-gap{
       height: 0;
@@ -137,91 +121,40 @@
       height: 1.2rem;
       background-color: #ccc;
     }
-    .share-picture{
-      width: 45%;
-      height: 4.45rem;
-      margin: 2rem 5.17rem;
-      position: relative;
+    .share-box{
+      width: 100%;
+      padding: 1.2rem 0;
       font-size: 0.6rem;
-
-      .share-picture-left{
+      text-align: center;
+      .share-item{
+        display: inline-block;
         width: 4.2rem;
         height: 4.3rem;
         margin: 0 0.35rem;
-        .wechat{
-          width: 2rem;
-          height: 2rem;
-          border-radius: 0.5rem;
-          padding: 0.75rem;
-          background: #fff url("../../../static/image/interview/share-wechat.png") no-repeat center center / 50%;
-        }
-      }
-      .share-picture-right{
-        width: 4.2rem;
-        height: 4.3rem;
-        position: absolute;
-        top: 0;
-        left: 4rem;
-        margin: 0 7px;
-        .timeline{
-          width: 2rem;
-          height: 2rem;
-          border-radius: 0.5rem;
-          padding: 0.75rem;
-          background: #fff url("../../../static/image/interview/share-timeline.png") no-repeat center center / 50%;
-        }
-      }
-      img {
-        width: 2rem;
-        height: 2rem;
-        display: block;
-      }
-      .pic-bottom{
         text-align: center;
-        margin-left: -0.7rem;
+      }
+      .wechat,.timeline{
+        display: inline-block;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      .wechat{
+        background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
+      }
+      .timeline{
+        background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
+      }
+      .share-name{
+        width: 100%;
+        display: inline-block;
+        text-align: center;
         margin-top: .5rem;
       }
     }
-    @media all and (max-width: 320px){
-      .share-picture{
-        width: 45%;
-        height: 4.45rem;
-        margin: 2rem 4.17rem;
-        position: relative;
-      }
-    }
-    .share-article{
-      margin-bottom: 80/40rem;
-      font-size: 26/40rem;
+    .end{
+      font-size: 0.7rem;
       color: #aaa;
       text-align: center;
-      hr{
-        margin: 0.32rem .5rem;
-        width: 4.5rem;
-        height: 1px;
-        background: #aaa;
-        border: 0;
-        display: inline-block;
-      }
-      p{
-        margin: 0;
-      }
-      .share-btn{
-        display: inline-block;
-        margin: 60/40rem 40/40rem;
-        .share-icon{
-          display: block;
-          width: 100/40rem;
-          height: 100/40rem;
-          margin-bottom: 24/40rem;
-        }
-        .wechat{
-          background: #fff url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-        }
-        .timeline{
-          background: #fff url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-        }
-      }
     }
   }
 </style>
@@ -244,32 +177,35 @@
     },
     data () {
       return {
-        scrollerHeight: '590px',
+        scrollerHeight: '580px',
         rightOptions: {
           disabled: false
         },
         isLoadSuccess: false,
         isShowAction: false,
         channelConfig: { //分享浮层内容
-          menu1: '<div class="share-picture">' +
-                    '<div class="share-picture-left">' +
+          menu1: '<div class="share-box">' +
+                    '<div class="share-item">' +
                       '<div class="wechat"></div>' +
-                      '<div class="pic-bottom">微信好友</div>' +
+                      '<div class="share-name">微信好友</div>' +
                     '</div>' +
-                    '<div class="share-picture-right">' +
+                    '<div class="share-item">' +
                       '<div class="timeline"></div>' +
-                      '<div class="pic-bottom">微信朋友圈</div>' +
+                      '<div class="share-name">微信朋友圈</div>' +
                     '</div>' +
                   '</div>'
         }
       }
     },
+    watch: {
+      'interviewRecord' () {
+        this.setScrollerHeight()
+      }
+    },
     route: {
       data ({to: {params: {interviewId}}}) {
-        const me = this
         return this.loadInterviewRecord(interviewId).then(
           function () {
-            me.setScrollerHeight()
             return {
               isLoadSuccess: true
             }
