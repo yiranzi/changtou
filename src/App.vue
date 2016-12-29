@@ -141,7 +141,8 @@
   @import "assets/styles/animate.less";
   html {
     height: 100%;
-    font-family: "Microsoft YaHei" ! important;
+    /*font-family: "Microsoft YaHei" ! important;*/
+    font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
     overflow-x: hidden;
   }
 
