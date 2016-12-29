@@ -50,29 +50,29 @@
           </div>
       </div>
 
-      <div class="acquisition-box" v-if="subject.acquisitions && subject.acquisitions.length > 0">
-        <div class="title-babel">
-          <span>学习收获</span>
-        </div>
-        <div v-for="qu in subject.acquisitions" class="acquisition-item">
-          <div class="a-left">
-            <img v-bind:src="qu.pic" alt="" class="a-img">
+        <div class="acquisition-box" v-if="subject.acquisitions && subject.acquisitions.length > 0">
+          <div class="title-babel">
+            <span>学习收获</span>
           </div>
-          <div class="a-right">
-            <p>{{qu.content.split('--')[0]}}</p>
-            <p>{{qu.content.split('--')[1]}}</p>
+          <div v-for="qu in subject.acquisitions" class="acquisition-item">
+            <div class="a-left">
+              <img v-bind:src="qu.pic" alt="" class="a-img">
+            </div>
+            <div class="a-right">
+              <p>{{qu.content.split('--')[0]}}</p>
+              <p>{{qu.content.split('--')[1]}}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div v-if="subject.studentFeedbackUrl">
-        <div class="title-babel" style="margin-top: 1.25rem">
-          <span>学员评价</span>
+        <div v-if="subject.studentFeedbackUrl">
+          <div class="title-babel" style="margin-top: 1.25rem">
+            <span>学员评价</span>
+          </div>
+          <div style="margin-top: 0.75rem; text-align: center">
+            <img v-bind:src="subject.studentFeedbackUrl" style="height: 15rem; width: 13rem;">
+          </div>
         </div>
-        <div style="margin-top: 0.75rem; text-align: center">
-          <img v-bind:src="subject.studentFeedbackUrl" style="height: 15rem; width: 13rem;">
-        </div>
-      </div>
 
         <div class="notice-box" v-if="subject.notice && subject.notice.length > 0">
           <div class="title-babel">
@@ -82,21 +82,21 @@
           <p>{{$index+1}}. {{{item}}}</p>
         </div>
       </div>
+      </div>
 
-        <div class="custom-divider" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
-          <div class="left"><hr class="line"/></div>
-          <div>发现好课</div>
-          <div class="right"><hr class="line"/></div>
-        </div>
+      <div class="custom-divider" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
+        <div class="left"><hr class="line"/></div>
+        <div class="text">发现好课</div>
+        <div class="right"><hr class="line"/></div>
+      </div>
 
-        <div class="lessons-box" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
-          <div v-for="item in subject.similarSubjects" class="lesson-item" v-touch:tap="goTolesson(item)">
-            <div><img v-bind:src="item.pic" alt="" class="l-img"></div>
-            <div class="l-title">{{item.title}}</div>
-            <div class="l-price">￥{{item.price}}</div>
-          </div>
+      <div class="lessons-box" v-if="subject.similarSubjects && subject.similarSubjects.length > 0">
+        <div v-for="item in subject.similarSubjects" class="lesson-item" v-touch:tap="goTolesson(item)">
+          <div><img v-bind:src="item.pic" alt="" class="l-img"></div>
+          <div class="l-title">{{item.title}}</div>
+          <div class="l-price">￥{{item.price}}</div>
         </div>
-    </div>
+      </div>
   </div>
     <div style="height:1rem; background-color: #fff"></div>
   </div>
@@ -194,7 +194,8 @@
 
     .custom-divider {
       margin-top: 60/40rem;
-      margin-right: 50/40rem;
+      margin-left: 1.8rem;
+      margin-right: 1.8rem;
       display: flex;
       font-size: 30/40rem;
       color: #00b0f0;
@@ -202,6 +203,10 @@
         height: 1px;
         background-color: #00b0f0;
         border: none;
+      }
+      .text {
+        width: 4rem;
+        text-align: center;
       }
       .left, .right{
         flex: 1;
@@ -397,34 +402,44 @@
 
     .lessons-box {
       position: relative;
-      left: -0.6rem;
-      margin-top: 30/40rem;
+      margin-top: 20/40rem;
+      margin-bottom: 0.5rem;
       display: flex;
       flex-flow: row wrap;
       justify-content: center;
       .lesson-item {
         margin-top: 20/40rem;
-        flex: 0 0 48%;
+        flex: 0 0 50%;
         text-align:center;
+        box-sizing: border-box;
+        padding-left: 0.175rem;
+        padding-right: 0.7rem;
 
         .l-img {
-          width: 95%;
+          width: 100%;
+          height: 4.5rem;
         }
         .l-title {
+          box-sizing: border-box;
           text-align: left;
-          margin-top: 10/40rem;
+          /*margin-top: 10/40rem;*/
+          line-height: 1rem;
           font-size: 28/40rem;
           color: #000;
         }
         .l-price {
+          box-sizing: border-box;
           text-align: left;
-          margin-top: 10/40rem;
-          font-size: 28/40rem;
+          line-height: 1rem;
+          font-size: 30/40rem;
           color: #ff5b45;
         }
       }
       .lesson-item:nth-of-type(2n+1) {
-        margin: 20/40rem 2% 0 0;
+        margin: 20/40rem 0 0.5rem 0;
+        box-sizing: border-box;
+        padding-left: 0.7rem;
+        padding-right: 0.175rem;
       }
     }
   }
