@@ -111,7 +111,7 @@
       padding-top: 40%;
     }
     .weui_actionsheet_cell{
-      height: 9rem;
+      height: 7rem;
       background-color: #DCDCDC;
     }
     .vux-actionsheet-gap{
