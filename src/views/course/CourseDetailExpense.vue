@@ -49,7 +49,7 @@
       </div>
 
       <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
+        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活课程</ict-button>
       </div>
 
       <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
