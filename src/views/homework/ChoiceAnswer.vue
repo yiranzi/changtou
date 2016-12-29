@@ -395,7 +395,7 @@ export default {
         padding: 0;
         font-family: 'myicon';
         content: '\e90d';
-        font-size: .8rem!important;
+        font-size: .7rem!important;
         color: #aaa;
         right: 0;
         top: 0;
