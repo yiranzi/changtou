@@ -59,7 +59,7 @@ const mixin = {
       this.jpushInit()
       // 默认用户 设置成'00'
       this.jpushSetAlias('00')
-      //
+      //传入路由对象用于跳转页面
       this.jpushSetRouter(this.$route.router)
 
       // 增加推送消息接收处理
