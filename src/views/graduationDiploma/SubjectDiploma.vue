@@ -40,7 +40,7 @@
                 <p>随机积分</p>
               </div>
             </div>
-            <div class="draw-stamps" :class="{'draw-stamps-disabled': diplomaDetails.drawStatus !== drawStatus.undraw}" v-if="diplomaDetails && diplomaDetails.drawStatus === drawStatus.draw">
+            <div class="draw-stamps" :class="{'draw-stamps-disabled': diplomaDetails.integralTicket.isUsed !== ticketStatus.unused}" v-if="diplomaDetails && diplomaDetails.drawStatus === drawStatus.draw">
               <span class="status-label"
               :class="{'expired': integralTicketCls.expired,'used': integralTicketCls.used}"></span>
               <p class="app-label">APP专享</p>
@@ -177,7 +177,7 @@
             this.showMask({
               component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
-              data: `${integral}`,
+              componentData: `${integral}`,
               callbackName: 'graduationVolumeConfirm',
               callbackFn: () => {}
             })

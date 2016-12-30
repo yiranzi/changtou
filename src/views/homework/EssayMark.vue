@@ -38,7 +38,6 @@
 export default {
   vuex: {
     getters: {
-      lessonId: essayGetters.essayLessonId,
       userName: userGetters.userName,
       articleId: essayGetters.articleId,
       essayAnswer: essayGetters.essayAnswer,
@@ -46,6 +45,12 @@ export default {
       remarkList: essayGetters.remarkList,
       score: essayGetters.score,
       status: essayGetters.status
+    }
+  },
+  data () {
+    return {
+      subjectId: 0,
+      lessonId: 0
     }
   },
   computed: {
@@ -56,12 +61,18 @@ export default {
       return this.status !== 3
     }
   },
+  route: {
+    data ({to: {params}}) {
+      this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
+    }
+  },
   methods: {
     /**
      * 点击编辑作业
      */
     editAnswer () {
-      this.$route.router.go(`/homework/essay/answer/${this.lessonId}`)
+      this.$route.router.go(`/homework/essay/answer/${this.subjectId}/${this.lessonId}`)
     }
   },
   components: {

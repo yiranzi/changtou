@@ -20,7 +20,7 @@ export const loadAllExpenseRecords = ({ dispatch }) => {
     ).then(
       records => {
         dispatch('UPDATE_EXPENSE_RECORDS_ALL', records)
-        resolve()
+        resolve(records)
       },
       err => {
         console.warn(err)
@@ -49,7 +49,7 @@ export const loadOneSubjectExpenseRecord = ({ dispatch }, subjectId) => {
         if (records.length) {
           dispatch('UPDATE_EXPENSE_RECORD_ONE_SUBJECT', records[0])
         }
-        resolve()
+        resolve(records)
       },
       err => {
         console.warn(err)
