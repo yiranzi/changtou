@@ -18,6 +18,7 @@ export const eventMap = {
   HIDE_MASK: 'hide_mask', // 浮层 消失
   SUBJECT_GRADUATION: 'subject_graduation', // 课程毕业
   STATISTIC_EVENT: 'statistics_event', // 数据统计
-  VIEW_CHANGE: 'view_change' // 页面切换
+  VIEW_CHANGE: 'view_change', // 页面切换
+  ACTIVE_TAB: 'active_tab' //激活首页tab
 }
 
