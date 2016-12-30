@@ -50,6 +50,7 @@
   import {myCoursesActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
+  import {eventMap} from '../../frame/eventConfig'
 export default {
   vuex: {
     getters: {
@@ -110,6 +111,7 @@ export default {
   },
   route: {
     data () {
+      this.$dispatch(eventMap.ACTIVE_TAB, 1)
       setLocalCache('statistics-entry-page', {entryPage: '我的课程'})
       let promiseArray = []
       const me = this

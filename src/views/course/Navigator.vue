@@ -106,6 +106,7 @@
 
     route: {
       data () {
+        this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         this.$nextTick(() => {
           this.$refs.scroller.reset({
