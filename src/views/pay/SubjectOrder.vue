@@ -16,6 +16,7 @@
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {courseRecordActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -25,6 +26,9 @@
       getters: {
         isLogin: userGetters.isLogin,
         expenseRecords: courseRecordsGetters.expenseRecords
+      },
+      actions: {
+        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
     data () {
@@ -254,17 +258,69 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
+            if (result && result.type === dealType.WX_CODE) {
+            // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.onPayFinish()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
-        (err) => me.onPayFail(err)
-      )
+
+      /**
+       * 支付结束
+       */
+      onPayFinish () {
+        const me = this
+        me.loadOneSubjectExpenseRecord(me.subjectId).then(
+          function (records) {
+            if (records.length > 0) {
+              me.goToPaySuccess()
+            } else {
+              setTimeout(
+                function () {
+                  me.loadOneSubjectExpenseRecord(me.subjectId).then(
+                    function (records) {
+                      if (records.length > 0) {
+                        me.goToPaySuccess()
+                      } else {
+                        me.onPayFail({
+                          type: errorType.FAIL,
+                          reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                        })
+                      }
+                    }
+                  )
+                },
+                3000
+              )
+            }
+          }
+        ).catch(
+          setTimeout(
+            function () {
+              me.loadOneSubjectExpenseRecord(me.subjectId).then(
+                function (records) {
+                  if (records.length > 0) {
+                    me.goToPaySuccess()
+                  } else {
+                    me.onPayFail({
+                      type: errorType.FAIL,
+                      reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                    })
+                  }
+                }
+              )
+            },
+            3000
+          )
+        )
       },
+
       /**
        * 跳转到 支付成功
        */
