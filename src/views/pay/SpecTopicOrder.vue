@@ -17,7 +17,7 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import {courseRecordActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
@@ -259,18 +259,19 @@
           trade: trade
         }).then(
           (result) => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.onPayFinish()
-        }
-      }).catch(
-        (err) => {
-          me.onPayFail(err)
-        }
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.onPayFinish()
+            }
+          }
+        ).catch(
+          (err) => {
+            me.onPayFail(err)
+          }
+        )
       },
 
       /**
