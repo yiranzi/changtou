@@ -207,7 +207,6 @@
   import {interviewGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-//  import {SEVER_URL} from '../../frame/serverConfig'
   export default {
     vuex: {
       actions: {

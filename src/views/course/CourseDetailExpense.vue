@@ -4,7 +4,7 @@
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
-             alt="" style="height: 12rem; width: 100%; display: block">
+             alt="" style="height: 13rem; width: 100%; display: block">
 
         <!--ppt-->
         <ppt-panel v-if="hasValidChapterClicked" :ppts="currPpts"></ppt-panel>
@@ -49,7 +49,7 @@
       </div>
 
       <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
+        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活课程</ict-button>
       </div>
 
       <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
