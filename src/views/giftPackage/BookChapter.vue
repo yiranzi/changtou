@@ -67,7 +67,6 @@
               color: #ccc !important;
             }
           }
-
           .book-index:nth-child(2),.book-title:nth-child(2){color: #666;}
           .book-index:nth-child(2){
             font-size: .7rem;
@@ -127,9 +126,6 @@
     @media (min-height: 640px) and (max-height: 640px) {
       .book-paganition{
         top: 75% !important;
-      }
-      .book-use-top{
-
       }
       .book-title:nth-child(3){
         margin-bottom: .8rem !important;
