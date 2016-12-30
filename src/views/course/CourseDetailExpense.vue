@@ -279,12 +279,10 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         this.isQuestionPlaced = false
-        console.log('start', parseInt(this.subjectId))
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
-        // TODO code muse be more concise
          if (from.path && from.path.indexOf('questionNaire/') > -1) {
           this.isQuestionPlaced = false
         }
@@ -478,7 +476,6 @@
 
     ready () {
       this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-       //       console.log(this.currRecord.startDate)
     },
 
     /**

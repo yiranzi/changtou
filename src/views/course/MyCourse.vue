@@ -30,27 +30,23 @@
             <span class="help-icon" v-touch:tap="onCardHelpIconTap"></span>
           </div>
 
-          <!-- 设置 电子书 入口 可记录阅读进度-->
-        <div class="read-book-list" v-if="isShowEBook">
-          <div class="course-list read-book-item" v-for="course in readBookList">
-            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png'>
-            <div class="course-list-info" v-touch:tap="gotoReadBook">
-              <p class="course-list-title">{{course.title}}</p>
-              <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state">{{readTotalNum}}人阅读过</p>
-            </div>
-            <span class="read-book-tip">伴学礼包</span>
-          </div>
-        </div>
-          <!--                            end-->
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
-          <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
-            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
+          <div class="course-list" v-for="course in courseList" track-by="$index" :class=" $index === parseInt(this.expenseRecords.length)?'read-book-item':'' ">
+            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic v-if="$index !== parseInt(this.expenseRecords.length)">
+            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length)">
+            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" v-if="$index !== parseInt(this.expenseRecords.length)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state">{{course.status}}</p>
+              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
             </div>
+            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length)">
+              <p class="course-list-title">{{course.title}}</p>
+              <p class="course-list-subtitle">{{course.subtitle}}</p>
+              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
+            </div>
+            <span class="read-book-tip" v-if="$index === parseInt(this.expenseRecords.length)">伴学礼包</span>
           </div>
         </div>
       </scroller>
@@ -89,9 +85,10 @@
       courseList: [], //课程列表
       isShowEBook: false, // 是否显示电子书
       readTotalNum: 0,  // 阅读电子书人数
+      isBookPlacedDown: false, // 已购买课程放在付费课程之下
       readBookList: [  //
         {
-          'pic': '../../assets/styles/image/giftPackage/readIcon.png',
+          'pic': 'src/assets/styles/image/giftPackage/readIcon.png',
           'title': '大熊股市历险记',
           'subtitle': '阅读材料'
         }
@@ -141,19 +138,6 @@
         promiseArray = [this.loadDefaultCourses()]
       }
 
-      // 是否显示电子书
-        me.receiveGiftPackage().then(
-           (message) => {
-           }).catch(function (err) {
-            if (err.message === '您已领取过新手礼包') {
-              me.isShowEBook = true
-              if (me.expenseRecords.length > 0) {
-                let readBookList = document.getElementsByClassName('read-book-list')[0]
-                me.priInsertAfter(readBookList, document.getElementsByClassName('course-list')[parseInt(me.expenseRecords.length)])
-              }
-            }
-        })
-
       // 获取电子书阅读人数
        const bookId = 1
        this.getBookProgress(bookId).then(
@@ -174,10 +158,26 @@
           setTimeout(
             function () {
               me.arrangeList()
+              me.courseList.splice(me.expenseRecords.length, 0, me.readBookList[0])
               me.setScrollerHeight()
             }, 300)
         }
       )
+    },
+    activate ({from, next}) {
+        // 是否显示电子书
+        const me = this
+        me.receiveGiftPackage().then(
+           (message) => {
+           }).catch(function (err) {
+            if (err.message === '您已领取过新手礼包') {
+              if (me.expenseRecords.length > 0) {
+                me.isShowEBook = true
+                me.isBookPlacedDown = true
+              }
+            }
+        })
+        next()
     }
   },
   ready () {
@@ -205,19 +205,6 @@
         }
       )
     },
-    /**
-     *  插入DOM方法，用来显示电子书在不同状态下情况。
-     */
-     priInsertAfter (newElement, targetElement) {
-        let parent = targetElement.parentNode
-        if (parent.lastChild === targetElement) {
-        // 如果最后的节点是目标元素，则直接添加。因为默认是最后
-        parent.appendChild(newElement)
-        } else {
-        parent.insertBefore(newElement, targetElement.nextSibling)
-        //如果不是，则插入在目标元素的下一个兄弟节点 的前面。也就是目标元素的后面
-        }
-     },
     /**
      * 设置滚动高度
      */
@@ -480,7 +467,7 @@
         color: #00b0f0;
       }
     }
-    .course-list{
+    .course-list, .read-book-item{
       background: #fff;
       overflow: hidden;
       border-bottom: 1px solid #f0eff5;
