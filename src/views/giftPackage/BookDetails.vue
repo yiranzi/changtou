@@ -120,7 +120,7 @@ export default {
            if (res === '' || res === undefined || res === null) {
               // doNothing
             } else {
-              let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 604800000)   // 一周的毫秒数 每一周放置一章
+              let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 7 * 24 * 60 * 60 * 1000)   // 一周的毫秒数 每一周放置一章
                 if (setChapterNum < 1 && setChapterNum >= 0) {
                   me.bookTitleList = me.bookTitleList.splice(0, 1)
                 } else {
@@ -142,6 +142,9 @@ export default {
     Scroller
   },
   methods: {
+    /**
+    *  去对应的章节数
+    */
     gotoChapterDetails (currIndex) {
      this.$route.router.go(`/giftPackage/bookChapter/${currIndex}`)
     },

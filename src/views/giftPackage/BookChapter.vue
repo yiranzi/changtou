@@ -277,6 +277,9 @@ export default {
     this.setScrollerHeight()
   },
   methods: {
+    /**
+    *  更新阅读进度
+    */
     updateChapterProgress () {
      const me = this
      const bookId = 1
@@ -308,9 +311,15 @@ export default {
         })
         }, 150)
     },
+    /**
+    *  去图书详细页
+    */
     gotoBookDetail () {
       this.$route.router.go('giftPackage/newerBookDetails')
     },
+    /**
+    *  目录幕布
+    */
     gotoSetMask () {
       this.showIndexMask = !this.showIndexMask
     }

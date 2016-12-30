@@ -236,9 +236,7 @@
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
         showChoice: false,
-        isQuestionPlaced: false,  //是否放置提问按钮
-        expireDate: null, // 课程过期时间
-        currDate: null    // 当前日期
+        isQuestionPlaced: false  //是否放置提问按钮
       }
     },
 
@@ -295,23 +293,16 @@
           if (me.currStatus !== 'N') {
            me.isQuestionPlaced = false
            } else {
-          if (me.expenseRecordsArr.length !== 0) {
-            for (var i = 0; i < me.expenseRecordsArr.length; i++) {
-            if (parseInt(me.expenseRecordsArr[i]['subjectId']) === parseInt(me.subjectId)) {
-              me.expireDate = parseInt(new Date(me.expenseRecordsArr[i]['lessonSet'].initDate).getTime() + 2592000000)  // 此数值是指一周的毫秒数，用于对比时间差
-            }
-          }
-        }
         // 提问入口按钮显示逻辑
-        me.isSubmitQuestionNaire(questionnaireId).then(
-          function (isSubmit) {
-            if (!isSubmit && me.isUserLogin && me.currDate < me.expireDate) {  // 未提交放置按钮
-              if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
-                me.isQuestionPlaced = true
+            me.isSubmitQuestionNaire(questionnaireId).then(
+              function (isSubmit) {
+                if (!isSubmit && me.isUserLogin) {  // 未提交放置按钮
+                  if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                    me.isQuestionPlaced = true
+                  }
+                }
               }
-            }
-          }
-         )
+             )
            }
        }
        , 300)
