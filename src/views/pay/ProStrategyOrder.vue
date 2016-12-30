@@ -156,7 +156,6 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        setLocalCache('strategy-period', {period: parseInt(periodIndex) ? '两年' : '一年'})
         this.selectedPeriodIndex = periodIndex
         this.selectedPeriod = this.periods[periodIndex]
       },
@@ -208,6 +207,7 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        setLocalCache('strategy-period', {period: parseInt(this.selectedPeriodIndex) ? '两年' : '一年'})
         this.statisticData = {
           '实付': this.sum,
           '商品名称': this.periods[this.selectedPeriodIndex].name
