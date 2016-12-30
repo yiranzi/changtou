@@ -9,7 +9,7 @@
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
       <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
+      <textarea v-model="answer" placeholder="请写下你的作业内容" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
@@ -45,9 +45,10 @@ export default {
   },
   data () {
     return {
+      subjectId: 0,
+      lessonId: 0,
       timer: 0,
       canDraft: false, //是否可以保存草稿
-      lessonId: 0,
       rightOptions: { //titlebar
         callback: '',
         disabled: true
@@ -85,6 +86,7 @@ export default {
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       this.getQuestion(this.lessonId)
       this.answer = this.essayAnswer
       setTimeout(

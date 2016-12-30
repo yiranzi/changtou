@@ -11,11 +11,12 @@
             <ict-input title="手机号"
                      title-position="left"
                      placeholder="输入手机号"
+                     type="tel"
                      :value.sync="phone">
             </ict-input>
           </flexbox-item>
           <ict-button type="mini"
-                      :disabled="isPhoneValid"
+                      :disabled="!isPhoneValid || isValidationBtnDisable"
                       @click="getValidationCode"
                       :text="validationBtnText">
           </ict-button>
@@ -23,6 +24,7 @@
         <flexbox>
           <flexbox-item>
             <ict-input title="验证码"
+                     type="tel"
                      title-position="left"
                      placeholder="输入验证码"
                      right-title="10分钟内有效"
@@ -61,6 +63,7 @@ export default {
     return {
       errTip: '',
       phone: '',
+      isPhoneValid: false,
       validationCode: '',
       validationBtnText: '获取验证码',
       isValidationBtnDisable: false,
@@ -72,15 +75,13 @@ export default {
   computed: {
     show () {
       return !this.isLogin
-    },
-    isPhoneValid () {
-      return !(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))
     }
   },
 
   watch: {
     phone (newPhone) {
       this.errTip = ''
+      this.isPhoneValid = (/^1[3|4|5|7|8]\d{9}$/.test(newPhone))
     },
     validationCode (newCode) {
       this.errTip = ''

@@ -17,8 +17,9 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PaySubject from '../../components/payment/PaySubject.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {courseRecordActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -28,6 +29,9 @@
       getters: {
         isLogin: userGetters.isLogin,
         expenseRecords: courseRecordsGetters.expenseRecords
+      },
+      actions: {
+        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
     data () {
@@ -36,7 +40,6 @@
         price: 0, // 价格
         courseList: [], //课程列表
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -44,6 +47,10 @@
       }
     },
     computed: {
+      // 专题中的第一个subjectId 用于判断是否购买成功
+      subjectId () {
+        return this.courseList.length > 0 ? this.courseList[0].subjectId : 0
+      },
       // 选择的优惠 优惠金额
       selectedCouponUserBene () {
         return this.coupons.length > 0 ? this.coupons[this.selectedCouponIndex].userBene : 0
@@ -80,6 +87,9 @@
           }
         }
         return true
+      },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
       },
       // 支付按钮 信息
       btnOptions () {
@@ -120,7 +130,6 @@
         this.price = 0 // 价格
         this.courseList = [] //课程列表
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
@@ -137,7 +146,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -250,18 +258,88 @@
           isSubscriber: me.$route.query.subscriber,
           trade: trade
         }).then(
-          result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
+          (result) => {
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.onPayFinish()
+            }
+          }
+        ).catch(
+          (err) => {
+            me.onPayFail(err)
+          }
+        )
       },
-        (err) => me.onPayFail(err)
-      )
+
+      /**
+       * 支付结束
+       */
+      onPayFinish () {
+        const me = this
+        me.loadAllExpenseRecords().then(
+          function (records) {
+            if (!me.canUserBuy) {
+              me.goToPaySuccess()
+            } else {
+              setTimeout(
+                function () {
+                  me.loadAllExpenseRecords().then(
+                    function (records) {
+                      if (!me.canUserBuy) {
+                        me.goToPaySuccess()
+                      } else {
+                        me.onPayFail({
+                          type: errorType.FAIL,
+                          reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                        })
+                      }
+                    }
+                  ).catch(
+                    function () {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
+                  )
+                },
+                3000
+              )
+            }
+          }
+        ).catch(
+          function () {
+            setTimeout(
+              function () {
+                me.loadAllExpenseRecords().then(
+                  function (records) {
+                    if (!me.canUserBuy) {
+                      me.goToPaySuccess()
+                    } else {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
+                  }
+                ).catch(
+                  function () {
+                    me.onPayFail({
+                      type: errorType.FAIL,
+                      reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                    })
+                  }
+                )
+              },
+              3000
+            )
+          }
+        )
       },
+
       /**
        * 跳转到 支付成功页
        */

@@ -13,6 +13,8 @@
              @focus="onFocus"
              v-el:input >
       <span class="eye" v-touch:tap="toggle" v-bind:class="{'hide': isHidePassword}" v-if="isShowToggle"></span>
+      <!--默认右边 spacer-->
+      <span class="spacer" style="width: 20px" v-if="!isShowToggle"></span>
       <label v-if="rightTitle" class="right-title">{{rightTitle}}</label>
     </div>
 
@@ -143,7 +145,7 @@
       .title {
         font-size: 0.75rem;
         font-weight: bold;
-        width: 4.5rem;
+        min-width: 3.5rem;
       }
 
       input {
@@ -169,6 +171,7 @@
         font-size: 0.75rem;
         color: inherit;
         background-color: transparent;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
 
       .eye {
@@ -186,6 +189,7 @@
       .right-title {
         font-size: 0.65rem;
         color: #aaa;
+        min-width: 4.5rem;
       }
       .hide::before {
         color: #bbb;

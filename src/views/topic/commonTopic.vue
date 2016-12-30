@@ -92,20 +92,7 @@
     watch: {
       'commonTopicInfo.content' () {
         this.isTopicLoaded = true
-      },
-      'isTopicLoaded' (newFlag) {
-        if (!newFlag) {
-          return
-        }
-        var me = this
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.btn.offsetHeight : 0) + 'px'
-            me.$refs.scroller.reset({
-              top: 0
-            })
-        })
-        }, 2000)
+        this.setScrollerHeight()
       }
     },
     route: {
@@ -138,6 +125,20 @@
           component: require('../pay/CommonTopicOrder.vue')
         })
         this.$route.router.go(path)
+      },
+      /**
+       * 设置 滚动范围高度
+       */
+      setScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.btn.offsetHeight : 0) + 'px'
+          me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 2000)
       }
     },
     components: {

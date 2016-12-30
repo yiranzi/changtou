@@ -6,7 +6,7 @@
   <div class="order-vip-strategy">
     <pay-base v-ref:pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
-      <pay-period :periods="periods"></pay-period>
+      <pay-period :periods="periods" :value.sync="periodValue"></pay-period>
       <div v-if="proLeftDays && selectedDeduction" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
     </pay-base>
   </div>
@@ -15,7 +15,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
@@ -39,7 +39,6 @@
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
@@ -49,6 +48,7 @@
         deductions: [0], // pro 抵扣列表
         selectedDeduction: 0, // 选择的 抵扣金额
         proLeftDays: 0, // pro 剩余时间
+        periodValue: '0',
         statisticData: null //统计数据
       }
     },
@@ -72,6 +72,9 @@
       // 实付金额
       sum () {
         return this.total - this.toubi
+      },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
       },
       // 支付按钮 信息
       btnOptions () {
@@ -134,7 +137,6 @@
         this.pic = '' // 图片
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
@@ -145,7 +147,7 @@
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
-
+        this.periodValue = '0'
         // 关闭监听事件
         const {payBase} = this.$refs
         payBase.stopListenToHeightChange()
@@ -156,14 +158,12 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        setLocalCache('strategy-period', {period: parseInt(periodIndex) ? '两年' : '一年'})
         this.selectedPeriodIndex = periodIndex
         this.selectedPeriod = this.periods[periodIndex]
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -210,6 +210,7 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        setLocalCache('strategy-period', {period: parseInt(this.selectedPeriodIndex) ? '两年' : '一年'})
         this.statisticData = {
           '实付': this.sum,
           '商品名称': this.periods[this.selectedPeriodIndex].name
@@ -255,16 +256,17 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
-      },
-        (err) => me.onPayFail(err)
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.goToPaySuccess()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
       /**
        * 跳转到 支付成功

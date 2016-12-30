@@ -58,6 +58,7 @@
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {eventMap} from '../../frame/eventConfig'
   export default {
     vuex: {
       actions: {
@@ -109,6 +110,7 @@
 
     route: {
       data () {
+        this.$dispatch(eventMap.ACTIVE_TAB, 2)
         return Promise.resolve().then(this.setScrollerHeight)
       }
     },

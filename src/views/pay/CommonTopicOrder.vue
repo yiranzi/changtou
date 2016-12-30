@@ -18,7 +18,7 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
@@ -38,7 +38,6 @@
         itemId: 0, // 交易项目标识
         mchantType: 0, // 商品类型
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -65,6 +64,9 @@
       // 实付金额
       sum () {
         return this.total - this.toubi
+      },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
       },
       // 支付按钮 信息
       btnOptions () {
@@ -104,7 +106,6 @@
         this.itemId = 0 // 交易项目标识
         this.mchantType = 0 // 商品类型
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
@@ -121,7 +122,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -215,16 +215,17 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
-      },
-        (err) => me.onPayFail(err)
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.goToPaySuccess()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
       goToPaySuccess () {
         this.hideLoading()

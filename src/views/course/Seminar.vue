@@ -4,7 +4,8 @@
  */
 <template>
   <div style="height: 100%;" class="seminar-detail">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <ict-back-btn></ict-back-btn>
+
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <img v-if="!hasValidChapterClicked" v-bind:src="seminar ? seminar.promotion : './static/image/subject/intro-mini-pic.png'"
@@ -26,24 +27,6 @@
 </template>
 <style lang="less">
   .seminar-detail {
-    .top-back-btn {
-      position: absolute;
-      height: 2rem;
-      width: 2rem;
-      top: 0.3rem;
-      left: 1rem;
-      z-index: 20;
-    }
-    .top-back-btn:before {
-      position: absolute;
-      display: inline-block;
-      font-family: 'myicon';
-      content: '\e91b';
-      font-size: 1.6rem !important;
-      line-height: 2rem;
-      width: 2rem;
-      color: #999;
-    }
     .vux-tab-item {
       font-size: 0.85rem;
     }
@@ -86,6 +69,7 @@
 </style>
 
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import WebAudio from '../../components/WebAudio.vue'
   import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Content from '../../components/IctSeminarContent.vue'
@@ -244,7 +228,8 @@
       WebAudio,
       Scroller,
       Content,
-      PptPanel
+      PptPanel,
+      IctBackBtn
     }
   }
 </script>

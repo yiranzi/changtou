@@ -106,6 +106,7 @@
 
     route: {
       data () {
+        this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         this.$nextTick(() => {
           this.$refs.scroller.reset({
@@ -479,7 +480,7 @@
       p{
         font-size: 0.65rem;
         color: #aaa;
-        margin: 1rem 0 1.25rem;
+        margin: 1rem 0 0;
       }
     }
     /*每日一题*/

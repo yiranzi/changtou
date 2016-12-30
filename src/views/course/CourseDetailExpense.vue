@@ -1,6 +1,7 @@
 <template>
   <div style="height: 100%;" class="subject-detail">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <ict-back-btn></ict-back-btn>
+
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
@@ -17,12 +18,12 @@
 
         <!--简介和目录-->
         <div v-show="1" style="height: 100%; background-color: #fff">
-          <sticky>
+          <div>
             <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
               <tab-item class="vux-center" :selected="currTabItem === 's'">简介</tab-item>
               <tab-item class="vux-center" :selected="currTabItem === 'c'">目录</tab-item>
             </tab>
-          </sticky>
+          </div>
 
           <!--简介-->
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
@@ -71,25 +72,6 @@
 </template>
 <style lang="less">
   .subject-detail {
-    .top-back-btn {
-      position: absolute;
-      height: 2rem;
-      width: 2rem;
-      top: 0.3rem;
-      left: 1rem;
-      z-index: 20;
-    }
-    .top-back-btn:before {
-      position: absolute;
-      display: inline-block;
-      font-family: 'myicon';
-      content: '\e91b';
-      font-size: 1.6rem !important;
-      line-height: 2rem;
-      width: 2rem;
-      color: #999;
-    }
-
     .vux-tab-item {
       font-size: 0.85rem;
     }
@@ -134,6 +116,7 @@
 
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import WebAudio from '../../components/WebAudio.vue'
   import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
@@ -144,7 +127,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -172,9 +155,7 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        getDiplomaList: graduationDiplomaActions.getDiplomaList,
-
-        syncHomeworkList: homeworkListActions.getHomeworkList,
+        syncHomeworkList: homeworkListActions.getHomeworkList
         updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
@@ -255,23 +236,8 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
-        const me = this
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
-        } else if (from.path && /\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
-          //做完课程最后一课选择题 拉取毕业奖状列表
-          me.getDiplomaList().then(
-            (newDiploma) => {
-              const subjectDiploma = newDiploma.find(
-                function (diploma) {
-                  return diploma.subjectId === parseInt(me.subjectId)
-                }
-              )
-              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
-              }
-            }
-          )
         } else {
           if (this.subjectId !== subjectId) {
             this.showLoading()
@@ -505,7 +471,7 @@
           report => {
             if (report.kpScore) {
               // 做过选择题
-              me.$route.router.go('/homework/choice/mark')
+              me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
             } else {
               // 没做过
               me.showChoice = true
@@ -564,7 +530,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-            () => me.$route.router.go(`/homework/essay/answer/${lessonId}`)
+            () => me.$route.router.go(`/homework/essay/answer/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -584,7 +550,7 @@
         const me = this
         const lessonId = LimitedLessonId || this.selectedLesson
         this.getArticle(lessonId).then(
-            () => me.$route.router.go('/homework/essay/mark')
+            () => me.$route.router.go(`/homework/essay/mark/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -606,7 +572,7 @@
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
             lessonid: this.selectedLesson.lessonId
           })
-          this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
+          this.$route.router.go(`/homework/essay/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
         }
       },
 
@@ -618,11 +584,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
           lessonid: this.selectedLesson.lessonId
         })
-        this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
-      },
-
-      back () {
-        window.history.back()
+        this.$route.router.go(`/homework/choice/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
       },
 
       /**
@@ -757,7 +719,7 @@
               // 有选择题
               confirmText = '去测试'
               confirmHandler = function () {
-                me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
               }
               msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
             } else {
@@ -1069,7 +1031,8 @@
       IctButton,
       choiceFloat,
       essayFloat,
-      PptPanel
+      PptPanel,
+      IctBackBtn
     }
   }
 </script>

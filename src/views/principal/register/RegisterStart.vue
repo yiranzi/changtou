@@ -7,6 +7,7 @@
 
     <ict-input title="账号"
              placeholder="输入手机号"
+             type="tel"
              id="register-start-phone"
              :value.sync="phone">
     </ict-input>
