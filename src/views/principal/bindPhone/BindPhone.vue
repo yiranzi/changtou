@@ -6,6 +6,7 @@
     </div>
 
     <ict-input title="手机号"
+             type="tel"
              placeholder="请输入新手机号"
              id="bind-phone-phone"
              :value.sync="phone">
