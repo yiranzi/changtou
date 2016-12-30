@@ -14,7 +14,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, getIntegral, dealType, pay, payChannel, errorType, transactionChannel} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
   import {courseRecordActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
@@ -259,7 +259,7 @@
           trade: trade
         }).then(
           result => {
-            if (result && result.type === dealType.WX_CODE) {
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
             // 扫码支付
               me.showCodePanel(result.url)
             } else {
@@ -268,7 +268,9 @@
             }
           }
         ).catch(
-          (err) => me.onPayFail(err)
+          (err) => {
+            me.onPayFail(err)
+          }
         )
       },
 

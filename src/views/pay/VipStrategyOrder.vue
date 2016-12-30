@@ -15,7 +15,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
@@ -158,7 +158,6 @@
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        setLocalCache('strategy-period', {period: parseInt(periodIndex) ? '两年' : '一年'})
         this.selectedPeriodIndex = periodIndex
         this.selectedPeriod = this.periods[periodIndex]
       },
@@ -211,6 +210,7 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        setLocalCache('strategy-period', {period: parseInt(this.selectedPeriodIndex) ? '两年' : '一年'})
         this.statisticData = {
           '实付': this.sum,
           '商品名称': this.periods[this.selectedPeriodIndex].name
@@ -256,16 +256,17 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
-      },
-        (err) => me.onPayFail(err)
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.goToPaySuccess()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
       /**
        * 跳转到 支付成功
