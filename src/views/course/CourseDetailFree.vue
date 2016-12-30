@@ -15,12 +15,12 @@
 
         <!--简介和目录-->
         <div v-show="1" style="height: 100%; background-color: #fff">
-          <sticky>
+          <div>
             <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
               <tab-item class="vux-center" :selected="currTabItem === 's'">简介</tab-item>
               <tab-item class="vux-center" :selected="currTabItem === 'c'">目录</tab-item>
             </tab>
-          </sticky>
+          </div>
 
           <specific v-show='currTabIndex === 0' :subject="currSubject"></specific>
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
