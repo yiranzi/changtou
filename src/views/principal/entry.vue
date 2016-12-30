@@ -41,17 +41,14 @@
         <p class="third-text">第三方登录</p>
         <i class="horizon-line"></i>
       </div>
-      <div v-if="isPopAuthContainer">
-      <div style="height: 0.5rem" class="spacer"></div>
-        <div class="third-icon-container">
-          <div class="third-icon" v-if="isQQShow">
-            <span class="third-icon-qq" v-touch:tap='onQQLoginTap'> </span>
-            <p>QQ登录</p>
-          </div>
-          <div class="third-icon" v-if="isWxShow">
-            <span class="third-icon-wx" v-touch:tap='onWxLoginTap'> </span>
-            <p>微信登录</p>
-          </div>
+      <div class="third-icon-container">
+        <div class="third-icon" v-if="isQQShow">
+          <span class="third-icon-qq" v-touch:tap='onQQLoginTap'> </span>
+          <p>QQ登录</p>
+        </div>
+        <div class="third-icon" v-if="isWxShow">
+          <span class="third-icon-wx" v-touch:tap='onWxLoginTap'> </span>
+          <p>微信登录</p>
         </div>
       </div>
     </div>
@@ -414,13 +411,14 @@
     }
     .pop-animation {
       transition: 0.5s;
-      transform: translate3d(0,-3.5rem,0);
+      transform: translate3d(0,0,0);
     }
 
     .hide-animation {
       transition: 0.5s;
-      transform: translate3d(0,0,0);
+      transform: translate3d(0,5rem,0);
     }
+
     .third-party-container{
       position: absolute;
       bottom: 0;
@@ -430,6 +428,7 @@
       text-align: center;
     }
     .third-icon-container{
+      padding: 1rem 0;
       width:100%;
       font-size: 0;
       text-align: center;
