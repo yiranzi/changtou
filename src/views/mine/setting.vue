@@ -114,7 +114,7 @@
         const me = this
         this.loadingCouponList().then(
             function (couponList) {
-              if (JSON.stringify(couponList).length > 0) {
+              if (parseInt(couponList.length) > 0) {
                me.isCouponShow = true
               }
             }

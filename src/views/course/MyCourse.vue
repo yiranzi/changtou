@@ -34,7 +34,7 @@
           <div class="course-list" v-for="course in courseList" track-by="$index" :class=" $index === parseInt(this.expenseRecords.length)?'read-book-item':'' ">
             <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic v-if="$index !== parseInt(this.expenseRecords.length)">
             <!-- 电子书 背景 -->
-            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin">
+            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin && isShowEBook">
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" v-if="$index !== parseInt(this.expenseRecords.length)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
@@ -42,7 +42,7 @@
               <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
             </div>
             <!-- 电子书 介绍 -->
-            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin">
+            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin && isShowEBook">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
@@ -78,7 +78,8 @@
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
       loadUserCourses: myCoursesActions.loadUserCourses, // 下载 用户 我的课程 信息
       getBookProgress: giftActions.getBookProgress,   // 得到上次阅读进度
-      receiveGiftPackage: giftActions.receiveGiftPackage  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
+      receiveGiftPackage: giftActions.receiveGiftPackage,  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
+      isQualifyGiftPackage: giftActions.isQualifyGiftPackage
     }
   },
   data () {
@@ -154,16 +155,22 @@
       )
 
       // 是否显示电子书
-      me.receiveGiftPackage().then(
-        (message) => {
-          }).catch(function (err) {
+      this.isQualifyGiftPackage().then(
+        function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
+          if (!res.qualification) {
+            me.receiveGiftPackage().then(
+              (message) => {
+                }).catch(function (err) {
             if (err.message === '您已领取过新手礼包' && me.isLogin) {
               me.isShowEBook = true
             if (me.expenseRecords.length > 0) {
               me.isBookPlacedDown = true
             }
           }
-      })
+            })
+          }
+        }
+      )
 
       return Promise.all(promiseArray).then(
         function () {
