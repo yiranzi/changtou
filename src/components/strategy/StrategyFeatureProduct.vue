@@ -36,39 +36,44 @@ export default {
 </script>
 <style lang="less">
   .featured-strategy{
-    .strategy-suitable-product .strategy-options{
-      .strategy-header{
-        color:#fcbd00;
-        span{
+    .strategy-suitable-product {
+      .strategy-header {
+        color: #fcbd00;
+        span {
           color: #fdd766;
         }
       }
-      .strategy-up-item {
-        background: #ffab6d;
-        .strategy-options-subtitle{
-          padding-bottom: 0;
+      .strategy-options {
+        .strategy-up-item {
+          background: #ffab6d;
+          .strategy-options-subtitle {
+            padding-bottom: 0;
+          }
         }
-      }
-      .strategy-options-labels {
-         color: #ffab6d;
-      }
-      .strategy-options-intro {
-        background: #ffeee2;
-      }
-      .strategy-options-related-item {
-        background: #ffab6d;
-        &:nth-of-type(2){
-          background: #ffcda7;
-          .play-icon{
-            display: none;
+        .strategy-options-labels {
+          color: #ffab6d;
+        }
+        .strategy-options-intro {
+          background: #ffeee2;
+        }
+        .strategy-options-related-item {
+          background: #ffab6d;
+          &:nth-of-type(2) {
+            background: #ffcda7;
+            .play-icon {
+              display: none;
+            }
           }
         }
       }
     }
 
     .benefit{
-      padding: 1rem 2rem 0.5rem;
+      padding: 0.5rem 2rem;
       text-align: left;
+      p{
+        margin: 0;
+      }
       p{
         margin-bottom: 0.5rem;
         font-size: 0.65rem;

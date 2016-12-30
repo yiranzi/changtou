@@ -12,7 +12,9 @@
       </div>
 
       <div class="circleCtr" v-el:ctr
-           v-bind:style="{ transform: ctrTranslate}"></div>
+           v-bind:style="{ transform: ctrTranslate}">
+        <div class="circle-content"></div>
+      </div>
 
       <div class="progress-box" v-el:progress>
         <div class="progress" v-bind:style="{ width: ctrOffset + 'px' }"></div>
@@ -57,11 +59,21 @@
   }
 
   .circleCtr {
-    height: 12px;
-    width: 12px;
+    position: relative;
+    left: 4px;
+    height: 20px;
+    width: 20px;
     /*position: absolute;*/
-    border-radius: 6px;
-    background: rgb(0, 176, 240);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    .circle-content {
+      height: 12px;
+      width: 12px;
+      border-radius: 6px;
+      background: rgb(0, 176, 240);
+    }
     /*top: -8px;*/
   }
 
@@ -88,7 +100,7 @@
   }
 
   .timer {
-    width: 4rem;
+    width: 4.2rem;
     font-size: 12/20rem;
     font-weight: bold;
     color: #fff
@@ -122,6 +134,8 @@
 
     data () {
       return {
+        touchStartHandler: () => {},
+        touchEndHandler: () => {},
         isEmptyTipShow: false,
         isInitListeners: false,
         intervalId: 0,
@@ -154,6 +168,7 @@
           this.isInitListeners = true
           this.addDragEvents()
           this.addAudioListens()
+          this.initStatus()
           this.startTimerTask()
         }
 
@@ -227,6 +242,7 @@
 
         ctr.addEventListener('touchstart', ({changedTouches}) => {
           this.stopTimerTask()
+          this.touchStartHandler()
         })
 
         ctr.addEventListener('touchmove', ({changedTouches, target}) => {
@@ -247,6 +263,7 @@
         ctr.addEventListener('touchend', ({changedTouches, target}) => {
           this.startTimerTask()
           webAudio.seekToAmplitude(amplitude)
+          this.touchEndHandler()
         })
       },
 
@@ -273,6 +290,11 @@
         webAudio.on(webAudio.events.loadMediaDuration, () => {
           me.totalTime = convertAudioTimeToString(webAudio.duration)
         })
+      },
+
+      // 初始化音频状态
+      initStatus () {
+        this.status = webAudio.status
       },
 
       /**
@@ -309,6 +331,14 @@
 
       onFullScreenTap () {
         this.$dispatch('fullScreenTap')
+      },
+
+      setTouchStartHandler (handler) {
+        this.touchStartHandler = handler || this.touchStartHandler
+      },
+
+      setTouchEndHandler (handler) {
+        this.touchEndHandler = handler || this.touchStartHandler
       }
     },
 

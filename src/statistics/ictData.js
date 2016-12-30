@@ -3,10 +3,10 @@
  */
 
 import 'whatwg-fetch'
-import {D_PLUS_ID} from '../frame/serverConfig'
-const cacheItem = 'sessionProps'
+import {D_PLUS_ID, ICT_SERVER} from '../frame/serverConfig'
+const cacheItem = 'ictSessionProps'
 
-let server = 'http://121.40.131.112:3000'
+let server = ICT_SERVER
 let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) || {} //全局的超级属性, 仅在本次会话内有效
 
 /**
@@ -30,7 +30,7 @@ const init = function (serverUrl) {
       //"disable_cookie": true,
       //"cross_subdomain_cookie": true,
       localstorage: true,
-      track_timeout: 1000, //回调响应时间
+      track_timeout: 3000, //回调响应时间
 
       loaded: function () {
 
@@ -56,7 +56,7 @@ const track = function (eventName, properties = {}) {
 
   // ict
   //var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
-  //console.log('server', server)
+  ////console.log('server', server)
   //window.fetch(server + '/event', {
   //  method: 'POST',
   //  headers: {

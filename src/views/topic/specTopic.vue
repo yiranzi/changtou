@@ -35,7 +35,7 @@
 
         </div>
       </scroller>
-      <div class="bottom-area" v-el:bottom-btn >
+      <div class="bottom-area" v-el:bottom-btn v-show="isTopicLoaded">
         <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
           立即支付
           <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
@@ -48,7 +48,6 @@
 </template>
 <style lang="less">
   .spec-topic{
-    position: relative;
     width: 100%;
     height: 100%;
     .top-back-btn {
@@ -159,8 +158,8 @@
       p{
         padding: 0;
         margin-bottom: 0.1rem;
-        color: #898989;
-        border-bottom: 1px solid #898989;
+        color: #aaa;
+        border-bottom: 1px solid #ccc;
       }
       .conclusion-content{
         width: 15rem;
@@ -199,7 +198,6 @@
       }
       .buttom-tip{
         position: relative;
-        top: -3.45rem;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -213,7 +211,7 @@
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
-  import {specTopicGetters, myCoursesGetters, userGetters} from '../../vuex/getters'
+  import {specTopicGetters, userGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -225,7 +223,6 @@
       },
       getters: {
         specTopicInfo: specTopicGetters.specTopic, //打包课程信息
-        myCourses: myCoursesGetters.myCourses, //我的课程列表
         isUserLogin: userGetters.isLogin  //登录情况
       }
     },
@@ -247,14 +244,11 @@
         if (this.isUserLogin) {
           taskArr.push(this.loadUserCourses())
         }
+
         const me = this
-        return Promise.all(taskArr).then(
-          function () {
-            return {isBuySubject: me.isBuy(), isLoadedFail: false}
-          }
-        ).catch(
-          function () {
-            return {isLoadedFail: true}
+        Promise.all(taskArr).then(
+          function ([topic, courses]) {
+            me.isBuySubject = !me.canSubjectBuy(topic, courses.myCourses)
           }
         )
       }
@@ -265,7 +259,7 @@
         stpId: '',
         scrollerHeight: '0px',
         isBuySubject: false,
-        isLoadedFail: false //数据是否加载完毕
+        isTopicLoaded: false //数据是否加载完毕
       }
     },
 
@@ -283,29 +277,19 @@
     },
     watch: {
       'specTopicInfo': function () {
-        var me = this
-        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-              top: 0
-          })
-        })
-        }, 300)
+        this.isTopicLoaded = true
+        this.resetScrollerHeight()
       }
     },
     methods: {
-      back () {
-        window.history.back()
-      },
-      isBuy () {
-        let myCourses = this.myCourses
-        let coursePackage = this.specTopicInfo.coursePackage
+      /**
+       * 是否购买过专题中的课程
+       */
+      canSubjectBuy (topic, myCourses) {
         let ret = false
-
-        for (let i = 0; i < coursePackage.length; i++) {
+        for (let i = 0; i < topic.coursePackage.length; i++) {
           for (let j = 0; j < myCourses.length; j++) {
-            if (coursePackage[i].subjectId === myCourses[j].subjectId) {
+            if (topic.coursePackage[i].subjectId === myCourses[j].subjectId) {
               ret = true
               break
             }
@@ -315,6 +299,20 @@
           }
         }
         return ret
+      },
+      resetScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 500)
+      },
+      back () {
+        window.history.back()
       },
       toBuy () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {

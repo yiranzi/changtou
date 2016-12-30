@@ -27,26 +27,27 @@
     </div>
 
     <div class="other-entry">
-      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"></ict-button>
-      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"></ict-button>
+      <ict-button type="string" text="注册" v-touch:tap="doRegister" class="ict-btn"> </ict-button>
+      <ict-button type="string" text="忘记密码" v-touch:tap="doResetPassword" class="ict-btn"> </ict-button>
     </div>
 
 
-    <div class="third-party-container" v-if="isQQShow || isWxShow" v-el:auth-container
+    <div class="third-party-container"
+        v-if="isQQShow || isWxShow"
+         v-el:auth-container
          v-bind:class="{'pop-animation': isPopAuthContainer, 'hide-animation': !isPopAuthContainer}">
       <div class="third-text-container" v-touch:tap="onToggleShowThirdParty" >
         <i class="horizon-line"></i>
         <p class="third-text">第三方登录</p>
         <i class="horizon-line"></i>
       </div>
-      <div style="height: 0.5rem" class="spacer"></div>
       <div class="third-icon-container">
         <div class="third-icon" v-if="isQQShow">
-          <span class="third-icon-qq" v-touch:tap='onQQLoginTap'></span>
+          <span class="third-icon-qq" v-touch:tap='onQQLoginTap'> </span>
           <p>QQ登录</p>
         </div>
         <div class="third-icon" v-if="isWxShow">
-          <span class="third-icon-wx" v-touch:tap='onWxLoginTap'></span>
+          <span class="third-icon-wx" v-touch:tap='onWxLoginTap'> </span>
           <p>微信登录</p>
         </div>
       </div>
@@ -182,10 +183,18 @@
                           me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                           window.history.back()
                       }
+                  ).catch(
+                    err => {
+                      me.showAlert({message: err.message})
+                    }
                   )
               }
           ).catch(
-//              err => { me.errTip = err }
+            err => {
+              if (err !== 'cancelled by user') {
+                me.showAlert({message: err})
+              }
+            }
           )
         } else {
           this.showAlert({message: '请安装QQ客户端'})
@@ -205,10 +214,16 @@
                   me.$dispatch(eventMap.LOGIN_SUCCESS, user)
                   window.history.back()
                 }
+              ).catch(
+                err => {
+                  me.showAlert({message: err.message})
+                }
               )
             }
           ).catch(
-//            err => { me.errTip = err }
+            err => {
+                if (err !== '用户点击取消并返回') { me.showAlert({message: err}) }
+            }
           )
         } else {
           this.showAlert({message: '请安装微信客户端'})
@@ -299,7 +314,6 @@
   .principal-base{
     width: 100%;
     height: 100%;
-    position: relative;
     p{
       margin: 0;
     }
@@ -402,8 +416,9 @@
 
     .hide-animation {
       transition: 0.5s;
-      transform: translate3d(0,3.5rem,0);
+      transform: translate3d(0,5rem,0);
     }
+
     .third-party-container{
       position: absolute;
       bottom: 0;
@@ -413,6 +428,7 @@
       text-align: center;
     }
     .third-icon-container{
+      padding: 1rem 0;
       width:100%;
       font-size: 0;
       text-align: center;

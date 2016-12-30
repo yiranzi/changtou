@@ -40,7 +40,7 @@
                 <p>随机积分</p>
               </div>
             </div>
-            <div class="draw-stamps" v-if="diplomaDetails && diplomaDetails.drawStatus === drawStatus.draw">
+            <div class="draw-stamps" :class="{'draw-stamps-disabled': diplomaDetails.integralTicket.isUsed !== ticketStatus.unused}" v-if="diplomaDetails && diplomaDetails.drawStatus === drawStatus.draw">
               <span class="status-label"
               :class="{'expired': integralTicketCls.expired,'used': integralTicketCls.used}"></span>
               <p class="app-label">APP专享</p>
@@ -129,18 +129,16 @@
       )
     }
   },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
-  },
   methods: {
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
-          top: 0
+            top: 0
+          })
         })
-      })
       }, 500)
     },
 
@@ -176,14 +174,14 @@
           }
         ).then(
           ({integral}) => {
-            this.reloadDiploma()
             this.showMask({
-              component: 'graduationDiploma/DrawVolume.vue',
+              component: integral ? 'graduationDiploma/DrawVolume.vue' : 'graduationDiploma/DrawVolumeFailed.vue',
               hideOnMaskTap: true,
-              data: `${integral}`,
-              callbackName: null,
-              callbackFn: null
+              componentData: `${integral}`,
+              callbackName: 'graduationVolumeConfirm',
+              callbackFn: () => {}
             })
+            this.reloadDiploma()
           }
         )
       }
@@ -233,7 +231,8 @@
         top: 510/40rem;
         left: 0;
         text-align: center;
-        font-size: 28/40rem;
+        font-size: 0.8rem;
+        font-weight: bold;
         color: #666;
       }
       .graduation-date{
@@ -445,6 +444,11 @@
         p:nth-of-type(2){
           color: #ddd;
         }
+      }
+      .animated-border,.animated-border-top,.animated-border-bottom,.animated-border-right,.animated-border-left{
+        background: none;
+        animation-name: none;
+        -webkit-animation-name: none;
       }
     }
     .draw-stamps{

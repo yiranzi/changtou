@@ -9,7 +9,7 @@
       </ict-titlebar>
       <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
       <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="作业将自动保存" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()"></textarea>
+      <textarea v-model="answer" placeholder="请写下你的作业内容" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
           <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
@@ -20,10 +20,15 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import xTextarea from 'vux/x-textarea'
-  import { essayGetters } from '../../vuex/getters'
-  import { essayActions } from '../../vuex/actions'
+  import {essayGetters} from '../../vuex/getters'
+  import {essayActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+
+  // 页面原有高度, 用来处理键盘弹出事件
+  const _originHtmlHeight = window.document.body.offsetHeight
+  let isKeyboardPop = false
+
 export default {
   vuex: {
     getters: {
@@ -33,13 +38,17 @@ export default {
     },
     actions: {
       getQuestion: essayActions.getEssayQuestion,
-      submitArticle: essayActions.submitArticle
+      submitArticle: essayActions.submitArticle,
+      syncHomeworkList: homeworkListActions.getHomeworkList,
+      loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
     }
   },
   data () {
     return {
-      canDraft: false, //是否可以保存草稿
+      subjectId: 0,
       lessonId: 0,
+      timer: 0,
+      canDraft: false, //是否可以保存草稿
       rightOptions: { //titlebar
         callback: '',
         disabled: true
@@ -77,12 +86,14 @@ export default {
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       this.getQuestion(this.lessonId)
       this.answer = this.essayAnswer
       setTimeout(
         this.resizeTextarea,
         300
       )
+      this.startListenToHeightChange()
     },
     deactivate () {
       if (this.isAnswerChange && this.essayAnswer) {
@@ -95,6 +106,8 @@ export default {
       this.textareaStyle = '' //textarea样式
       this.answer = '' // 填写的答案
       this.canDraft = false
+
+      this.stopListenToHeightChange()
     }
   },
   methods: {
@@ -140,6 +153,9 @@ export default {
             this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
             this.rightOptions.disabled = false
           }
+          this.loadAllExpenseRecords().then(
+            this.syncHomeworkList()
+          )
           window.history.back()
         }).catch(
         () => {
@@ -167,41 +183,60 @@ export default {
       }
       this.submitArticle(essay).then(
         result => {
+          this.loadAllExpenseRecords().then(
+            this.syncHomeworkList()
+          )
           this.showToast('你的草稿已保存')
         }
       )
-    },
-
-    onAlertHide () {
-      window.history.back()
     },
 
     /**
      * 关闭 keyboard
      */
     resumeKeyboard () {
-      const textarea = document.getElementById('essay-textarea')
+      const textarea = this.$els.textarea
       textarea.blur()
+    },
+
+    /**
+     * textarea 聚焦
+     */
+    onTextFocus () {
       setTimeout(
         this.resizeTextarea,
         200
       )
     },
 
-    onTextFocus () {
-      this.$els.draftbar.setAttribute('style', 'position: relative')
+    /**
+     * textarea 失焦
+     */
+    onTextBlur () {
       setTimeout(
         this.resizeTextarea,
-        100
+        500
       )
     },
 
-    onTextBlur () {
-      this.$els.draftbar.setAttribute('style', 'position: absolute')
-      setTimeout(
-        this.resizeTextarea,
-        100
-      )
+    /**
+     * 开始监听页面高度改变事件
+     */
+    startListenToHeightChange () {
+      this.timer = setInterval(() => {
+        // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
+        if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
+          this.resizeTextarea()
+        }
+        isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
+      }, 500)
+    },
+
+    /**
+     * 停止监听页面高度改变事件
+     */
+    stopListenToHeightChange () {
+      clearInterval(this.timer)
     }
   },
   components: {
@@ -215,7 +250,6 @@ export default {
   .essay-answer{
     width: 100%;
     height: 100%;
-    position: relative;
     p{
       margin: 0;
     }
@@ -230,6 +264,10 @@ export default {
       background: #f0eff5;
       font-size: 0.65rem;
       color: #656565;
+      p{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       *{
         margin: 0;
         padding: 0;

@@ -5,6 +5,7 @@
 <template>
   <div>
     <pay-base :coupons="coupons"
+              v-ref:pay-base
               :toubi="toubi"
               :total="total"
               :sum="sum"
@@ -12,7 +13,7 @@
               :tip="tip"
               :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
-      <pay-period :periods="periods"></pay-period>
+      <pay-period :periods="periods" :value.sync="periodValue"></pay-period>
     </pay-base>
   </div>
 </template>
@@ -20,7 +21,7 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getStrategyOrder, goodsType, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getStrategyOrder, goodsType, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
@@ -44,13 +45,13 @@
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
         itemId: 1, // 交易 id
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
+        periodValue: '0',
         statisticData: null //统计数据
       }
     },
@@ -104,6 +105,9 @@
           return []
         }
       },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
+      },
       itemId () {
         return this.selectedPeriodIndex === '1' ? 2 : 1 // 交易用到的itemId //1 一年专业版 2 两年专业版
       },
@@ -114,6 +118,11 @@
     route: {
       data () {
         const me = this
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getStrategyOrder(goodsType.PRO_STRATEGY)]).then(
           ([order]) => {
             me.order = order
@@ -128,7 +137,6 @@
         this.pic = '' // 图片
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
@@ -136,20 +144,24 @@
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+        this.periodValue = '0'
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
+
         this.$broadcast('pay-page-deactive')
       }
     },
     events: {
       // 服务期限 更改
       'periodChange' (periodIndex) {
-        setLocalCache('strategy-period', {period: parseInt(periodIndex) ? '两年' : '一年'})
         this.selectedPeriodIndex = periodIndex
         this.selectedPeriod = this.periods[periodIndex]
       },
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -195,6 +207,7 @@
        * 点击确认订单
        */
       onConfirmTap () {
+        setLocalCache('strategy-period', {period: parseInt(this.selectedPeriodIndex) ? '两年' : '一年'})
         this.statisticData = {
           '实付': this.sum,
           '商品名称': this.periods[this.selectedPeriodIndex].name
@@ -211,6 +224,7 @@
        * @param channel
        */
       payByChannel (channel) {
+        this.showLoading()
         Object.assign(this.statisticData, {
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
@@ -240,23 +254,25 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
-      },
-        (err) => me.onPayFail(err)
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.goToPaySuccess()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
       /**
        * 跳转到 支付成功
        */
       goToPaySuccess () {
+        this.hideLoading()
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/pay/success/PS/0`)
+        this.$route.router.replace(`/pay/success/PS/0`)
         this.syncUser().then(
           user => {
             this.$dispatch(eventMap.SYNC_USER, user)
@@ -264,6 +280,7 @@
         )
       },
       onPayFail (err) {
+        this.hideLoading()
         Object.assign(this.statisticData, {
           '原因': err.reason
         })

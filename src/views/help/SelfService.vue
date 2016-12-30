@@ -74,7 +74,7 @@
       color: #bbb;
     }
     .question_box{
-      border: 1px solid #f0eff5;
+      border-bottom: 1px solid #f0eff5;
       background-color: #fff;
       .question{
         padding: 1rem 0.9rem 0.75rem 0.9rem;
@@ -128,7 +128,8 @@
 
     data () {
       return {
-        scrollerHeight: '500px',
+        showBtn: false,
+        scrollerHeight: '1000px',
         currQuestionIndex: -1 //当前查看的问题集合
       }
     },
@@ -146,17 +147,19 @@
     route: {
       data (transition) {
         const me = this
-        me.loadQAList().then(
-          function () {
-            me.refreshScroller()
-            transition.next()
-          }
-        )
-      }
-    },
 
-    ready () {
-      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.btn.offsetHeight) + 'px'
+        if (this.helpList.length < 1) {
+          me.loadQAList().then(
+            function () {
+              me.refreshScroller()
+              transition.next()
+            }
+          )
+        } else {
+          me.refreshScroller()
+          transition.next()
+        }
+      }
     },
 
     methods: {
@@ -186,6 +189,7 @@
       refreshScroller () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

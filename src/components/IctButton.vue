@@ -34,7 +34,7 @@
 </script>
 <style lang="less">
   @height-ict-button: 2.2rem;
-  @font-ict-button: 0.9rem;
+  @font-ict-button: 0.85rem;
   @radius-ict-border: 5px;
 
   //background color
@@ -62,6 +62,7 @@
     margin-right: auto;
     padding-left: 0.7rem;
     padding-right: 0.7rem;
+    font-family: "Microsoft YaHei" ! important;
     font-size: @font-ict-button;
     text-align: center;
     text-decoration: none;
@@ -72,8 +73,8 @@
     background-color: @color-default-normal-background;
 
     &:not(.ict-btn-disabled):visited {
-      color: @color-default-pressed-text-color;
-    }
+           color: @color-default-pressed-text-color;
+         }
     &:not(.ict-btn-disabled):active {
       color: @color-default-pressed-text-color;
     }

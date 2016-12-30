@@ -24,6 +24,7 @@
     <div class="validation-box">
       <ict-input title="验证码"
                  id="register-end-valid-code"
+                 type="tel"
                placeholder="输入验证码"
                :value.sync="validationCode">
       </ict-input>
@@ -52,7 +53,7 @@
   import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
-
+  import {getSessionCache} from '../../../util/cache'
   export default {
     vuex: {
       actions: {
@@ -87,9 +88,19 @@
     },
     route: {
       data ({to: {params}}) {
+        clearInterval(this.timer)
+        this.phone = params.phone
+        this.plainPassword = params.plainPassword
+        this.errTip = ''
+        this.validationCode = ''
+        this.isPhoneReadonly = true
+        this.validationBtnText = '再次发送'
+        this.isValidationBtnDisable = false
+        this.leftTime = 120
+        this.isDisabled = true
+        this.timer = null
+
         const me = this
-        me.phone = params.phone
-        me.plainPassword = params.plainPassword
         me.timer = setInterval(
           () => {
             if (me.leftTime > 0) {
@@ -103,16 +114,6 @@
             clearInterval(me.timer)
           }
         }, 1000)
-      },
-
-      /**
-       * 重置
-       */
-      deactivate () {
-        clearInterval(this.timer)
-        this.validationBtnText = '获取验证码'
-        this.isValidationBtnDisable = false
-        this.leftTime = 120
       }
     },
 
@@ -165,10 +166,11 @@
        * 点击 获取验证码
        */
       getValidationCode () {
+        const me = this
         if (me.isValidationBtnDisable) {
           return
         }
-        const me = this
+
         me.isValidationBtnDisable = true
         me.registerStart(this.phone, this.plainPassword).then(
           res => me.countdown()
@@ -190,7 +192,13 @@
           this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
             (user) => {
               this.$dispatch(eventMap.REGISTER_SUCCESS, user)
-              window.history.go(-2)
+              if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
+                // 个人中心 进入注册
+                window.history.go(-2)
+              } else if (/\/entry/.test(getSessionCache('register-sources-page').sourcesPage)) {
+                // 登录页面 进入注册
+                window.history.go(-3)
+              }
               me.isDisabled = false
             }).catch(
               (err) => {

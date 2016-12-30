@@ -3,14 +3,16 @@
  * 问答题 浮框
  */
 <template>
-    <ict-sheet title="课后作业" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
+  <div>
+    <ict-sheet :title="title" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
-        <div class="essay-content" v-if="essayType === 'S'">{{{essayQuestion}}}</div>
+        <div class="essay-content" v-if="assignmentType === 'S'">{{{essayQuestion}}}</div>
         <div class="essay-explain">
           {{{explain}}}
         </div>
       </div>
     </ict-sheet>
+  </div>
 </template>
 <script>
   import IctSheet from '../../components/IctActionSheet.vue'
@@ -36,11 +38,12 @@
   }
   export default {
     props: {
+      hasChoice: Boolean,
       show: Boolean
     },
     vuex: {
       getters: {
-        essayType: essayGetters.essayType,
+        assignmentType: essayGetters.assignmentType,
         essayQuestion: essayGetters.essayQuestion,
         essayLessonId: essayGetters.essayLessonId,
         articleId: essayGetters.articleId
@@ -48,15 +51,18 @@
     },
     data () {
       return {
-        btnText: ''
+
       }
     },
     computed: {
+      title () {
+        return this.hasChoice ? '选修作业' : '课后作业'
+      },
       btnText () {
-        return this.essayType ? tpl[this.essayType].btnText : null
+        return this.assignmentType ? tpl[this.assignmentType].btnText : null
       },
       explain () {
-        return this.essayType ? tpl[this.essayType].explain : null
+        return this.assignmentType ? tpl[this.assignmentType].explain : null
       }
     },
     methods: {
@@ -81,18 +87,20 @@
       padding: 1rem 0.9rem 0.85rem;
       font-size: 0.7rem;
       color: #444;
-      p {
+      *{
         margin: 0;
+        padding: 0;
+        list-style: none;
       }
     }
     .essay-explain{
+      p {
+        margin: 0;
+      }
       padding: 0.85rem 0.9rem 2.5rem;
       font-size: 0.65rem;
       color: #656565;
       margin-bottom: 2.2rem;
-      p {
-        margin: 0;
-      }
     }
   }
 </style>

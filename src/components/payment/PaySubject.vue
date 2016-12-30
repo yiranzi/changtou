@@ -54,7 +54,7 @@ export default {
   }
   background: #fff;
   overflow: hidden;
-  border-bottom: 1px solid #f0eff5;
+  margin-bottom: 0.5rem;
   &-img{
     width: 300/40rem;
     height: 3.5rem;

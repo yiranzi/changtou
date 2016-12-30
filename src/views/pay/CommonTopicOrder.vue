@@ -4,7 +4,8 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi"
+    <pay-base v-ref:pay-base
+              :coupons="coupons" :toubi="toubi"
               :total="total" :sum="sum"
               :btn-options="btnOptions" :tip="tip"
               :sheet-show="sheetShow">
@@ -17,7 +18,7 @@
   import PayTitle from '../../components/payment/PayTitle.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import { Device, platformMap } from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
@@ -37,7 +38,6 @@
         itemId: 0, // 交易项目标识
         mchantType: 0, // 商品类型
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -65,6 +65,9 @@
       sum () {
         return this.total - this.toubi
       },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
+      },
       // 支付按钮 信息
       btnOptions () {
         return {
@@ -84,6 +87,11 @@
         const me = this
         this.type = pathArr[1]
         this.ctpId = parseInt(pathArr[2])
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return Promise.all([getOrder(this.type, this.ctpId)]).then(
           ([order]) => {
             me.arrangeOrder(order)
@@ -98,11 +106,14 @@
         this.itemId = 0 // 交易项目标识
         this.mchantType = 0 // 商品类型
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
 
         this.$broadcast('pay-page-deactive')
       }
@@ -111,7 +122,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -175,6 +185,7 @@
        * @param channel
        */
       payByChannel (channel) {
+        this.showLoading()
         Object.assign(this.statisticData, {
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
@@ -204,22 +215,25 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
-      },
-        (err) => me.onPayFail(err)
-      )
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+              // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.goToPaySuccess()
+            }
+          }
+        ).catch(
+          (err) => me.onPayFail(err)
+        )
       },
       goToPaySuccess () {
+        this.hideLoading()
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/pay/success/CT/${this.ctpId}`)
+        this.$route.router.replace(`/pay/success/CT/${this.ctpId}`)
       },
       onPayFail (err) {
+        this.hideLoading()
         Object.assign(this.statisticData, {
           '原因': err.reason
         })

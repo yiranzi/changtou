@@ -38,7 +38,7 @@
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" v-if="$index !== parseInt(this.expenseRecords.length)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
+              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)" >{{course.status}}<span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
               <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
             </div>
             <!-- 电子书 介绍 -->
@@ -61,8 +61,8 @@
   import {myCoursesActions, giftActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
-
- export default {
+  import {eventMap} from '../../frame/eventConfig'
+export default {
   vuex: {
     getters: {
       graduatedType: myCoursesGetters.graduatedType, //课程状态类型
@@ -83,7 +83,7 @@
   },
   data () {
     return {
-      scrollerHeight: '0px',
+      scrollerHeight: '1000px',
       courseList: [], //课程列表
       isShowEBook: false, // 是否显示电子书
       readTotalNum: 0,  // 阅读电子书人数
@@ -97,6 +97,11 @@
       ]
     }
   },
+
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+  },
+
   computed: {
     // 截止日期
     validity () {
@@ -122,16 +127,21 @@
     isShowHomeWorkPanel () {
       if (!this.isLogin) {
         return false
+      } else {
+        for (let i = 0, length = this.expenseRecords.length; i < length; i++) {
+          if (this.expenseRecords[i] && this.expenseRecords[i].lessonSet.graduated !== 'I') {
+            return true
+          }
+        }
+        return false
       }
-      if (this.expenseRecords.length > 0) {
-        return true
-      }
-       return false
     }
   },
   route: {
     data () {
+      this.$dispatch(eventMap.ACTIVE_TAB, 1)
       setLocalCache('statistics-entry-page', {entryPage: '我的课程'})
+
       let promiseArray = []
       const me = this
       if (this.isLogin) {
@@ -177,9 +187,6 @@
       )
     }
   },
-  ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
-  },
   methods: {
     /**
      *  去阅读电子书 若有阅读进度 则去上次阅读进度处
@@ -209,7 +216,7 @@
           top: 0
         })
       })
-      }, 200)
+      }, 300)
     },
     /**
      * 整理课程列表
@@ -328,24 +335,6 @@
     p{
       margin: 0;
     }
-    .read-book-item{
-  //    position: relative;
-      background: #e3f7fe !important;
-      position: relative;
-      .read-book-tip{
-        background: #ff9800;
-        height: 1rem;
-        line-height: 1rem;
-        text-align: center;
-        font-size: .6rem;
-        color: #fff;
-        top: 0.5rem;
-        left: 5.5rem;
-        /* position: relative; */
-        position: absolute;
-        width: 2.75rem;
-      }
-    }
     .my-course-drfts{
       width: 5rem;
       color: #fff;
@@ -460,7 +449,7 @@
         color: #00b0f0;
       }
     }
-    .course-list, .read-book-item{
+    .course-list{
       background: #fff;
       overflow: hidden;
       border-bottom: 1px solid #f0eff5;
@@ -503,6 +492,13 @@
           color: #00b0f0;
           font-size: 0.7rem !important;
           vertical-align: bottom;
+        }
+      }
+      &-state-unlogin{
+        color: #898989;
+        &:before{
+          content: '';
+          margin-right: 0;
         }
       }
     }

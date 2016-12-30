@@ -25,6 +25,24 @@ const events = {
 const $media = new window.Audio()
 
 /**
+ * 内部维护一个音频状态
+ * @type {string}
+ */
+let mediaStatus = 'pause'
+
+$media.addEventListener(events.play, () => {
+  mediaStatus = 'play'
+}, false)
+
+$media.addEventListener(events.pause, () => {
+  mediaStatus = 'pause'
+}, false)
+
+$media.addEventListener(events.ended, () => {
+  mediaStatus = 'pause'
+}, false)
+
+/**
  *
  * @param src
  * @param media
@@ -165,5 +183,13 @@ export const webAudio = {
      */
   get duration () {
     return isNaN(this.media.duration) ? 0 : this.media.duration
+  },
+
+  /**
+   * 音频状态
+   * @returns {string}
+   */
+  get status () {
+    return mediaStatus
   }
 }

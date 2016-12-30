@@ -23,7 +23,8 @@ export default {
   .strategy-intro{
     padding: 0 2rem 0.5rem;
     text-align: left;
-    .intro-item {
+    p.intro-item{
+      margin: 0;
       padding-bottom: 1rem;
       font-size: 0.65rem;
       color: #898989;

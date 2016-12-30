@@ -4,7 +4,7 @@
 */
 <template>
   <div class="strategy-agreement" v-el:agreement>
-    <div class="strategy-agreement-title" v-el:title>服务协议</div>
+    <div class="strategy-agreement-title" v-el:title>服务协议 <span class="close-icon" v-touch:tap="onCloseTap"></span></div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div class="strategy-agreement-content">
         <p v-for="item in agreement">{{item}}</p>
@@ -49,6 +49,9 @@
       },
       onAgreeTap () {
         this.$dispatch('onAgreeTap')
+      },
+      onCloseTap () {
+        this.$dispatch('hideMask')
       }
     },
     components: {
@@ -75,6 +78,22 @@
       text-align: center;
       font-size: 0.8rem;
       color: #444;
+      .close-icon{
+        position: absolute;
+        display: inline-block;
+        top: 0;
+        right: 0;
+        line-height: 2.25rem;
+        &:before{
+          padding: 0.75rem;
+          box-sizing: border-box;
+          line-height: 2.25rem;
+          font-family: 'myicon';
+          content: '\e90d';
+          font-size: 0.75rem !important;
+          color: #aaa;
+        }
+      }
     }
     &-content{
       padding: 1rem;

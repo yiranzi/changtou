@@ -7,6 +7,7 @@
       <ict-titlebar>草稿箱</ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller>
         <div v-if="isEmpty" class="empty-tip">
+          <img src="../../../static/image/mine/empty-box.png"/>
         </div>
         <div v-if="!isEmpty">
           <div v-for="draft in draftList" class="draft-item">
@@ -24,14 +25,19 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
-  import { essayActions } from '../../vuex/actions'
-export default {
+  import {essayActions} from '../../vuex/actions'
+  import {courseRecordsGetters} from '../../vuex/getters'
+
+  export default {
   vuex: {
     actions: {
       getArticle: essayActions.getArticle,
       getDrafts: essayActions.getDrafts,
       deleteDraft: essayActions.deleteDrafts,
       updateDraft: essayActions.updateDraft
+    },
+    getters: {
+      expenseRecords: courseRecordsGetters.expenseRecords //付费课程记录
     }
   },
   data () {
@@ -70,7 +76,22 @@ export default {
   methods: {
     goToArticleEdit (draft) {
       this.updateDraft(draft)
-      this.$route.router.go(`/homework/essay/answer/${draft.lessonId}`)
+      let subjectId = 0
+      for (var i = 0, length = this.expenseRecords.length; i < length; i++) {
+        if (subjectId) {
+          break
+        }
+        const lessonIds = this.expenseRecords[i].lessonSet.lessonIds
+        if (lessonIds) {
+          for (var j = 0, idsLength = lessonIds.length; j < idsLength; j++) {
+            if (parseInt(lessonIds[j]) === parseInt(draft.lessonId)) {
+              subjectId = this.expenseRecords[i].subjectId
+              break
+            }
+          }
+        }
+      }
+      this.$route.router.go(`/homework/essay/answer/${subjectId}/${draft.lessonId}`)
     },
     goToDeleteDraft (articleId) {
       const me = this
@@ -101,11 +122,13 @@ export default {
       margin: 0;
     }
     .empty-tip{
+      width: 100%;
       text-align: center;
-      background: url("../../../static/image/mine/noMessages.png") no-repeat center center / 70%;
-      margin: 6.5rem auto 0;
-      height: 6.05rem;
-      width: 6.05rem;
+      padding-top: 5rem;
+      img{
+        height: 6.05rem;
+        width: 6.05rem;
+      }
     }
     .draft-item{
       position: relative;

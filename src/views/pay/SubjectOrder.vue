@@ -4,7 +4,7 @@
  */
 <template>
   <div>
-    <pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
+    <pay-base v-ref:pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-subject :course-list="courseList"></pay-subject>
     </pay-base>
   </div>
@@ -14,8 +14,9 @@
   import PayPeriod from '../../components/payment/PayPeriod.vue'
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
-  import {getOrder, getIntegral, dealType, pay, payChannel, errorType} from '../../util/pay/dealHelper'
+  import {getOrder, getIntegral, dealType, pay, payChannel, errorType, transactionChannel} from '../../util/pay/dealHelper'
   import {userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {courseRecordActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -25,6 +26,9 @@
       getters: {
         isLogin: userGetters.isLogin,
         expenseRecords: courseRecordsGetters.expenseRecords
+      },
+      actions: {
+        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords
       }
     },
     data () {
@@ -34,7 +38,6 @@
         courseList: [], //课程列表
         price: 0, // 价格
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -70,6 +73,10 @@
         })
         return !(me.isLogin && (subjectIndex >= 0))
       },
+      // 选择的优惠
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
+      },
       // 支付按钮 信息
       btnOptions () {
         return {
@@ -91,6 +98,11 @@
         const pathArr = path.split('-')
         this.type = pathArr[1]
         this.subjectId = parseInt(pathArr[2])
+
+        // 设置监听事件,处理键盘弹出后页面按钮的显示问题
+        const {payBase} = this.$refs
+        payBase.startListenToHeightChange()
+
         return this.getSubjectOrder()
       },
       deactivate () {
@@ -99,11 +111,15 @@
         this.courseList = [] //课程列表
         this.price = 0 // 价格
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
         this.statisticData = null //统计数据
+
+        // 关闭监听事件
+        const {payBase} = this.$refs
+        payBase.stopListenToHeightChange()
+
         this.$broadcast('pay-page-deactive')
       }
 
@@ -112,7 +128,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
@@ -213,6 +228,7 @@
        * @param channel
        */
       payByChannel (channel) {
+        this.showLoading()
         Object.assign(this.statisticData, {
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
@@ -243,25 +259,106 @@
           trade: trade
         }).then(
           result => {
-          if (result && result.type === dealType.WX_CODE) {
-          // 扫码支付
-          me.showCodePanel(result.url)
-        } else {
-          // 其他支付 （不包括支付宝网页支付）
-          me.goToPaySuccess()
-        }
+            if (result && result.type && (result.type === transactionChannel.WX_CODE)) {
+            // 扫码支付
+              me.showCodePanel(result.url)
+            } else {
+              // 其他支付 （不包括支付宝网页支付）
+              me.onPayFinish()
+            }
+          }
+        ).catch(
+          (err) => {
+            me.onPayFail(err)
+          }
+        )
       },
-        (err) => me.onPayFail(err)
-      )
+
+      /**
+       * 支付结束
+       */
+      onPayFinish () {
+        const me = this
+        me.loadAllExpenseRecords().then(
+          function (records) {
+            const index = records.findIndex(function (record) {
+              return parseInt(record.subjectId) === parseInt(me.subjectId)
+            })
+            if (index >= 0) {
+              me.goToPaySuccess()
+            } else {
+              setTimeout(
+                function () {
+                  me.loadAllExpenseRecords().then(
+                    function (records) {
+                      const index = records.findIndex(function (record) {
+                        return parseInt(record.subjectId) === parseInt(me.subjectId)
+                      })
+                      if (index >= 0) {
+                        me.goToPaySuccess()
+                      } else {
+                        me.onPayFail({
+                          type: errorType.FAIL,
+                          reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                        })
+                      }
+                    }
+                  ).catch(
+                    function () {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
+                  )
+                },
+                3000
+              )
+            }
+          }
+        ).catch(
+          function () {
+            setTimeout(
+              function () {
+                me.loadAllExpenseRecords().then(
+                  function (records) {
+                    const index = records.findIndex(function (record) {
+                      return parseInt(record.subjectId) === parseInt(me.subjectId)
+                    })
+                    if (index >= 0) {
+                      me.goToPaySuccess()
+                    } else {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
+                  }
+                ).catch(
+                  function () {
+                    me.onPayFail({
+                      type: errorType.FAIL,
+                      reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                    })
+                  }
+                )
+              },
+              3000
+            )
+          }
+        )
       },
+
       /**
        * 跳转到 支付成功
        */
       goToPaySuccess () {
+        this.hideLoading()
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
-        this.$route.router.go(`/pay/success/S/${this.subjectId}`)
+        this.$route.router.replace(`/pay/success/S/${this.subjectId}`)
       },
       onPayFail (err) {
+        this.hideLoading()
         Object.assign(this.statisticData, {
           '原因': err.reason
         })

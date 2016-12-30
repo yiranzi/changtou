@@ -15,14 +15,10 @@
     }
     .toggleField {
       width: 100%;
-      margin-top: -.5rem;
+      margin-top: 1rem;
       .weui_label{
         line-height: 25px;
         font-size: 0.75rem;
-      }
-      .weui_cells{
-        border: 1px solid #c3c3c3;
-        height: 3.1rem;
       }
       .weui_switch {
         width: 2.3rem;
@@ -44,15 +40,22 @@
         border-color: #00b0f0;
         background-color: #00b0f0;
       }
+      .weui_cells{
+        border: 1px solid #c3c3c3;
+        height: 3.1rem;
+        padding: 9/20rem 12/20rem;
+        box-sizing: border-box;
+      }
       .weui_cell{
-        padding: 0.5rem 0.75rem 0 0.75rem;
+        padding: 0;
       }
       .instruction{
         width: 93.6%;
         height: 0.8rem;
         font-size: 0.6rem;
         color: #898989;
-        padding: 0 0 0.5rem 0.75rem;
+        padding: 0;
+        box-sizing: border-box;
       }
     }
   }

@@ -23,7 +23,7 @@
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
           </p>
-          <scroller :lock-y='true' :scrollbar-x="false" style="height=8.5rem">
+          <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">
             <div class="box-container" >
                 <div class="box-item" v-for="item in recommends"
                      v-touch:tap="goToRecommendDetail(item,$index)">
@@ -108,10 +108,14 @@
 
     route: {
       data () {
+        this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         this.$nextTick(() => {
           this.$refs.scroller.reset({
           top: 0
+          })
+          this.$refs.vscroller.reset({
+            left: 0
           })
         })
       }
@@ -129,6 +133,9 @@
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
+          setTimeout(() => {
+            me.$dispatch(eventMap.NAVIGATOR_LOADED)
+          }, 200)
         }
       )
       this.isQualifyGiftPackage().then(
@@ -169,6 +176,9 @@
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
+          })
+          me.$refs.vscroller.reset({
+            left: 0
           })
         })
         }, 150)
@@ -277,6 +287,7 @@
 
 <style lang="less">
   .course-navigator{
+    background: #fff;
     .popularSpe{
       padding-bottom: .8rem;
     }
@@ -368,7 +379,7 @@
     /*新增理财揭秘，院生访谈的样式*/
     .financial-interview{
       width: 100%;
-      line-height: 4rem;
+      line-height: 3.5rem;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -485,8 +496,9 @@
     }
     .strategy-entry{
       width: 100%;
-      margin-top: 1.25rem;
+      padding: 1.25rem 0 1rem;
       text-align: center;
+      background: #fff;
       img{
         width: 100%;
         height: 6.75rem;
@@ -494,7 +506,7 @@
       p{
         font-size: 0.65rem;
         color: #aaa;
-        margin: 1rem 0 1.25rem;
+        margin: 1rem 0 0;
       }
     }
     /*每日一题*/
@@ -502,11 +514,10 @@
       width: 325/375;
       height: 3rem;
       padding: 1.5rem 5.5rem;
-      background-color: #f2f2f2;
       font-size: .75rem;
       color:#444;
       line-height: 1.2rem;
-      background: url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      background: #f2f2f2 url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
       position: relative;
     }
 
@@ -518,7 +529,7 @@
     .daily-anpic-container {
       width: 1.725rem;
       height: 1.05rem;
-      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / 70%;
+      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / contain;
       display: inline-block;
       position: absolute;
       left: 86%;
@@ -526,19 +537,18 @@
     }
 
     .finan-icon{
-      width: 1.725rem;
-      height: 1.725rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      vertical-align: middle;
       display: inline-block;
-      margin-bottom: -.3rem;
     }
 
-  .finan-icon.finan-icon-jiemi{
-    background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / 70%;
-  }
+    .finan-icon.finan-icon-jiemi{
+      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / contain;
+    }
 
     .finan-icon.finan-icon-fangtan{
-      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / 70%;
-      margin-bottom: -.5rem;
+      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / contain;
     }
 
     .vertical-line-yan{

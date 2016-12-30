@@ -8,7 +8,7 @@
         </div>
       </div>
     </scroller>
-    <div class="bottom-area" v-el:bottom-btn>
+    <div class="bottom-area" v-el:btn v-show="isTopicLoaded">
       <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy">
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
@@ -41,11 +41,15 @@
       display: block;
     }
     .bottom-area{
+      position: relative;
+      height: 2.2rem;
       width: 100%;
       font-family: '微软雅黑';
+
       .ticket-tip{
-        position: relative;
-        top: -3.45rem;
+        width: 100%;
+        position: absolute;
+        top: -1.25rem;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -53,6 +57,7 @@
         text-align: center;
       }
       .ict-button{
+        border-radius: 0;
         height: 2.2rem;
       }
     }
@@ -62,7 +67,7 @@
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {commonTopicActions} from '../../vuex/actions'
-  import {commonTopicGetters} from '../../vuex/getters'
+  import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
@@ -72,27 +77,22 @@
         booleanMeetingTicket: commonTopicActions.booleanMeetingTicket
       },
       getters: {
+        isLogin: userGetters.isLogin,
         commonTopicInfo: commonTopicGetters.commonTopic,
         isBuyTicket: commonTopicGetters.isBuyTicket
       }
     },
     data () {
       return {
-        scrollerHeight: '0px',
+        scrollerHeight: '580px',
+        isTopicLoaded: false,
         ctpId: this.$route.params.ctpId
       }
     },
     watch: {
-      'commonTopicInfo.content': function () {
-        var me = this
-        this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-//              top: 0
-              })
-            })
-         }, 5000)
+      'commonTopicInfo.content' () {
+        this.isTopicLoaded = true
+        this.setScrollerHeight()
       }
     },
     route: {
@@ -104,22 +104,10 @@
       },
       data (transition) {
         const ctpId = transition.to.params.ctpId
-        this.loadCommonTopic(ctpId).then(
-          function () {
-            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
-        this.booleanMeetingTicket().then(
-          function () {
-//            transition.next()
-          },
-          function (err) {
-            console.log('err', err)
-          }
-        )
+        this.loadCommonTopic(ctpId)
+        if (this.isLogin) {
+          this.booleanMeetingTicket()
+        }
       }
     },
     methods: {
@@ -137,6 +125,20 @@
           component: require('../pay/CommonTopicOrder.vue')
         })
         this.$route.router.go(path)
+      },
+      /**
+       * 设置 滚动范围高度
+       */
+      setScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.scrollerHeight = window.document.body.offsetHeight - (me.commonTopicInfo.price > 0 ? me.$els.btn.offsetHeight : 0) + 'px'
+          me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 2000)
       }
     },
     components: {
