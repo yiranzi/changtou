@@ -20,3 +20,10 @@ export const jpushAddOpenHandler = ({dispatch}, openHandler) => {
   jpush.addReceiveHandler(openHandler)
 }
 
+export const jpushOpenNotification = () => {
+  jpush.openNotification()
+}
+
+export const jpushSetRouter = (router) => {
+  jpush.setRouter(router)
+}

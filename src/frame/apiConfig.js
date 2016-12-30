@@ -164,7 +164,17 @@ const apiUrl = {
   /**
    * 优惠信息 新手礼包劵
    */
-  'loading_coupon_list': '/integral/user/ticket-list'      // 渲染积分券列表
+  'loading_coupon_list': '/integral/user/ticket-list',      // 渲染积分券列表
+  /**
+   *  问卷调查
+   */
+  'submit_question_naire': '/person/questionnaire',   // 提交问卷调查
+  'is_questionnaire_submit': '/person/questionnaire/state-done/:questionnaireId',  //是否提交过问卷
+  /**
+   *  电子书阅读进度
+   */
+   'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
+   'get/book/progress': '/e-book/record/:bookId'                    // 获取电子书阅读进度
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

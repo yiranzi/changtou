@@ -59,13 +59,11 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Scroller from 'vux/scroller'
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
-  import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        jpushAddOpenHandler,
         loadingCouponList: giftActions.loadingCouponList
       },
       getters: {

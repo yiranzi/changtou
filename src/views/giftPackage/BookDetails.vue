@@ -1,7 +1,8 @@
 <template>
-  <div class="book-info">
-    <ict-titlebar v-el:titlebar>阅读材料</ict-titlebar>
+  <div class="book-info" style="height: 100%;">
+    <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <div class="set-height" style="height: 100%;">
       <div class="book-info-container">
         <img class="book-avatar" src="../../assets/styles/image/giftPackage/bookCover.png" width="230" height="300">
         <p class="book-name">大雄股市历险记</p>
@@ -15,6 +16,7 @@
         <p class="book-chapter-item" v-for="bookItem in bookTitleList" v-touch:tap="gotoChapterDetails($index)"
         >第{{$index+1}}章  {{bookItem}}</p>
       </div>
+     </div>
     </scroller>
   </div>
 </template>
@@ -23,59 +25,73 @@
     .book-info{
       background: white !important;
     }
-    .book-info-container{
-      margin-top: 1.75rem;
-      text-align: center;
-      .book-avatar{
-        width: 5.75rem;
-        height: 7.5rem;
-      }
-      .book-name{
-        font-size: .75rem;
-        color: #444;
-        margin-top: 1.25rem;
-      }
-      .book-status{
-        width: 3rem;
-        height:.8rem;
-        font-size: 60%;
-        color:#00b0f0;
-        border: 1px solid #00b0f0;
-        position: absolute;
-        top: 8rem;
-        left: 12.2rem;
-      }
-      .book-intro{
-        margin:1rem 1.25rem 1.5rem 1.25rem;
-        color: #888;
-        font-size: .65rem;
-      }
-    }
-    .book-chapter{
-      background: white !important;
-      border-top: .5rem solid #f0eff5;
-      .book-chapter-title{
-        background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
+    .set-height{
+    //  margin-bottom: 2rem;
+      padding-bottom: 1.4rem;
+      .book-info-container{
+        margin-top: 1.75rem;
         text-align: center;
-        font-size: .75rem;
-        color: #00b0f0;
-        height: 2.2rem;
-        line-height: 2.2rem;
+        .book-avatar{
+          width: 5.75rem;
+          height: 7.5rem;
+        }
+        .book-name{
+          font-size: .75rem;
+          color: #444;
+          margin-top: 1.25rem;
+        }
+        .book-status{
+          width: 3rem;
+          height:.8rem;
+          font-size: 60%;
+          color:#00b0f0;
+          border: 1px solid #00b0f0;
+          position: absolute;
+          top: 8rem;
+          left: 12.2rem;
+          line-height: .8rem;
+        }
+        .book-intro{
+          margin:1rem 1.25rem 1.5rem 1.25rem;
+          color: #888;
+          font-size: .65rem;
+        }
       }
-      .book-chapter-item{
-        border-bottom: 1px solid #f0eff5;
-        font-size: .7rem;
-        color: #666;
-        padding-left: 1.25rem;
-        height: 2.2rem;
-        line-height: 2.2rem;
+      .book-chapter{
+        background: white !important;
+        border-top: .5rem solid #f0eff5;
+        .book-chapter-title{
+          background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
+          text-align: center;
+          font-size: .75rem;
+          color: #00b0f0;
+          height: 2.2rem;
+          line-height: 2.2rem;
+        }
+        .book-chapter-item{
+          border-bottom: 1px solid #f0eff5;
+          font-size: .7rem;
+          color: #666;
+          padding-left: 1.25rem;
+          height: 2.2rem;
+          line-height: 2.2rem;
+        }
       }
     }
+
 </style>
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
+import {giftActions} from '../../vuex/actions'
 export default {
+  vuex: {
+    getters: {
+    },
+    actions: {
+      getBookProgress: giftActions.getBookProgress   // 得到上次阅读进度的时间然后对比当前时间，渲染章节列表
+    }
+  },
   data () {
     return {
       scrollerHeight: '0px',
@@ -86,7 +102,34 @@ export default {
         '资产负债大盘点',
         '钱从哪儿来，又到哪去',
         '投资的路才刚刚开始'
-        ]
+        ],
+      leftOptions: { //titlebar
+          callback: this.backtoMyCourse,
+          disabled: false,
+          showBack: true
+        }
+    }
+  },
+  route: {
+    data () {
+       const me = this
+       const bookId = 1
+       // 用于获取领取礼包(即电子书)的创建时间
+       this.getBookProgress(bookId).then(
+         res => {
+           if (res) {
+             let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 1000 * 3600 * 7 * 24)   // 一周的毫秒数 每一周放置一章
+                if (setChapterNum < 1 && setChapterNum >= 0) {
+                  me.bookTitleList = me.bookTitleList.splice(0, 1)
+                } else {
+                  me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+                }
+              }
+        }).catch(
+        err => {
+          console.log(err.message)
+        }
+      )
     }
   },
   ready () {
@@ -97,6 +140,9 @@ export default {
     Scroller
   },
   methods: {
+    /**
+    *  去对应的章节数
+    */
     gotoChapterDetails (currIndex) {
      this.$route.router.go(`/giftPackage/bookChapter/${currIndex}`)
     },
@@ -112,7 +158,10 @@ export default {
           })
         })
         }, 150)
-      }
+      },
+    backtoMyCourse () {
+      this.$route.router.go('/mycourse')
+    }
   }
 }
 </script>
