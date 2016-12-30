@@ -1,6 +1,7 @@
 <template>
   <div style="height: 100%;" class="subject-detail">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <ict-back-btn></ict-back-btn>
+
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
@@ -48,6 +49,7 @@
 </style>
 
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import WebAudio from '../../components/WebAudio.vue'
   import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Specific from '../../components/IctCouserSpecificFree.vue'
@@ -383,7 +385,8 @@
       Specific,
       Content,
       IctButton,
-      PptPanel
+      PptPanel,
+      IctBackBtn
     }
   }
 </script>
