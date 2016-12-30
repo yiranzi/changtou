@@ -1,6 +1,7 @@
 <template>
   <div style="height: 100%;" class="subject-detail">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <ict-back-btn></ict-back-btn>
+
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
@@ -15,12 +16,12 @@
 
         <!--简介和目录-->
         <div v-show="1" style="height: 100%; background-color: #fff">
-          <sticky>
+          <div>
             <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
               <tab-item class="vux-center" :selected="currTabItem === 's'">简介</tab-item>
               <tab-item class="vux-center" :selected="currTabItem === 'c'">目录</tab-item>
             </tab>
-          </sticky>
+          </div>
 
           <specific v-show='currTabIndex === 0' :subject="currSubject"></specific>
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"
@@ -48,6 +49,7 @@
 </style>
 
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import WebAudio from '../../components/WebAudio.vue'
   import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Specific from '../../components/IctCouserSpecificFree.vue'
@@ -381,7 +383,8 @@
       Specific,
       Content,
       IctButton,
-      PptPanel
+      PptPanel,
+      IctBackBtn
     }
   }
 </script>

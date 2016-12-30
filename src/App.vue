@@ -155,7 +155,7 @@
   html {
     height: 100%;
     /*font-family: "Microsoft YaHei" ! important;*/
-    font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+    font-family:"Microsoft YaHei","微软雅黑",Arial,Helvetica,sans-serif,"宋体";
     overflow-x: hidden;
   }
 

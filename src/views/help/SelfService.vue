@@ -128,7 +128,8 @@
 
     data () {
       return {
-        scrollerHeight: '500px',
+        showBtn: false,
+        scrollerHeight: '1000px',
         currQuestionIndex: -1 //当前查看的问题集合
       }
     },
@@ -146,12 +147,18 @@
     route: {
       data (transition) {
         const me = this
-        me.loadQAList().then(
-          function () {
-            me.refreshScroller()
-            transition.next()
-          }
-        )
+
+        if (this.helpList.length < 1) {
+          me.loadQAList().then(
+            function () {
+              me.refreshScroller()
+              transition.next()
+            }
+          )
+        } else {
+          me.refreshScroller()
+          transition.next()
+        }
       }
     },
 
@@ -188,7 +195,7 @@
             top: 0
           })
         })
-        }, 500)
+        }, 300)
       }
     },
     components: {
