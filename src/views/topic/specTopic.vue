@@ -274,8 +274,13 @@
       'specTopicInfo': function () {
         this.isTopicLoaded = true
         this.resetScrollerHeight()
-      },
-      'myCourses' () {
+      }
+    },
+    methods: {
+      /**
+       * 是否购买过专题中的课程
+       */
+      isBuySubject () {
         let ret = false
         for (let i = 0; i < this.specTopicInfo.coursePackage.length; i++) {
           for (let j = 0; j < this.myCourses.length; j++) {
@@ -289,9 +294,7 @@
           }
         }
         this.isBuySubject = ret
-      }
-    },
-    methods: {
+      },
       resetScrollerHeight () {
         const me = this
         setTimeout(function () {
