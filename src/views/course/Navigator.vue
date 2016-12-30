@@ -479,7 +479,7 @@
       p{
         font-size: 0.65rem;
         color: #aaa;
-        margin: 1rem 0 1.25rem;
+        margin: 1rem 0 0rem;
       }
     }
     /*每日一题*/
