@@ -33,14 +33,16 @@
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
           <div class="course-list" v-for="course in courseList" track-by="$index" :class=" $index === parseInt(this.expenseRecords.length)?'read-book-item':'' ">
             <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic v-if="$index !== parseInt(this.expenseRecords.length)">
-            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length)">
+            <!-- 电子书 背景 -->
+            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin">
             <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" v-if="$index !== parseInt(this.expenseRecords.length)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
               <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
             </div>
-            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length)">
+            <!-- 电子书 介绍 -->
+            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
@@ -170,9 +172,9 @@
         me.receiveGiftPackage().then(
            (message) => {
            }).catch(function (err) {
-            if (err.message === '您已领取过新手礼包') {
-              if (me.expenseRecords.length > 0) {
+            if (err.message === '您已领取过新手礼包' && me.isLogin) {
                 me.isShowEBook = true
+              if (me.expenseRecords.length > 0) {
                 me.isBookPlacedDown = true
               }
             }

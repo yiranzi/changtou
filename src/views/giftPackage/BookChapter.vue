@@ -76,7 +76,7 @@
           .book-title:nth-child(3){
             font-size: .8rem;
             font-weight: bold;
-            margin-bottom: 1.1rem;
+            margin-bottom: .8rem;
           }
           .book-content{
             font-size: .7rem;
