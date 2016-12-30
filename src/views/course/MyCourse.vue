@@ -70,10 +70,15 @@ export default {
   },
   data () {
     return {
-      scrollerHeight: '0px',
+      scrollerHeight: '1000px',
       courseList: [] //课程列表
     }
   },
+
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+  },
+
   computed: {
     // 截止日期
     validity () {
@@ -113,6 +118,7 @@ export default {
     data () {
       this.$dispatch(eventMap.ACTIVE_TAB, 1)
       setLocalCache('statistics-entry-page', {entryPage: '我的课程'})
+
       let promiseArray = []
       const me = this
       if (this.isLogin) {
@@ -138,13 +144,12 @@ export default {
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
-        me.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
         })
       })
-      }, 500)
+      }, 300)
     },
     /**
      * 整理课程列表
