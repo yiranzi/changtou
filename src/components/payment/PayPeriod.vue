@@ -17,10 +17,7 @@
   export default {
     props: {
       periods: Array,
-      value: {
-        type: Array,
-        default: null
-      }
+      value: String
     },
     watch: {
       value (newVal) {

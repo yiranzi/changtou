@@ -38,7 +38,6 @@
         courseList: [], //课程列表
         price: 0, // 价格
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -74,6 +73,10 @@
         })
         return !(me.isLogin && (subjectIndex >= 0))
       },
+      // 选择的优惠
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
+      },
       // 支付按钮 信息
       btnOptions () {
         return {
@@ -108,7 +111,6 @@
         this.courseList = [] //课程列表
         this.price = 0 // 价格
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
@@ -126,7 +128,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)

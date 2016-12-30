@@ -6,7 +6,7 @@
   <div class="order-vip-strategy">
     <pay-base v-ref:pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
       <pay-pic :pic="pic"></pay-pic>
-      <pay-period :periods="periods"></pay-period>
+      <pay-period :periods="periods" :value.sync="periodValue"></pay-period>
       <div v-if="proLeftDays && selectedDeduction" class="deduction">长投宝专业版剩余{{proLeftDays}}天,返还￥{{selectedDeduction}}</div>
     </pay-base>
   </div>
@@ -39,7 +39,6 @@
         pic: '', // 图片
         price: 0, // 价格
         periods: [],  // 服务期限列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         selectedPeriod: null, // 选择的服务期限
         selectedPeriodIndex: 0, //  选择的服务期限 的index
@@ -49,6 +48,7 @@
         deductions: [0], // pro 抵扣列表
         selectedDeduction: 0, // 选择的 抵扣金额
         proLeftDays: 0, // pro 剩余时间
+        periodValue: '0',
         statisticData: null //统计数据
       }
     },
@@ -72,6 +72,9 @@
       // 实付金额
       sum () {
         return this.total - this.toubi
+      },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
       },
       // 支付按钮 信息
       btnOptions () {
@@ -134,7 +137,6 @@
         this.pic = '' // 图片
         this.price = 0 // 价格
         this.periods = []  // 服务期限列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.selectedPeriod = null // 选择的服务期限
         this.selectedPeriodIndex = 0 //  选择的服务期限 的index
@@ -145,7 +147,7 @@
         this.selectedDeduction = 0 // 选择的 抵扣金额
         this.proLeftDays = 0 // pro 剩余时间
         this.statisticData = null //统计数据
-
+        this.periodValue = '0'
         // 关闭监听事件
         const {payBase} = this.$refs
         payBase.stopListenToHeightChange()
@@ -163,7 +165,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)
