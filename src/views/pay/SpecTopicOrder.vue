@@ -267,7 +267,9 @@
           me.onPayFinish()
         }
       }).catch(
-        (err) => me.onPayFail(err)
+        (err) => {
+          me.onPayFail(err)
+        }
       )
       },
 
@@ -276,16 +278,16 @@
        */
       onPayFinish () {
         const me = this
-        me.loadOneSubjectExpenseRecord(me.subjectId).then(
+        me.loadAllExpenseRecords().then(
           function (records) {
-            if (records.length > 0) {
+            if (!me.canUserBuy) {
               me.goToPaySuccess()
             } else {
               setTimeout(
                 function () {
-                  me.loadOneSubjectExpenseRecord(me.subjectId).then(
+                  me.loadAllExpenseRecords().then(
                     function (records) {
-                      if (records.length > 0) {
+                      if (!me.canUserBuy) {
                         me.goToPaySuccess()
                       } else {
                         me.onPayFail({
@@ -294,6 +296,13 @@
                         })
                       }
                     }
+                  ).catch(
+                    function () {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
                   )
                 },
                 3000
@@ -301,23 +310,32 @@
             }
           }
         ).catch(
-          setTimeout(
-            function () {
-              me.loadOneSubjectExpenseRecord(me.subjectId).then(
-                function (records) {
-                  if (records.length > 0) {
-                    me.goToPaySuccess()
-                  } else {
+          function () {
+            setTimeout(
+              function () {
+                me.loadAllExpenseRecords().then(
+                  function (records) {
+                    if (!me.canUserBuy) {
+                      me.goToPaySuccess()
+                    } else {
+                      me.onPayFail({
+                        type: errorType.FAIL,
+                        reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
+                      })
+                    }
+                  }
+                ).catch(
+                  function () {
                     me.onPayFail({
                       type: errorType.FAIL,
                       reason: '暂时未能获取到课程进度，请稍后在“我的课程”页面查看'
                     })
                   }
-                }
-              )
-            },
-            3000
-          )
+                )
+              },
+              3000
+            )
+          }
         )
       },
 

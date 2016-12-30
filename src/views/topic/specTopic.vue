@@ -211,7 +211,7 @@
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
-  import {specTopicGetters, myCoursesGetters, userGetters} from '../../vuex/getters'
+  import {specTopicGetters, userGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -223,7 +223,6 @@
       },
       getters: {
         specTopicInfo: specTopicGetters.specTopic, //打包课程信息
-        myCourses: myCoursesGetters.myCourseList, //我的课程列表
         isUserLogin: userGetters.isLogin  //登录情况
       }
     },
@@ -245,7 +244,13 @@
         if (this.isUserLogin) {
           taskArr.push(this.loadUserCourses())
         }
-        Promise.all(taskArr).then()
+
+        const me = this
+        Promise.all(taskArr).then(
+          function ([topic, courses]) {
+            me.isBuySubject = !me.canSubjectBuy(topic, courses.myCourses)
+          }
+        )
       }
     },
 
@@ -280,11 +285,11 @@
       /**
        * 是否购买过专题中的课程
        */
-      isBuySubject () {
+      canSubjectBuy (topic, myCourses) {
         let ret = false
-        for (let i = 0; i < this.specTopicInfo.coursePackage.length; i++) {
-          for (let j = 0; j < this.myCourses.length; j++) {
-            if (this.specTopicInfo.coursePackage[i].subjectId === this.myCourses[j].subjectId) {
+        for (let i = 0; i < topic.coursePackage.length; i++) {
+          for (let j = 0; j < myCourses.length; j++) {
+            if (topic.coursePackage[i].subjectId === myCourses[j].subjectId) {
               ret = true
               break
             }
@@ -293,7 +298,7 @@
             break
           }
         }
-        this.isBuySubject = ret
+        return ret
       },
       resetScrollerHeight () {
         const me = this

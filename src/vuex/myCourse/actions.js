@@ -18,7 +18,7 @@ export const loadUserCourses = ({ dispatch }) => {
         }
       ).then(
         myCourses => {
-          resolve()
+          resolve(myCourses)
           dispatch('UPDATE_MY_COURSES', myCourses)
         },
         err => {
