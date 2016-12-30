@@ -45,6 +45,7 @@ export default {
   },
   data () {
     return {
+      subjectId: 0,
       lessonId: 0,
       btnText: '下一题', // 按钮文案
       isBtnDisabled: true,  // 按钮是否可用
@@ -100,6 +101,7 @@ export default {
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       this.getQuestion(this.lessonId).then(
         (choiceQuestion) => {
           this.initPointData(choiceQuestion)
@@ -230,7 +232,7 @@ export default {
      * 跳转到结果页
      */
     goToMark () {
-      this.$route.router.replace('/homework/choice/mark')
+      this.$route.router.replace(`/homework/choice/mark/${this.subjectId}/${this.lessonId}`)
       setTimeout(
         () => {
           this.resetView()

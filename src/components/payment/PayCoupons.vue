@@ -28,7 +28,7 @@
 export default {
   props: {
     coupons: Array,
-    value: Array
+    value: String
   },
   computed: {
     show () {

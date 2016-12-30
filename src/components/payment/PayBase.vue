@@ -9,7 +9,7 @@
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <slot></slot>
-        <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange"></pay-coupons>
+        <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange" :value.sync="couponsValue"></pay-coupons>
         <pay-total>{{total}}</pay-total>
         <pay-toubi :value="toubi"></pay-toubi>
         <fast-login @login-tap="onLoginTap" @code-confirm="onCodeConfirm"></fast-login>
@@ -93,6 +93,9 @@ export default {
         callback: this.barRightOptions.callback,
         disabled: this.barRightOptions.disabled
       }
+    },
+    couponsValue () {
+      return '0'
     }
   },
 

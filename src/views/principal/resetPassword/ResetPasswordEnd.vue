@@ -46,9 +46,11 @@ import IctTitlebar from '../../../components/IctTitleBar.vue'
 import IctButton from '../../../components/IctButton.vue'
 import IctInput from '../../../components/form/IctInput.vue'
 import {userActions} from '../../../vuex/actions'
+import {eventMap} from '../../../frame/eventConfig'
 export default {
   vuex: {
     actions: {
+      logout: userActions.logout,
       resetPasswordEnd: userActions.resetPasswordEnd
     }
   },
@@ -88,14 +90,19 @@ export default {
      * 点击完成重置密码
      */
     doResetPassword () {
-      if (this.conformedPlainPassword === this.plainPassword) {
+      const me = this
+      if (me.conformedPlainPassword === this.plainPassword) {
         this.resetPasswordEnd(this.phone, this.plainPassword).then(
-          () => window.history.go(-3)
+          () => {
+            me.logout()
+            me.$dispatch(eventMap.LOGOUT)
+            window.history.go(-3)
+          }
         ).catch(
-          err => { this.errTip = err.message }
+          err => { me.errTip = err.message }
         )
       } else {
-        this.errTip = '两次输入的密码不一致'
+        me.errTip = '两次输入的密码不一致'
       }
     }
   },

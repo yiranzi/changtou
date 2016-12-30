@@ -4,15 +4,15 @@
 
     <!--bottom slot-->
     <tabbar class="ict_tabber" icon-class="vux-center" v-show="isTabbarView" slot="bottom" v-el:tab-bar>
-      <tabbar-item v-link="{path:'/main'}" :selected="route.path === '/main'">
+      <tabbar-item v-link="{path:'/main'}" :selected="currTab === 0" v-touch:tap="currTab=0">
         <span class="home-icon" slot="icon"></span>
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
+      <tabbar-item v-link="{path:'/mycourse'}" :selected="currTab === 1" v-touch:tap="currTab=1">
         <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
+      <tabbar-item v-link="{path:'/setting'}" :selected="currTab === 2" :badge="badgeNewMsgNum"v-touch:tap="currTab=2">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -89,6 +89,13 @@
       }
     },
 
+    data () {
+      return {
+        currTab: 0,
+        tabList: [0, 1, 2]
+      }
+    },
+
     watch: {
       route (newRoute) {
         this.$dispatch(eventMap.VIEW_CHANGE, newRoute.path)
@@ -108,6 +115,12 @@
 
     created () {
 //      this.showNewTestPopIf()
+    },
+
+    events: {
+      [eventMap.ACTIVE_TAB] (itemIndex) {
+        this.currTab = itemIndex
+      }
     },
 
     methods: {

@@ -38,7 +38,6 @@
         itemId: 0, // 交易项目标识
         mchantType: 0, // 商品类型
         coupons: [],  // 优惠列表
-        selectedCoupon: null, // 选择的优惠
         selectedCouponIndex: 0,
         currentBalance: 0,  // 投币余额
         sheetShow: false, // 显示支付sheet
@@ -65,6 +64,9 @@
       // 实付金额
       sum () {
         return this.total - this.toubi
+      },
+      selectedCoupon () {
+        return this.coupons[this.selectedCouponIndex]
       },
       // 支付按钮 信息
       btnOptions () {
@@ -104,7 +106,6 @@
         this.itemId = 0 // 交易项目标识
         this.mchantType = 0 // 商品类型
         this.coupons = []  // 优惠列表
-        this.selectedCoupon = null // 选择的优惠
         this.selectedCouponIndex = 0
         this.currentBalance = 0  // 投币余额
         this.sheetShow = false // 显示支付sheet
@@ -121,7 +122,6 @@
       // 优惠信息 选择
       'couponChange' (couponsIndex) {
         this.selectedCouponIndex = couponsIndex
-        this.selectedCoupon = this.coupons[ couponsIndex ]
       },
       'payChannelChange' (channel) {
         this.payByChannel(channel)

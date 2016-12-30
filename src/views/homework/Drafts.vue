@@ -25,14 +25,19 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
-  import { essayActions } from '../../vuex/actions'
-export default {
+  import {essayActions} from '../../vuex/actions'
+  import {courseRecordsGetters} from '../../vuex/getters'
+
+  export default {
   vuex: {
     actions: {
       getArticle: essayActions.getArticle,
       getDrafts: essayActions.getDrafts,
       deleteDraft: essayActions.deleteDrafts,
       updateDraft: essayActions.updateDraft
+    },
+    getters: {
+      expenseRecords: courseRecordsGetters.expenseRecords //付费课程记录
     }
   },
   data () {
@@ -71,7 +76,22 @@ export default {
   methods: {
     goToArticleEdit (draft) {
       this.updateDraft(draft)
-      this.$route.router.go(`/homework/essay/answer/${draft.lessonId}`)
+      let subjectId = 0
+      for (var i = 0, length = this.expenseRecords.length; i < length; i++) {
+        if (subjectId) {
+          break
+        }
+        const lessonIds = this.expenseRecords[i].lessonSet.lessonIds
+        if (lessonIds) {
+          for (var j = 0, idsLength = lessonIds.length; j < idsLength; j++) {
+            if (parseInt(lessonIds[j]) === parseInt(draft.lessonId)) {
+              subjectId = this.expenseRecords[i].subjectId
+              break
+            }
+          }
+        }
+      }
+      this.$route.router.go(`/homework/essay/answer/${subjectId}/${draft.lessonId}`)
     },
     goToDeleteDraft (articleId) {
       const me = this

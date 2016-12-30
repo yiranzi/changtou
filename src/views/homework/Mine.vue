@@ -32,7 +32,7 @@
               <div class="choice-panel"  v-if="subject.choiceTotal">
                 <p class="modules-title">课后测试</p>
                 <span v-for="choice in subject.lessons">
-                  <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice)"  class="choice-item">
+                  <span v-if="choice.hasChoice === 'Y'" v-touch:tap="onChoiceTap(choice,subject.subjectId)" class="choice-item">
                     <span :class="{'unavailable':!choice.available}">第{{chinaNum[$index]}}课</span>
                     <img v-if="choice.isChoicePassed === 'Y'" class="choice-status" src="../../assets/styles/image/homework/mine/passed.png">
                   </span>
@@ -42,7 +42,7 @@
               <div class="essay-panel" v-if="subject.essayTotal">
                 <p  class="modules-title">{{subject.choiceTotal ? '选修作业' : '课后作业'}}</p>
                 <div v-for="essay in subject.lessons">
-                  <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay)" class="essay-item">
+                  <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay,subject.subjectId)" class="essay-item">
                     <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
                     <span class="essay-status" v-if="essay.available">{{essayStatus[essay.essayStatus]}}</span>
                   </p>
@@ -201,21 +201,22 @@
           this.refreshScroller()
         }
       },
+
       /**
        * 选择题被点击
        * @param choice
        **/
-      onChoiceTap (choice) {
+      onChoiceTap (choice, subjectId) {
         if (choice.available) {
           const me = this
           me.getReport(choice.lessonId).then(
             report => {
               if (report.kpScore) {
                 // 做过选择题
-                me.$route.router.go('/homework/choice/mark')
+                me.$route.router.go(`/homework/choice/mark/${subjectId}/${choice.lessonId}`)
               } else {
                 // 没做过
-                me.$route.router.go(`/homework/choice/answer/${choice.lessonId}`)
+                me.$route.router.go(`/homework/choice/answer/${subjectId}/${choice.lessonId}`)
               }
             }
           ).catch(
@@ -227,7 +228,7 @@
        * 点击问答题
        * @param essay
       */
-      onEssayTap (essay) {
+      onEssayTap (essay, subjectId) {
         const me = this
         if (essay.available) {
           if (essay.essayType === 'N') {
@@ -235,25 +236,14 @@
             me.getArticle(essay.lessonId).then(
               evaluation => {
                 if (evaluation && evaluation.status !== null) {
-                  switch (evaluation.status) {
-                    case 0://作业已提交
-                      me.goEssayMark(essay.lessonId)
-                      break
-                    case 1://草稿已提交 写作业
-                      me.goEssayAnswer(essay.lessonId)
-                      break
-                    case 2://已批改 未通过 查看作业
-                      me.goEssayMark(essay.lessonId)
-                      break
-                    case 3://已批改 通过 查看作业
-                      me.goEssayMark(essay.lessonId)
-                      break
-                    default:
-                      me.goEssayMark(essay.lessonId)
-                      break
+                  if (evaluation.status === 1) {
+                    //草稿已提交 写作业
+                    me.goEssayAnswer(subjectId, essay.lessonId)
+                  } else {
+                    me.goEssayMark(subjectId, essay.lessonId)
                   }
                 } else {
-                  me.goEssayAnswer(essay.lessonId)
+                  me.goEssayAnswer(subjectId, essay.lessonId)
                 }
               }
             ).catch(
@@ -269,19 +259,19 @@
         }
       },
 
-      goEssayMark (lessonId) {
+      goEssayMark (subjectId, lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-          () => me.$route.router.go('/homework/essay/mark')
+          () => me.$route.router.go(`/homework/essay/mark/${subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
       },
 
-      goEssayAnswer (lessonId) {
+      goEssayAnswer (subjectId, lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-          () => me.$route.router.go(`/homework/essay/answer/${lessonId}`)
+          () => me.$route.router.go(`/homework/essay/answer/${subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
