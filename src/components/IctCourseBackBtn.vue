@@ -7,7 +7,7 @@
   export default{
     data () {
       return {
-        activeTop: Device.platform === platformMap.IOS ? (0.3 * window.fontScale + 20) + 'px' : '0.3rem'
+        activeTop: Device.platform === platformMap.IOS ? (0.1 * window.fontScale + 20) + 'px' : '0.3rem'
       }
     },
 
