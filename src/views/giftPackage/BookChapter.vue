@@ -48,7 +48,7 @@
     .book-paganition{
       position: fixed;
       left: 83%;
-      top: 27.5rem !important;
+      top: 27.5rem ;
       color: #ccc;
       font-size: .6rem;
       z-index: 400;
@@ -56,7 +56,6 @@
     .swiper-container{
       background: white !important;
       .vux-slider{
-        height:37rem !important;
         padding: 1.25rem 1.25rem 0 1.25rem;
         .vux-swiper{
           height:37rem !important;
@@ -120,12 +119,17 @@
         margin-bottom: 1.5rem !important;
       }
     }
+    @media (min-height: 568px)  and (max-height: 568px) {
+      .book-title:nth-child(3){
+        margin-bottom: .7rem !important;
+      }
+    }
     @media (min-height: 640px) and (max-height: 640px) {
       .book-paganition{
-        top: 68% !important;
+        top: 75% !important;
       }
       .book-use-top{
-        margin-top: -1.5rem;
+
       }
       .book-title:nth-child(3){
         margin-bottom: .8rem !important;
@@ -150,12 +154,19 @@
     @media (min-height: 1024px) and (max-height: 1366px) {
       .book-content{
         font-size: .5rem !important;
+        p{
+          line-height: 1rem;
+        }
       }
       .book-paganition{
         top: 59%;
       }
-      .book-title:nth-child(3){
+      .book-title{
         margin-bottom: .5rem !important;
+        font-size: .5rem !important;
+      }
+      .book-index{
+        font-size: .45rem !important;
       }
     }
   }
