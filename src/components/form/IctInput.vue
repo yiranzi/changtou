@@ -182,7 +182,7 @@
       .eye::before {
         font-family: 'myicon';
         content: '\e912';
-        color: #00b0f0;
+        color: #007aff;
         font-size: 1rem !important;
       }
 
