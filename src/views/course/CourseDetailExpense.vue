@@ -155,7 +155,7 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        syncHomeworkList: homeworkListActions.getHomeworkList
+        syncHomeworkList: homeworkListActions.getHomeworkList,
         updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
