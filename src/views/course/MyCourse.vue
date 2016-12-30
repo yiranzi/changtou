@@ -144,10 +144,8 @@
        const bookId = 1
        this.getBookProgress(bookId).then(
         res => {   // bookId, createTime, sectionIndex, totalOwnerNum
-          if (res === '' || res === undefined || res === null) {
-            // doNothing
-          } else {
-          me.readTotalNum = res.totalOwnerNum
+          if (res) {
+            me.readTotalNum = res.totalOwnerNum
           }
         }).catch(
         err => {
@@ -191,12 +189,12 @@
       const bookId = 1
       this.getBookProgress(bookId).then(
         res => { // bookId, createTime, sectionIndex
-        if (res === '' || res === undefined) {
-          me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
-        } else {
+        if (parseInt(res.sectionIndex) !== 0) {
           let currIndex = parseInt(res.sectionIndex)
           // 阅读页数应该到 书籍阅读页获取而不是入口处
           me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
+        } else {
+          me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
         }
       })
     },

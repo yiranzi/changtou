@@ -117,16 +117,14 @@ export default {
        // 用于获取领取礼包(即电子书)的创建时间
        this.getBookProgress(bookId).then(
          res => {
-           if (res === '' || res === undefined || res === null) {
-              // doNothing
-            } else {
-              let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 7 * 24 * 60 * 60 * 1000)   // 一周的毫秒数 每一周放置一章
+           if (res) {
+             let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 1000 * 3600 * 7 * 24)   // 一周的毫秒数 每一周放置一章
                 if (setChapterNum < 1 && setChapterNum >= 0) {
                   me.bookTitleList = me.bookTitleList.splice(0, 1)
                 } else {
-             me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
-            }
-          }
+                  me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+                }
+              }
         }).catch(
         err => {
           console.log(err.message)
