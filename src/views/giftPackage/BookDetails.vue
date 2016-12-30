@@ -118,7 +118,7 @@ export default {
        this.getBookProgress(bookId).then(
          res => {
            if (res) {
-             let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 1000 * 3600 * 7 * 24)   // 一周的毫秒数 每一周放置一章
+             let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / (1000 * 3600 * 7 * 24))   // 一周的毫秒数 每一周放置一章
                 if (setChapterNum < 1 && setChapterNum >= 0) {
                   me.bookTitleList = me.bookTitleList.splice(0, 1)
                 } else {

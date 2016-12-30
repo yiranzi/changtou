@@ -278,9 +278,10 @@
            me.isQuestionPlaced = false
            } else {
         // 提问入口按钮显示逻辑
-            me.isSubmitQuestionNaire(questionnaireId).then(
+           if (me.isUserLogin) {
+              me.isSubmitQuestionNaire(questionnaireId).then(
               function (isSubmit) {
-                if (!isSubmit && me.isUserLogin) {  // 未提交放置按钮
+                if (!isSubmit) {  // 未提交放置按钮
                   if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
                     me.isQuestionPlaced = true
                   }
@@ -288,6 +289,7 @@
               }
              )
            }
+         }
        }
        , 300)
 

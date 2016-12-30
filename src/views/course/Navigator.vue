@@ -138,13 +138,15 @@
           }, 200)
         }
       )
-      this.isQualifyGiftPackage().then(
-        function (isQualify) {
-          if (isQualify.qualification) {
-            me.showPackage()
+      if (this.isLogin) {
+        this.isQualifyGiftPackage().then(
+          function (isQualify) {
+            if (isQualify.qualification) {
+              me.showPackage()
+            }
           }
-        }
-      )
+         )
+      }
     },
 
     computed: {

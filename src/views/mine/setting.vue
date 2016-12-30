@@ -113,14 +113,16 @@
       data (transition) {
         this.$dispatch(eventMap.ACTIVE_TAB, 2)
         const me = this
-        this.loadingCouponList().then(
-            function (couponList) {
-              if (parseInt(couponList.length) > 0) {
-               me.isCouponShow = true
-               me.setScrollerHeight()
-              }
+        if (this.isLogin) {
+          this.loadingCouponList().then(
+          function (couponList) {
+            if (parseInt(couponList.length) > 0) {
+             me.isCouponShow = true
+             me.setScrollerHeight()
             }
-          )
+          }
+         )
+        }
         transition.next()
       }
     },

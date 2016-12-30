@@ -153,34 +153,35 @@ export default {
 
       // 获取电子书阅读人数
        const bookId = 1
-       this.getBookProgress(bookId).then(
-        res => {   // bookId, createTime, sectionIndex, totalOwnerNum
-          if (res) {
-            me.readTotalNum = res.totalOwnerNum
+       if (this.isLogin) {
+          this.getBookProgress(bookId).then(
+          res => {   // bookId, createTime, sectionIndex, totalOwnerNum
+            if (res) {
+              me.readTotalNum = res.totalOwnerNum
+            }
+          }).catch(
+          err => {
+            console.log(err.message)
           }
-        }).catch(
-        err => {
-          console.log(err.message)
-        }
-      )
-
-      // 是否显示电子书
-      this.isQualifyGiftPackage().then(
-        function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
-          if (!res.qualification) {
-            me.receiveGiftPackage().then(
-              (message) => {
-                }).catch(function (err) {
-            if (err.message === '您已领取过新手礼包' && me.isLogin) {
-              me.isShowEBook = true
-            if (me.expenseRecords.length > 0) {
-              me.isBookPlacedDown = true
+        )
+        // 是否显示电子书
+        this.isQualifyGiftPackage().then(
+          function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
+            if (!res.qualification) {
+              me.receiveGiftPackage().then(
+                (message) => {
+                  }).catch(function (err) {
+              if (err.message === '您已领取过新手礼包' && me.isLogin) {
+                me.isShowEBook = true
+              if (me.expenseRecords.length > 0) {
+                me.isBookPlacedDown = true
+              }
+            }
+              })
             }
           }
-            })
-          }
-        }
-      )
+        )
+      }
 
       return Promise.all(promiseArray).then(
         function () {
@@ -201,16 +202,18 @@ export default {
     gotoReadBook () {
       const me = this
       const bookId = 1
-      this.getBookProgress(bookId).then(
-        res => { // bookId, createTime, sectionIndex
-        if (parseInt(res.sectionIndex) !== 0) {
-          let currIndex = parseInt(res.sectionIndex)
-          // 阅读页数应该到 书籍阅读页获取而不是入口处
-          me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
-        } else {
-          me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
-        }
-      })
+      if (this.isLogin) {
+        this.getBookProgress(bookId).then(
+          res => { // bookId, createTime, sectionIndex
+          if (parseInt(res.sectionIndex) !== 0) {
+            let currIndex = parseInt(res.sectionIndex)
+            // 阅读页数应该到 书籍阅读页获取而不是入口处
+            me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
+          } else {
+            me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
+          }
+        })
+      }
     },
     /**
      * 设置滚动高度
@@ -342,6 +345,24 @@ export default {
     p{
       margin: 0;
     }
+    .read-book-item{
+  //    position: relative;
+      background: #e3f7fe !important;
+      position: relative;
+      .read-book-tip{
+        background: #ff9800;
+        height: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        font-size: .6rem;
+        color: #fff;
+        top: 0.5rem;
+        left: 5.5rem;
+        /* position: relative; */
+        position: absolute;
+        width: 2.75rem;
+      }
+    }
     .my-course-drfts{
       width: 5rem;
       color: #fff;
@@ -456,7 +477,7 @@ export default {
         color: #00b0f0;
       }
     }
-    .course-list{
+    .course-list, .read-book-item{
       background: #fff;
       overflow: hidden;
       border-bottom: 1px solid #f0eff5;
