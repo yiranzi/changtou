@@ -4,15 +4,15 @@
 
     <!--bottom slot-->
     <tabbar class="ict_tabber" icon-class="vux-center" v-show="isTabbarView" slot="bottom" v-el:tab-bar>
-      <tabbar-item v-link="{path:'/main'}" :selected="route.path === '/main'">
+      <tabbar-item v-link="{path:'/main'}" :selected="currTab === 0" v-touch:tap="currTab=0">
         <span class="home-icon" slot="icon"></span>
         <span class="ict_tabber-label"slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/mycourse'}" :selected="isDemo" >
+      <tabbar-item v-link="{path:'/mycourse'}" :selected="currTab === 1" v-touch:tap="currTab=1">
         <span class="my-icon" slot="icon"></span>
         <span slot="label">我的课程</span>
       </tabbar-item>
-      <tabbar-item v-link="{path:'/setting'}" :selected="route.path === '/project/donate'" :badge="badgeNewMsgNum">
+      <tabbar-item v-link="{path:'/setting'}" :selected="currTab === 2" :badge="badgeNewMsgNum"v-touch:tap="currTab=2">
         <span class="setting-icon" slot="icon"></span>
         <span slot="label">个人中心</span>
       </tabbar-item>
@@ -20,6 +20,7 @@
 
     <alert :show.sync="alertBox.show"
            :button-text="alertBox.btnText"
+           @on-hide="hideAlert"
            class="ict-alert">{{alertBox.message}}</alert>
     <confirm
              :show.sync="confirmBox.show"
@@ -60,7 +61,6 @@
   import Toast from 'vux/toast'
   import Confirm from 'vux/confirm'
   import {Tabbar, TabbarItem} from 'vux/tabbar'
-  import {setLocalCache, getLocalCache} from './util/cache'
 
   import mixinEvent from './mixinEvent'
   import mixinAjax from './mixinAjax'
@@ -91,7 +91,8 @@
 
     data () {
       return {
-        isShowNewTestPop: false
+        currTab: 0,
+        tabList: [0, 1, 2]
       }
     },
 
@@ -113,7 +114,13 @@
     },
 
     created () {
-      this.showNewTestPopIf()
+//      this.showNewTestPopIf()
+    },
+
+    events: {
+      [eventMap.ACTIVE_TAB] (itemIndex) {
+        this.currTab = itemIndex
+      }
     },
 
     methods: {
@@ -130,20 +137,6 @@
         } else if (type === 'cancel') {
           this.cancelHandler()
         }
-      },
-
-      //判断是否显示新手测试弹框
-      showNewTestPopIf () {
-        if (getLocalCache('first-test')) {
-          this.isShowNewTestPop = false
-        } else {
-          this.isShowNewTestPop = true
-        }
-      },
-      //关闭新手测试弹框
-      closeNewerTestPop () {
-        this.isShowNewTestPop = false
-        setLocalCache('first-test', true)
       }
     },
 
@@ -161,7 +154,8 @@
   @import "assets/styles/animate.less";
   html {
     height: 100%;
-    font-family: "Microsoft YaHei" ! important;
+    /*font-family: "Microsoft YaHei" ! important;*/
+    font-family:"Microsoft YaHei","微软雅黑",Arial,Helvetica,sans-serif,"宋体";
     overflow-x: hidden;
   }
 
@@ -280,11 +274,12 @@
   }
 
   .weui_tabbar{
-    height: 2.45rem;
+    height: 2.5rem;
     & &_item{
       padding-top: 2px;
       text-decoration: initial;
       .weui_tabbar_icon{
+        margin: 0.2rem auto 0;
         display: block;
         width: 1.4rem;
         height: 1.4rem;
@@ -298,10 +293,10 @@
       }
     }
     .weui_tabbar_item .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
     }
     .weui_tabbar_item.weui_bar_item_on .weui_tabbar_label{
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-size: 0.5rem;
       line-height: 0.7rem;
       color: #409af4;
@@ -424,10 +419,14 @@
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #087685;
+    font-size: 24/40rem;
+    color: #aaa;
+    p{
+      margin: 20/40rem 0;
+    }
   }
   .ict-loading-img{
-    width: 2rem;
-    height: 2rem;
+    width: 4rem;
+    height: 4rem;
   }
 </style>

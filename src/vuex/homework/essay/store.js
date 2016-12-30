@@ -3,7 +3,7 @@
  */
 const state = {
   essayLessonId: '', // 问答题 lessonId
-  essayType: '', // 问答题类型 null | S | H
+  assignmentType: '', // 问答题类型 null | S | H
   essayQuestion: '', // 问答题题目
   essayAnswer: '', //作业内容
   articleId: 0,
@@ -21,7 +21,7 @@ const mutations = {
    * @constructor
      */
   UPDATE_ESSAY (state, essay) {
-    state.essayType = essay.assignmentType
+    state.assignmentType = essay.assignmentType
     state.essayQuestion = essay.assignmentContent
   },
   /**

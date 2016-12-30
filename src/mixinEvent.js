@@ -12,8 +12,6 @@ import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {getKnowledgePointMap} from './vuex/homework/choice/actions'
-//import {Device} from './plugin/device'
-import {initVerNum} from './plugin/version'
 
 const mixin = {
   vuex: {
@@ -69,10 +67,8 @@ const mixin = {
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
-        .then(this.hideSplashscreen)
-        .catch(this.hideSplashscreen)
-
-      initVerNum()
+        .then(() => {})
+        .catch(() => {})
 
       // 延迟获取对应知识点, 增加页面的响应速度
       const me = this
@@ -113,6 +109,9 @@ const mixin = {
       this.doWhenUserNotValid(user)
     },
 
+    /**
+     * 毕业
+     */
     [eventMap.SUBJECT_GRADUATION]: function ({subjectId}) {
       this.showMask({
         component: 'graduationDiploma/Congratulation.vue',
@@ -122,6 +121,13 @@ const mixin = {
           this.$route.router.go(`/graduation/subject/diploma/${subjectId}`)
         }
       })
+    },
+
+    /**
+     * 首屏加载完毕
+     */
+    [eventMap.NAVIGATOR_LOADED]: function () {
+      this.hideSplashscreen()
     },
 
     /**
@@ -150,7 +156,7 @@ const mixin = {
 
       tasks.push(this.getHomeworkList())
       return Promise.all(tasks).then(
-        () => {}
+        //this.hideSplashscreen
       ).catch(
         () => {}
       )

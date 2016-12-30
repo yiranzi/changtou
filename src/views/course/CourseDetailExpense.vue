@@ -1,53 +1,40 @@
 <template>
   <div style="height: 100%;" class="subject-detail">
-    <div class="top-back-btn" v-touch:tap="back"></div>
+    <ict-back-btn></ict-back-btn>
+
     <scroller :lock-x="true" scrollbar-y :bounce="false" v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
-        <img v-if="!hasVaildChapterCicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
-             alt="" style="height: 12rem; width: 100%; display: block">
+        <img v-if="!hasValidChapterClicked" v-bind:src="currSubject ? currSubject.pic : './static/image/subject/intro-mini-pic.png'"
+             alt="" style="height: 13rem; width: 100%; display: block">
 
-        <swiper v-if="hasVaildChapterCicked" :show-dots="false" :auto="false" :loop="false" :aspect-ratio="0.8" :show-desc-mask="false" style="height: 12rem">
-        <swiper-item v-for="ppt in currPpts" class="black" style="height: 12rem" track-by="$index">
-          <img :src="ppt" alt="" style="height: 100%; width: 100%">
-        </swiper-item>
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">你无处可藏</h2></swiper-item>-->
-        <!--<swiper-item class="black"><h2 class="title fadeInUp animated">不是它可恶</h2></swiper-item>-->
-      </swiper>
+        <!--ppt-->
+        <ppt-panel v-if="hasValidChapterClicked" :ppts="currPpts"></ppt-panel>
 
-        <web-audio v-show="hasVaildChapterCicked" :src.sync="currAudioSrc"></web-audio>
+        <!--音频-->
+        <web-audio v-show="hasValidChapterClicked" :src.sync="currAudioSrc"></web-audio>
 
         <!--没有获取到课程内容时显示-->
         <div v-show="0">没有内容</div>
 
         <!--简介和目录-->
         <div v-show="1" style="height: 100%; background-color: #fff">
-          <sticky>
+          <div>
             <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
               <tab-item class="vux-center" :selected="currTabItem === 's'">简介</tab-item>
               <tab-item class="vux-center" :selected="currTabItem === 'c'">目录</tab-item>
             </tab>
-          </sticky>
+          </div>
 
+          <!--简介-->
           <specific v-show='currTabIndex === 0' :subject="currSubject" :record="currRecord"></specific>
+
+          <!--目录-->
           <content v-show='currTabIndex === 1' :lessons="currSubject ? currSubject.lessonList : []"
                    :homework="currHomework"
                    :selected-lesson.sync="selectedLesson"
                    :selected-chapter.sync="selectedChapter">
           </content>
-        <!--<swiper :index.sync="currTabIndex" :show-dots="false" height="1000px">-->
-          <!--<swiper-item>-->
-            <!--<specific :subject="currSubject"></specific>-->
-          <!--</swiper-item>-->
-
-          <!--<swiper-item>-->
-            <!--<content :lessons="currSubject ? currSubject.lessonList : []" :selected-lesson.sync="selectedLesson"-->
-                     <!--:selected-chapter.sync="selectedChapter">-->
-            <!--</content>-->
-          <!--</swiper-item>-->
-
-        <!--</swiper>-->
-        <!--<div style="height: 1000px;background: #00b0f0"></div>-->
-      </div>
+        </div>
       </div>
     </scroller>
 
@@ -62,24 +49,24 @@
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
 
-      <div v-if="currStatus === 'I' && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活</ict-button>
+      <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
+        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活课程</ict-button>
       </div>
 
-      <div v-if="currStatus === 'N' && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
 
-      <div v-if="currStatus === 'P' && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
       </div>
 
-      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject.type == 'M'" class="btn-box">
+      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
       </div>
     </div>
-    <essay-float :show="showEssay" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
+    <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
   </div>
@@ -148,7 +135,10 @@
           color: #fff;
           background-color: #00b0f0;
           flex: 51;
-          /*flex-grow: 2;*/
+
+          &:active,&:visited{
+            color: #898989;
+          }
         }
       }
     }
@@ -156,18 +146,18 @@
 
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import WebAudio from '../../components/WebAudio.vue'
+  import PptPanel from '../../components/IctCoursePptPanel.vue'
   import Specific from '../../components/IctCouserSpecificExpense.vue'
   import Content from '../../components/IctCourseContentExpense.vue'
   import IctButton from '../../components/IctButton.vue'
   import essayFloat from '../homework/essayFloat.vue'
   import choiceFloat from '../homework/ChoiceFloat.vue'
-  import Swiper from 'vux/swiper'
-  import SwiperItem from 'vux/swiper-item'
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, graduationDiplomaActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -195,8 +185,6 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        getDiplomaList: graduationDiplomaActions.getDiplomaList,
-
         syncHomeworkList: homeworkListActions.getHomeworkList,
         isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire
       }
@@ -212,7 +200,7 @@
 
         isLoadedFail: false, //数据是否加载完毕
         subjectId: '', //课程Id
-        hasVaildChapterCicked: false,
+        hasValidChapterClicked: false,
 
         isSubjectBranch: false, // 当前课程是否为选修课
         currSubject: null, // 当前课程
@@ -323,30 +311,8 @@
               this.hideLoading()
               return {isLoaded: false, isLoadedFail: true, isResponsive: true}
             }
-          ).catch(
-            this.hideLoading()
           )
         }
-      },
-
-      activate ({from, next}) {
-        //做完课程最后一课选择题 拉取毕业奖状列表
-        const me = this
-        if (/\/homework\/choice\/mark/.test(from.path) && this.currUseabLessonArr.length === this.currSubject.lessonList.length) {
-          me.getDiplomaList().then(
-            (newDiploma) => {
-              const subjectDiploma = newDiploma.find(
-                function (diploma) {
-                  return diploma.subjectId === parseInt(me.subjectId)
-                }
-              )
-              if (subjectDiploma && subjectDiploma.drawStatus === 'N') {
-                me.$dispatch(eventMap.SUBJECT_GRADUATION, subjectDiploma)
-              }
-            }
-          )
-        }
-        next()
       },
 
       /**
@@ -406,9 +372,6 @@
       'subjectId': function (newSubjectId, oldSubjectId) {
         // 这里调用 setTimeout  是因为页面切换同时刷新数据会有卡顿
         setTimeout(() => {
-          // 隐藏loading提示
-          this.hideLoading()
-
           //设置课程信息
           this.currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === newSubjectId)
 
@@ -433,6 +396,11 @@
   //          this.currStatus = 'W'
   //          this.currUseabLessonArr = [this.currSubject.lessonList[0].lessonId]
           }
+
+          // 隐藏loading提示
+          this.$nextTick(() => {
+            this.hideLoading()
+          })
         }, 500)
       },
 
@@ -507,7 +475,7 @@
             this.buy()
           }
         } else if (type === 'common') { //当前课程可以听
-          this.hasVaildChapterCicked = true
+          this.hasValidChapterClicked = true
           this.playChapter(chapter)
         } else if (type === 'choice') {
           this.onChoiceTap()
@@ -555,7 +523,7 @@
           report => {
             if (report.kpScore) {
               // 做过选择题
-              me.$route.router.go('/homework/choice/mark')
+              me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
             } else {
               // 没做过
               me.showChoice = true
@@ -596,11 +564,11 @@
                   me.goEssayMark(lessonId)
                   break
                 default:
-                  me.goEssayMark(lessonId)
+                  me.showEssayFloat()
                   break
               }
             } else {
-              me.goEssayAnswer(lessonId)
+              me.showEssayFloat()
             }
         }).catch(
           err => {
@@ -614,7 +582,7 @@
       goEssayAnswer (lessonId) {
         const me = this
         this.getArticle(lessonId).then(
-            () => me.$route.router.go(`/homework/essay/answer/${lessonId}`)
+            () => me.$route.router.go(`/homework/essay/answer/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -634,7 +602,7 @@
         const me = this
         const lessonId = LimitedLessonId || this.selectedLesson
         this.getArticle(lessonId).then(
-            () => me.$route.router.go('/homework/essay/mark')
+            () => me.$route.router.go(`/homework/essay/mark/${me.subjectId}/${lessonId}`)
         ).catch(
             err => console.warn(err)
         )
@@ -656,7 +624,7 @@
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.DO_HOMEWORK, {
             lessonid: this.selectedLesson.lessonId
           })
-          this.$route.router.go(`/homework/essay/answer/${this.selectedLesson.lessonId}`)
+          this.$route.router.go(`/homework/essay/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
         }
       },
 
@@ -668,18 +636,14 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_BEGIN, {
           lessonid: this.selectedLesson.lessonId
         })
-        this.$route.router.go(`/homework/choice/answer/${this.selectedLesson.lessonId}`)
-      },
-
-      back () {
-        window.history.back()
+        this.$route.router.go(`/homework/choice/answer/${this.subjectId}/${this.selectedLesson.lessonId}`)
       },
 
       /**
        * 重置页面
        */
       resetView () {
-        this.hasVaildChapterCicked = false
+        this.hasValidChapterClicked = false
         this.pause()
         this.resetScroller()
       },
@@ -712,8 +676,8 @@
 
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubjectRecord.lessonSet.lessonIds.length) {
-            this.currUseabLessonArr.push(currSubjectRecord.lessonSet.lessonIds[this.currUseabLessonArr.length])
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < this.currSubject.lessonList.length) {
+            this.currUseabLessonArr.push(this.currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
           }
         }
 
@@ -791,40 +755,51 @@
         const lessonTitle = lastSubmitLesson.title
         const essayQuestion = lastSubmitLesson.essayQuestion
 
-        if (this.isAssignmentSubmitted) {
-          // 如果提交作业
-          confirmText = '查看作业'
-          confirmHandler = function () {
-            me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
-          }
-          msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
-        } else {
-          // 如果没有提交作业
-          if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
-            // 有选择题
-            confirmText = '去测试'
+        if (essayQuestion.assignmentType === 'S') {
+          // 简单作业
+          if (this.isAssignmentSubmitted) {
+            // 如果提交作业
+            confirmText = '查看作业'
             confirmHandler = function () {
-              me.$route.router.go(`/homework/choice/answer/${me.lastSubmitlessonId}`)
+              me.setEssayQuestion(essayQuestion)
+              me.goEssayMark(me.lastSubmitlessonId)
             }
-            msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
+            msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
           } else {
-            // 无选择题
-            confirmText = '去写作业'
-            confirmHandler = function () {
-              me.onEssayTap(me.lastSubmitlessonId, essayQuestion)
+            // 如果没有提交作业
+            if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
+              // 有选择题
+              confirmText = '去测试'
+              confirmHandler = function () {
+                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
+              }
+              msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
+            } else {
+              // 无选择题
+              confirmText = '去写作业'
+              confirmHandler = function () {
+                  me.setEssayQuestion(essayQuestion)
+                  me.goEssayAnswer(me.lastSubmitlessonId)
+              }
+              msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
             }
-            msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
           }
+            // 加入延迟,防止出现msg被点透的情况
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: confirmText,
+            cancelText: '继续听课',
+            okCallback: confirmHandler
+          })
+        } else if (essayQuestion.assignmentType === 'H') {
+          me.showAlert(
+            {
+              message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
+              btnText: '知道了'
+            }
+          )
         }
-
-        // 加入延迟,防止出现msg被点透的情况
-        me.showConfirm({
-          title: '',
-          message: msg,
-          okText: confirmText,
-          cancelText: '继续听课',
-          okCallback: confirmHandler
-        })
       },
 
       /**
@@ -1014,6 +989,7 @@
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
         this.$dispatch('chapterPlay', chapter)
+        this.resetScroller()
       },
 
       /**
@@ -1035,8 +1011,6 @@
 
     components: {
       WebAudio,
-      Swiper,
-      SwiperItem,
       Tab,
       TabItem,
       Scroller,
@@ -1045,7 +1019,9 @@
       Content,
       IctButton,
       choiceFloat,
-      essayFloat
+      essayFloat,
+      PptPanel,
+      IctBackBtn
     }
   }
 </script>

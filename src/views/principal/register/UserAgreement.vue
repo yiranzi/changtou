@@ -1,8 +1,8 @@
 <template>
   <div class="agreement">
-    <ict-titlebar>用户协议</ict-titlebar>
+    <ict-titlebar v-el:titlebar>用户协议</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-      <div  v-el:agreement>
+      <div>
         <div v-for="item in agreement" class="agreement-item">
           <p class="item-title">{{item.title}}</p>
           <p v-for="content in item.contents">{{content}}</p>
@@ -14,7 +14,7 @@
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../../components/IctTitleBar.vue'
-  var agreement = [
+  const agreement = [
     {
       'contents': [
         '请仔细阅读本协议，长投学堂APP平台将依据以下条件和条款为您提供服务。',
@@ -126,7 +126,7 @@
   export default {
     data () {
       return {
-        scrollerHeight: '0px',
+        scrollerHeight: '583px',
         agreement: agreement
       }
     },
@@ -140,9 +140,8 @@
       setScrollerHeight () {
         // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
         const me = this
-        const { agreement } = this.$els
-        me.scrollerHeight = agreement.offsetHeight + 'px'
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.offsetHeight + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0

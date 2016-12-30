@@ -8,7 +8,7 @@
 */
 <template>
   <div class="pay-toubi" v-if="show">
-    使用投币{{value}}抵用￥{{value}}
+    使用投币抵用￥{{value}}
   </div>
 </template>
 <script>

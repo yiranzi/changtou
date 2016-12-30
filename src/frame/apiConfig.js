@@ -56,6 +56,8 @@ const apiUrl = {
   'update_free_subject_record': '/student/free/lesson/record', // 更新免费课程进度
   'join_subject': '/student/free/subject/registration', //打开免费课程
 
+  'update_expense_chapter_record': '/student/expense/chapter/record', // 记录付费课程进度到chapter
+
   'seminar': '/course/seminar/:seminarId', //讲座
   /**
    * 专题模块

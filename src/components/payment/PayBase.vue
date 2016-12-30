@@ -9,14 +9,14 @@
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <slot></slot>
-        <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange"></pay-coupons>
+        <pay-coupons :coupons="coupons" @pay-coupons-change="onCouponChange" :value.sync="couponsValue"></pay-coupons>
         <pay-total>{{total}}</pay-total>
         <pay-toubi :value="toubi"></pay-toubi>
         <fast-login @login-tap="onLoginTap" @code-confirm="onCodeConfirm"></fast-login>
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
       <pay-button :state="btnOptions.state" :left-options="btnOptions.leftOptions" :right-options="btnOptions.rightOptions" v-el:btns v-show="isShowBottomBtn"></pay-button>
-      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange"></pay-action-sheet>
+      <pay-action-sheet :show.sync="sheetShow" :menus="actionSheet.menus" @pay-way-close="onPayWayClose" @pay-way-selected="onPayChannelChange" :sum="sum"></pay-action-sheet>
     </div>
 </template>
 <script>
@@ -30,6 +30,8 @@
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
   import {userGetters} from '../../vuex/getters'
 
+  // 页面原有高度, 用来处理键盘弹出事件
+  const _originHtmlHeight = window.document.body.offsetHeight
   let isKeyboardPop = false
 
 export default {
@@ -63,7 +65,8 @@ export default {
         }
       }
     },
-    sheetShow: Boolean
+    sheetShow: Boolean,
+    sum: Number
   },
 
   vuex: {
@@ -76,11 +79,12 @@ export default {
       scrollerHeight: '0px',
       actionSheet: {
         menus: {
-          wechat: '微信支付',
-          ali: '支付宝支付'
+          ali: '支付宝支付',
+          wechat: '微信支付'
         }
       },
-      isShowBottomBtn: true
+      isShowBottomBtn: true,
+      timer: 0
     }
   },
   computed: {
@@ -89,6 +93,9 @@ export default {
         callback: this.barRightOptions.callback,
         disabled: this.barRightOptions.disabled
       }
+    },
+    couponsValue () {
+      return '0'
     }
   },
 
@@ -116,20 +123,24 @@ export default {
      * input控件被选中
      */
     'ictInputFocus': function (inputId) {
+      this.stopListenToHeightChange()
+
       isKeyboardPop = true
       this.hideBtnWhenKeyboardShow()
+
+      this.startListenToHeightChange()
     },
 
     /**
      * input控件失去焦点
      */
     'ictInputBlur': function (inputId) {
-      isKeyboardPop = false
-      setTimeout(() => {
-        if (!isKeyboardPop) {
-        this.showBtnWhenKeyboardHide()
-        }
-      }, 500)
+//      isKeyboardPop = false
+//      setTimeout(() => {
+//        if (!isKeyboardPop) {
+//        this.showBtnWhenKeyboardHide()
+//        }
+//      }, 500)
     }
   },
 
@@ -164,6 +175,26 @@ export default {
      */
     showBtnWhenKeyboardHide () {
       this.isShowBottomBtn = true
+    },
+
+    /**
+     * 开始监听页面高度改变事件
+     */
+    startListenToHeightChange () {
+      this.timer = setInterval(() => {
+          // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
+          if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
+            this.showBtnWhenKeyboardHide()
+          }
+          isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
+      }, 500)
+    },
+
+    /**
+     * 停止监听页面高度改变事件
+     */
+    stopListenToHeightChange () {
+      clearInterval(this.timer)
     }
   },
   components: {

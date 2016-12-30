@@ -7,6 +7,7 @@
 
     <ict-input title="账号"
              placeholder="输入手机号"
+             type="tel"
              id="register-start-phone"
              :value.sync="phone">
     </ict-input>
@@ -40,7 +41,7 @@
   import {userActions} from '../../../vuex/actions'
   import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
-
+  import {setSessionCache} from '../../../util/cache'
   export default {
     vuex: {
       actions: {
@@ -68,7 +69,8 @@
       }
     },
     route: {
-      data () {
+      data ({from}) {
+        setSessionCache('register-sources-page', {sourcesPage: from.path})
         this.phone = ''
         this.plainPassword = ''
       }

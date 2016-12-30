@@ -60,6 +60,7 @@
   import Scroller from 'vux/scroller'
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
   import {strategyLevel} from '../../frame/userLevelConfig'
+  import {eventMap} from '../../frame/eventConfig'
   import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
@@ -110,12 +111,13 @@
     },
     route: {
       data (transition) {
-        this.setScrollerHeight()
+        this.$dispatch(eventMap.ACTIVE_TAB, 2)
         const me = this
         this.loadingCouponList().then(
             function (couponList) {
               if (parseInt(couponList.length) > 0) {
                me.isCouponShow = true
+               me.setScrollerHeight()
               }
             }
           )
@@ -123,12 +125,14 @@
       }
     },
     methods: {
-      doLogin   () {
+      doLogin () {
         this.$route.router.go('/entry')
       },
+
       doRegister () {
         this.$route.router.go('/register/start')
       },
+
       onStrategyTap () {
         if (!this.strategy || this.strategy.strategyLevel === strategyLevel.COMMON) {
           this.$route.router.go('/strategy/professional/intro')
@@ -187,14 +191,21 @@
       color:black;
     }
     .ict-user-name {
+      position: relative;
       font-size: 0.8rem;
       .reset-nick-name {
-        position: relative;
-        background: url("../../assets/styles/image/pen.png") no-repeat center center / 70%;
+        position: absolute;
         width: 1rem;
         height:1rem;
         top: 2px;
+        margin-left: 0.2rem;
         display: inline-block;
+        &:after{
+          font-family: 'myicon';
+          content: '\e926';
+          font-size: 0.8rem;
+          color: #000;
+        }
       }
     }
     .ict-user-info {

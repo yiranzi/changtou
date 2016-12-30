@@ -10,13 +10,13 @@
       <div v-show="lessonListType.length !== 0 ? (lessonListType[$index] ? lessonListType[$index].isUnfold : false): false"
            transition="expand"
            v-bind:style="{height: (lesson.lessonDetailsList.length +
-           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assigmentType !== 'N' && lesson.type !== 'C' ? 1 : 0)) * 11/4 + 'rem'}" >
+           (lesson.choiceQuestion.length > 0 && lesson.type !== 'C' ? 1 : 0) + (lesson.essayQuestion.assignmentType === 'N' || lesson.type === 'C' ? 0 : 1)) * 11/4 + 'rem'}" >
         <div v-for="chapter in lesson.lessonDetailsList" v-touch:tap="updateSelectedChapter(chapter, $index)"
              class="chapter-title" v-bind:class="{'active': chapter.title === (selectedChapter && selectedChapter.title)}">
-          <span style="width: 85%">
+          <span style="width: 85%; display: inline-flex; align-items:flex-start;line-height: 0.7rem;font-size: 0.7rem ">
             <span class="number">{{$index+1}}</span>
             <span class="play-icon"></span>
-            <span>{{chapter.title}}</span>
+            <span class="chapter-item-title">{{chapter.title}}</span>
           </span>
           <span v-if="lesson.type === 'C'" style="color: #00b0f0; font-size:0.6rem">可试听</span>
         </div>
@@ -124,10 +124,11 @@
       height: 110/40rem;
       font-size: 28/40rem;
       color: #656565;
+      box-sizing: border-box;
       border-bottom: 1px solid #f0eff5;
 
       .number {
-        display: inline-block;
+        width: 0.25rem;
         margin-right: 30/40rem;
       }
       .play-icon {
@@ -137,6 +138,9 @@
         font-family: 'myicon';
         content: '\e907';
         font-size: 0.7rem !important;
+      }
+      .chapter-item-title {
+        width: 78%;
       }
     }
   }
@@ -201,7 +205,7 @@
                 if (homework.essayStatus === -1) {
                   tip = '未答题'
                 } else if (homework.essayStatus === 0) {
-                  tip = '审核中'
+                  tip = '已提交'
                 } else if (homework.essayStatus === 1) {
                   tip = '草稿'
                 } else if (homework.essayStatus === 2) {

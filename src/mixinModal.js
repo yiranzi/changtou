@@ -20,6 +20,10 @@ Vue.mixin({
         {title, message, okText, okCallback, cancelText, cancelCallback})
     },
 
+    /**
+     * 显示 alert
+     * @param args
+       */
     showAlert: function (args) {
       if (typeof args === 'string') {
         this.$dispatch(eventMap.SHOW_ALERT, {message: args, btnText: '确定'})
@@ -29,6 +33,17 @@ Vue.mixin({
       }
     },
 
+    /**
+     * 隐藏 alert时
+     */
+    hideAlert: function () {
+      this.$dispatch(eventMap.HIDE_ALERT)
+    },
+
+    /**
+     * 显示 toast
+     * @param args
+       */
     showToast: function (args) {
       if (typeof args === 'string') {
         this.$dispatch(eventMap.SHOW_TOAST, {message: args, type: 'text'})
@@ -38,36 +53,41 @@ Vue.mixin({
       }
     },
 
-    showMask: function ({component, hideOnMaskTap = true, data, callbackName, callbackFn}) {
-      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, data, callbackName, callbackFn})
+    /**
+     * 显示 带mask的浮层
+     * @param component
+     * @param hideOnMaskTap
+     * @param data
+     * @param callbackName
+       * @param callbackFn
+       */
+    showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
+      this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
+
     /**
      * 隐藏 mask
      */
-    hideMask () {
-      let MyComponent = Vue.extend({
-        template: `<div></div>`
-      })
-      new MyComponent({ el: '#mask' })
-      this.isMaskShow = false
+    hideMask: function () {
+      this.$dispatch(eventMap.HIDE_MASK)
     },
 
     /**
      * 显示loading
      * @param message
        */
-    showLoading: function (message = 'loading..') {
+    showLoading: function (message = '努力加载中..') {
       let MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-loading-mask" ></div>
                     <div class="ict-loading-content">
-                      <img src="./static/image/hourglass.svg" class="ict-loading-img">
+                      <img src="./static/image/loading.gif" class="ict-loading-img">
                       <p>${message}</p>
                     </div>
                   </div>`
       })
       new MyComponent({ el: '#mask' })
-      this.isMaskShow = false
+      this.isMaskShow = true
     },
 
     /**
@@ -129,13 +149,17 @@ const mixin = {
     },
 
     [eventMap.SHOW_ALERT]: function ({message, btnText}) {
-      // todo 设置isMaskShow的标识
-      //this.isMaskShow = true
+      this.isMaskShow = true
+      //hide时 为false 的逻辑在app.vue里
       this.alertBox = {
         show: true,
         message: message,
         btnText: btnText
       }
+    },
+
+    [eventMap.HIDE_ALERT]: function () {
+      this.isMaskShow = false
     },
 
     [eventMap.SHOW_TOAST]: function ({message, type, timeout = 2000}) {
@@ -153,41 +177,54 @@ const mixin = {
       )
     },
 
-    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, data, callbackName, callbackFn}) {
+    [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, componentData, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
 
       // 执行完毕后, 重置标识
-      const realCallBack = (args) => {
-        callbackFn(args)
-        me.isMaskShow = false
+      const realCallBack = () => {
+        callbackFn()
+        me.hideMask()
       }
 
       const MyComponent = Vue.extend({
         template: `<div>
                     <div class="ict-float-mask" v-touch:tap="onFloatMaskTap"></div>
-                    <div class="ict-float-component"><mask-component><a slot="data">${data}</a></mask-component></div>
+                    <div class="ict-float-component"><mask-component :component-data="componentData"><a slot="data">${componentData}</a></mask-component></div>
                   </div>`,
         components: {
           'mask-component': require('./components/' + component)
         },
         events: {
+          hideMask: me.hideMask,
           [callbackName]: realCallBack
         },
         methods: {
           onFloatMaskTap: function () {
             if (hideOnMaskTap) {
-              const me = this
               let EmptyComponent = Vue.extend({
                 template: `<div></div>`
               })
-              new EmptyComponent({ el: '#mask' })
-              me.isMaskShow = false
+              new EmptyComponent({el: '#mask'})
+              me.hideMask()
             }
           }
         }
       })
+      new MyComponent({
+          el: '#mask',
+          data: {
+            componentData: componentData
+          }
+        })
+    },
+
+    [eventMap.HIDE_MASK]: function () {
+      let MyComponent = Vue.extend({
+        template: `<div></div>`
+      })
       new MyComponent({ el: '#mask' })
+      this.isMaskShow = false
     }
   }
 }

@@ -8,7 +8,7 @@
       <div class="feature-item" v-for="item in feature">
         <img class="feature-img" v-bind:src="item.imgUrl">
         <div class="feature-text">
-          <p class="feature-title"><span>{{$index}}</span>{{item.title}}</p>
+          <p class="feature-title"><span>{{$index+1}}</span>{{item.title}}</p>
           <p class="feature-content">{{item.content}}</p>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default {
       vertical-align: top;
       display: inline-block;
     }
-    .feature-title {
+    p.feature-title {
       margin-bottom: 0.75rem;
       line-height: 1rem;
       font-size: 0.75rem;

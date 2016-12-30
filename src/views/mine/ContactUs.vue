@@ -17,7 +17,7 @@
       </div>
       <div class="item">
         <span>版本信息</span>
-        <span> {{ jsVersion }} </span>
+        <span> {{ appVersion }} </span>
       </div>
 
       <div class="copyright">
@@ -103,11 +103,11 @@
 </style>
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
-import {jsVersion} from '../../plugin/version'
+import {appVersion} from '../../frame/versionConfig'
   export default {
   data () {
     return {
-      jsVersion
+      appVersion
     }
   },
   components: {

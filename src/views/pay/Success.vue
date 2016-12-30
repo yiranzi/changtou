@@ -14,9 +14,7 @@
         <p class="message-title">{{message.title}}</p>
         <p class="message-content" v-for="item in message.content">{{{item}}}</p>
       </div>
-      <div v-if="isBtnShow">
-        <ict-button type="default" v-touch:tap="onConfirm">{{{message.btnText}}}</ict-button>
-      </div>
+      <ict-button type="default" v-touch:tap="onConfirm" v-if="isBtnShow">{{{message.btnText}}}</ict-button>
     </div>
 </template>
 <script>
@@ -101,7 +99,7 @@ export default {
       this.message = messages[type]
     },
     onConfirm () {
-      window.history.go(-2)
+      window.history.go(-1)
     }
   },
   components: {
@@ -112,6 +110,8 @@ export default {
 </script>
 <style lang="less">
   .pay-success{
+    width: 100%;
+    height: 100%;
     background: #f0eff5;
     .tip{
       width: 100%;

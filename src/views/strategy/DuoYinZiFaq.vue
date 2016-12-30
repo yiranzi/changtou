@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div class="help_self_service">
+  <div class="d_help_self_service">
     <ict-titlebar v-el:titlebar>
       策略使用FAQ
     </ict-titlebar>
@@ -22,7 +22,7 @@
   </div>
 </template>
 <style lang="less">
-  .help_self_service{
+  .d_help_self_service{
     width: 100%;
     .right_unable{
       disabled: false;

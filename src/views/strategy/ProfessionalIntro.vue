@@ -17,7 +17,7 @@
         </div>
       </scroller>
       <div class="tip-on-btn" v-el:tip>{{tip}}</div>
-      <div class="pay-button" v-el:btns>
+      <div class="pay-button" v-el:btns v-show="isIntroLoaded">
         <div class="left" v-touch:tap="goToVip">了解VIP</div>
         <ict-button class="right" v-touch:tap="buyNow" :disabled="disabled">立即购买</ict-button>
       </div>
@@ -50,7 +50,8 @@
     },
     data () {
       return {
-        scrollerHeight: '0px'
+        scrollerHeight: '580px',
+        isIntroLoaded: false
       }
     },
     computed: {
@@ -63,6 +64,12 @@
         return (this.isLogin && this.strategy && this.strategy.strategyLevel === strategyLevel.VIP)
       }
     },
+    watch: {
+      'professionalIntro' () {
+        this.isIntroLoaded = true
+        this.setScrollerHeight()
+      }
+    },
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/PS\//.test(transition.from.path)) {
@@ -71,13 +78,8 @@
         transition.next()
       },
       data () {
-        this.getProfessionalIntro().then(
-          () => this.setScrollerHeight()
-        )
+        this.getProfessionalIntro().then()
       }
-    },
-    ready () {
-      this.scrollerHeight = window.document.body.offsetHeight - this.$els.titlebar.clientHeight - this.$els.btns.clientHeight + 'px'
     },
     methods: {
       /**
@@ -86,6 +88,7 @@
       setScrollerHeight () {
         const me = this
         setTimeout(function () {
+          me.scrollerHeight = window.document.body.offsetHeight - me.$els.titlebar.clientHeight - me.$els.btns.clientHeight + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
@@ -138,7 +141,8 @@
 </script>
 <style lang="less">
   .strategy-professional-intro{
-    position: relative;
+    width: 100%;
+    height: 100%;
     background: #fff;
     .intro-promotion{
       width: 18.75rem;

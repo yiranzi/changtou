@@ -48,14 +48,7 @@
       }
     },
     ready () {
-      const me = this
-      setTimeout(function () {
-        me.$nextTick(() => {
-          me.$refs.scroller.reset({
-          top: 0
-        })
-      })
-      }, 300)
+      this.loadList().then(this.setScrollerHeight)
     },
     data () {
       return {
@@ -69,23 +62,20 @@
         this.setScrollerHeight()
       }
     },
-    created () {
-      this.loadList()
-    },
     methods: {
       /**
        * 设置滚动高度
        */
       setScrollerHeight () {
         const me = this
-        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
         setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.clientHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
           })
         })
-        }, 200)
+        }, 100)
       },
       onPromoteCloseTap () {
         this.promoteShow = false
@@ -112,6 +102,7 @@
     }
     .promote-panel{
       position: relative;
+      height: 4rem;
       .close-icon{
         position: absolute;
         top: 0.4rem;
@@ -141,6 +132,7 @@
       }
     }
     .course-list{
+      height: 86/20rem;
       background: #fff;
       overflow: hidden;
       border-bottom: 1px solid #f0eff5;

@@ -45,6 +45,7 @@ export default {
   },
   data () {
     return {
+      subjectId: 0,
       lessonId: 0,
       btnText: '下一题', // 按钮文案
       isBtnDisabled: true,  // 按钮是否可用
@@ -100,6 +101,7 @@ export default {
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
+      this.subjectId = params.subjectId
       this.getQuestion(this.lessonId).then(
         (choiceQuestion) => {
           this.initPointData(choiceQuestion)
@@ -205,16 +207,18 @@ export default {
         const me = this
         //登录 并且 分数>6
         if (this.isLogin && parseInt(this.rightNum / this.totalNum * 10) >= 6) {
+          this.showLoading()
           this.submitReport(this.report).then(
             function () {
               me.loadAllExpenseRecords().then(
                 me.syncHomeworkList()
               )
-
+              me.hideLoading()
               me.goToMark()
             }
           ).catch(
             function (err) {
+              me.hideLoading()
               console.warn(err.message)
             }
           )
@@ -230,7 +234,7 @@ export default {
      * 跳转到结果页
      */
     goToMark () {
-      this.$route.router.replace('/homework/choice/mark')
+      this.$route.router.replace(`/homework/choice/mark/${this.subjectId}/${this.lessonId}`)
       setTimeout(
         () => {
           this.resetView()
@@ -304,7 +308,6 @@ export default {
     p{
       margin: 0;
     }
-    position: relative;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -334,6 +337,7 @@ export default {
       position: relative;
       margin: 0 2rem .75rem;
       padding: .75rem 1rem;
+      box-sizing: border-box;
       background: #f1f1f1;
       border-radius: 10px;
       font-size: .7rem;
@@ -395,7 +399,7 @@ export default {
         padding: 0;
         font-family: 'myicon';
         content: '\e90d';
-        font-size: .8rem!important;
+        font-size: .7rem!important;
         color: #aaa;
         right: 0;
         top: 0;
