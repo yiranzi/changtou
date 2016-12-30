@@ -11,6 +11,7 @@
             <ict-input title="手机号"
                      title-position="left"
                      placeholder="输入手机号"
+                     type="tel"
                      :value.sync="phone">
             </ict-input>
           </flexbox-item>
@@ -23,6 +24,7 @@
         <flexbox>
           <flexbox-item>
             <ict-input title="验证码"
+                     type="tel"
                      title-position="left"
                      placeholder="输入验证码"
                      right-title="10分钟内有效"

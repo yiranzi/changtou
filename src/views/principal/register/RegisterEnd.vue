@@ -24,6 +24,7 @@
     <div class="validation-box">
       <ict-input title="验证码"
                  id="register-end-valid-code"
+                 type="tel"
                placeholder="输入验证码"
                :value.sync="validationCode">
       </ict-input>

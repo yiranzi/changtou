@@ -8,7 +8,8 @@
 
       <ict-input title="手机号"
                placeholder="输入手机号"
-               :value.sync="phone">
+                 type="tel"
+                 :value.sync="phone">
       </ict-input>
 
       <div style="height: 4rem" class="spacer"></div>

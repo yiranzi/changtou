@@ -207,16 +207,18 @@ export default {
         const me = this
         //登录 并且 分数>6
         if (this.isLogin && parseInt(this.rightNum / this.totalNum * 10) >= 6) {
+          this.showLoading()
           this.submitReport(this.report).then(
             function () {
               me.loadAllExpenseRecords().then(
                 me.syncHomeworkList()
               )
-
+              me.hideLoading()
               me.goToMark()
             }
           ).catch(
             function (err) {
+              me.hideLoading()
               console.warn(err.message)
             }
           )

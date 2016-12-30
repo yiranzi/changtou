@@ -17,6 +17,7 @@
       <ict-input title="验证码"
                id="bind-phone-end-code"
                placeholder="输入验证码"
+               type="tel"
                :value.sync="validationCode">
       </ict-input>
       <ict-button type="mini"
