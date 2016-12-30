@@ -114,18 +114,19 @@ export default {
     data () {
        const me = this
        const bookId = 1
+       // 用于获取领取礼包(即电子书)的创建时间
        this.getBookProgress(bookId).then(
-        res => {
-          if (res === '' || res === undefined) {
-            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
-          } else {
-        let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 604800000)
-        if (setChapterNum < 1 && setChapterNum >= 0) {
-          me.bookTitleList = me.bookTitleList.splice(0, 1)
-          } else {
-           me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+         res => {
+           if (res === '' || res === undefined || res === null) {
+              // doNothing
+            } else {
+              let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / 604800000)   // 一周的毫秒数 每一周放置一章
+                if (setChapterNum < 1 && setChapterNum >= 0) {
+                  me.bookTitleList = me.bookTitleList.splice(0, 1)
+                } else {
+             me.bookTitleList = me.bookTitleList.splice(0, setChapterNum)
+            }
           }
-        }
         }).catch(
         err => {
           console.log(err.message)

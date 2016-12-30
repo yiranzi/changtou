@@ -2,7 +2,7 @@
 *  专用于问卷调查的按钮，可以点击切换状态并且获取对应的选项ID :)
 */
 <template>
-  <div class="ict-item-questionnaire" :disabled="disabled" :class="{'ict-item-disabled': disabled, 'ict-item-active': btnActive}" v-touch:tap="onClick"
+  <div class="ict-item-questionnaire" :disabled="disabled" :class="{'ict-item-disabled': disabled, 'ict-item-active': btnActive}" v-touch:tap="onTap"
   :order="order" :option="option">
     {{title}}
   </div>
@@ -17,7 +17,7 @@ export default {
     btnActive: Boolean
   },
   methods: {
-    onClick () {
+    onTap () {
       this.btnActive = !this.btnActive
       if (!this.btnActive) {
         this.$dispatch('reduceActiveList', this.option)

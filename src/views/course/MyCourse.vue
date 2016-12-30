@@ -143,17 +143,29 @@
       // 获取电子书阅读人数
        const bookId = 1
        this.getBookProgress(bookId).then(
-        res => {   // bookId, createTime, sectionIndex
-          if (res === '' || res === undefined) {
-            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
+        res => {   // bookId, createTime, sectionIndex, totalOwnerNum
+          if (res === '' || res === undefined || res === null) {
+            // doNothing
           } else {
-        me.readTotalNum = res.totalOwnerNum
+          me.readTotalNum = res.totalOwnerNum
           }
         }).catch(
         err => {
           console.log(err.message)
         }
       )
+
+      // 是否显示电子书
+      me.receiveGiftPackage().then(
+        (message) => {
+          }).catch(function (err) {
+            if (err.message === '您已领取过新手礼包' && me.isLogin) {
+              me.isShowEBook = true
+            if (me.expenseRecords.length > 0) {
+              me.isBookPlacedDown = true
+            }
+          }
+      })
 
       return Promise.all(promiseArray).then(
         function () {
@@ -165,21 +177,6 @@
             }, 300)
         }
       )
-    },
-    activate ({from, next}) {
-        // 是否显示电子书
-        const me = this
-        me.receiveGiftPackage().then(
-           (message) => {
-           }).catch(function (err) {
-            if (err.message === '您已领取过新手礼包' && me.isLogin) {
-                me.isShowEBook = true
-              if (me.expenseRecords.length > 0) {
-                me.isBookPlacedDown = true
-              }
-            }
-        })
-        next()
     }
   },
   ready () {
@@ -190,22 +187,18 @@
      *  去阅读电子书 若有阅读进度 则去上次阅读进度处
      */
     gotoReadBook () {
-       const me = this
-       const bookId = 1
-       this.getBookProgress(bookId).then(
-        res => {   // bookId, createTime, sectionIndex
-          if (res === '' || res === undefined) {
-            me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
-          } else {
-        let currIndex = parseInt(res.sectionIndex)
-            // 阅读页数应该到 书籍阅读页获取而不是入口处
-        me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
-          }
-        }).catch(
-        err => {
-          console.log(err.message)
+      const me = this
+      const bookId = 1
+      this.getBookProgress(bookId).then(
+        res => { // bookId, createTime, sectionIndex
+        if (res === '' || res === undefined) {
+          me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
+        } else {
+          let currIndex = parseInt(res.sectionIndex)
+          // 阅读页数应该到 书籍阅读页获取而不是入口处
+          me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
         }
-      )
+      })
     },
     /**
      * 设置滚动高度
@@ -514,12 +507,6 @@
           vertical-align: bottom;
         }
       }
-    }
-  }
-
-  @media all and (max-width: 320px) {
-    .read-book-tip{
-
     }
   }
 </style>
