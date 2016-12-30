@@ -31,8 +31,8 @@
         </div>
       </scroller>
 
-      <div class="send_message" v-el:btns>
-        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-touch:tap="editQuestion" v-el:input>
+      <div class="send_message" v-el:btns v-show="isBtnShow">
+        <input type="text"  v-model="userQuestion" placeholder="有问题就向我提问吧" v-el:input>
         <div class="send_box" :disabled="isSendDisabled" :class="{'notSend':isSendDisabled,'send':!isSendDisabled}" v-touch:tap="sendUserQuestion">
           <span>发送</span>
         </div>
@@ -85,7 +85,8 @@
         scrollerHeight: '0px',
         isShowConfirm: false,
         userQuestion: '',
-        isSendDisabled: true
+        isSendDisabled: true,
+        isBtnShow: false
       }
     },
 
@@ -134,24 +135,14 @@
         } else {
           this.refreshScroller()
         }
+      },
+
+      deactivate () {
+        this.isBtnShow = false
       }
     },
 
-    ready () {
-      this.refreshScroller()
-    },
-
     methods: {
-    /**
-       * 编辑问题
-       */
-      editQuestion () {
-        // 如没有登录， 弹框提示登录
-        if (!this.isLogin) {
-          this.isShowConfirm = true
-        }
-      },
-
       /**
        *  转去登录
        */
@@ -160,6 +151,10 @@
       },
 
       sendUserQuestion () {
+        if (!this.isLogin) {
+          this.isShowConfirm = true
+        }
+
         if (this.isDisabled) {
           return
         }
@@ -208,6 +203,7 @@
 
       refreshScroller: function () {
         const me = this
+        this.isBtnShow = true
         setTimeout(function () {
           me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight) + 'px'
           me.$nextTick(() => {
@@ -298,7 +294,8 @@
       border-top: 1px solid #ccc;
       background-color: #f5f5f7;
       text-align: center;
-      input{
+
+      input {
         width: 70%;
         height: 1.95rem;
         padding: 0 0.25rem;
@@ -308,7 +305,11 @@
         outline: 0;
         font-family: '微软雅黑';
         border-radius: .3rem;
+        color: inherit;
+        background-color: transparent;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
+
       .send_box{
         width: 20%;
         display: inline-block;
