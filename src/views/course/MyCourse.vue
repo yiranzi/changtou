@@ -76,7 +76,7 @@ export default {
   },
 
   ready () {
-    this.scrollerHeight = (window.document.body.offsetHeight - (me.$parent.$els.tabBar ? me.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
+    this.scrollerHeight = (window.document.body.offsetHeight - (this.$parent.$els.tabBar ? this.$parent.$els.tabBar.offsetHeight : 0)) + 'px'
   },
 
   computed: {
