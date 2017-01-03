@@ -84,7 +84,7 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters} from '../../vuex/getters'
+  import {navigatorGetters, userGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions, giftActions} from '../../vuex/actions'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -95,7 +95,8 @@
         originBanners: navigatorGetters.banners,
         freeList: navigatorGetters.freeCourseList,
         expenseList: navigatorGetters.expenseCourseList,
-        recommends: navigatorGetters.recommends
+        recommends: navigatorGetters.recommends,
+        isLogin: userGetters.isLogin
       },
       actions: {
         loadData: navigatorActions.loadNavigatorData,
