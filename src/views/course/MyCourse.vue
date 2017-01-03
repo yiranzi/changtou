@@ -91,7 +91,6 @@ export default {
       isBookPlacedDown: false, // 已购买课程放在付费课程之下
       readBookList: [  //
         {
-          'pic': 'src/assets/styles/image/giftPackage/readIcon.png',
           'title': '大熊股市历险记',
           'subtitle': '阅读材料'
         }

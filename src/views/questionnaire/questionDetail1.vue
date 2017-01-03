@@ -1,9 +1,11 @@
 <template>
     <ict-titlebar v-el:titlebar >想问</ict-titlebar>
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="question-detail-container">
     <div class="question-container">
     <p>亲爱的院生：</p>
-    <p>为了方便大家解决学习过程中遇到的疑惑，帮助大家在投资学习之路上更好的成长；长投学堂APP正在针对“提问与讨论”功能进行调研，希望你能告诉小投你在学习中想问什么（可多选哦）
+    <p>
+      为了方便大家解决学习过程中遇到的疑惑，帮助大家在投资学习之路上更好的成长；长投学堂APP正在针对“提问与讨论”功能进行调研，希望你能告诉小投你在学习中想问什么（可多选哦）
     </p>
     <p>参与调研的院生并成功提交的院生，将有机会第一时间参与“提问与讨论”功能的测试 ^-+  </p>
     </div>
@@ -36,6 +38,7 @@
       <ict-button type="default"  v-touch:tap="doSubmit" :disabled="!isAccordSubmit">提交</ict-button>
     </div>
   </div>
+ </scroller>
 </template>
 <style lang="less">
   .question-detail-container{
@@ -102,7 +105,8 @@ export default {
       naireId: 0,
       activeList: [],
       activeOpt: false,
-      btnActive: false
+      btnActive: false,
+      scrollerHeight: '0px'
     }
   },
   computed: {
@@ -128,6 +132,7 @@ export default {
     }
   },
   ready () {
+    this.setScrollerHeight()
   },
   methods: {
     doSubmit () {
@@ -146,6 +151,19 @@ export default {
         }
       )
       window.history.back()
+    },
+     setScrollerHeight () {
+      // 设置滚动条高度为 页面高度-titlebar高度
+      const me = this
+      const {titlebar} = this.$els
+      me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+      setTimeout(function () {
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+          top: 0
+        })
+      })
+      }, 150)
     }
   },
   events: {

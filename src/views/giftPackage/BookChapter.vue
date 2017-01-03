@@ -168,7 +168,7 @@
   }
 </style>
 <script>
-  import Swiper from 'vux/Swiper'
+  import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import bookMask from '../../components/giftPackage/BookMask.vue'
