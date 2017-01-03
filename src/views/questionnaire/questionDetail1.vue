@@ -1,4 +1,5 @@
 <template>
+  <div>
     <ict-titlebar v-el:titlebar >想问</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="question-detail-container">
@@ -37,8 +38,9 @@
       </div>
       <ict-button type="default"  v-touch:tap="doSubmit" :disabled="!isAccordSubmit">提交</ict-button>
     </div>
-  </div>
+   </div>
  </scroller>
+ </div>
 </template>
 <style lang="less">
   .question-detail-container{
