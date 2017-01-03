@@ -9,12 +9,12 @@
                 :show-desc-mask="false" dots-class="dots-class"></swiper>
         <div class="financial-interview">
           <span v-touch:tap="goToNewertestStart">
-            <i class="finan-icon finan-icon-jiemi"></i>
+            <i class="finan-icon finan-icon-expose"></i>
             理财揭秘
           </span>
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
-            <i class="finan-icon finan-icon-fangtan"></i>
+            <i class="finan-icon finan-icon-story"></i>
             院生故事
           </span>
         </div>
@@ -546,11 +546,11 @@
       display: inline-block;
     }
 
-    .finan-icon.finan-icon-jiemi{
+    .finan-icon.finan-icon-expose{
       background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / contain;
     }
 
-    .finan-icon.finan-icon-fangtan{
+    .finan-icon.finan-icon-story{
       background: url("../../assets/styles/image/fangtan.png") no-repeat center right / contain;
     }
 
