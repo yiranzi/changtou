@@ -52,9 +52,6 @@
   </div>
 </template>
 <style lang="less">
-  body{
-    background: #fff ;
-  }
   .gift-package-details{
     background: white ;
     .left-arrow{
