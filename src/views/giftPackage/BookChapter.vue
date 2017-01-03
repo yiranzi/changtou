@@ -168,7 +168,7 @@
   }
 </style>
 <script>
-  import Swiper from 'vux/Swiper'
+  import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import bookMask from '../../components/giftPackage/BookMask.vue'
@@ -254,7 +254,7 @@ export default {
           if (res === '' || res === undefined) {
             me.$route.router.go('/giftPackage/newerBookDetails')   //  为空 初始状态去详情页
           } else {
-        let setChapterNum = parseInt(parseInt(new Date().getTime() + 1604800000 - new Date(res.createTime).getTime()) / 604800000)
+        let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / (1000 * 3600 * 7 * 24))
         if (setChapterNum < 1 && setChapterNum >= 0) {
           me.bookTitleList = me.bookTitleList.splice(0, 1)
           } else {
