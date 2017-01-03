@@ -415,7 +415,7 @@
               me.showToast('分享成功')
             },
             function (failReason) {
-              if (failReason === 'cancelled by user') {
+              if (failReason === 'cancel by user') {
 
               } else {
                 me.showAlert({title: '分享失败', message: failReason})
