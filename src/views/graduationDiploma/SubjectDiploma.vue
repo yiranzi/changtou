@@ -4,8 +4,8 @@
  */
 <template>
     <div class="graduation-diploma">
-      <ict-titlebar :right-options="rightOptions" v-el:titlebar>
-        <a slot="right">完成</a>
+      <ict-titlebar :right-options="titleRightOptions" :left-Options="titleLeftOptions" v-el:titlebar>
+        <a slot="right">{{titleText}}</a>
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
@@ -84,6 +84,7 @@
   },
   data () {
     return {
+      isFromList: false,
       scrollerHeight: '0px',
       subjectId: 0,
       rightOptions: { //titlebar
@@ -104,6 +105,21 @@
     }
   },
   computed: {
+    // titlebar 右边按钮
+    titleRightOptions () {
+      return this.isFromList ? {callback: null, disabled: false} : this.rightOptions
+    },
+
+    // titlebar 左边按钮
+    titleLeftOptions () {
+      return this.isFromList ? {showBack: true} : {showBack: false}
+    },
+
+    // titlebar 右边按钮 文案
+    titleText () {
+      return this.isFromList ? '' : '完成'
+    },
+
     // 用来显示抽奖机会的状态
     drawStatusCls () {
       return {
@@ -111,6 +127,8 @@
         failed: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.failed
       }
     },
+
+    //积分券样式
     integralTicketCls () {
       return {
         expired: this.diplomaDetails && this.diplomaDetails.integralTicket && this.diplomaDetails.integralTicket.isUsed === this.ticketStatus.expired,
@@ -120,7 +138,8 @@
     }
   },
   route: {
-    data ({to: {params}}) {
+    data ({to: {params}, from}) {
+      this.isFromList = (/\/graduation\/list/.test(from.path))
       this.subjectId = params.subjectId
       this.getDiplomaDetails(this.subjectId).then(
         details => {
