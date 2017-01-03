@@ -150,7 +150,11 @@ export default {
       this.submitArticle(essayContent).then(
         markInfo => {
           if (markInfo.correction_date) {
-            this.showAlert(`您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`)
+            this.showAlert({
+              title: '作业已提交',
+              message: `您的作业最快将在${markInfo.correction_date}被助教${markInfo.userName}批改。现在可以进行下一课内容的学习了`,
+              btnText: '知道了'
+            })
             this.rightOptions.disabled = false
           }
           this.loadAllExpenseRecords().then(
