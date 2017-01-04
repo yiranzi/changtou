@@ -12,7 +12,7 @@
       <textarea v-model="answer" placeholder="请写下你的作业内容" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
         <div v-el:draftbar class="draft-box">
           <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
-          <span class="keyboard-icon" v-touch:tap="resumeKeyboard"></span>
+          <span class="keyboard-icon" v-touch:tap="resumeKeyboard" v-show="isKeyBoardShow"></span>
         </div>
     </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   },
   data () {
     return {
+      isKeyBoardShow: false,
       subjectId: 0,
       lessonId: 0,
       timer: 0,
@@ -199,6 +200,7 @@ export default {
      * 关闭 keyboard
      */
     resumeKeyboard () {
+      this.isKeyBoardShow = false
       const textarea = this.$els.textarea
       textarea.blur()
     },
@@ -207,6 +209,7 @@ export default {
      * textarea 聚焦
      */
     onTextFocus () {
+      this.isKeyBoardShow = true
       setTimeout(
         this.resizeTextarea,
         200
@@ -217,6 +220,7 @@ export default {
      * textarea 失焦
      */
     onTextBlur () {
+      this.isKeyBoardShow = false
       setTimeout(
         this.resizeTextarea,
         500
@@ -230,6 +234,7 @@ export default {
       this.timer = setInterval(() => {
         // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
         if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
+          this.resumeKeyboard()
           this.resizeTextarea()
         }
         isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
