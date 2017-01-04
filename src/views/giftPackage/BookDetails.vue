@@ -26,7 +26,6 @@
       background: white !important;
     }
     .set-height{
-    //  margin-bottom: 2rem;
       padding-bottom: 1.4rem;
       .book-info-container{
         margin-top: 1.75rem;
@@ -84,6 +83,7 @@
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
 import {giftActions} from '../../vuex/actions'
+import backHandler from '../../plugin/backHandler'
 export default {
   vuex: {
     getters: {
@@ -115,6 +115,13 @@ export default {
        const me = this
        const bookId = 1
        // 用于获取领取礼包(即电子书)的创建时间
+         // 监听物理键back
+        backHandler.setHandler(onBackKeyDown.bind(me))
+        function onBackKeyDown () {
+          me.$route.router.go('/mycourse')
+          backHandler.resetHandler()
+        }
+       ////////////////////////////////////////////////////////
        this.getBookProgress(bookId).then(
          res => {
            if (res) {

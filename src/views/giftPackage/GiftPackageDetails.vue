@@ -7,11 +7,11 @@
       </div>
     </ict-titlebar>
     <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight">
-    <div class="gift-container">
+    <div class="gift-container" style="height: 100%;">
       <div class="gift-item-container">
         <h3>1/  <span>入门读物</span> </h3>
-        <div class="gift-item gift-item-book">
-          <span>大雄股市历险记</span> <span v-touch:tap="gotoBookDetails">立即阅读</span>
+        <div class="gift-item gift-item-book" v-touch:tap="gotoBookDetails">
+          <span>大雄股市历险记</span> <span>立即阅读</span>
           <p class="gift-item-promotion">
             专为初学者准备的生动有趣的阅读材料。小伙伴们可以跟随大雄学习股票投资的经历，迈出学习理财的第一步。
           </p>
@@ -62,6 +62,7 @@
     }
     .gift-container {
       background: white;
+      padding-bottom: 1.4rem;
       .gift-item-container{
         margin: 2rem 0;
       }
