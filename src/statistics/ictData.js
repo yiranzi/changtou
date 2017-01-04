@@ -3,10 +3,10 @@
  */
 
 import 'whatwg-fetch'
-import {D_PLUS_ID, ICT_SERVER} from '../frame/serverConfig'
+import {D_PLUS_ID, ICT_DATA_SERVER} from '../frame/serverConfig'
 const cacheItem = 'ictSessionProps'
 
-let server = ICT_SERVER
+let server = ICT_DATA_SERVER
 let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) || {} //全局的超级属性, 仅在本次会话内有效
 
 /**
@@ -55,22 +55,22 @@ const track = function (eventName, properties = {}) {
   }
 
   // ict
-  //var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
-  ////console.log('server', server)
-  //window.fetch(server + '/event', {
-  //  method: 'POST',
-  //  headers: {
-  //    'Accept': 'application/json',
-  //    'Content-Type': 'application/json'
-  //  },
-  //  body: JSON.stringify(trackData)
-  //}).then(function (response) {
-  //  return response.json()
-  //}).then(function (json) {
-  //  //console.log('parsed json', json)
-  //}).catch(function (ex) {
-  //  console.warn('ictdata parsing failed', ex)
-  //})
+  var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
+  //console.log('server', server)
+  window.fetch(server + '/event', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(trackData)
+  }).then(function (response) {
+    return response.json()
+  }).then(function (json) {
+    //console.log('parsed json', json)
+  }).catch(function (ex) {
+    console.warn('ictdata parsing failed', ex)
+  })
 }
 
 /**
