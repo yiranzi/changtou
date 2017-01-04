@@ -58,7 +58,7 @@
     }
     .inner-for-padding{
       width: 100%;
-      height: 2rem;
+      height: 1.5rem;
       background: #fff;
     }
     .question-option-container{

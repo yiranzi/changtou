@@ -77,7 +77,7 @@
       width:2.025rem;
       height: 2.075rem;
       position: relative;
-      left: 88%;
+      left: 80%;
       bottom: 9%;
       background: url("../../assets/styles/image/questionNaire/qsBtn.png") no-repeat center center /95%;
     }

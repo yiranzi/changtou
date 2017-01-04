@@ -111,6 +111,19 @@
       data () {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
+
+        // 请求新手礼包获取资格并出现礼包
+        const me = this
+        if (this.isLogin) {
+          this.isQualifyGiftPackage().then(
+            function (isQualify) {
+              if (isQualify.qualification) {
+                me.showPackage()
+              }
+            }
+           )
+        }
+
         this.$nextTick(() => {
           this.$refs.scroller.reset({
           top: 0
@@ -139,17 +152,7 @@
           }, 200)
         }
       )
-      if (this.isLogin) {
-        this.isQualifyGiftPackage().then(
-          function (isQualify) {
-            if (isQualify.qualification) {
-              me.showPackage()
-            }
-          }
-         )
-      }
     },
-
     computed: {
       banners () {
         let banners = this.originBanners

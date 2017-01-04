@@ -41,7 +41,7 @@
     .gift-mask-swiper{
       height: 18rem !important;
       width: 14.5rem;
-      border-radius: .5rem;
+      border-radius: 3%;
       .vux-swiper{
         height: 16rem !important;
       }
@@ -63,7 +63,6 @@
       .item-white{
         background: white;
         text-align: center;
-        border-radius: 3%;
         width: 14.5rem;
         p{
           font-family: initial;
