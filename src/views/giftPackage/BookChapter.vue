@@ -241,6 +241,7 @@ export default {
         const me = this
         backHandler.setHandler(onBackKeyDown.bind(me))
         function onBackKeyDown () {
+          me.updateChapterProgress()
           me.$route.router.go('/giftPackage/newerBookDetails')
           backHandler.resetHandler()
         }

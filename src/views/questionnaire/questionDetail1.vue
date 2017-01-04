@@ -10,6 +10,7 @@
     </p>
     <p>参与调研的院生并成功提交的院生，将有机会第一时间参与“提问与讨论”功能的测试 ^-+  </p>
     </div>
+    <div class="inner-for-padding"></div>
     <div class="question-option-container">
       <div class="option-item-container">
         <p class="option-item-title">我想问 : <a class="option-blue-text">问题类型</a> </p>
@@ -44,6 +45,7 @@
 </template>
 <style lang="less">
   .question-detail-container{
+    background: #fff;
     font-size: .7rem;
     .ict-btn{
       border-radius: 0;
@@ -53,7 +55,11 @@
       color: #666;
       font-size: .65rem;
       padding: 1rem 1.25rem;
-      margin-bottom: 2rem;
+    }
+    .inner-for-padding{
+      width: 100%;
+      height: 2rem;
+      background: #fff;
     }
     .question-option-container{
       background: white;

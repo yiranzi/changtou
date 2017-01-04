@@ -275,11 +275,8 @@
         // 暂时定为问卷一
         this.currDate = parseInt(new Date().getTime())
         setTimeout(function () {
-          if (me.currStatus !== 'N') {
-           me.isQuestionPlaced = false
-           } else {
-        // 提问入口按钮显示逻辑
-           if (me.isUserLogin) {
+           // 提问入口按钮显示逻辑
+           if (me.isUserLogin && (me.currRecord !== null)) {
               me.isSubmitQuestionNaire(questionnaireId).then(
               function (isSubmit) {
                 if (!isSubmit) {  // 未提交放置按钮
@@ -288,10 +285,9 @@
                   }
                 }
               }
-             )
-           }
-         }
-       }
+            )
+          }
+        }
        , 300)
 
           if (this.subjectId !== subjectId) {
