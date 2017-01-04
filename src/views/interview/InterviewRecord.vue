@@ -23,7 +23,27 @@
           </div>
           <img class="pic" v-bind:src="paragraph.image">
         </div>
-          <p class="end">-END-</p>
+
+        <div class="share-article">
+          <div><hr/><span>好文共赏</span><hr/></div>
+          <div class="share-item" v-touch:tap="shareToFriend">
+            <div class="timeline"></div>
+            <div class="share-name">朋友圈</div>
+          </div>
+          <div class="share-item" v-touch:tap="shareToFriendCircle">
+            <div class="wechat"></div>
+            <div class="share-name">微信好友</div>
+          </div>
+          <div class="share-item" v-touch:tap="shareToQQ">
+            <div class="qq"></div>
+            <div class="share-name">QQ</div>
+          </div>
+          <div class="share-item" v-touch:tap="shareToWeibo">
+            <div class="weibo"></div>
+            <div class="share-name">微博</div>
+          </div>
+        </div>
+
       </div>
       <!--<div class="load-fail" v-show="!isLoadSuccess">-->
         <!--<div>加载中...</div>-->
@@ -121,40 +141,61 @@
       height: 1.2rem;
       background-color: #ccc;
     }
+    .share-item{
+      display: inline-block;
+      width: 3.5rem;
+      height: 4.3rem;
+      margin: 0 0.35rem;
+      text-align: center;
+    }
+    .wechat,.timeline,.qq,.weibo{
+      display: inline-block;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+    .wechat{
+      background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
+    }
+    .timeline{
+      background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
+    }
+    .qq{
+      background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
+    }
+    .weibo{
+      background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
+    }
+    .share-name{
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+      margin-top: .5rem;
+    }
     .share-box{
       width: 100%;
       padding: 1.2rem 0;
       font-size: 0.6rem;
       text-align: center;
-      .share-item{
-        display: inline-block;
-        width: 4.2rem;
-        height: 4.3rem;
-        margin: 0 0.35rem;
-        text-align: center;
-      }
-      .wechat,.timeline{
-        display: inline-block;
-        width: 2.5rem;
-        height: 2.5rem;
-      }
-      .wechat{
-        background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-      }
-      .timeline{
-        background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-      }
-      .share-name{
-        width: 100%;
-        display: inline-block;
-        text-align: center;
-        margin-top: .5rem;
-      }
     }
-    .end{
-      font-size: 0.7rem;
+    .share-article{
+      font-size: 26/40rem;
       color: #aaa;
       text-align: center;
+      hr{
+        margin: 0.32rem .5rem;
+        width: 4.5rem;
+        height: 1px;
+        background: #aaa;
+        border: 0;
+        display: inline-block;
+      }
+      p{
+        margin: 0;
+      }
+      .share-item{
+        width: 2.8rem;
+        margin-top: 1.5rem;
+      }
     }
   }
 </style>
@@ -186,12 +227,20 @@
         channelConfig: { //分享浮层内容
           menu1: '<div class="share-box">' +
                     '<div class="share-item">' +
-                      '<div class="wechat"></div>' +
-                      '<div class="share-name">微信好友</div>' +
+                      '<div class="timeline"></div>' +
+                      '<div class="share-name">朋友圈</div>' +
                     '</div>' +
                     '<div class="share-item">' +
-                      '<div class="timeline"></div>' +
-                      '<div class="share-name">微信朋友圈</div>' +
+                      '<div class="wechat"></div>' +
+                      '<div class="share-name" >微信好友</div>' +
+                    '</div>' +
+                    '<div class="share-item">' +
+                      '<div class="qq"></div>' +
+                      '<div class="share-name">QQ</div>' +
+                    '</div>' +
+                    '<div class="share-item">' +
+                      '<div class="weibo"></div>' +
+                      '<div class="share-name">微博</div>' +
                     '</div>' +
                   '</div>'
         }
@@ -237,19 +286,25 @@
         }, 150)
       },
       onActionTap (event) {
-        if (event.target.className === 'wechat') {
-          this.shareToFriend() // 分享朋友
-        } else if (event.target.className === 'timeline') {
-          this.shareToFriendCircle() //分享到朋友圈
+        switch (event.target.className) {
+          case 'wechat':
+            this.shareToFriend() // 分享朋友
+            break
+          case 'timeline':
+            this.shareToFriendCircle() //分享到朋友圈
+            break
+          case 'qq':
+            this.shareToQQ() // 分享朋友
+            break
+          case 'weibo':
+            this.shareToWeibo() //分享到朋友圈
+            break
+          default:
+                break
         }
       },
       //分享朋友
       shareToFriend () {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-          '访谈Id': this.interviewRecord.interviewId,
-          '分享渠道': '微信-会话'
-        })
-
         const me = this
         window.Wechat.share({
             message: {
@@ -258,19 +313,24 @@
               thumb: me.interviewRecord.paragraph[0].image, // 分享图标
               media: {
                 type: window.Wechat.Type.WEBPAGE,
+//                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
                 webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
               }
             },
             scene: window.Wechat.Scene.SESSION
           },
           function () {
-            console.log('分享微信好友成功')
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '访谈Id': me.interviewRecord.interviewId,
+              '分享渠道': '微信-会话'
+            })
+            me.showToast('分享成功')
           },
           function (reason) {
             if (reason === '用户点击取消并返回') {
 
             } else {
-              me.showAlert('分享微信好友失败')
+              me.showAlert({title: '分享失败', message: reason})
             }
           }
         )
@@ -278,11 +338,6 @@
 
       //分享到朋友圈
       shareToFriendCircle () {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-          '访谈Id': this.interviewRecord.interviewId,
-          '分享渠道': '微信-朋友圈'
-        })
-
         const me = this
         window.Wechat.share({
           message: {
@@ -297,16 +352,78 @@
           scene: window.Wechat.Scene.TIMELINE // share to Timeline
         },
           function () {
-            console.log('分享微信朋友圈成功')
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '访谈Id': me.interviewRecord.interviewId,
+              '分享渠道': '微信-朋友圈'
+            })
+            me.showToast('分享成功')
           },
           function (reason) {
             if (reason === '用户点击取消并返回') {
 
             } else {
-//              me.showAlert('分享微信朋友圈失败')
+              me.showAlert({title: '分享失败', message: reason})
             }
           }
         )
+      },
+      /**
+       * 分享到QQ
+       */
+      shareToQQ () {
+        if (window.YCQQ) {
+          const me = this
+          var args = {}
+          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+          args.title = me.interviewRecord.title
+          args.description = ''
+          args.imageUrl = me.interviewRecord.paragraph[0].image
+          args.appName = '长投学堂'
+          window.YCQQ.shareToQQ(
+            function () {
+              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+                '访谈Id': me.interviewRecord.interviewId,
+                '分享渠道': 'QQ'
+              })
+              me.showToast('分享成功')
+            },
+            function (failReason) {
+              if (failReason === 'cancelled by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        }
+      },
+      /**
+       * 分享到微博
+       */
+      shareToWeibo () {
+        if (window.YCWeibo) {
+          const me = this
+          var args = {}
+          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+          args.title = me.interviewRecord.title + 'title'
+          args.description = '长投学堂' + 'description'
+          args.imageUrl = me.interviewRecord.paragraph[0].image
+          args.defaultText = me.interviewRecord.title + 'defaultText'
+          window.YCWeibo.shareToWeibo(
+            function () {
+              me.showToast('分享成功')
+            },
+            function (failReason) {
+              if (failReason === 'cancel by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        }
       }
     },
 
