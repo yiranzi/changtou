@@ -12,7 +12,7 @@
       price: 100
     },
     {
-pic: '图片',
+      pic: '图片',
       title: '主标题',
       description: '副标题',
       price: 0
@@ -28,7 +28,7 @@ pic: '图片',
       <div class="pay-course-list-info">
         <p class="pay-course-list-title">{{course.title}}</p>
         <p class="pay-course-list-subtitle">{{course.subtitle}}</p>
-        <p class="pay-course-list-price"><span v-if="course.price">￥{{course.price}}</span></p>
+        <p class="pay-course-list-price" v-if="courseList.length === 1"><span v-if="course.price">￥{{course.price}}</span></p>
       </div>
     </div>
   </div>
