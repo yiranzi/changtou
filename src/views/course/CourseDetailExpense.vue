@@ -267,6 +267,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
@@ -275,7 +276,6 @@
           const me = this
           const questionnaireId = 1
           // 暂时定为问卷一
-          this.currDate = parseInt(new Date().getTime())
           setTimeout(function () {
              // 提问入口按钮显示
              if (me.isUserLogin && (me.currRecord !== null)) {
@@ -290,7 +290,7 @@
               )
             }
           }
-         , 300)
+         , 50)
 
           if (this.subjectId !== subjectId) {
             this.showLoading()
