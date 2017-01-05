@@ -285,6 +285,13 @@
         if (this.selectChapterIndex + 1 < this.selectedLesson.lessonDetailsList.length) {
           this.updateSelectedChapter(this.selectedLesson.lessonDetailsList[this.selectChapterIndex + 1], this.selectChapterIndex + 1)
         }
+      },
+
+      /**
+       * 课程详情页deactive 重置被选中的的chapter,清除样式
+       */
+      'expense-detail-deactive': function () {
+        this.selectedChapter = null
       }
     },
 

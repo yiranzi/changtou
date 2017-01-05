@@ -308,6 +308,7 @@
           // 设置不可响应
           this.pause()
           this.isResponsive = false
+          this.$broadcast('expense-detail-deactive')
           next()
         }
       }
