@@ -6,6 +6,6 @@ export const commonTopic = (state) => {
   return state.topicCommon.commonTopicInfo
 }
 //获取是否购买年会门票
-export const isBuyTicket = (state) => {
+export const isBuyTopic = (state) => {
   return state.topicCommon.isbuy
 }

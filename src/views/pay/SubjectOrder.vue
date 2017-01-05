@@ -5,7 +5,7 @@
 <template>
   <div>
     <pay-base v-ref:pay-base :coupons="coupons" :toubi="toubi" :total="total" :sum="sum" :btn-options="btnOptions" :tip="tip" :sheet-show="sheetShow">
-      <pay-subject :course-list="courseList"></pay-subject>
+      <pay-subject :course-list="courseList" :is-price-show=true></pay-subject>
     </pay-base>
   </div>
 </template>

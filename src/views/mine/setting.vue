@@ -206,7 +206,7 @@
           font-family: 'myicon';
           content: '\e926';
           font-size: 0.8rem;
-          color: #000;
+          color: #aaa;
         }
       }
     }
