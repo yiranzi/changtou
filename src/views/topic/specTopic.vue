@@ -292,7 +292,7 @@
         for (let i = 0; i < topic.coursePackage.length; i++) {
           for (let j = 0; j < myCourses.length; j++) {
             if (topic.coursePackage[i].subjectId === myCourses[j].subjectId) {
-              ret = true
+              ret = false
               break
             }
           }
