@@ -16,6 +16,9 @@ export const loadDailyQuestion = ({ dispatch }) => {
         url: getUrl('load_daily_question')
       }).then(
         function (dailyQuestion) {
+          dailyQuestion.options.sort(function () {
+            return 0.5 - Math.random()
+          })
           dispatch('LOAD_DAILY_QUESTION', dailyQuestion)
           resolve(dailyQuestion)
         },

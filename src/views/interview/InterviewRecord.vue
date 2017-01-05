@@ -26,11 +26,11 @@
 
         <div class="share-article">
           <div><hr/><span>好文共赏</span><hr/></div>
-          <div class="share-item" v-touch:tap="shareToFriend">
+          <div class="share-item" v-touch:tap="shareToFriendCircle">
             <div class="timeline"></div>
             <div class="share-name">朋友圈</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToFriendCircle">
+          <div class="share-item" v-touch:tap="shareToFriend">
             <div class="wechat"></div>
             <div class="share-name">微信好友</div>
           </div>

@@ -200,7 +200,8 @@ const mixin = {
           [callbackName]: realCallBack
         },
         methods: {
-          onFloatMaskTap: function () {
+          onFloatMaskTap: function (e) {
+            e.preventDefault()
             if (hideOnMaskTap) {
               let EmptyComponent = Vue.extend({
                 template: `<div></div>`
