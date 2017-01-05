@@ -12,7 +12,7 @@
       price: 100
     },
     {
-pic: '图片',
+      pic: '图片',
       title: '主标题',
       description: '副标题',
       price: 0
@@ -21,14 +21,14 @@ pic: '图片',
 
  */
 <template>
-  <div v-if="isShow()">
-    <div class="pay-course-list" v-for="course in courseList">
-      <img class="pay-course-list-img"
+  <div v-if="isShow()" class="pay-course-list">
+    <div class="pay-course-item" v-for="course in courseList">
+      <img class="pay-course-item-img"
            v-bind:src=course.pic>
-      <div class="pay-course-list-info">
-        <p class="pay-course-list-title">{{course.title}}</p>
-        <p class="pay-course-list-subtitle">{{course.subtitle}}</p>
-        <p class="pay-course-list-price"><span v-if="course.price">￥{{course.price}}</span></p>
+      <div class="pay-course-item-info">
+        <p class="pay-course-item-title">{{course.title}}</p>
+        <p class="pay-course-item-subtitle">{{course.subtitle}}</p>
+        <p class="pay-course-item-price" v-if="courseList.length === 1"><span v-if="course.price">￥{{course.price}}</span></p>
       </div>
     </div>
   </div>
@@ -49,46 +49,49 @@ export default {
 </script>
 <style lang="less">
 .pay-course-list{
-  p{
-    margin: 0;
-  }
-  background: #fff;
-  overflow: hidden;
   margin-bottom: 0.5rem;
-  &-img{
-    width: 300/40rem;
-    height: 3.5rem;
-    margin: 0.5rem 15/40rem 0.5rem 30/40rem;
-    vertical-align: top;
-  }
-  &-info{
-    position: relative;
-    display: inline-block;
-    margin: 0.5rem 30/40rem 0.5rem 0;
-    width: 360/40rem;
-    vertical-align: top;
-    line-height: 1rem;
-  }
-  &-title{
-    color: #000;
-    font-size: 0.8rem;
-    white-space: nowrap;
+  .pay-course-item{
+    p {
+      margin: 0;
+    }
+    background: #fff;
     overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  &-subtitle{
-    color: #898989;
-    font-size: 0.7rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  &-price{
-    padding-top: 20/40rem;
-    color: #898989;
-    font-size: 0.6rem;
-    color: #ff5b45;
-    font-size: 0.7rem;
+    border-bottom: 1px solid #f0eff5;
+    &-img {
+      width: 300/40rem;
+      height: 3.5rem;
+      margin: 0.5rem 15/40rem 0.5rem 30/40rem;
+      vertical-align: top;
+    }
+    &-info {
+      position: relative;
+      display: inline-block;
+      margin: 0.5rem 30/40rem 0.5rem 0;
+      width: 360/40rem;
+      vertical-align: top;
+      line-height: 1rem;
+    }
+    &-title {
+      color: #000;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &-subtitle {
+      color: #898989;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &-price {
+      padding-top: 20/40rem;
+      color: #898989;
+      font-size: 0.6rem;
+      color: #ff5b45;
+      font-size: 0.7rem;
+    }
   }
 }
 </style>

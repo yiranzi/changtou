@@ -100,14 +100,15 @@ titlebar
       position: absolute;
       top: 0;
       display: block;
+      padding: 0 0.6rem;
       font-size: 14px;
       color: #fff;
     }
     &-left{
-      left: 24/40rem;
+      left: 0;
     }
     &-right{
-      right: 24/40rem;
+      right: 0;
     }
     &-right.disabled{
       color: #bbb;
