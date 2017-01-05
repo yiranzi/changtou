@@ -4,7 +4,7 @@
  */
 <template>
   <div class="interview-share-float">
-    <ict-sheet title="" :show="show" btn-text="取消" @confirm="onCancelTap">
+    <ict-sheet title="" :show.sync="show" btn-text="取消" @confirm="onConfirmTap">
       <div >
         <div class="share-box">
           <div class="share-item">
@@ -27,9 +27,9 @@
       show: Boolean
     },
     methods: {
-      onCancelTap () {
+      onConfirmTap () {
         this.show = false
-        this.$emit('cancel')
+        this.$emit('confirm')
       }
     },
     components: {

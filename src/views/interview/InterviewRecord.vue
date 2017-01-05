@@ -26,7 +26,7 @@
           <p class="end">-END-</p>
       </div>
     </scroller>
-    <share-float :show="showShareFloat"  @cancel="cancelShare" v-touch:tap="onActionTap"></share-float>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
   </div>
 </template>
 
@@ -184,6 +184,7 @@
        * 取消分享
        */
       cancelShare () {
+        console.log(2)
         this.showShareFloat = false
       }
     },
