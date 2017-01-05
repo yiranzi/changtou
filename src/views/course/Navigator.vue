@@ -9,12 +9,12 @@
                 :show-desc-mask="false" dots-class="dots-class"></swiper>
         <div class="financial-interview">
           <span v-touch:tap="goToNewertestStart">
-            <i class="finan-icon finan-icon-jiemi"></i>
+            <i class="finan-icon finan-icon-expose"></i>
             理财揭秘
           </span>
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
-            <i class="finan-icon finan-icon-fangtan"></i>
+            <i class="finan-icon finan-icon-story"></i>
             院生故事
           </span>
         </div>
@@ -111,6 +111,19 @@
       data () {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
+        // 显示礼包模块
+        const me = this
+        if (this.isLogin) {
+        this.isQualifyGiftPackage().then(
+          function (isQualify) {
+            if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              me.showPackage()
+              me.giftMaskCount += 1
+            }
+          }
+         )
+        }
+
         this.$nextTick(() => {
           this.$refs.scroller.reset({
           top: 0
@@ -125,7 +138,8 @@
     data () {
       return {
         scrollerHeight: '0px',
-        isShowNewTestPop: false
+        isShowNewTestPop: false,
+        giftMaskCount: 0  // 显示新手礼包的次数 超过1则不显示礼包
       }
     },
     ready () {
@@ -139,17 +153,7 @@
           }, 200)
         }
       )
-      if (this.isLogin) {
-        this.isQualifyGiftPackage().then(
-          function (isQualify) {
-            if (isQualify.qualification) {
-              me.showPackage()
-            }
-          }
-         )
-      }
     },
-
     computed: {
       banners () {
         let banners = this.originBanners
@@ -546,11 +550,11 @@
       display: inline-block;
     }
 
-    .finan-icon.finan-icon-jiemi{
+    .finan-icon.finan-icon-expose{
       background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / contain;
     }
 
-    .finan-icon.finan-icon-fangtan{
+    .finan-icon.finan-icon-story{
       background: url("../../assets/styles/image/fangtan.png") no-repeat center right / contain;
     }
 

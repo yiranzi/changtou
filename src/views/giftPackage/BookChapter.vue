@@ -7,7 +7,7 @@
         <swiper-item class="black" v-for="chapter in currBookChapter">
           <div class="book-use-top">
             <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
-            {{{chapter.index}}} {{{chapter.title}}}
+          <div v-if="book_index === 0 ? true : false" class="chapter-info-container">  {{{chapter.index}}} {{{chapter.title}}}  </div>
           </div>
             <div class="book-content">
               {{{chapter.content}}}
@@ -61,18 +61,18 @@
           height:37rem !important;
           .chapter-line{
             font-size: .6rem;
-            margin-bottom: .75rem;
+            margin-bottom: 2rem;
             p{
               display: inline-block;
               color: #ccc !important;
             }
           }
-          .book-index:nth-child(2),.book-title:nth-child(2){color: #666;}
-          .book-index:nth-child(2){
+          .chapter-info-container {color: #666;}
+          .chapter-info-container p:first-child {
             font-size: .7rem;
             margin-bottom: .5rem;
           }
-          .book-title:nth-child(3){
+          .chapter-info-container p:last-child{
             font-size: .8rem;
             font-weight: bold;
             margin-bottom: .8rem;
@@ -241,6 +241,7 @@ export default {
         const me = this
         backHandler.setHandler(onBackKeyDown.bind(me))
         function onBackKeyDown () {
+          me.updateChapterProgress()
           me.$route.router.go('/giftPackage/newerBookDetails')
           backHandler.resetHandler()
         }
@@ -333,7 +334,7 @@ const bookChapter1 = [
   {
     'index': '<p class="book-index">第一章</p>',
     'title': '<p class="book-title">认识一个好老师</p>',
-    'content': '﻿﻿﻿﻿﻿﻿<p class="book-bar">1.1导读</p><p>　　　亲爱的小伙伴们，大雄股市历险记第一章新鲜出炉啦，本章包括五个小节，讲述了大雄为何萌发学习股票投资的念头，可是这个念头差点被曾经投资失败的爸爸妈妈扼杀在摇篮里。幸好神通广大的小叮当支持大雄，为大雄找了一个神秘的老师。大雄从神秘的老师那里了解了关于股票的基本概念，明白了买股票其实就是买入公司的一部分，还知道了为什么股票会上涨。老师还告诉大雄：其实买股票很简单，拿出我们在双十一买打折商品的一半精神，就可以找到又便宜又好的打折股票！</p><p>　　　读完这一章的小伙伴，明白了股票的本质后，妈妈再也不用担心你会把自己辛辛苦苦积攒下来的存款盲目地用于买股票啦！</p><p>1.1.1 投资的想法被妈妈打击了</p>  '
+    'content': '﻿﻿﻿﻿﻿﻿<p class="book-bar">1.1导读</p> <p>　　　亲爱的小伙伴们，大雄股市历险记第一章新鲜出炉啦，本章包括五个小节，讲述了大雄为何萌发学习股票投资的念头，可是这个念头差点被曾经投资失败的爸爸妈妈扼杀在摇篮里。幸好神通广大的小叮当支持大雄，为大雄找了一个神秘的老师。大雄从神秘的老师那里了解了关于股票的基本概念，明白了买股票其实就是买入公司的一部分，还知道了为什么股票会上涨。老师还告诉大雄：其实买股票很简单，拿出我们在双十一买打折商品的一半精神，就可以找到又便宜又好的打折股票！</p><p>　　　读完这一章的小伙伴，明白了股票的本质后，妈妈再也不用担心你会把自己辛辛苦苦积攒下来的存款盲目地用于买股票啦！</p><p>1.1.1 投资的想法被妈妈打击了</p>  '
   },
   {
     'index': '<p class="book-index">第一章</p>',

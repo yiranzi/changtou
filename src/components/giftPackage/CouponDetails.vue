@@ -7,18 +7,18 @@
           <a class="coupon-specify">APP 专享</a>
           <h1 class="coupon-mark">{{couponItem.integral}}</h1>
           <p>
-               <span>积分</span>
-               <span class="coupon-title">{{couponItem.ticketName}}</span>
+             <span>积分</span>
+             <span class="coupon-title">{{couponItem.ticketName}}</span>
           </p>
           <div class="inner"></div>
           <div class="coupon-explain">
             <span>购买付费课程(策略类除外)可用</span>
             <span class="coupon-expire"><span>有效期至</span> {{couponItem.endTime.substring(0,10)}}</span>
           </div>
-          <!-- 已使用未过期-->
-          <div :class="couponItem.isUsed !== 'N'&& compareDate(couponItem.endTime) ? 'rotate-tip':'coupon-not-show'">已使用</div>
-          <!-- 已过期未使用-->
-          <div :class="couponItem.isUsed === 'N'&& !compareDate(couponItem.endTime) ? 'rotate-tip':'coupon-not-show'">已过期</div>
+          <!-- 已使用-->
+          <div :class="couponItem.isUsed === 'Y' ? 'rotate-tip':'coupon-not-show'">已使用</div>
+          <!-- 已过期-->
+          <div :class="couponItem.isUsed === 'E' ? 'rotate-tip':'coupon-not-show'">已过期</div>
         </div>
       </div>
     </scroller>
@@ -36,20 +36,6 @@
         h1,p,span{
           color: #ddd !important;
         }
-        .rotate-tip{
-          content: ' ';
-          font-weight: bold;
-          color: #999;
-          width: 4.15rem;
-          height: 2rem;
-          position: absolute;
-          left: 11.8rem;
-          text-align: center;
-          bottom: 2.3rem;
-          border: .2rem solid #999;
-          line-height: 2rem;
-          -webkit-transform: rotate(-9deg);
-        }
       }
       .coupon-item{
         background: white;
@@ -60,6 +46,7 @@
         padding-left: .5rem;
         margin-left: auto;
         margin-right: auto;
+        position: relative;
         .coupon-specify{
           display: block;
           text-align: right;
@@ -105,10 +92,24 @@
             margin-left: 1.2rem;
           }
         }
+        .rotate-tip{
+          content: ' ';
+          font-weight: bold;
+          color: #999;
+          width: 4.15rem;
+          height: 2rem;
+          position: absolute;
+          left: 11.8rem;
+          text-align: center;
+          bottom: 2.3rem;
+          border: .2rem solid #999;
+          line-height: 2rem;
+          -webkit-transform: rotate(-9deg);
+        }
+        .coupon-not-show{
+          display: none;
+        }
       }
-    }
-    .coupon-not-show{
-      display: none;
     }
   }
 </style>
@@ -126,8 +127,7 @@
     },
     data () {
       return {
-        scrollerHeight: '590px',
-        isCompareDate: false
+        scrollerHeight: '590px'
       }
     },
     route: {
@@ -143,13 +143,6 @@
           })
         }, 1500)
             transition.next()
-      }
-    },
-    methods: {
-       compareDate (endDate) {
-        const currDate = moment().format('YYYY-MM-DD HH:mm:ss').replace(/-/g, '')
-        endDate = endDate.replace(/-/g, '')
-        return currDate < endDate
       }
     },
     components: {

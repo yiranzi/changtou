@@ -6,7 +6,7 @@
       <div class="book-info-container">
         <img class="book-avatar" src="../../assets/styles/image/giftPackage/bookCover.png" width="230" height="300">
         <p class="book-name">大雄股市历险记</p>
-        <p class="book-status">连载中</p>
+        <p class="book-status">{{bookStatus}}</p>
         <div class="book-intro">
           大雄萌发学习股票投资的念头，可是这个念头差点被曾经投资失败的爸爸妈妈扼杀在摇篮里。幸好神通广大的小叮当支持大雄，为大雄找了一个神秘的老师。
         </div>
@@ -26,7 +26,6 @@
       background: white !important;
     }
     .set-height{
-    //  margin-bottom: 2rem;
       padding-bottom: 1.4rem;
       .book-info-container{
         margin-top: 1.75rem;
@@ -84,6 +83,7 @@
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
 import {giftActions} from '../../vuex/actions'
+import backHandler from '../../plugin/backHandler'
 export default {
   vuex: {
     getters: {
@@ -110,15 +110,31 @@ export default {
         }
     }
   },
+  computed: {
+    bookStatus () {
+      if (parseInt(this.bookTitleList.length) === 6) {
+        return '已完结'
+      } else {
+        return '连载中'
+      }
+    }
+  },
   route: {
     data () {
        const me = this
        const bookId = 1
        // 用于获取领取礼包(即电子书)的创建时间
+         // 监听物理键back
+        backHandler.setHandler(onBackKeyDown.bind(me))
+        function onBackKeyDown () {
+          me.$route.router.go('/mycourse')
+          backHandler.resetHandler()
+        }
+       ////////////////////////////////////////////////////////
        this.getBookProgress(bookId).then(
          res => {
            if (res) {
-             let setChapterNum = parseInt(parseInt(new Date().getTime() - new Date(res.createTime).getTime()) / (1000 * 3600 * 7 * 24))   // 一周的毫秒数 每一周放置一章
+             let setChapterNum = parseInt((parseInt(new Date().getTime()) - parseInt(new Date(res.createTime).getTime() - (1000 * 3600 * 7 * 24))) / (1000 * 3600 * 7 * 24))   // 一周的毫秒数 每一周放置一章
                 if (setChapterNum < 1 && setChapterNum >= 0) {
                   me.bookTitleList = me.bookTitleList.splice(0, 1)
                 } else {

@@ -38,64 +38,64 @@
 }
 </script>
 <style lang="less">
-    .gift-mask-swiper{
-      height: 18rem !important;
-      width: 14.5rem;
-      border-radius: .5rem;
-      .vux-swiper{
-        height: 16rem !important;
-      }
-      .dots-class{
-        left: 5.5rem !important;
-      }
-      .vux-icon-dot {
-        background-color: #fff!important;
-        opacity: 0.5;
-        width: .5rem !important;
-        height: .5rem !important;
-        border-radius: .25rem !important;
-        margin-right: .6rem;
-      }
-      .vux-icon-dot.active{
-        background-color: orange !important;
-        opacity: 1;
-      }
-      .item-white{
-        background: white;
-        text-align: center;
-        border-radius: 3%;
+      .gift-mask-swiper{
+        height: 18rem !important;
         width: 14.5rem;
-        p{
-          font-family: initial;
-          font-size: 1.5rem;
-          color: #444;
+        .vux-swiper{
+          height: 16rem !important;
+          border-radius: 5%;
+          width: 100%;
+          background: #fff;
         }
-        p:first-child{
-          margin-bottom: .1rem;
-          font-weight: bold;
-          font-size: 1.2rem;
-          margin-top: .5rem;
+        .dots-class{
+          left: 5.5rem !important;
         }
-        p:nth-child(2){
-          margin-top: 0;
-          font-size: .7rem;
-          margin-bottom: 1.5rem;
+        .vux-icon-dot {
+          background-color: #fff!important;
+          opacity: 0.5;
+          width: .5rem !important;
+          height: .5rem !important;
+          border-radius: .25rem !important;
+          margin-right: .6rem;
+        }
+        .vux-icon-dot.active{
+          background-color: orange !important;
+          opacity: 1;
+        }
+        .item-white{
+          text-align: center;
+          width: 14.5rem;
+          p{
+            font-family: initial;
+            font-size: 1.5rem;
+            color: #444;
+          }
+          p:first-child{
+            margin-bottom: .1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: .5rem;
+          }
+          p:nth-child(2){
+            margin-top: 0;
+            font-size: .7rem;
+            margin-bottom: 1.5rem;
+          }
+        }
+        .receive-gift-btn{
+          border: 2px solid #FF3C3C;
+          border-radius: 2rem;
+          width: 65%;
+          margin-left: 17%;
+          height: 1.5rem;
+          font-size: .8rem !important;
+          line-height: 1.5rem;
+          color: #ff3c3c;
+          top: 12.5rem;
+          text-align: center;
+          position: absolute !important;
         }
       }
-      .receive-gift-btn{
-        border: 2px solid #FF3C3C;
-        border-radius: 2rem;
-        width: 65%;
-        margin-left: 17%;
-        height: 1.5rem;
-        font-size: .8rem !important;
-        line-height: 1.5rem;
-        color: #ff3c3c;
-        top: 12.5rem;
-        text-align: center;
-        position: absolute !important;
-      }
-    }
 </style>
 
 
