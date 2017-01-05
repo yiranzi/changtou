@@ -191,7 +191,7 @@
               }
           ).catch(
             err => {
-              if (err !== 'cancelled by user') {
+              if (err !== 'cancelled by user' && err !== 'QQ login cancelled') {
                 me.showAlert({message: err})
               }
             }

@@ -193,11 +193,11 @@
         this.pic = order.pic
         this.periods = [
           {
-            name: '长投卡VIP版一年服务费',
+            name: '长投宝VIP版一年服务费',
             price: order.price
           },
           {
-            name: '长投卡VIP版两年服务费',
+            name: '长投宝VIP版两年服务费',
             price: order.price * 2 * order.discount,
             discount: order.discount
           }

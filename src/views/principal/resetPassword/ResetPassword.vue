@@ -84,6 +84,7 @@ export default {
      */
     deactivate () {
       this.phone = ''
+      this.validationCode = ''
       this.errTip = ''
       clearInterval(this.timer)
       this.validationBtnText = '获取验证码'
