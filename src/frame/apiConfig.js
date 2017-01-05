@@ -64,8 +64,7 @@ const apiUrl = {
    */
   'common_topic': '/homepage/topic/common-topic/:ctpId', //通用专题
   'spec_topic': '/homepage/topic/spec-topic/:stpId', //打包课专题
-  'boolean_meeting_ticket': '/homepage/topic/common-topic/meeting-ticket', //是否购买年会门票
-
+  'is_common_topic_buy': '/homepage/topic/common-topic/buy-status/:ctpId', //是否购买通用专题
   /**
    * 鼓励师
    */

@@ -19,15 +19,20 @@
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
-  import {userGetters} from '../../vuex/getters'
-  import { Device, platformMap } from '../../plugin/device'
+  import {commonTopicActions} from '../../vuex/actions'
+  import {commonTopicGetters, userGetters} from '../../vuex/getters'
+  import {Device, platformMap} from '../../plugin/device'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {getLocalCache} from '../../util/cache'
   export default {
     vuex: {
+      actions: {
+        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy
+      },
       getters: {
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        isBuyTopic: commonTopicGetters.isBuyTopic
       }
     },
     data () {
@@ -71,12 +76,15 @@
       // 支付按钮 信息
       btnOptions () {
         return {
+          state: this.isLogin && this.isBuyTopic ? 'exception' : '',
           leftOptions: {
-            price: this.sum
+            price: this.sum,
+            text: '你已成功购买过,不可重复购买'
           },
           rightOptions: {
+            text: '回首页',
             disabled: !this.isLogin,
-            callback: this.onConfirmTap
+            callback: this.isBuyTopic ? this.goToHome : this.onConfirmTap
           }
         }
       }
@@ -92,8 +100,15 @@
         const {payBase} = this.$refs
         payBase.startListenToHeightChange()
 
-        return Promise.all([getOrder(this.type, this.ctpId)]).then(
-          ([order]) => {
+        let promiseArr = []
+        promiseArr.push(getOrder(this.type, this.ctpId))
+
+        if (this.isLogin) {
+          promiseArr.push(this.isCommonTopicBuy(this.ctpId))
+        }
+
+        return Promise.all(promiseArr).then(
+          ([order, isBuy]) => {
             me.arrangeOrder(order)
         }).catch(
             (err) => console.log(err)
@@ -179,6 +194,13 @@
         } else {
           this.payByChannel(payChannel.TOUBI)
         }
+      },
+
+      /**
+       * 回到首页
+       */
+      goToHome () {
+        window.history.go(-2)
       },
       /**
        * 支付
