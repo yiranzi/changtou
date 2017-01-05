@@ -163,7 +163,7 @@ export default {
       window.history.back()
     },
      setScrollerHeight () {
-      // 设置滚动条高度为 页面高度-titlebar高度
+      // 设置滚动条高度为 页面高度-titlebar高度-button的高度
       const me = this
       const titlebar = this.$els.titlebar
       const ictbutton = this.$els.ictbutton
