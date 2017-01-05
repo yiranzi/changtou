@@ -186,7 +186,8 @@
         getReport: choiceActions.getReport,
 
         syncHomeworkList: homeworkListActions.getHomeworkList,
-        isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire
+        isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire,
+        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
 
@@ -224,7 +225,9 @@
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
         showChoice: false,
-        isQuestionPlaced: false  //是否放置提问按钮
+        isQuestionPlaced: false,  //是否放置提问按钮
+
+        currChapterRecord: null //当前课程chapter记录
       }
     },
 
@@ -264,31 +267,32 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
-        this.isQuestionPlaced = false   // 进入页面重置一下
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
-        // 用于查询是否提交过问卷
-        const me = this
-        const questionnaireId = 1
-        // 暂时定为问卷一
-        this.currDate = parseInt(new Date().getTime())
-        setTimeout(function () {
-           // 提问入口按钮显示逻辑
-           if (me.isUserLogin && (me.currRecord !== null)) {
-              me.isSubmitQuestionNaire(questionnaireId).then(
-              function (isSubmit) {
-                if (!isSubmit) {  // 未提交放置按钮
-                  if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
-                    me.isQuestionPlaced = true
+
+          // 用于查询是否提交过问卷
+          const me = this
+          const questionnaireId = 1
+          // 暂时定为问卷一
+          this.currDate = parseInt(new Date().getTime())
+          setTimeout(function () {
+             // 提问入口按钮显示逻辑
+             if (me.isUserLogin && (me.currRecord !== null)) {
+                me.isSubmitQuestionNaire(questionnaireId).then(
+                function (isSubmit) {
+                  if (!isSubmit) {  // 未提交放置按钮
+                    if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                      me.isQuestionPlaced = true
+                    }
                   }
                 }
-              }
-            )
+              )
+            }
           }
-        }
-       , 300)
+         , 300)
+
 
           if (this.subjectId !== subjectId) {
             this.showLoading()
@@ -987,8 +991,76 @@
       playChapter (chapter) {
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
+        if (this.isUserLogin) {
+          this.uploadChapterRecord(chapter)
+        }
         this.$dispatch('chapterPlay', chapter)
         this.resetScroller()
+      },
+
+      /**
+       * 上传chapter进度
+       */
+      uploadChapterRecord (chapter) {
+        const me = this
+        if (me.canChapterUpload(chapter.chapterId)) {
+          me.updateExpenseChapterRecord({
+            subjectId: me.subjectId,
+            chapterId: chapter.chapterId,
+            lessonId: me.selectedLesson.lessonId
+          }).then(
+            () => {
+              me.currChapterRecord = {
+                subjectId: me.subjectId,
+                chapterId: chapter.chapterId,
+                lessonId: me.selectedLesson.lessonId
+              }
+            }
+          )
+        }
+      },
+
+      /**
+       * 当前chapter进度是否可以上传
+       * @params chapterId
+       */
+      canChapterUpload (selectedChapterId) {
+        if (!this.currChapterRecord) {
+          // 服务器上没有进度进入,直接上传
+          return true
+        } else {
+          //chapterId 为当前点击的chapterId
+          const selectedLessonId = this.selectedLesson.lessonId
+
+          //this.currChapterRecord 为服务器上的进度 包括lessonId和chapterId
+          const currChapterId = this.currChapterRecord.chapterId
+          const currLessonId = this.currChapterRecord.lessonId
+          // 当前点击的进度大于服务器上的进度时,可以上传
+          return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
+        }
+      },
+
+      /**
+       * 获取lesson在ids中的index
+       * @params lessonId
+       */
+      getLessonIndexOfIds (lessonId) {
+        const ids = this.currRecord.lessonIds
+        const index = ids.findIndex(
+                (itemId) => itemId === lessonId
+              )
+        return index >= 0 ? index : ids.length  //不在ids中的lesson为新学的lesson
+      },
+
+      /**
+       * 获取chapter的sequences
+       * @params chapterId
+       */
+      getChapterSequences (chapterId) {
+        const chapters = this.selectedLesson.lessonDetailsList
+        return chapters.find(
+          (chapter) => chapter.chapterId === chapterId
+        ).sequence
       },
 
       /**
