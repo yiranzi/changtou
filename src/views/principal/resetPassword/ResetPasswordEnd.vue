@@ -22,6 +22,7 @@
       <div style="height: 1rem"></div>
 
       <ict-input title="确认密码"
+                 type="password"
                placeholder="请再次输入密码"
                :value.sync="conformedPlainPassword">
       </ict-input>
