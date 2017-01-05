@@ -111,17 +111,17 @@
       data () {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
-
-        // 请求新手礼包获取资格并出现礼包
+        // 显示礼包模块
         const me = this
         if (this.isLogin) {
-          this.isQualifyGiftPackage().then(
-            function (isQualify) {
-              if (isQualify.qualification) {
-                me.showPackage()
-              }
+        this.isQualifyGiftPackage().then(
+          function (isQualify) {
+            if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              me.showPackage()
+              me.giftMaskCount += 1
             }
-           )
+          }
+         )
         }
 
         this.$nextTick(() => {
@@ -138,7 +138,8 @@
     data () {
       return {
         scrollerHeight: '0px',
-        isShowNewTestPop: false
+        isShowNewTestPop: false,
+        giftMaskCount: 0  // 显示新手礼包的次数 超过1则不显示礼包
       }
     },
     ready () {
