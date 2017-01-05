@@ -249,7 +249,7 @@
         const me = this
         Promise.all(taskArr).then(
           function ([topic, courses]) {
-            me.isBuySubject = !me.canSubjectBuy(topic, courses.myCourses)
+            me.isBuySubject = courses && courses.myCourses && !me.canSubjectBuy(topic, courses.myCourses)
           }
         )
       }
