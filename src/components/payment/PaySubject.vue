@@ -28,7 +28,7 @@
       <div class="pay-course-item-info">
         <p class="pay-course-item-title">{{course.title}}</p>
         <p class="pay-course-item-subtitle">{{course.subtitle}}</p>
-        <p class="pay-course-item-price" v-if="courseList.length === 1"><span v-if="course.price">￥{{course.price}}</span></p>
+        <p class="pay-course-item-price" v-if="isPriceShow"><span v-if="course.price">￥{{course.price}}</span></p>
       </div>
     </div>
   </div>
@@ -36,6 +36,10 @@
 <script>
 export default {
   props: {
+    isPriceShow: {
+      type: Boolean,
+      default: false
+    },
     courseList: {
       type: Array
     }
