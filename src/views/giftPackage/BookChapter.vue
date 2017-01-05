@@ -35,6 +35,9 @@
     }
     .ict-titlebar{
       z-index: 5001 !important;
+      .left-arrow{
+        margin-left: .5rem;
+      }
     }
     .toggle-index-btn{
       position: fixed;

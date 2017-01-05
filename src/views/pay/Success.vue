@@ -4,7 +4,9 @@
  */
 <template>
     <div class="pay-success">
-      <ict-titlebar :left-options="{showBack: false}">成功提示</ict-titlebar>
+      <ict-titlebar :left-options="{showBack: false}" :right-options="rightOptions">成功提示
+        <a slot="right" v-if="isCT">完成</a>
+      </ict-titlebar>
       <div class="tip">
         <img src="../../assets/styles/image/pay/success-icon.png">
         <p>恭喜您</p>
@@ -14,7 +16,7 @@
         <p class="message-title">{{message.title}}</p>
         <p class="message-content" v-for="item in message.content">{{{item}}}</p>
       </div>
-      <ict-button type="default" v-touch:tap="onConfirm" v-if="isBtnShow">{{{message.btnText}}}</ict-button>
+      <ict-button type="default" v-touch:tap="onConfirm" v-if="!isCT">{{{message.btnText}}}</ict-button>
     </div>
 </template>
 <script>
@@ -42,12 +44,10 @@ import {getLocalCache, clearLocalCache} from '../../util/cache'
       btnText: '查看课程'
     },
     'CT': {
-      name: '专题',
-      title: '小提示：',
-      content: [
-        `本次购买套餐课程仅属于各自对应的有效期，请认真查看课程有效时间范围，合理安排学习时间。`
-      ],
-      btnText: '查看'
+      name: '',
+      title: '',
+      content: [],
+      btnText: '完成'
     },
     'VS': {
       name: '策略',
@@ -75,10 +75,25 @@ export default {
     return {
       type: '',
       id: 0,
-      message: '',
-      isBtnShow: true
+      message: ''
     }
   },
+
+  computed: {
+    isCT () {
+      return this.type === 'CT'
+    },
+    // titlebar
+    rightOptions () {
+      if (this.type === 'CT') {
+        return {
+          callback: this.onConfirm,
+          disabled: false
+        }
+      }
+    }
+  },
+
   route: {
     data ({to: {params: { type, id }}}) {
       this.type = type
@@ -98,6 +113,7 @@ export default {
       }
       this.message = messages[type]
     },
+    // 点击按钮
     onConfirm () {
       window.history.go(-1)
     }

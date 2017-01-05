@@ -276,7 +276,6 @@
           const me = this
           const questionnaireId = 1
           // 暂时定为问卷一
-          this.currDate = parseInt(new Date().getTime())
           setTimeout(function () {
              // 提问入口按钮显示
              if (me.isUserLogin && (me.currRecord !== null)) {
@@ -291,7 +290,7 @@
               )
             }
           }
-         , 300)
+         , 50)
 
           if (this.subjectId !== subjectId) {
             this.showLoading()
@@ -330,6 +329,7 @@
           // 设置不可响应
           this.pause()
           this.isResponsive = false
+          this.$broadcast('expense-detail-deactive')
           next()
         }
       }

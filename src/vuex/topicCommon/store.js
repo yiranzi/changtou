@@ -9,7 +9,7 @@ const mutations = {
   LOAD_COMMON_TOPIC (state, commonTopic) {
     state.commonTopicInfo = commonTopic
   },
-  LOAD_ISBUY_TICKET (state, isBuy) {
+  UPDATE_COMMON_TOPIC_ISBUY (state, isBuy) {
     state.isbuy = isBuy
   }
 }
