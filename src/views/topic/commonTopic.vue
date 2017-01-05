@@ -18,6 +18,8 @@
 </template>
 <style lang="less">
   .common-topic{
+    width: 100%;
+    height: 100%;
     .top-back-btn {
       position: absolute;
       height: 2rem;
@@ -41,7 +43,8 @@
       display: block;
     }
     .bottom-area{
-      position: relative;
+      position: absolute;
+      bottom: 0;
       height: 2.2rem;
       width: 100%;
       font-family: '微软雅黑';
@@ -91,7 +94,6 @@
     },
     watch: {
       'commonTopicInfo.content' () {
-        this.isTopicLoaded = true
         this.setScrollerHeight()
       }
     },
@@ -104,7 +106,9 @@
       },
       data (transition) {
         const ctpId = transition.to.params.ctpId
-        this.loadCommonTopic(ctpId)
+        this.loadCommonTopic(ctpId).then(
+          () => { this.isTopicLoaded = true }
+        )
         if (this.isLogin) {
           this.booleanMeetingTicket()
         }
