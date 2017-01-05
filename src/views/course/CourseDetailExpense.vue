@@ -267,6 +267,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
