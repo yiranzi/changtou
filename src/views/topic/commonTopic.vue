@@ -9,10 +9,10 @@
       </div>
     </scroller>
     <div class="bottom-area" v-show="isTopicLoaded && commonTopicInfo.price > 0">
-      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy" v-el:btn>
+      <ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
+      <div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
     </div>
   </div>
 </template>
@@ -74,12 +74,12 @@
     vuex: {
       actions: {
         loadCommonTopic: commonTopicActions.loadCommonTopic,
-        booleanMeetingTicket: commonTopicActions.booleanMeetingTicket
+        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy
       },
       getters: {
         isLogin: userGetters.isLogin,
         commonTopicInfo: commonTopicGetters.commonTopic,
-        isBuyTicket: commonTopicGetters.isBuyTicket
+        isBuyTopic: commonTopicGetters.isBuyTopic
       }
     },
     data () {
@@ -87,6 +87,11 @@
         scrollerHeight: '580px',
         isTopicLoaded: false,
         ctpId: this.$route.params.ctpId
+      }
+    },
+    computed: {
+      isBuy () {
+        return this.isLogin ? this.isBuyTopic : false
       }
     },
     watch: {
@@ -106,7 +111,7 @@
         const ctpId = transition.to.params.ctpId
         this.loadCommonTopic(ctpId)
         if (this.isLogin) {
-          this.booleanMeetingTicket()
+          this.isCommonTopicBuy(ctpId)
         }
       }
     },
@@ -138,7 +143,7 @@
             top: 0
           })
         })
-        }, 2000)
+        }, 1500)
       }
     },
     components: {
