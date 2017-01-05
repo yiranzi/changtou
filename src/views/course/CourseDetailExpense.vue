@@ -269,26 +269,26 @@
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
-        // 用于查询是否提交过问卷
-        const me = this
-        const questionnaireId = 1
-        // 暂时定为问卷一
-        this.currDate = parseInt(new Date().getTime())
-        setTimeout(function () {
-           // 提问入口按钮显示逻辑
-           if (me.isUserLogin && (me.currRecord !== null)) {
-              me.isSubmitQuestionNaire(questionnaireId).then(
-              function (isSubmit) {
-                if (!isSubmit) {  // 未提交放置按钮
-                  if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
-                    me.isQuestionPlaced = true
+          // 用于查询是否提交过问卷
+          const me = this
+          const questionnaireId = 1
+          // 暂时定为问卷一
+          this.currDate = parseInt(new Date().getTime())
+          setTimeout(function () {
+             // 提问入口按钮显示逻辑
+             if (me.isUserLogin && (me.currRecord !== null)) {
+                me.isSubmitQuestionNaire(questionnaireId).then(
+                function (isSubmit) {
+                  if (!isSubmit) {  // 未提交放置按钮
+                    if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                      me.isQuestionPlaced = true
+                    }
                   }
                 }
-              }
-            )
+              )
+            }
           }
-        }
-       , 300)
+         , 300)
 
           if (this.subjectId !== subjectId) {
             this.showLoading()
