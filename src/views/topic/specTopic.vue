@@ -179,9 +179,11 @@
       }
     }
     .bottom-area{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
       .buttom-btn{
-        position: absolute;
-        bottom: 0;
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
@@ -197,7 +199,9 @@
         }
       }
       .buttom-tip{
-        position: relative;
+        position: absolute;
+        width: 100%;
+        top: -1.25rem;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
