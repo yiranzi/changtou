@@ -242,6 +242,8 @@
       data ({to: {params: {stpId}}}) {
         setLocalCache('statistics-entry-page', {entryPage: '专题'})
         this.stpId = stpId
+        this.isBuySubject = false
+        this.isTopicLoaded = false
 
         let taskArr = []
         taskArr.push(this.loadSpecTopic(stpId))
