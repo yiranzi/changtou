@@ -1,6 +1,6 @@
 <template>
   <div class="common-topic">
-    <div class="top-back-btn" v-touch:tap="back" ></div>
+    <ict-back-btn></ict-back-btn>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <div v-for="commonContent in commonTopicInfo.content">
@@ -67,6 +67,7 @@
   }
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {commonTopicActions} from '../../vuex/actions'
@@ -152,7 +153,8 @@
     },
     components: {
       Scroller,
-      IctButton
+      IctButton,
+      IctBackBtn
     }
   }
 </script>

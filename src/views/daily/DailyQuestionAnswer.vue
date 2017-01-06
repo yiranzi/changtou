@@ -1,6 +1,6 @@
 <template>
     <div class="question-answer">
-      <div class="top-back-btn" v-touch:tap="back"></div>
+      <ict-back-btn></ict-back-btn>
       <div class="title-box" v-bind:class="{ 'right-tilte': result, 'wrong-title': !result }">
         <img src="../../assets/styles/image/daily/right.png" v-show="result">
         <img src="../../assets/styles/image/daily/wrong.png" v-show="!result">
@@ -29,24 +29,6 @@
     width: 100%;
     height: 100%;
     background-color: #fff;
-    .top-back-btn {
-      position: absolute;
-      height: 2rem;
-      width: 2rem;
-      top: 0.3rem;
-      left: 1rem;
-      z-index: 20;
-    }
-    .top-back-btn:before {
-      position: absolute;
-      display: inline-block;
-      font-family: 'myicon';
-      content: '\e91b';
-      font-size: 1.6rem !important;
-      line-height: 2rem;
-      width: 2rem;
-      color: #999;
-    }
     .title-box{
       width: 100%;
       height: 11rem;
@@ -122,6 +104,7 @@
   }
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import {dailyQuestionGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -160,6 +143,9 @@
       back () {
         this.$route.router.go('/main')
       }
+    },
+    components: {
+      IctBackBtn
     }
   }
 </script>
