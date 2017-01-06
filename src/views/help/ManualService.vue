@@ -208,7 +208,7 @@
           me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-              top: me.records.length > 0 ? window.document.body.offsetHeight : 0
+              top: window.document.body.offsetHeight
           })
         })
         }, 500)
