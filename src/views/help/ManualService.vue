@@ -100,8 +100,8 @@
     },
 
     watch: {
-      'records' () {
-        this.refreshScroller()
+      'records' (newRecords) {
+        this.refreshScroller(newRecords && newRecords.length > 0 ? 'bottom' : '')
       },
 
       /**
@@ -174,7 +174,7 @@
               function () {
                 me.userQuestion = ''
                 // 发送之后,键盘收起, 重置页面
-                setTimeout(me.refreshScroller, 800)
+                setTimeout(() => { me.refreshScroller('bottom') }, 800)
               },
               function () {
                 me.showAlert('加载信息失败，请重试！')
@@ -206,13 +206,13 @@
         this.$route.router.go(url + id)
       },
 
-      refreshScroller: function () {
+      refreshScroller: function (bottom) {
         const me = this
         setTimeout(function () {
           me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-              top: me.records.length > 0 ? window.document.body.offsetHeight : 0
+              top: bottom ? window.document.body.offsetHeight : 0
           })
         })
         }, 500)
