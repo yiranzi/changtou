@@ -15,7 +15,16 @@
             <div class="timeline"></div>
             <div class="share-name">微信朋友圈</div>
           </div>
+          <div class="share-item">
+            <div class="qq"></div>
+            <div class="share-name">QQ</div>
+          </div>
+          <div class="share-item">
+            <div class="weibo"></div>
+            <div class="share-name">微博</div>
+          </div>
         </div>
+
       </div>
     </ict-sheet>
   </div>
@@ -59,7 +68,7 @@
       text-align: center;
       .share-item{
         display: inline-block;
-        width: 4.2rem;
+        width: 3.5rem;
         height: 4.3rem;
         margin: 0 0.35rem;
         text-align: center;
