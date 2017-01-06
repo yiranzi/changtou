@@ -43,7 +43,7 @@ Vue.mixin({
     /**
      * 显示 toast
      * @param args
-     */
+       */
     showToast: function (args) {
       if (typeof args === 'string') {
         this.$dispatch(eventMap.SHOW_TOAST, {message: args, type: 'text'})
@@ -59,8 +59,8 @@ Vue.mixin({
      * @param hideOnMaskTap
      * @param data
      * @param callbackName
-     * @param callbackFn
-     */
+       * @param callbackFn
+       */
     showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
@@ -75,7 +75,7 @@ Vue.mixin({
     /**
      * 显示loading
      * @param message
-     */
+       */
     showLoading: function (message = '努力加载中..') {
       let MyComponent = Vue.extend({
         template: `<div>
@@ -213,11 +213,11 @@ const mixin = {
         }
       })
       new MyComponent({
-        el: '#mask',
-        data: {
-          componentData: componentData
-        }
-      })
+          el: '#mask',
+          data: {
+            componentData: componentData
+          }
+        })
     },
 
     [eventMap.HIDE_MASK]: function () {
