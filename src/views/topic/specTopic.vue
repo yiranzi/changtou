@@ -35,8 +35,8 @@
 
         </div>
       </scroller>
-      <div class="bottom-area" v-el:bottom-btn v-show="isTopicLoaded">
-        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
+      <div class="bottom-area" v-show="isTopicLoaded">
+        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy" v-el:bottom-btn>
           立即支付
           <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
@@ -179,9 +179,10 @@
       }
     }
     .bottom-area{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       .buttom-btn{
-        position: absolute;
-        bottom: 0;
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
@@ -197,7 +198,9 @@
         }
       }
       .buttom-tip{
-        position: relative;
+        position: absolute;
+        top: -1.25rem;
+        width: 100%;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
