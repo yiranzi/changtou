@@ -52,9 +52,22 @@ if (/pay-[A-Z]{1,2}-\d{1,2}/.test(window.location.href)) {
 
 appRouter.afterEach(function () {
   let MyComponent = Vue.extend({
-    template: `<div style="width: 100%;height: 100%;background: transparent; position: absolute; z-index: 5003;"></div>`
+    template: `<div style="width: 100%;height: 100%;background: transparent; position: relative; z-index: 5003;display: block;"></div>`
   })
-  new MyComponent({ el: '#routerMask' })
+  new MyComponent({
+    el: '#routerMask'
+  })
+
+  setTimeout(
+    () => {
+      let MyComponent = Vue.extend({
+        template: `<div style="display: none;"></div>`
+      })
+      new MyComponent({
+        el: '#routerMask'
+      })
+    }, 500
+  )
 })
 
 export {

@@ -183,7 +183,7 @@
   .vux-pop-out-transition,
   .vux-pop-in-transition {
     width: 100%;
-    animation-duration: 0.3s;
+    animation-duration: 0.5s;
     animation-fill-mode: both;
     backface-visibility: hidden;
   }
