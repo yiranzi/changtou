@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="question-naire-container">
     <ict-titlebar v-el:titlebar >想问</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
-    <div class="question-detail-container">
+     <div class="question-detail-container">
     <div class="question-container">
     <p>亲爱的院生：</p>
     <p>
@@ -37,58 +37,60 @@
           <ict-option title="完成任务获提问机会" :disabled="activeOpt" order="g#" option="C"></ict-option>
         </p>
       </div>
-      <ict-button type="default"  v-touch:tap="doSubmit" :disabled="!isAccordSubmit">提交</ict-button>
     </div>
    </div>
- </scroller>
+    </scroller>
+    <ict-button type="default"  v-touch:tap="doSubmit" :disabled="!isAccordSubmit" v-el:ictbutton >提交</ict-button>
  </div>
 </template>
 <style lang="less">
-  .question-detail-container{
+  .question-naire-container{
     background: #fff;
-    font-size: .7rem;
-    .ict-btn{
-      border-radius: 0;
-    }
-    .question-container{
-      background: #f0eff5;
-      color: #666;
-      font-size: .65rem;
-      padding: 1rem 1.25rem;
-    }
-    .inner-for-padding{
-      width: 100%;
-      height: 1.5rem;
-      background: #fff;
-    }
-    .question-option-container{
-      background: white;
-      .option-item-title{
-        text-align: center;
-        font-size: .65rem;
-        color: #aaa;
-        margin-bottom: 1rem;
+    .question-detail-container{
+      font-size: .7rem;
+      .ict-btn{
+        border-radius: 0;
       }
-      .option-item-title + p{
-        text-align: center;
-        margin-bottom: 2.5rem;
-        font-size: .6rem;
-        span{
-          color: #666;
-          width: 3.75rem;
-          height: 1.35rem;
-          border-radius: .675rem;
-          border: 1px solid #eee;
-          padding: .2rem .5rem;
-          margin-right: .5rem;
+      .question-container{
+        background: #f0eff5;
+        color: #666;
+        font-size: .65rem;
+        padding: 1rem 1.25rem;
+      }
+      .inner-for-padding{
+        width: 100%;
+        height: 1.5rem;
+        background: #fff;
+      }
+      .question-option-container{
+        background: white;
+        .option-item-title{
+          text-align: center;
+          font-size: .65rem;
+          color: #aaa;
+          margin-bottom: 1rem;
+        }
+        .option-item-title + p{
+          text-align: center;
+          margin-bottom: 2.5rem;
+          font-size: .6rem;
+          span{
+            color: #666;
+            width: 3.75rem;
+            height: 1.35rem;
+            border-radius: .675rem;
+            border: 1px solid #eee;
+            padding: .2rem .5rem;
+            margin-right: .5rem;
+          }
+        }
+        .option-item-title + p:last-child{
+          margin-bottom: 2.32rem;
         }
       }
-      .option-item-title + p:last-child{
-        margin-bottom: 2.32rem;
+      .option-blue-text{
+        color: #00b0f0;
       }
-    }
-    .option-blue-text{
-      color: #00b0f0;
     }
   }
 </style>
@@ -161,10 +163,11 @@ export default {
       window.history.back()
     },
      setScrollerHeight () {
-      // 设置滚动条高度为 页面高度-titlebar高度
+      // 设置滚动条高度为 页面高度-titlebar高度-button的高度
       const me = this
-      const {titlebar} = this.$els
-      me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+      const titlebar = this.$els.titlebar
+      const ictbutton = this.$els.ictbutton
+      me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight - ictbutton.offsetHeight) + 'px'
       setTimeout(function () {
         me.$nextTick(() => {
           me.$refs.scroller.reset({

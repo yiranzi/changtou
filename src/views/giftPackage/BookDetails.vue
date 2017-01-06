@@ -113,7 +113,7 @@ export default {
   computed: {
     bookStatus () {
       if (parseInt(this.bookTitleList.length) === 6) {
-        return '已完结'
+        return '连载完'
       } else {
         return '连载中'
       }
