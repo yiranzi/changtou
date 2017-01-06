@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view class="view" :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')" keep-alive></router-view>
+    <router-view class="ict-base-view" :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')" keep-alive></router-view>
 
     <!--bottom slot-->
     <tabbar class="ict_tabber" icon-class="vux-center" v-show="isTabbarView" slot="bottom" v-el:tab-bar>
@@ -40,7 +40,7 @@
     </div>
 
     <div id="mask"></div>
-
+    <div id="routerMask"></div>
 
     <!--新手测试-->
     <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
@@ -174,6 +174,9 @@
     height: 100%;
   }
 
+  .ict-base-view{
+    height: 100%;
+  }
   /**
   * vue-router transition
   */
