@@ -1,6 +1,6 @@
 <template>
     <div class="spec-topic">
-      <div class="top-back-btn" v-touch:tap="back" v-el:titlebar></div>
+      <ict-back-btn></ict-back-btn>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="content">
           <div class="spec-description">
@@ -208,6 +208,7 @@
   }
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {specTopicActions, myCoursesActions} from '../../vuex/actions'
@@ -305,7 +306,7 @@
       resetScrollerHeight () {
         const me = this
         setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
@@ -342,7 +343,8 @@
     },
     components: {
       IctButton,
-      Scroller
+      Scroller,
+      IctBackBtn
     }
   }
 </script>

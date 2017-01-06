@@ -64,7 +64,8 @@ export default {
     }
   },
   methods: {
-    onRightTap () {
+    onRightTap (e) {
+      e.preventDefault()
       if (!this.rightOptions.disabled) {
         this.rightOptions.callback()
       }
