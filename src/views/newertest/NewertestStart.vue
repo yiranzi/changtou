@@ -1,6 +1,6 @@
 <template>
     <div class="newertest-start">
-      <div class="cancel" v-touch:tap="onCancel"></div>
+      <ict-close-btn @close="onCancel"></ict-close-btn>
       <div class="title"></div>
       <div class="introduce-img">
         <img src="../../assets/styles/image/newertest/introduceImg.png">
@@ -83,6 +83,7 @@
   }
 </style>
 <script>
+  import IctCloseBtn from '../../components/IctCloseBtn.vue'
   export default {
     route: {
       data () {
@@ -101,6 +102,9 @@
       goToNewertestQuestion () {
         this.$route.router.go('/newertest/question')
       }
+    },
+    components: {
+      IctCloseBtn
     }
   }
 </script>

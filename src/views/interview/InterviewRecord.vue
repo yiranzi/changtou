@@ -50,159 +50,15 @@
         <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
       <!--</div>-->
     </scroller>
-    <actionsheet :show.sync="isShowAction" :menus="channelConfig" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
   </div>
 </template>
-<style lang="less">
-  .interview-record{
-    .right_unable{
-      disabled: false;
-      color: #fff;
-    }
-    .share-pic{
-      width: 1.3rem;
-      height: 1rem;
-      margin-top: 0.65rem;
-    }
-    .content{
-      width: 15.25rem;
-      padding: 1.25rem 1.75rem 2rem 1.75rem ;
-      background-color: #fff;
-      .title{
-        margin-bottom: 2.5rem;
-      }
-      .introduce{
-        border: 2px solid #00b0f0;
-        padding: 1.25rem;
-        font-size: 0.7rem;
-        line-height: 1.2rem;
-        color: #898989;
-        position: relative;
-        .xiao-tou{
-          position: absolute;
-          top: -0.6rem;
-          width: 3rem;
-          line-height: 1.2rem;
-          background-color: #fff;
-          font-size: 0.8rem;
-          font-weight: bold;
-          text-align: center;
-          color: #00b0f0;
-        }
-      }
-      .tip{
-        font-size: 0.7rem;
-        color: #00b0f0;
-        text-align: center;
-        margin: 1rem 0 2.5rem 0;
-      }
-      .paragraph-title{
-        margin-bottom: 1.25rem;
-        font-size: 0.8rem;
-        color: #222;
-        text-align: center;
-        span{
-          font-size: 1.2rem;
-        }
-      }
-      .paragraph-content{
-        padding: 0 1.25rem;
-        margin-bottom: 1.25rem;
-        font-size: 0.7rem;
-        color: #898989;
-        line-height: 1.2rem;
-        hl{
-          font-weight: bold;
-          color: #ff9800;
-        }
-      }
-      .pic{
-        padding: 0 1.25rem;
-        width: 12rem;
-        text-align: center;
-        margin-bottom: 2.5rem;
-      }
-    }
-    .load-fail{
-      width: 100%;
-      height: 623px;
-      background-color: #fff;
-      text-align: center;
-      padding-top: 40%;
-    }
-    .weui_actionsheet_cell{
-      height: 7rem;
-      background-color: #f0eff5;
-    }
-    .vux-actionsheet-gap{
-      height: 0;
-    }
-    .vux-actionsheet-cancel{
-      height: 1.2rem;
-      background-color: #ccc;
-    }
-    .share-item{
-      display: inline-block;
-      width: 3.5rem;
-      height: 4.3rem;
-      margin: 0 0.35rem;
-      text-align: center;
-    }
-    .wechat,.timeline,.qq,.weibo{
-      display: inline-block;
-      width: 2.5rem;
-      height: 2.5rem;
-    }
-    .wechat{
-      background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-    }
-    .timeline{
-      background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-    }
-    .qq{
-      background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
-    }
-    .weibo{
-      background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
-    }
-    .share-name{
-      width: 100%;
-      display: inline-block;
-      text-align: center;
-      margin-top: .5rem;
-    }
-    .share-box{
-      width: 100%;
-      padding: 1.2rem 0;
-      font-size: 0.6rem;
-      text-align: center;
-    }
-    .share-article{
-      font-size: 26/40rem;
-      color: #aaa;
-      text-align: center;
-      hr{
-        margin: 0.32rem .5rem;
-        width: 4.5rem;
-        height: 1px;
-        background: #aaa;
-        border: 0;
-        display: inline-block;
-      }
-      p{
-        margin: 0;
-      }
-      .share-item{
-        width: 2.8rem;
-        margin-top: 1.5rem;
-      }
-    }
-  }
-</style>
+
 <script>
   import Scroller from 'vux/scroller'
   import Actionsheet from 'vux/actionsheet'
   import IctTitlebar from '../../components/IctTitleBar.vue'
+  import ShareFloat from './InterviewFloat.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
@@ -218,6 +74,7 @@
     },
     data () {
       return {
+        showShareFloat: false,
         scrollerHeight: '580px',
         rightOptions: {
           disabled: false
@@ -280,10 +137,7 @@
         }, 500)
       },
       showActionSharePanel () {
-        const me = this
-        setTimeout(() => {
-          me.isShowAction = true
-        }, 150)
+        this.showShareFloat = true
       },
       onActionTap (event) {
         switch (event.target.className) {
@@ -313,7 +167,6 @@
               thumb: me.interviewRecord.paragraph[0].image, // 分享图标
               media: {
                 type: window.Wechat.Type.WEBPAGE,
-//                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
                 webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
               }
             },
@@ -424,13 +277,107 @@
             args
           )
         }
+      },
+
+      /**
+       * 取消分享
+       */
+      cancelShare () {
+        console.log(2)
+        this.showShareFloat = false
       }
     },
 
     components: {
       IctTitlebar,
       Scroller,
-      Actionsheet
+      Actionsheet,
+      ShareFloat
     }
   }
 </script>
+<style lang="less">
+  .interview-record{
+    .right_unable{
+      disabled: false;
+      color: #fff;
+    }
+    .share-pic{
+      width: 1.3rem;
+      height: 1rem;
+      margin-top: 0.65rem;
+    }
+    .content{
+      width: 15.25rem;
+      padding: 1.25rem 1.75rem 2rem 1.75rem ;
+      background-color: #fff;
+      .title{
+        margin-bottom: 2.5rem;
+      }
+      .introduce{
+        border: 2px solid #00b0f0;
+        padding: 1.25rem;
+        font-size: 0.7rem;
+        line-height: 1.2rem;
+        color: #898989;
+        position: relative;
+        .xiao-tou{
+          position: absolute;
+          top: -0.6rem;
+          width: 3rem;
+          line-height: 1.2rem;
+          background-color: #fff;
+          font-size: 0.8rem;
+          font-weight: bold;
+          text-align: center;
+          color: #00b0f0;
+        }
+      }
+      .tip{
+        font-size: 0.7rem;
+        color: #00b0f0;
+        text-align: center;
+        margin: 1rem 0 2.5rem 0;
+      }
+      .paragraph-title{
+        margin-bottom: 1.25rem;
+        font-size: 0.8rem;
+        color: #222;
+        text-align: center;
+        span{
+          font-size: 1.2rem;
+        }
+      }
+      .paragraph-content{
+        padding: 0 1.25rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.7rem;
+        color: #898989;
+        line-height: 1.2rem;
+        hl{
+          font-weight: bold;
+          color: #ff9800;
+        }
+      }
+      .pic{
+        padding: 0 1.25rem;
+        width: 12rem;
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+    }
+    .load-fail{
+      width: 100%;
+      height: 623px;
+      background-color: #fff;
+      text-align: center;
+      padding-top: 40%;
+    }
+
+    .end{
+      font-size: 0.7rem;
+      color: #aaa;
+      text-align: center;
+    }
+  }
+</style>

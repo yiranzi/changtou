@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="newertest-end">
-      <div class="top" v-el:titlebar>
-        <div class="cancel" v-touch:tap="onCancel"></div>
-      </div>
+      <ict-close-btn @close="onCancel" v-el:titlebar></ict-close-btn>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div class="newertest-end-content">
           <div>
@@ -51,23 +49,9 @@
   .newertest-end{
     width: 100%;
     background: #413f83 ! important;
+    padding-top: 2rem;
     .newertest-end-content{
       background: #413f83 ! important;
-    }
-    .top{
-      width: 100%;
-      height: 2.2rem;
-      position: relative;
-      .cancel:before{
-        position: absolute;
-        top: 0.6rem;
-        right: 1.3rem;
-        line-height: 1.5rem;
-        font-family: 'myicon';
-        content: '\e90d';
-        font-size: 0.8rem;
-        color: #aaa;
-      }
     }
     .bulb-box{
       width: 100%;
@@ -193,6 +177,7 @@
   }
 </style>
 <script>
+  import IctCloseBtn from '../../components/IctCloseBtn.vue'
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
@@ -285,7 +270,8 @@
       },
       components: {
         Confirm,
-        Scroller
+        Scroller,
+        IctCloseBtn
       }
   }
 </script>

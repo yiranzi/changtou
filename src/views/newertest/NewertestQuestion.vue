@@ -1,9 +1,7 @@
 <template>
   <div style="height: 100%; width: 100%; background-color: #f6cf3f;">
     <div class="newertest-question" v-bind:class="{'layout-card' : isFloat}">
-      <div class="top">
-        <div class="cancel" v-touch:tap="onCancel"></div>
-      </div>
+      <ict-close-btn @close="onCancel"></ict-close-btn>
       <div class="title-box">
         <div class="title">{{currQuestion ? currQuestion.title : ''}}</div>
         <div class="subtitle">{{currQuestion ? currQuestion.subtitle : ''}}</div>
@@ -30,22 +28,7 @@
   .newertest-question{
     width: 100%;
     background-color: inherit;
-    /*height: 100%;*/
-    .top{
-      width: 100%;
-      height: 2.2rem;
-      position: relative;
-      .cancel:before{
-        position: absolute;
-        top: 0.6rem;
-        right: 1.3rem;
-        line-height: 1.5rem;
-        font-family: 'myicon';
-        content: '\e90d';
-        font-size: 0.8rem;
-        color: #aaa;
-      }
-    }
+    padding-top: 2rem;
     .title-box{
       width: 15.25rem;
       height: 12.35rem;
@@ -177,6 +160,7 @@
 </style>
 <script>
   import {newertestActions} from '../../vuex/actions'
+  import IctCloseBtn from '../../components/IctCloseBtn.vue'
 //  import {newertestGetters} from '../../vuex/getters'
 
   export default {
@@ -317,6 +301,9 @@
         this.currQuIndex = 0
         this.currOpsIndex = -1
       }
+    },
+    components: {
+      IctCloseBtn
     }
   }
 </script>
