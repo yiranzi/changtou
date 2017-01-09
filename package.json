@@ -19,6 +19,7 @@
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
+    "alloytouch": "^0.2.0",
     "babel-core": "^6.0.0",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.0.0",
@@ -32,6 +33,7 @@
     "connect-history-api-fallback": "^1.1.0",
     "cross-spawn": "^2.1.5",
     "css-loader": "^0.23.0",
+    "css3transform": "^1.1.2",
     "es6-promise": "^3.2.1",
     "eslint": "^2.10.2",
     "eslint-config-standard": "^5.1.0",
