@@ -35,8 +35,8 @@
 
         </div>
       </scroller>
-      <div class="bottom-area" v-el:bottom-btn v-show="isTopicLoaded">
-        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
+      <div class="bottom-area" v-show="isTopicLoaded">
+        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy" v-el:bottom-btn>
           立即支付
           <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
@@ -181,7 +181,6 @@
     .bottom-area{
       position: absolute;
       bottom: 0;
-      left: 0;
       width: 100%;
       .buttom-btn{
         height: 2.2rem;
@@ -200,8 +199,8 @@
       }
       .buttom-tip{
         position: absolute;
-        width: 100%;
         top: -1.25rem;
+        width: 100%;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -242,8 +241,6 @@
       data ({to: {params: {stpId}}}) {
         setLocalCache('statistics-entry-page', {entryPage: '专题'})
         this.stpId = stpId
-        this.isBuySubject = false
-        this.isTopicLoaded = false
 
         let taskArr = []
         taskArr.push(this.loadSpecTopic(stpId))
