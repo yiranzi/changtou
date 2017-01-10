@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "alloytouch": "^0.2.0",
+    "animate.css": "^3.5.2",
     "babel-core": "^6.0.0",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.0.0",

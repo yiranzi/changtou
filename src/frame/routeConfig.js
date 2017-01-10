@@ -96,7 +96,7 @@ export function configRouter (router) {
     },
     // 关于我们
     '/contact/us': {
-      component: require('../views/alloyTouch/alloyTouchDemo.vue')  //require('../views/mine/ContactUs.vue')
+      component: require('../views/alloyTouch/testAlloy.vue')  //require('../views/mine/ContactUs.vue')
     },
     // 意见反馈
     '/feedback': {
