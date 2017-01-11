@@ -23,23 +23,6 @@
 <script>
 
   /**
-   * 正式环境
-   * 验证是否完成微信授权
-   */
-/*  function authentication() {
-    return window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')
-  }*/
-
-  /**
-   * 测试环境
-   * 验证是否完成微信授权
-   */
-  function authentication() {
-    window.localStorage.setItem('her', 'aaa')
-    return window.sessionStorage.getItem('wxOauth2')
-  }
-
-  /**
    * 初始化，设置rem
    */
   function init (){
@@ -52,7 +35,7 @@
     html.style.fontSize = window.fontScale + 'px';
 
     /**
-     * 用户有可能设置了系统字体，此时等比例反缩放 //todo
+     * 用户有可能设置了系统字体，此时等比例反缩放
      */
     var appFontTester = document.getElementById('appFontTester')
     var scale = appFontTester.offsetWidth / html.offsetWidth;
@@ -64,18 +47,43 @@
 
     // 阻止document页面滚动 (ios系统的webview的滚动)
     document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
+
+    var params = window.location.href.split('?')[1]
+    var paramsArr = params ? params.split('&') : []
+
+    for(var i = 0, length = paramsArr.length; i < length; i++){
+      var key = paramsArr[i].split('=')[0]
+      var value = paramsArr[i].split('=')[1]
+      window.sessionStorage.setItem(key, value)
+    }
+
+    window.location.href = window.location.href.split('?')[0]
   }
+
 
   const ua = navigator.userAgent.toLowerCase();
   const isWx = ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === "micromessenger";
 
   if (isWx) {
-    if (authentication()) {
+    /**
+     * 正式环境
+     */
+//    if (window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')) {
+//      //完成授权 进入新站
+//      init();
+//    } else {
+//      //未授权 回老站授权
+//      window.location.href = window.location.origin + '/edu/index.html' //正式环境
+//    }
+
+    /**
+     * 测试环境
+     */
+    if (window.sessionStorage.getItem('wxOauth2')) {
       //完成授权 进入新站
       init();
     } else {
       //未授权 回老站授权
-//    window.location.href = window.location.origin + '/edu/index.html' //正式环境
       window.location.href = window.location.origin + '/zl/index.html' //测试环境
     }
   } else {

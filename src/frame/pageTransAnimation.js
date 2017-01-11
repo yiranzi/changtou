@@ -5,12 +5,14 @@
  */
 
 /**
- * 取出 用户openId
+ * 取出
+ * 用户openId | 渠道 | 订阅
  * 以免被清除
  */
 const changTou = window.sessionStorage.getItem('wxOauth2')
 const zhouLe = window.sessionStorage.getItem('zhouLe')
-
+const channel = window.sessionStorage.getItem('channel')
+const subscriber = window.sessionStorage.getItem('subscriber')
 /**
  * 清除路由
  * @type {Storage}
@@ -22,11 +24,12 @@ history.setItem('/', 0)
 
 /**
  * 清除session后
- * 设置 用户openId
+ * 设置 用户openId | 渠道 | 订阅
  */
 window.sessionStorage.setItem('wxOauth2', changTou)
 window.sessionStorage.setItem('zhouLe', zhouLe)
-
+window.sessionStorage.setItem('channel', channel)
+window.sessionStorage.setItem('subscriber', subscriber)
 /**
  *
  * @param router
