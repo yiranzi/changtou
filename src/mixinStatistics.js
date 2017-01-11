@@ -5,7 +5,7 @@
 import {eventMap} from './frame/eventConfig'
 import {userId, userName} from './vuex/user/getters'
 import ictData from './statistics/ictData'
-import {Device, platformMap} from '../../plugin/device'
+import {Device, platformMap} from './plugin/device'
 import {statisticsMap} from './statistics/statisticsMap'
 import {appVersion, getNativeVersion} from './frame/versionConfig'
 

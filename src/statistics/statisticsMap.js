@@ -13,9 +13,9 @@ export const statisticsMap = {
   /**
    *
    */
-  //WX_SHARE: '微信内分享',
-  //WX_SHARE_SUCCESS: '微信内分享成功',
-  //WX_SHARE_CANCEL: '微信内分享取消',
+  WX_SHARE: '微信内分享',
+  WX_SHARE_SUCCESS: '微信内分享成功',
+  WX_SHARE_CANCEL: '微信内分享取消',
 
   /**
    * 课程

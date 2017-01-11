@@ -176,7 +176,12 @@ const apiUrl = {
    *  电子书阅读进度
    */
    'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
-   'get/book/progress': '/e-book/record/:bookId'                    // 获取电子书阅读进度
+   'get/book/progress': '/e-book/record/:bookId',                    // 获取电子书阅读进度
+
+  /**
+   * 微信sdk
+   */
+    'wx_signature': '/wx/signature'
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]
