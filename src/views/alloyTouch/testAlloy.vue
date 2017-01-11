@@ -1,6 +1,5 @@
 <template>
-  <div id="alloyTouchDemo2">
-    <div>
+  <div id="alloyTouchDemo">
       <span class="section-title"></span>
       <div class="section">
         <div id="fullpage" class="site_header">
@@ -68,314 +67,313 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>  <!-- fullpage end -->
       </div>
-    </div>
   </div>
 </template>
 <style lang="less">
-      html, body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      .section-title {
-        background-image: url("../../../static/image/alloyTouch/bgTitle.png");
-        background-position: 0% 0%;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        position: fixed;
-        top: 1.5rem;
-        left: 5%;
-        display: block;
-        width: 8.775rem;
-        height: 1.05rem;
-        z-index: 10000;
-      }
-      .section {
-        width: 100%;
-        font-size: 24px;
-        overflow: hidden;
-        position: relative;
-        background-image: url("../../../static/image/alloyTouch/backgdData.jpg");
-        background-position: 0% 0%;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        #fullpage {
-          visibility: hidden;
-          .section-item-0 {
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 90%;
-            width: 8.825rem;
-            height: 7.275rem;
-            position: relative;
-            top: 30%;
-            left: 30%;
-          }
-          .section-item-1 {
-            width: 15.025rem;
-            height: 20.3rem;
-            position: relative;
-            top: 19%;
-            left: 5%;
-          }
-          .section-item-2 {
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 90%;
-            width: 14.25rem;
-            height: 19.7rem;
-            position: relative;
-            top: 20%;
-            left: 10%;
-          }
-          .section-item-3 {
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 90%;
-            width: 14.825rem;
-            height: 22.525rem;
-            position: relative;
-            top: 15%;
-            left: 15%;
-          }
-          .section-item-4 {
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 90%;
-            width: 15.85rem;
-            height: 16.8rem;
-            position: relative;
-            top: 24%;
-            left: 10%;
-          }
-          .section-item-5 {
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 90%;
-            width: 15.55rem;
-            height: 20.8rem;
-            position: relative;
-            top: 20%;
-            left: 12%;
-          }
-          .section-item-6 {
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    .section-title {
+      background-image: url("../../../static/image/alloyTouch/bgTitle.png");
+      background-position: 0% 0%;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      position: fixed;
+      top: 1.5rem;
+      left: 5%;
+      display: block;
+      width: 8.775rem;
+      height: 1.05rem;
+      z-index: 10000;
+    }
+    .section {
+      width: 100%;
+      font-size: 24px;
+      overflow: hidden;
+      position: relative;
+      background-image: url("../../../static/image/alloyTouch/backgdData.jpg");
+      background-position: 0% 0%;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      #fullpage {
+        visibility: hidden;
+        .section-item-0 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 8.825rem;
+          height: 7.275rem;
+          position: relative;
+          top: 30%;
+          left: 30%;
+        }
+        .section-item-1 {
+          width: 15.025rem;
+          height: 20.3rem;
+          position: relative;
+          top: 19%;
+          left: 5%;
+        }
+        .section-item-2 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 14.25rem;
+          height: 19.7rem;
+          position: relative;
+          top: 20%;
+          left: 10%;
+        }
+        .section-item-3 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 14.825rem;
+          height: 22.525rem;
+          position: relative;
+          top: 15%;
+          left: 15%;
+        }
+        .section-item-4 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 15.85rem;
+          height: 16.8rem;
+          position: relative;
+          top: 24%;
+          left: 10%;
+        }
+        .section-item-5 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 15.55rem;
+          height: 20.8rem;
+          position: relative;
+          top: 20%;
+          left: 12%;
+        }
+        .section-item-6 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 18.75rem;
+          height: 20.3rem;
+          position: relative;
+          top: 15%;
+        }
+        .section-item-7 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 16.65rem;
+          height: 19.15rem;
+          position: relative;
+          top: 15%;
+          left: 10%;
+        }
+        .section-item-8 {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 90%;
+          width: 16rem;
+          height: 19.1rem;
+          position: relative;
+          top: 15%;
+          left: 10%;
+        }
+        .section-item-9 {
+          background: #fcf8f4;
+          .section-title {
+            background-image: url("../../../static/image/alloyTouch/backCover1.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-size: 90%;
             width: 18.75rem;
-            height: 20.3rem;
+            height: 7.15rem;
             position: relative;
-            top: 15%;
+            left: 1%;
           }
-          .section-item-7 {
+          .section-mid {
+            background-image: url("../../../static/image/alloyTouch/backCover2.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-size: 90%;
-            width: 16.65rem;
-            height: 19.15rem;
+            width: 13.125rem;
+            height: 3.25rem;
             position: relative;
-            top: 15%;
-            left: 10%;
+            left: 13%;
+            margin-bottom: 5rem;
+            margin-top: 5rem;
           }
-          .section-item-8 {
+          .section-down {
+            background-image: url("../../../static/image/alloyTouch/backCover3.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-size: 90%;
-            width: 16rem;
-            height: 19.1rem;
+            width: 11.95rem;
+            height: 2.2rem;
             position: relative;
-            top: 15%;
-            left: 10%;
+            left: 16%;
           }
-          .section-item-9 {
-            background: #fcf8f4;
-            .section-title {
-              background-image: url("../../../static/image/alloyTouch/backCover1.png");
-              background-position: center center;
-              background-repeat: no-repeat;
-              background-size: 90%;
-              width: 18.75rem;
-              height: 7.15rem;
+          /************        share     part  *********************/
+          .right_unable {
+            disabled: false;
+            color: #fff;
+          }
+          .share-pic {
+            width: 1.3rem;
+            height: 1rem;
+            margin-top: 0.65rem;
+          }
+          .content {
+            width: 15.25rem;
+            padding: 1.25rem 1.75rem 2rem 1.75rem;
+            background-color: #fff;
+            .title {
+              margin-bottom: 2.5rem;
+            }
+            .introduce {
+              border: 2px solid #00b0f0;
+              padding: 1.25rem;
+              font-size: 0.7rem;
+              line-height: 1.2rem;
+              color: #898989;
               position: relative;
-              left: 1%;
-            }
-            .section-mid {
-              background-image: url("../../../static/image/alloyTouch/backCover2.png");
-              background-position: center center;
-              background-repeat: no-repeat;
-              background-size: 90%;
-              width: 13.125rem;
-              height: 3.25rem;
-              position: relative;
-              left: 13%;
-              margin-bottom: 5rem;
-              margin-top: 5rem;
-            }
-            .section-down {
-              background-image: url("../../../static/image/alloyTouch/backCover3.png");
-              background-position: center center;
-              background-repeat: no-repeat;
-              background-size: 90%;
-              width: 11.95rem;
-              height: 2.2rem;
-              position: relative;
-              left: 16%;
-            }
-            /************        share     part  *********************/
-            .right_unable {
-              disabled: false;
-              color: #fff;
-            }
-            .share-pic {
-              width: 1.3rem;
-              height: 1rem;
-              margin-top: 0.65rem;
-            }
-            .content {
-              width: 15.25rem;
-              padding: 1.25rem 1.75rem 2rem 1.75rem;
-              background-color: #fff;
-              .title {
-                margin-bottom: 2.5rem;
-              }
-              .introduce {
-                border: 2px solid #00b0f0;
-                padding: 1.25rem;
-                font-size: 0.7rem;
+              .xiao-tou {
+                position: absolute;
+                top: -0.6rem;
+                width: 3rem;
                 line-height: 1.2rem;
-                color: #898989;
-                position: relative;
-                .xiao-tou {
-                  position: absolute;
-                  top: -0.6rem;
-                  width: 3rem;
-                  line-height: 1.2rem;
-                  background-color: #fff;
-                  font-size: 0.8rem;
-                  font-weight: bold;
-                  text-align: center;
-                  color: #00b0f0;
-                }
-              }
-              .tip {
-                font-size: 0.7rem;
-                color: #00b0f0;
-                text-align: center;
-                margin: 1rem 0 2.5rem 0;
-              }
-              .paragraph-title {
-                margin-bottom: 1.25rem;
+                background-color: #fff;
                 font-size: 0.8rem;
-                color: #222;
+                font-weight: bold;
                 text-align: center;
-                span {
-                  font-size: 1.2rem;
-                }
-              }
-              .paragraph-content {
-                padding: 0 1.25rem;
-                margin-bottom: 1.25rem;
-                font-size: 0.7rem;
-                color: #898989;
-                line-height: 1.2rem;
-                hl {
-                  font-weight: bold;
-                  color: #ff9800;
-                }
-              }
-              .pic {
-                padding: 0 1.25rem;
-                width: 12rem;
-                text-align: center;
-                margin-bottom: 2.5rem;
+                color: #00b0f0;
               }
             }
-            .load-fail {
-              width: 100%;
-              height: 623px;
-              background-color: #fff;
+            .tip {
+              font-size: 0.7rem;
+              color: #00b0f0;
               text-align: center;
-              padding-top: 40%;
+              margin: 1rem 0 2.5rem 0;
             }
-            .weui_actionsheet_cell {
-              height: 7rem;
-              background-color: #f0eff5;
+            .paragraph-title {
+              margin-bottom: 1.25rem;
+              font-size: 0.8rem;
+              color: #222;
+              text-align: center;
+              span {
+                font-size: 1.2rem;
+              }
             }
-            .vux-actionsheet-gap {
-              height: 0;
+            .paragraph-content {
+              padding: 0 1.25rem;
+              margin-bottom: 1.25rem;
+              font-size: 0.7rem;
+              color: #898989;
+              line-height: 1.2rem;
+              hl {
+                font-weight: bold;
+                color: #ff9800;
+              }
             }
-            .vux-actionsheet-cancel {
-              height: 1.2rem;
-              background-color: #ccc;
+            .pic {
+              padding: 0 1.25rem;
+              width: 12rem;
+              text-align: center;
+              margin-bottom: 2.5rem;
+            }
+          }
+          .load-fail {
+            width: 100%;
+            height: 623px;
+            background-color: #fff;
+            text-align: center;
+            padding-top: 40%;
+          }
+          .weui_actionsheet_cell {
+            height: 7rem;
+            background-color: #f0eff5;
+          }
+          .vux-actionsheet-gap {
+            height: 0;
+          }
+          .vux-actionsheet-cancel {
+            height: 1.2rem;
+            background-color: #ccc;
+          }
+          .share-item {
+            display: inline-block;
+            width: 3.5rem;
+            height: 4.3rem;
+            margin: 0 0.35rem;
+            text-align: center;
+          }
+          .wechat, .timeline, .qq, .weibo {
+            display: inline-block;
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+          .wechat {
+            background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
+          }
+          .timeline {
+            background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
+          }
+          .qq {
+            background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
+          }
+          .weibo {
+            background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
+          }
+          .share-name {
+            width: 100%;
+            display: inline-block;
+            text-align: center;
+            margin-top: .5rem;
+          }
+          .share-box {
+            width: 100%;
+            padding: 1.2rem 0;
+            font-size: 0.6rem;
+            text-align: center;
+          }
+          .share-article {
+            margin-top: 3rem;
+            font-size: 26/40rem;
+            color: #aaa;
+            text-align: center;
+            hr {
+              margin: 0.32rem .5rem;
+              width: 4.5rem;
+              height: 1px;
+              background: #aaa;
+              border: 0;
+              display: inline-block;
+            }
+            p {
+              margin: 0;
             }
             .share-item {
-              display: inline-block;
-              width: 3.5rem;
-              height: 4.3rem;
-              margin: 0 0.35rem;
-              text-align: center;
+              width: 2.8rem;
+              margin-top: 1.5rem;
             }
-            .wechat, .timeline, .qq, .weibo {
-              display: inline-block;
-              width: 2.5rem;
-              height: 2.5rem;
-            }
-            .wechat {
-              background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-            }
-            .timeline {
-              background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-            }
-            .qq {
-              background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
-            }
-            .weibo {
-              background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
-            }
-            .share-name {
-              width: 100%;
-              display: inline-block;
-              text-align: center;
-              margin-top: .5rem;
-            }
-            .share-box {
-              width: 100%;
-              padding: 1.2rem 0;
-              font-size: 0.6rem;
-              text-align: center;
-            }
-            .share-article {
-              margin-top: 3rem;
-              font-size: 26/40rem;
-              color: #aaa;
-              text-align: center;
-              hr {
-                margin: 0.32rem .5rem;
-                width: 4.5rem;
-                height: 1px;
-                background: #aaa;
-                border: 0;
-                display: inline-block;
-              }
-              p {
-                margin: 0;
-              }
-              .share-item {
-                width: 2.8rem;
-                margin-top: 1.5rem;
-              }
-            }
-            /************        share     part  *********************/
           }
+          /************        share     part  *********************/
         }
       }
+    }
 </style>
 <script>
     import AlloyTouch from 'alloyTouch'
@@ -390,7 +388,12 @@
         }
        },
        ready () {
-        this.init()
+         this.init()
+       },
+       route: {
+        data () {
+        //  this.init()
+        }
        },
        methods: {
         init () {
