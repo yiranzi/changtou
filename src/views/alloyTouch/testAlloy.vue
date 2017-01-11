@@ -83,6 +83,7 @@
     * {
       box-sizing: border-box;
     }  */
+  #alloyTouchDemo{
     .section-title {
       background-image: url("../../../static/image/alloyTouch/bgTitle.png");
       background-position: 0% 0%;
@@ -375,6 +376,7 @@
         }
       }
     }
+  }
 </style>
 <script>
     import AlloyTouch from 'alloyTouch'
