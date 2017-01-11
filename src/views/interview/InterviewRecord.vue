@@ -2,7 +2,7 @@
   <div class="interview-record">
     <ict-titlebar :right-options="rightOptions" v-el:titlebar>
       院生故事
-      <div slot="right" v-touch:tap="showActionSharePanel">
+      <div slot="right" v-touch:tap="showActionSharePanel" v-if="canShare">
         <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
@@ -24,7 +24,7 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
 
-        <div class="share-article">
+        <div class="share-article" v-if="canShare">
           <div><hr/><span>好文共赏</span><hr/></div>
           <div class="share-item" v-touch:tap="shareToFriendCircle">
             <div class="timeline"></div>
@@ -62,6 +62,7 @@
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
+  import {Device, platformMap} from '../../plugin/device'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -85,6 +86,12 @@
     watch: {
       'interviewRecord' () {
         this.setScrollerHeight()
+      }
+    },
+    computed: {
+      //只有app中才能调用插件分享
+      canShare () {
+        return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
       }
     },
     route: {
