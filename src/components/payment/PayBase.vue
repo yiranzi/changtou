@@ -29,7 +29,8 @@
   import FastLogin from '../../components/payment/PayFastLogin.vue'
   import PayActionSheet from '../../components/payment/PayActionSheet.vue'
   import {userGetters} from '../../vuex/getters'
-
+  import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
   // 页面原有高度, 用来处理键盘弹出事件
   const _originHtmlHeight = window.document.body.offsetHeight
   let isKeyboardPop = false
@@ -77,12 +78,6 @@ export default {
   data () {
     return {
       scrollerHeight: '0px',
-      actionSheet: {
-        menus: {
-          ali: '支付宝支付',
-          wechat: '微信支付'
-        }
-      },
       isShowBottomBtn: true,
       timer: 0
     }
@@ -96,6 +91,22 @@ export default {
     },
     couponsValue () {
       return '0'
+    },
+    actionSheet () {
+      if (Device.platform === platformMap.WEB && Agent.isWx) {
+        return {
+          menus: {
+            wechat: '微信支付'
+          }
+        }
+      } else {
+        return {
+          menus: {
+            ali: '支付宝支付',
+            wechat: '微信支付'
+          }
+        }
+      }
     }
   },
 

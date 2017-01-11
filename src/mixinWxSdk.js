@@ -17,7 +17,14 @@ const defaultShareConfig = {
 const mixin = {
   data () {
     return {
-
+      shareConfig: null
+    }
+  },
+  events: {
+    [eventMap.APP_START] () {
+      if (window.wx) {
+        this.initSdkConfig()
+      }
     }
   },
   methods: {
@@ -66,7 +73,9 @@ const mixin = {
      *  当页面改变时，设置分享
      */
     onViewChange () {
-      this.setShareConfigForAll(this.$els.activeView.ShareConfig || defaultShareConfig)
+      if (window.wx) {
+        this.setShareConfigForAll(this.shareConfig || defaultShareConfig)
+      }
     },
 
     /**
@@ -120,7 +129,7 @@ const mixin = {
      */
     shareToTimeline (config) {
       const me = this
-      //注意，这里分享到朋友圈，是没有title的，直接设置desc
+      //注意，这里分享到朋友圈，是没有desc的，直接设置title
       window.wx.onMenuShareTimeline({
         title: config.desc,
         link: config.link,
