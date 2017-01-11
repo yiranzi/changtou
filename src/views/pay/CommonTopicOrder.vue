@@ -22,6 +22,7 @@
   import {commonTopicActions} from '../../vuex/actions'
   import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {getLocalCache} from '../../util/cache'
@@ -217,6 +218,7 @@
         const trade = {
           sum: this.sum,
           body: '长投课程',
+          openId: Device.platform === platformMap.WEB && Agent.isWx ? JSON.parse(window.sessionStorage.getItem('wxOauth2')).openId : null,
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',

@@ -23,6 +23,23 @@
 <script>
 
   /**
+   * 正式环境
+   * 验证是否完成微信授权
+   */
+/*  function authentication() {
+    return window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')
+  }*/
+
+  /**
+   * 测试环境
+   * 验证是否完成微信授权
+   */
+  function authentication() {
+    window.localStorage.setItem('her', 'aaa')
+    return window.sessionStorage.getItem('wxOauth2')
+  }
+
+  /**
    * 初始化，设置rem
    */
   function init (){
@@ -49,7 +66,22 @@
     document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
   }
 
-  init();
+  const ua = navigator.userAgent.toLowerCase();
+  const isWx = ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === "micromessenger";
+
+  if (isWx) {
+    if (authentication()) {
+      //完成授权 进入新站
+      init();
+    } else {
+      //未授权 回老站授权
+//    window.location.href = window.location.origin + '/edu/index.html' //正式环境
+      window.location.href = window.location.origin + '/zl/index.html' //测试环境
+    }
+  } else {
+    init();
+  }
+
 </script>
 <script type="text/javascript" src="cordova.js"></script>
 <app></app>

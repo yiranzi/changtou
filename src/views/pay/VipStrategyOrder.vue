@@ -18,7 +18,8 @@
   import {getStrategyOrder, goodsType, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
   import {userActions} from '../../vuex/actions'
-  import { Device, platformMap } from '../../plugin/device'
+  import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -237,6 +238,7 @@
         const trade = {
           sum: this.sum,
           body: '长投课程',
+          openId: Device.platform === platformMap.WEB && Agent.isWx ? JSON.parse(window.sessionStorage.getItem('wxOauth2')).openId : null,
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',

@@ -12,6 +12,9 @@
             <i class="finan-icon finan-icon-expose"></i>
             理财揭秘
           </span>
+          <span v-touch:tap="goToNewerHelp">
+            新手攻略
+          </span>
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-story"></i>
@@ -190,6 +193,10 @@
         })
         }, 150)
       },
+
+      /**
+       * 跳转到课程详情页
+       */
       goToCourseDetail (subject, index) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           type: subject.type,
@@ -199,6 +206,10 @@
         })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
+
+      /**
+       * 跳转到推荐课程
+       */
       goToRecommendDetail (subject, index) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
           type: 'P',
@@ -207,6 +218,10 @@
         })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
+
+      /**
+       * 跳转到全部课程列表
+       */
       onListTap (type) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_TEXT_TAP, {
           titile: '全部课程',
@@ -214,7 +229,10 @@
         })
         this.$route.router.go('/totalList')
       },
-      //跳转到理财揭秘起始页
+
+      /**
+       * 跳转到理财揭秘起始页
+       */
       goToNewertestStart () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '新手测试'
@@ -230,14 +248,27 @@
           me.showAlert('信息加载失败，请重试！')
         })
       },
-      //跳转到院生访谈列表页面
+
+      /**
+       * 跳转到院生访谈列表页面
+       */
       goToInterviewList () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
       },
-      //跳转到每日一题
+
+      /**
+       * 跳转到新手攻略
+       */
+      goToNewerHelp () {
+
+      },
+
+      /**
+       * 跳转到每日一题
+       */
       goToDailyQuestion () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '每日一题'
@@ -265,14 +296,22 @@
         })
         this.$route.router.go('/strategy/professional/intro')
       },
+
+        /**
+         * 显示新手礼包浮层
+         */
       showPackage () {
         this.showMask({
           component: 'giftPackage/GiftMask.vue',
           hideOnMaskTap: true,
           callbackName: 'gotoGiftPackageDetails',
           callbackFn: this.gotoGiftPackageDetails.bind(this)
-      })
+        })
       },
+
+        /**
+         * 跳转到新手礼包详情
+         */
       gotoGiftPackageDetails () {
         const me = this
         me.hideMask()

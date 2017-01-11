@@ -22,7 +22,8 @@
   import PayBase from '../../components/payment/PayBase.vue'
   import {getPostponeOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
   import {userGetters} from '../../vuex/getters'
-  import { Device, platformMap } from '../../plugin/device'
+  import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {getLocalCache} from '../../util/cache'
@@ -220,6 +221,7 @@
         const trade = {
           sum: this.sum,
           body: '长投课程',
+          openId: Device.platform === platformMap.WEB && Agent.isWx ? JSON.parse(window.sessionStorage.getItem('wxOauth2')).openId : null,
           deal: {
             cardUsed: false,
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',

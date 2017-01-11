@@ -15,6 +15,7 @@ import { errorType } from '../../util/pay/dealHelper'
 const AliBrowserPay = (trade) => {
   //window.alert('AliBrowserPay')
   let deal = Object.assign({}, trade)
+  delete deal['openId']
   //添加支付返回提示
   deal.return_url = window.location.origin + window.location.pathname.replace('index.html', 'extra/aliBrowserPay/AliPayReturn.html')
   deal.show_url = window.location.href

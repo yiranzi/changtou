@@ -5,6 +5,13 @@
  */
 
 /**
+ * 取出 用户openId
+ * 以免被清除
+ */
+const changTou = window.sessionStorage.getItem('wxOauth2')
+const zhouLe = window.sessionStorage.getItem('zhouLe')
+
+/**
  * 清除路由
  * @type {Storage}
  */
@@ -12,6 +19,13 @@ let history = window.sessionStorage
 history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
+
+/**
+ * 清除session后
+ * 设置 用户openId
+ */
+window.sessionStorage.setItem('wxOauth2', changTou)
+window.sessionStorage.setItem('zhouLe', zhouLe)
 
 /**
  *
