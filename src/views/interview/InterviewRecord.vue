@@ -305,8 +305,9 @@
       margin-top: 0.65rem;
     }
     .content{
-      width: 15.25rem;
-      padding: 1.25rem 1.75rem 2rem 1.75rem ;
+      width: 100%;
+      padding: 1.25rem 1.75rem 2rem;
+      box-sizing: border-box;
       background-color: #fff;
       .title{
         margin-bottom: 2.5rem;
