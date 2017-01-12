@@ -93,17 +93,26 @@ export default {
       return '0'
     },
     actionSheet () {
-      if (Device.platform === platformMap.WEB && Agent.isWx) {
+      if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
+        //app中
+        return {
+          menus: {
+            ali: '支付宝支付',
+            wechat: '微信支付'
+          }
+        }
+      } else if (Device.platform === platformMap.WEB && Agent.isWx) {
+        //微信中
         return {
           menus: {
             wechat: '微信支付'
           }
         }
-      } else {
+      } else if (Device.platform === platformMap.WEB) {
+        //web
         return {
           menus: {
-            ali: '支付宝支付',
-            wechat: '微信支付'
+            ali: '支付宝支付'
           }
         }
       }

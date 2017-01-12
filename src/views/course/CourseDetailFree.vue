@@ -110,6 +110,18 @@
     },
 
     watch: {
+      /**
+       * 当前课程详情加载成功
+       */
+      'currSubject': function (newSubject) {
+        this.shareConfig = {
+          title: newSubject.title,
+          desc: newSubject.subtitle,
+          link: window.location.href,
+          imgUrl: newSubject.pic
+        }
+        this.onViewChange()
+      },
       // 当按钮消失,滚动条高度重置
       'currStatus': function (val) {
         if (val === 'N') {
@@ -185,6 +197,8 @@
        * 页面隐藏时
        */
       deactivate ({to, next}) {
+        this.shareConfig = null
+        this.onViewChange()
         // 如果是跳转到横屏页面, 不打断音频
         if (to.path && to.path.indexOf('landscape/') > -1) {
           next()

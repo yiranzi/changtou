@@ -100,7 +100,6 @@
     watch: {
       route (newRoute) {
         this.$dispatch(eventMap.VIEW_CHANGE, newRoute.path)
-        this.onViewChange()
       }
     },
 

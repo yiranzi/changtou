@@ -16,6 +16,10 @@
   <!--<script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="http://w.cnzz.com/dplus.php?token=ea16565d66171ebe26f4",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("ea16565d66171ebe26f4");</script>-->
   <!--<script type="text/javascript">!function(a,b){var c,d;window.__dplusDefineCacheQueue=[],b.define=function(){window.__dplusDefineCacheQueue.push(Array.prototype.slice.call(arguments))},c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="http://w.cnzz.com/dplus.define.php",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}(document,window.dplus);</script>-->
 
+  <!--以下为m站必须-->
+  <!-- 微信js sdk -->
+  <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
 </head>
 
 <body>
@@ -45,9 +49,14 @@
       html.style.fontSize = parseFloat(window.fontScale) / scale + 'px';
     }
 
-    // 阻止document页面滚动 (ios系统的webview的滚动)
+    /**
+     * 阻止document页面滚动 (ios系统的webview的滚动)
+     */
     document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
 
+    /**
+     * 缓存当前url上携带的参数
+     */
     var params = window.location.href.split('?')[1]
     if (params) {
       var paramsArr = params ? params.split('&') : []
@@ -71,22 +80,40 @@
      * 正式环境
      */
 //    if (window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')) {
-//      //完成授权 进入新站
-//      init();
+//      //完成授权
+//      if (window.sessionStorage.getItem('preUrl')) {
+//        //有保存的地址 进入该地址
+//        window.location.href = window.sessionStorage.getItem('preUrl')
+//      } else {
+//        //无保存的地址 直接进入
+//        init();
+//      }
 //    } else {
-//      //未授权 回老站授权
-//      window.location.href = window.location.origin + '/edu/index.html' //正式环境
+//      //未授权
+//      //保存当前地址
+//      window.sessionStorage.setItem('preUrl',window.location.href)
+//      //回老站授权
+//      window.location.href = window.location.origin + '/edu/index.html'
 //    }
 
     /**
      * 测试环境
      */
     if (window.sessionStorage.getItem('wxOauth2')) {
-      //完成授权 进入新站
-      init();
+      //完成授权
+      if (window.sessionStorage.getItem('preUrl')) {
+        //有保存的地址 进入该地址
+        window.location.href = window.sessionStorage.getItem('preUrl')
+      } else {
+        //无保存的地址 直接进入
+        init();
+      }
     } else {
-      //未授权 回老站授权
-      window.location.href = window.location.origin + '/zl/index.html' //测试环境
+      //未授权
+      //保存当前地址
+      window.sessionStorage.setItem('preUrl',window.location.href)
+      //回老站授权
+      window.location.href = window.location.origin + '/zl/index.html'
     }
   } else {
     init();
