@@ -252,7 +252,6 @@
 
         pay({
           channel: channel,
-          isSubscriber: me.$route.query.subscriber,
           trade: trade
         }).then(
           result => {
