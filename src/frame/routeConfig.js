@@ -284,7 +284,7 @@ export function configRouter (router) {
      * alloyTouch demo
      */
     'alloyTouch/demo1': {
-      component: require('../views/alloyTouch/alloyTouchDemo.vue')
+      component: require('../views/alloyTouch/testAlloy.vue')
     }
   })
 

@@ -23,19 +23,28 @@
               <img src="../../../static/image/alloyTouch/page4.png" width="100%" height="100%" />
             </div>
           </div>
-          <div>
-            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <img src="../../../static/image/alloyTouch/page5.png" width="100%" height="100%" />
+          <div v-show="isUserLogin">
+            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >   <!-- user's person info if haven't then set a average by a fake data -->
+              <div class="user-atavar">
+                <span><img :src="atavar" /></span>
+                <p class="user-name">{{userName}}</p>
+              </div>
+              <span class="section-init-date">2017 <span class="inner-cell" ></span> 12 <span class="inner-cell2" ></span> 12</span>
+              <img src="../../../static/image/alloyTouch/personInfo1.png" width="100%" height="100%" />
             </div>
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <img src="../../../static/image/alloyTouch/page6.png" width="100%" height="100%" />
+              <div class="user-atavar">
+                <img :src="atavar" />
+                <p class="user-name">{{userName}}</p>
+              </div>
+              <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
             </div>
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <img src="../../../static/image/alloyTouch/page7.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
             </div>
           </div>
           <div>
@@ -78,6 +87,17 @@
 </template>
 <style lang="less">
   #alloyTouchDemo{
+    .inner-cell{
+      width: .3rem;
+      height: 1rem;
+      display: inline-block;
+    }
+    .inner-cell2{
+      width: .1rem;
+      height: 1rem;
+      display: inline-block;
+    }
+
     .section-title {
       background-image: url("../../../static/image/alloyTouch/bgTitle.png");
       background-position: 0% 0%;
@@ -143,30 +163,43 @@
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 90%;
-          width: 15.85rem;
-          height: 16.8rem;
+          width: 12.15rem;
+          height: 8.725rem;
           position: relative;
-          top: 24%;
-          left: 10%;
+          top: 25%;
+          left: 17%;
+          .user-atavar{
+            text-align: center;
+            font-size: .6rem;
+            color: white;
+          }
+          .section-init-date{
+            font-size: 1.45rem;
+            color: #ffa530;
+            position: relative;
+            left: 2.66rem;
+            top: 1.1rem;
+          }
         }
         .section-item-5 {
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 90%;
-          width: 15.55rem;
-          height: 20.8rem;
+          width: 11.3rem;
+          height: 13.4rem;
           position: relative;
-          top: 20%;
-          left: 12%;
+          top: 30%;
+          left: 23%;
         }
         .section-item-6 {
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 90%;
-          width: 18.75rem;
-          height: 20.3rem;
+          width: 9.45rem;
+          height: 15.8rem;
           position: relative;
-          top: 15%;
+          top: 30%;
+          left: 23%;
         }
         .section-item-7 {
           background-position: center center;
@@ -379,7 +412,17 @@
     import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
     import {eventMap} from '../../frame/eventConfig'
     import {statisticsMap} from '../../statistics/statisticsMap'
+    import {userGetters} from '../../vuex/getters'
     export default {
+        vuex: {
+          getters: {
+            userName: userGetters.userName,
+            atavar: userGetters.avatar,
+            isUserLogin: userGetters.isLogin
+          },
+          actions: {
+          }
+       },
        data () {
         return {
         }
