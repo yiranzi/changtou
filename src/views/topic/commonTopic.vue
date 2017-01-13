@@ -1,6 +1,6 @@
 <template>
   <div class="common-topic">
-    <div class="top-back-btn" v-touch:tap="back" ></div>
+    <ict-back-btn></ict-back-btn>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
       <div>
         <div v-for="commonContent in commonTopicInfo.content">
@@ -8,16 +8,18 @@
         </div>
       </div>
     </scroller>
-    <div class="bottom-area" v-el:btn v-show="isTopicLoaded">
-      <ict-button class="ict-button" :disabled="isBuyTicket" v-bind:class="{'disable': isBuyTicket}" v-touch:tap="toBuy">
+    <div class="bottom-area" v-show="isTopicLoaded && commonTopicInfo.price > 0">
+      <ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuyTicket">你已成功购买2016年{{commonTopicInfo.title}},不可重复购买</div>
+      <div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
     </div>
   </div>
 </template>
 <style lang="less">
   .common-topic{
+    width: 100%;
+    height: 100%;
     .top-back-btn {
       position: absolute;
       height: 2rem;
@@ -41,7 +43,8 @@
       display: block;
     }
     .bottom-area{
-      position: relative;
+      position: absolute;
+      bottom: 0;
       height: 2.2rem;
       width: 100%;
       font-family: '微软雅黑';
@@ -64,6 +67,7 @@
   }
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
   import {commonTopicActions} from '../../vuex/actions'
@@ -74,12 +78,12 @@
     vuex: {
       actions: {
         loadCommonTopic: commonTopicActions.loadCommonTopic,
-        booleanMeetingTicket: commonTopicActions.booleanMeetingTicket
+        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy
       },
       getters: {
         isLogin: userGetters.isLogin,
         commonTopicInfo: commonTopicGetters.commonTopic,
-        isBuyTicket: commonTopicGetters.isBuyTicket
+        isBuyTopic: commonTopicGetters.isBuyTopic
       }
     },
     data () {
@@ -89,24 +93,30 @@
         ctpId: this.$route.params.ctpId
       }
     },
+    computed: {
+      isBuy () {
+        return this.isLogin ? this.isBuyTopic : false
+      }
+    },
     watch: {
       'commonTopicInfo.content' () {
-        this.isTopicLoaded = true
         this.setScrollerHeight()
       }
     },
     route: {
       canActivate: function (transition) {
         if (/\/pay\/success\/CT\//.test(transition.from.path)) {
-          window.history.go(-1)
+          transition.redirect('/mycourse')
         }
         transition.next()
       },
       data (transition) {
         const ctpId = transition.to.params.ctpId
-        this.loadCommonTopic(ctpId)
+        this.loadCommonTopic(ctpId).then(
+          () => { this.isTopicLoaded = true }
+        )
         if (this.isLogin) {
-          this.booleanMeetingTicket()
+          this.isCommonTopicBuy(ctpId)
         }
       }
     },
@@ -138,12 +148,13 @@
             top: 0
           })
         })
-        }, 2000)
+        }, 1500)
       }
     },
     components: {
       Scroller,
-      IctButton
+      IctButton,
+      IctBackBtn
     }
   }
 </script>

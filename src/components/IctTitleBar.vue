@@ -71,7 +71,11 @@ titlebar
         if (this.leftOptions && this.leftOptions.callback) {
           this.leftOptions.callback()
         } else {
-          window.history.back()
+          if (parseInt(window.sessionStorage.getItem('count')) <= 1) {
+            this.$route.router.go('/main')
+          } else {
+            window.history.back()
+          }
         }
       },
       /**
@@ -100,14 +104,15 @@ titlebar
       position: absolute;
       top: 0;
       display: block;
+      padding: 0 0.6rem;
       font-size: 14px;
       color: #fff;
     }
     &-left{
-      left: 24/40rem;
+      left: 0;
     }
     &-right{
-      right: 24/40rem;
+      right: 0;
     }
     &-right.disabled{
       color: #bbb;

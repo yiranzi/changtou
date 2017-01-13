@@ -14,6 +14,7 @@ const apiUrl = {
   'register_post_password_msite': '/principal/msite/auth/user-registration-info', // 注册 登录 M站
   // 账号登录
   'principal_login': '/principal/auth/login-user-info',
+  'principal_login_msite': '/principal/msite/login-user-info',
   // 同步用户信息
   'sync_user': '/principal/msite/users/user-info',
   // 快速登录
@@ -64,8 +65,7 @@ const apiUrl = {
    */
   'common_topic': '/homepage/topic/common-topic/:ctpId', //通用专题
   'spec_topic': '/homepage/topic/spec-topic/:stpId', //打包课专题
-  'boolean_meeting_ticket': '/homepage/topic/common-topic/meeting-ticket', //是否购买年会门票
-
+  'is_common_topic_buy': '/homepage/topic/common-topic/buy-status/:ctpId', //是否购买通用专题
   /**
    * 鼓励师
    */
@@ -157,7 +157,31 @@ const apiUrl = {
   /**
    * 积分券
    */
-  'integral_list': '/integral/user/ticket-list' //毕业积分券
+  'integral_list': '/integral/user/ticket-list', //毕业积分券
+  /**
+   * 新手礼包
+   */
+   'get_gift_package': '/homepage/newcomer/gift',    // 获取新手礼包
+   'get_gift_qualify': '/homepage/newcomer/gift-qualification',   // 判断是否有领取新手礼包资格
+  /**
+   * 优惠信息 新手礼包劵
+   */
+  'loading_coupon_list': '/integral/user/ticket-list',      // 渲染积分券列表
+  /**
+   *  问卷调查
+   */
+  'submit_question_naire': '/person/questionnaire',   // 提交问卷调查
+  'is_questionnaire_submit': '/person/questionnaire/state-done/:questionnaireId',  //是否提交过问卷
+  /**
+   *  电子书阅读进度
+   */
+   'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
+   'get/book/progress': '/e-book/record/:bookId',                    // 获取电子书阅读进度
+
+  /**
+   * 微信sdk
+   */
+    'wx_signature': '/wx/signature'
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

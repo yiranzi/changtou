@@ -248,6 +248,37 @@ export function configRouter (router) {
     // 毕业证 列表
     '/graduation/list': {
       component: require('../views/graduationDiploma/DiplomaList.vue')
+    },
+
+    /**
+     * 新手礼包
+     */
+     '/giftPackage/giftPackageDetails': {
+      component: require('../views/giftPackage/giftPackageDetails.vue')
+    },
+    /**
+     * 优惠信息
+     */
+    'coupon/details': {
+      component: require('../components/giftPackage/CouponDetails.vue')
+    },
+    /**
+     * 新手读物详情页
+     */
+    'giftPackage/newerBookDetails': {
+      component: require('../views/giftPackage/BookDetails.vue')
+    },
+    /**
+     * 图书内容页                  // 使用动态匹配向内传值更改 DATA
+     */
+    'giftPackage/bookChapter/:currIndex': {
+      component: require('../views/giftPackage/BookChapter.vue')
+    },
+    /**
+     * 问卷调查
+     */
+    'questionNaire/:naireId': {
+      component: require('../views/questionnaire/questionDetail1.vue')
     }
   })
 

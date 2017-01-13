@@ -206,9 +206,10 @@
         this.isBtnShow = true
         setTimeout(function () {
           me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.btns.offsetHeight) + 'px'
+          const top = me.$els.conversation.offsetHeight - parseInt(me.scrollerHeight)
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-              top: me.scrollerHeight
+              top: top > 0 ? top : 0
           })
         })
         }, 500)

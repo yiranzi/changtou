@@ -31,13 +31,24 @@
           </div>
 
           <div class="recommend" v-el:recommend v-if="recommend" v-touch:tap="onRecommendTap">{{{recommend}}}</div>
-          <div class="course-list" v-for="course in courseList">
-            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic>
-            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
+          <div class="course-list" v-for="course in courseList" track-by="$index" :class=" $index === parseInt(this.expenseRecords.length)?'read-book-item':'' ">
+            <img class="course-list-img" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" :src=course.pic v-if="$index !== parseInt(this.expenseRecords.length)">
+            <!-- 电子书 背景 -->
+            <img class="course-list-img" v-touch:tap="gotoReadBook" src='../../assets/styles/image/giftPackage/readIcon.png' v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin && isShowEBook">
+            <div class="course-list-info" v-touch:tap="goToCourseDetail(course.type, course.subjectId)" v-if="$index !== parseInt(this.expenseRecords.length)">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
-              <p class="course-list-state" :class="{'course-list-state-unlogin': !isLogin}">{{course.status}} <span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
+              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)" >{{course.status}}<span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
             </div>
+            <!-- 电子书 介绍 -->
+            <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin && isShowEBook">
+              <p class="course-list-title">{{course.title}}</p>
+              <p class="course-list-subtitle">{{course.subtitle}}</p>
+              <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{readTotalNum}}人阅读过</p>
+            </div>
+            <span class="read-book-tip" v-if="$index === parseInt(this.expenseRecords.length)">伴学礼包</span>
           </div>
         </div>
       </scroller>
@@ -47,7 +58,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import {myCoursesActions} from '../../vuex/actions'
+  import {myCoursesActions, giftActions} from '../../vuex/actions'
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -65,13 +76,25 @@ export default {
     },
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
-      loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
+      loadUserCourses: myCoursesActions.loadUserCourses, // 下载 用户 我的课程 信息
+      getBookProgress: giftActions.getBookProgress,   // 得到上次阅读进度
+      receiveGiftPackage: giftActions.receiveGiftPackage,  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
+      isQualifyGiftPackage: giftActions.isQualifyGiftPackage
     }
   },
   data () {
     return {
       scrollerHeight: '1000px',
-      courseList: [] //课程列表
+      courseList: [], //课程列表
+      isShowEBook: false, // 是否显示电子书
+      readTotalNum: 0,  // 阅读电子书人数
+      isBookPlacedDown: false, // 已购买课程放在付费课程之下
+      readBookList: [  //
+        {
+          'title': '大熊股市历险记',
+          'subtitle': '阅读材料'
+        }
+      ]
     }
   },
 
@@ -126,11 +149,45 @@ export default {
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
+
+      // 获取电子书阅读人数
+       const bookId = 1
+       if (this.isLogin) {
+          this.getBookProgress(bookId).then(
+          res => {   // bookId, createTime, sectionIndex, totalOwnerNum
+            if (res) {
+              me.readTotalNum = res.totalOwnerNum
+            }
+          }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
+        // 是否显示电子书
+        this.isQualifyGiftPackage().then(
+          function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
+            if (!res.qualification) {
+              me.receiveGiftPackage().then(
+                (message) => {
+                  }).catch(function (err) {
+              if (err.message === '您已领取过新手礼包' && me.isLogin) {
+                me.isShowEBook = true
+              if (me.expenseRecords.length > 0) {
+                me.isBookPlacedDown = true
+              }
+            }
+              })
+            }
+          }
+        )
+      }
+
       return Promise.all(promiseArray).then(
         function () {
           setTimeout(
             function () {
               me.arrangeList()
+              me.courseList.splice(me.expenseRecords.length, 0, me.readBookList[0])
               me.setScrollerHeight()
             }, 300)
         }
@@ -138,6 +195,25 @@ export default {
     }
   },
   methods: {
+    /**
+     *  去阅读电子书 若有阅读进度 则去上次阅读进度处
+     */
+    gotoReadBook () {
+      const me = this
+      const bookId = 1
+      if (this.isLogin) {
+        this.getBookProgress(bookId).then(
+          res => { // bookId, createTime, sectionIndex
+          if (parseInt(res.sectionIndex) !== 0) {
+            let currIndex = parseInt(res.sectionIndex)
+            // 阅读页数应该到 书籍阅读页获取而不是入口处
+            me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
+          } else {
+            me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
+          }
+        })
+      }
+    },
     /**
      * 设置滚动高度
      */
@@ -268,6 +344,24 @@ export default {
     p{
       margin: 0;
     }
+    .read-book-item{
+  //    position: relative;
+      background: #e3f7fe !important;
+      position: relative;
+      .read-book-tip{
+        background: #ff9800;
+        height: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        font-size: .6rem;
+        color: #fff;
+        top: 0.5rem;
+        left: 5.5rem;
+        /* position: relative; */
+        position: absolute;
+        width: 2.75rem;
+      }
+    }
     .my-course-drfts{
       width: 5rem;
       color: #fff;
@@ -382,7 +476,7 @@ export default {
         color: #00b0f0;
       }
     }
-    .course-list{
+    .course-list, .read-book-item{
       background: #fff;
       overflow: hidden;
       border-bottom: 1px solid #f0eff5;

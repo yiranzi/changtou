@@ -26,17 +26,17 @@ export const loadCommonTopic = ({ dispatch }, ctpId) => {
 }
 
 /**
- * 获取是否购买年会门票
+ * 获取是否购买通用专题
  */
-export const booleanMeetingTicket = ({ dispatch }) => {
+export const isCommonTopicBuy = ({ dispatch }, ctpId) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('boolean_meeting_ticket')
+        url: getUrl('is_common_topic_buy').replace(':ctpId', ctpId)
       }).then(
-        function (isBuyTicket) {
-          dispatch('LOAD_ISBUY_TICKET', isBuyTicket)
-          resolve(isBuyTicket)
+        function (isBuy) {
+          dispatch('UPDATE_COMMON_TOPIC_ISBUY', isBuy)
+          resolve(isBuy)
         },
         function (err) {
           reject(err)

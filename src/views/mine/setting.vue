@@ -26,6 +26,9 @@
                   :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
                   v-touch:tap="onStrategyTap">
         </ict-item>
+        <ict-item title="优惠信息"
+                  link="coupon/details"  v-if='isCouponShow'>
+        </ict-item>
         <div style="height: 1rem" class="spacer"></div>
         <ict-item title="系统消息"
                   :disabled="!isLogin"
@@ -56,13 +59,13 @@
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Scroller from 'vux/scroller'
   import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
-  import {jpushAddOpenHandler} from '../../vuex/jpush/actions'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
+  import {giftActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        jpushAddOpenHandler
+        loadingCouponList: giftActions.loadingCouponList
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -73,13 +76,12 @@
         newSuggestionNum: helpGetters.newSuggestionNum
       }
     },
-
     data () {
       return {
+        isCouponShow: false,
         scrollerHeight: '480px'
       }
     },
-
     computed: {
       badgeMessageNum () {
         let number = this.newMessageNum + ''
@@ -107,14 +109,23 @@
         return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       }
     },
-
     route: {
-      data () {
+      data (transition) {
         this.$dispatch(eventMap.ACTIVE_TAB, 2)
-        return Promise.resolve().then(this.setScrollerHeight)
+        const me = this
+        if (this.isLogin) {
+          this.loadingCouponList().then(
+          function (couponList) {
+            if (parseInt(couponList.length) > 0) {
+             me.isCouponShow = true
+             me.setScrollerHeight()
+            }
+          }
+         )
+        }
+        transition.next()
       }
     },
-
     methods: {
       doLogin () {
         this.$route.router.go('/entry')
@@ -195,7 +206,7 @@
           font-family: 'myicon';
           content: '\e926';
           font-size: 0.8rem;
-          color: #000;
+          color: #aaa;
         }
       }
     }

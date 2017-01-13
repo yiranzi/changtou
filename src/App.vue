@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view class="view" :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')" keep-alive></router-view>
+    <router-view class="ict-base-view" :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')" keep-alive v-el:active-view></router-view>
 
     <!--bottom slot-->
     <tabbar class="ict_tabber" icon-class="vux-center" v-show="isTabbarView" slot="bottom" v-el:tab-bar>
@@ -40,7 +40,7 @@
     </div>
 
     <div id="mask"></div>
-
+    <div id="routerMask"></div>
 
     <!--新手测试-->
     <!--<div class="newertest-pop" v-if="isShowNewTestPop">-->
@@ -68,11 +68,12 @@
   import mixinBackHandler from './mixinBackHandler'
   import mixinNetwork from './mixinNetwork'
   import mixinStatistics from './mixinStatistics'
+  import mixinWxSdk from './mixinWxSdk'
 
   import {eventMap} from './frame/eventConfig'
 
   export default {
-    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork, mixinStatistics],
+    mixins: [mixinEvent, mixinAjax, mixinModal, mixinBackHandler, mixinNetwork, mixinStatistics, mixinWxSdk],
 
     store,
 
@@ -174,13 +175,16 @@
     height: 100%;
   }
 
+  .ict-base-view{
+    height: 100%;
+  }
   /**
   * vue-router transition
   */
   .vux-pop-out-transition,
   .vux-pop-in-transition {
     width: 100%;
-    animation-duration: 0.3s;
+    animation-duration: 0.5s;
     animation-fill-mode: both;
     backface-visibility: hidden;
   }

@@ -68,10 +68,40 @@
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
+    <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
   </div>
 </template>
 <style lang="less">
   .subject-detail {
+    .question-naire-btn{
+      width:2.025rem;
+      height: 2.075rem;
+      position: relative;
+      left: 80%;
+      bottom: 9%;
+      background: url("../../assets/styles/image/questionNaire/qsBtn.png") no-repeat center center /95%;
+    }
+    .question-naire-btn:active{
+      background: url("../../assets/styles/image/questionNaire/qsBtnActice.png") no-repeat center center /95%;
+    }
+    .top-back-btn {
+      position: absolute;
+      height: 2rem;
+      width: 2rem;
+      top: 0.3rem;
+      left: 1rem;
+      z-index: 20;
+    }
+    .top-back-btn:before {
+      position: absolute;
+      display: inline-block;
+      font-family: 'myicon';
+      content: '\e91b';
+      font-size: 1.6rem !important;
+      line-height: 2rem;
+      width: 2rem;
+      color: #999;
+    }
     .vux-tab-item {
       font-size: 0.85rem;
     }
@@ -127,7 +157,7 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions} from '../../vuex/actions'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
@@ -155,7 +185,9 @@
         setChoiceQuestion: choiceActions.setChoice,
         getReport: choiceActions.getReport,
 
-        syncHomeworkList: homeworkListActions.getHomeworkList
+        syncHomeworkList: homeworkListActions.getHomeworkList,
+        isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire,
+        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
 
@@ -192,7 +224,10 @@
 
         isSelectdLessonLimited: true, //当前选中lesson是否受限
         showEssay: false,
-        showChoice: false
+        showChoice: false,
+        isQuestionPlaced: false,  //是否放置提问按钮
+
+        currChapterRecord: null //当前课程chapter记录
       }
     },
 
@@ -232,10 +267,31 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
           // do nothing
         } else {
+          // 用于查询是否提交过问卷
+          const me = this
+          const questionnaireId = 1
+          // 暂时定为问卷一
+          setTimeout(function () {
+             // 提问入口按钮显示
+             if (me.isUserLogin && (me.currRecord !== null)) {
+                me.isSubmitQuestionNaire(questionnaireId).then(
+                function (isSubmit) {
+                  if (!isSubmit) {  // 未提交放置按钮
+                    if (parseInt(me.subjectId) === 4 || parseInt(me.subjectId) === 15) {
+                      me.isQuestionPlaced = true
+                    }
+                  }
+                }
+              )
+            }
+          }
+         , 50)
+
           if (this.subjectId !== subjectId) {
             this.showLoading()
           }
@@ -264,6 +320,8 @@
        * 页面隐藏时
        */
       deactivate ({to, next}) {
+        this.shareConfig = null
+        this.onViewChange()
         // 如果是跳转到横屏页面, 不打断音频
         if (to.path && to.path.indexOf('landscape/') > -1) {
           next()
@@ -273,12 +331,25 @@
           // 设置不可响应
           this.pause()
           this.isResponsive = false
+          this.$broadcast('expense-detail-deactive')
           next()
         }
       }
     },
 
     watch: {
+      /**
+       * 当前课程详情加载成功
+       */
+      'currSubject': function (newSubject) {
+        this.shareConfig = {
+          title: newSubject.title,
+          desc: newSubject.subtitle,
+          link: window.location.href,
+          imgUrl: newSubject.pic
+        }
+        this.onViewChange()
+      },
       'currTabIndex': function () {
         this.$nextTick(() => {
             this.$refs.scroller.reset({
@@ -933,8 +1004,76 @@
       playChapter (chapter) {
         this.currAudioSrc = chapter.audio
         this.currPpts = chapter.ppts
+        if (this.isUserLogin) {
+          this.uploadChapterRecord(chapter)
+        }
         this.$dispatch('chapterPlay', chapter)
         this.resetScroller()
+      },
+
+      /**
+       * 上传chapter进度
+       */
+      uploadChapterRecord (chapter) {
+        const me = this
+        if (me.canChapterUpload(chapter.chapterId)) {
+          me.updateExpenseChapterRecord({
+            subjectId: me.subjectId,
+            chapterId: chapter.chapterId,
+            lessonId: me.selectedLesson.lessonId
+          }).then(
+            () => {
+              me.currChapterRecord = {
+                subjectId: me.subjectId,
+                chapterId: chapter.chapterId,
+                lessonId: me.selectedLesson.lessonId
+              }
+            }
+          )
+        }
+      },
+
+      /**
+       * 当前chapter进度是否可以上传
+       * @params chapterId
+       */
+      canChapterUpload (selectedChapterId) {
+        if (!this.currChapterRecord) {
+          // 服务器上没有进度进入,直接上传
+          return true
+        } else {
+          //chapterId 为当前点击的chapterId
+          const selectedLessonId = this.selectedLesson.lessonId
+
+          //this.currChapterRecord 为服务器上的进度 包括lessonId和chapterId
+          const currChapterId = this.currChapterRecord.chapterId
+          const currLessonId = this.currChapterRecord.lessonId
+          // 当前点击的进度大于服务器上的进度时,可以上传
+          return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
+        }
+      },
+
+      /**
+       * 获取lesson在ids中的index
+       * @params lessonId
+       */
+      getLessonIndexOfIds (lessonId) {
+        const ids = this.currRecord.lessonIds
+        const index = ids.findIndex(
+                (itemId) => itemId === lessonId
+              )
+        return index >= 0 ? index : ids.length  //不在ids中的lesson为新学的lesson
+      },
+
+      /**
+       * 获取chapter的sequences
+       * @params chapterId
+       */
+      getChapterSequences (chapterId) {
+        const chapters = this.selectedLesson.lessonDetailsList
+        return chapters.find(
+          (chapter) => chapter.chapterId === chapterId
+        ).sequence
       },
 
       /**
@@ -946,6 +1085,11 @@
               top: 0
           })
         })
+      },
+      gotoQuestionNaire () {
+        // 暂定为 问卷一
+        const naireId = 1
+        this.$route.router.go(`/questionNaire/${naireId}`)
       }
     },
 
