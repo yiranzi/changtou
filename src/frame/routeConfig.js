@@ -265,13 +265,13 @@ export function configRouter (router) {
     /**
      * 新手读物详情页
      */
-    'giftPackage/newerBookDetails': {
+    'giftPackage/newerBookDetails/:bookId': {
       component: require('../views/giftPackage/BookDetails.vue')
     },
     /**
      * 图书内容页                  // 使用动态匹配向内传值更改 DATA
      */
-    'giftPackage/bookChapter/:currIndex': {
+    'giftPackage/bookChapter/:bookId/:currIndex': {
       component: require('../views/giftPackage/BookChapter.vue')
     },
     /**
@@ -279,6 +279,18 @@ export function configRouter (router) {
      */
     'questionNaire/:naireId': {
       component: require('../views/questionnaire/questionDetail1.vue')
+    },
+    /**
+     * 新手攻略 页面一 (提示: 若用户已领取攻略则直接跳转页面二)
+     */
+    'newerStrategy/page/1': {
+      component: require('../views/newerStrategy/newerStrategy1.vue')
+    },
+    /**
+     * 新手攻略 页面二
+     */
+    'newerStrategy/page/2': {
+      component: require('../views/newerStrategy/newerStrategy2.vue')
     }
   })
 

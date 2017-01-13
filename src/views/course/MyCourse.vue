@@ -207,9 +207,9 @@ export default {
           if (parseInt(res.sectionIndex) !== 0) {
             let currIndex = parseInt(res.sectionIndex)
             // 阅读页数应该到 书籍阅读页获取而不是入口处
-            me.$route.router.go(`giftPackage/bookChapter/${currIndex - 1}`)
+            me.$route.router.go(`/giftPackage/bookChapter/${bookId}/${currIndex - 1}`)   // TODO bookId
           } else {
-            me.$route.router.go('/giftPackage/newerBookDetails') //  为空 初始状态去详情页
+            me.$route.router.go(`/giftPackage/newerBookDetails/{bookId}`) //  为空 初始状态去详情页
           }
         })
       }
