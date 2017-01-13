@@ -17,7 +17,7 @@ const D_PLUS_ID = debug ? 'da168f4458633q92c79b' : 'da168f4458633q92c79b'
 
 const ICT_DATA_SERVER = debug ? 'http://121.40.131.112:3000' : 'http://121.40.131.112:3000'
 
-const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wxd6c823882698f217'
+const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wx7cf8dd5d80048e42'
 
 /**
  * 开发 + 上线

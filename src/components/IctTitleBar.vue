@@ -71,7 +71,11 @@ titlebar
         if (this.leftOptions && this.leftOptions.callback) {
           this.leftOptions.callback()
         } else {
-          window.history.back()
+          if (parseInt(window.sessionStorage.getItem('count')) <= 1) {
+            this.$route.router.go('/main')
+          } else {
+            window.history.back()
+          }
         }
       },
       /**

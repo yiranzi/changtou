@@ -2,7 +2,7 @@
   <div class="interview-record">
     <ict-titlebar :right-options="rightOptions" v-el:titlebar>
       院生故事
-      <div slot="right" v-touch:tap="showActionSharePanel">
+      <div slot="right" v-touch:tap="showActionSharePanel" v-if="canShare">
         <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
@@ -24,21 +24,21 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
 
-        <div class="share-article">
+        <div class="share-article" v-if="canShare">
           <div><hr/><span>好文共赏</span><hr/></div>
-          <div class="share-item" v-touch:tap="shareToFriendCircle">
+          <div class="share-item" v-touch:tap="shareToTimelineInApp">
             <div class="timeline"></div>
             <div class="share-name">朋友圈</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToFriend">
+          <div class="share-item" v-touch:tap="shareToFriendInApp">
             <div class="wechat"></div>
             <div class="share-name">微信好友</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToQQ">
+          <div class="share-item" v-touch:tap="shareToQQInApp">
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToWeibo">
+          <div class="share-item" v-touch:tap="shareToWeiboInApp">
             <div class="weibo"></div>
             <div class="share-name">微博</div>
           </div>
@@ -62,6 +62,7 @@
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   import {eventMap} from '../../frame/eventConfig'
+  import {Device, platformMap} from '../../plugin/device'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
     vuex: {
@@ -83,8 +84,21 @@
       }
     },
     watch: {
-      'interviewRecord' () {
+      'interviewRecord' (newRecord) {
+        this.shareConfig = {
+          title: '院生故事',
+          desc: newRecord.title,
+          link: window.location.href,
+          imgUrl: newRecord.paragraph[0].image
+        }
+        this.onViewChange()
         this.setScrollerHeight()
+      }
+    },
+    computed: {
+      //只有app中才能调用插件分享
+      canShare () {
+        return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
       }
     },
     route: {
@@ -101,6 +115,10 @@
             }
           }
         )
+      },
+      deactivate () {
+        this.shareConfig = null
+        this.onViewChange()
       }
     },
     methods: {
@@ -122,23 +140,23 @@
         this.showShareFloat = false
         switch (event.target.className) {
           case 'wechat':
-            this.shareToFriend() // 分享朋友
+            this.shareToFriendInApp() // 分享朋友
             break
           case 'timeline':
-            this.shareToFriendCircle() //分享到朋友圈
+            this.shareToTimelineInApp() //分享到朋友圈
             break
           case 'qq':
-            this.shareToQQ() // 分享朋友
+            this.shareToQQInApp() // 分享朋友
             break
           case 'weibo':
-            this.shareToWeibo() //分享到朋友圈
+            this.shareToWeiboInApp() //分享到朋友圈
             break
           default:
                 break
         }
       },
       //分享朋友
-      shareToFriend () {
+      shareToFriendInApp () {
         const me = this
         window.Wechat.share({
             message: {
@@ -170,7 +188,7 @@
       },
 
       //分享到朋友圈
-      shareToFriendCircle () {
+      shareToTimelineInApp () {
         const me = this
         window.Wechat.share({
           message: {
@@ -203,7 +221,7 @@
       /**
        * 分享到QQ
        */
-      shareToQQ () {
+      shareToQQInApp () {
         if (window.YCQQ) {
           const me = this
           var args = {}
@@ -234,7 +252,7 @@
       /**
        * 分享到微博
        */
-      shareToWeibo () {
+      shareToWeiboInApp () {
         if (window.YCWeibo) {
           const me = this
           var args = {}
@@ -287,8 +305,9 @@
       margin-top: 0.65rem;
     }
     .content{
-      width: 15.25rem;
-      padding: 1.25rem 1.75rem 2rem 1.75rem ;
+      width: 100%;
+      padding: 1.25rem 1.75rem 2rem;
+      box-sizing: border-box;
       background-color: #fff;
       .title{
         margin-bottom: 2.5rem;
