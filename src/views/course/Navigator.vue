@@ -12,9 +12,6 @@
             <i class="finan-icon finan-icon-expose"></i>
             理财揭秘
           </span>
-          <span v-touch:tap="goToNewerHelp">
-            新手攻略
-          </span>
           <i class="vertical-line-yan"></i>
           <span v-touch:tap="goToInterviewList">
             <i class="finan-icon finan-icon-story"></i>
@@ -257,13 +254,6 @@
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
-      },
-
-      /**
-       * 跳转到新手攻略
-       */
-      goToNewerHelp () {
-
       },
 
       /**
