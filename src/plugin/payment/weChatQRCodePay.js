@@ -4,7 +4,7 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType, dealType } from '../../util/pay/dealHelper'
+import { errorType, transactionChannel } from '../../util/pay/dealHelper'
 
 /**
  * 微信 扫码支付
@@ -29,7 +29,7 @@ const WeChatQRCodePay = (prepayData) => {
         ).then(
           res => {
             resolve({
-              type: dealType.WX_CODE,
+              type: transactionChannel.WX_CODE,
               url: res.codeURL
             })
           }

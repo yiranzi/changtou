@@ -290,6 +290,7 @@ const pay = ({trade, channel}) => {
             if (Agent.isWx) {
               //window.alert('isWx')
               if (isSubscriber === 'Y') {
+                //window.alert('isSubscriber')
                 pay = WeChatQRCodePay
               } else {
                 pay = WeChatBrowserPay

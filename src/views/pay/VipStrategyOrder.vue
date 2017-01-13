@@ -292,6 +292,38 @@
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
+      },
+      /**
+       * 显示支付二维码
+       * @param url
+       */
+      showCodePanel (url) {
+        this.showMask({
+          component: 'payment/WxQrCode.vue',
+          hideOnMaskTap: true,
+          callbackName: 'qrCodePress',
+          componentData: url,
+          callbackFn: this.onQrCodePress.bind(this) //组件上的
+        })
+      },
+
+      /**
+       * 长按二维码
+       */
+      onQrCodePress () {
+        setTimeout(
+          () => {
+            this.showConfirm({
+              title: '',
+              message: '是否完成支付?',
+              okText: '已完成',
+              okCallback: this.onPayFinish.bind(this),
+              cancelText: '未完成',
+              cancelCallback: this.hideLoading
+            })
+          },
+          2000
+        )
       }
     },
     components: {
