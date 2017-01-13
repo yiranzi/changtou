@@ -12,6 +12,7 @@ import {syncUser} from './vuex/user/actions'
 import {isLogin, userId} from './vuex/user/getters'
 import {newShowDiploma} from './vuex/graduationDiploma/getters'
 import {getKnowledgePointMap} from './vuex/homework/choice/actions'
+import ictData from './statistics/ictData'
 
 const mixin = {
   vuex: {
@@ -61,7 +62,7 @@ const mixin = {
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
         .then(() => {})
-        .catch(() => {})
+        .catch(() => { ictData.insertUvRecord({userId: '00'}) })
 
       // 延迟获取对应知识点, 增加页面的响应速度
       const me = this
@@ -138,6 +139,12 @@ const mixin = {
      * @param user
      */
     doWhenUserValid: function (user) {
+      // 向统计后台发送用户数据
+      // 更新用户数据
+      ictData.updateUser(user)
+      // 插入访问记录
+      ictData.insertUvRecord(user)
+
       let tasks = []
       // 获取课程进度
       tasks.push(this.loadAllFreeRecords())
@@ -148,10 +155,12 @@ const mixin = {
       tasks.push(this.getDiplomaList().then(this.onGraduationDiplomaLoaded))
 
       tasks.push(this.getHomeworkList())
+
       return Promise.all(tasks).then(
         //this.hideSplashscreen
+        () => user
       ).catch(
-        () => {}
+        () => null
       )
     },
 
