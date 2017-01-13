@@ -40,6 +40,11 @@
           </div>
           <div>
             <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page9.png" width="100%" height="100%" />
             </div>
           </div>
