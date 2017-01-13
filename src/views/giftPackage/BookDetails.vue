@@ -6,6 +6,7 @@
         <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
+    <div class="app-download-mask" v-touch:tap="gotoDownloadApp" v-if="!isPlatformMApp" v-el:app-download></div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div class="set-height" style="height: 100%;">
       <div class="book-info-container">
@@ -30,96 +31,100 @@
 </template>
 
 <style lang="less">
-    .book-info{
+    .book-info {
       background: white !important;
-    }
-    .share-pic{
-      width: 1.3rem;
-      height: 1rem;
-      margin-top: 0.65rem;
-    }
-    .set-height{
-      padding-bottom: 1.4rem;
-      .book-info-container{
-        margin-top: 1.75rem;
-        text-align: center;
-        .book-avatar{
-          width: 5.75rem;
-          height: 7.5rem;
-        }
-        .book-name{
-          font-size: .75rem;
-          color: #444;
-          margin-top: 1.25rem;
-        }
-        .book-status{
-          width: 3rem;
-          height:.8rem;
-          font-size: 60%;
-          color:#00b0f0;
-          border: 1px solid #00b0f0;
-          position: absolute;
-          top: 8rem;
-          left: 12.2rem;
-          line-height: .8rem;
-        }
-        .book-intro{
-          margin:1rem 1.25rem 1rem 1.25rem;
-          color: #888;
-          font-size: .65rem;
-        }
-        .strategy-receive-btn{
-          width: 13rem;
-          height: 1.7rem;
-          border-radius: 1.05rem;
-          background: #feb649;
-          color: white;
-          font-size: .75rem;
-          border: none;
+      .share-pic {
+        width: 1.3rem;
+        height: 1rem;
+        margin-top: 0.65rem;
+      }
+      .app-download-mask {
+        background: url("../../../static/image/newerStrategy/appdownload.png") 0 0 no-repeat/90%;
+        width: 18.75rem;
+        height: 5.5rem;
+      }
+      .set-height {
+        padding-bottom: 1.4rem;
+        .book-info-container {
+          margin-top: 1.75rem;
           text-align: center;
-          line-height: 1.7rem;
-          margin-bottom: .4rem;
-          margin-left: 3rem;
-        }
-        .strategy-receive-btn:active{
-          animation: breath 2s ease-in-out infinite;
-        }
-        @keyframes breath {
-          from {
-            opacity: .2;
-            transform: scale(1.1);
+          .book-avatar {
+            width: 5.75rem;
+            height: 7.5rem;
           }
-          50% {
-            opacity: 1;
+          .book-name {
+            font-size: .75rem;
+            color: #444;
+            margin-top: 1.25rem;
           }
-          to {
-            opacity: .2;
-            transform: scale(1);
+          .book-status {
+            width: 3rem;
+            height: .8rem;
+            font-size: 60%;
+            color: #00b0f0;
+            border: 1px solid #00b0f0;
+            position: absolute;
+            top: 8rem;
+            left: 12.2rem;
+            line-height: .8rem;
+          }
+          .book-intro {
+            margin: 1rem 1.25rem 1rem 1.25rem;
+            color: #888;
+            font-size: .65rem;
+          }
+          .strategy-receive-btn {
+            width: 13rem;
+            height: 1.7rem;
+            border-radius: 1.05rem;
+            background: #feb649;
+            color: white;
+            font-size: .75rem;
+            border: none;
+            text-align: center;
+            line-height: 1.7rem;
+            margin-bottom: .4rem;
+            margin-left: 3rem;
+          }
+          .strategy-receive-btn:active {
+            animation: breath 2s ease-in-out infinite;
+          }
+          @keyframes breath {
+            from {
+              opacity: .2;
+              transform: scale(1.1);
+            }
+            50% {
+              opacity: 1;
+            }
+            to {
+              opacity: .2;
+              transform: scale(1);
+            }
+          }
+        }
+        .book-chapter {
+          background: white !important;
+          border-top: .5rem solid #f0eff5;
+          .book-chapter-title {
+            background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
+            text-align: center;
+            font-size: .75rem;
+            color: #00b0f0;
+            height: 2.2rem;
+            line-height: 2.2rem;
+          }
+          .book-chapter-item {
+            border-bottom: 1px solid #f0eff5;
+            font-size: .7rem;
+            color: #666;
+            padding-left: 1.25rem;
+            height: 2.2rem;
+            line-height: 2.2rem;
           }
         }
       }
-      .book-chapter{
-        background: white !important;
-        border-top: .5rem solid #f0eff5;
-        .book-chapter-title{
-          background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
-          text-align: center;
-          font-size: .75rem;
-          color: #00b0f0;
-          height: 2.2rem;
-          line-height: 2.2rem;
-        }
-        .book-chapter-item{
-          border-bottom: 1px solid #f0eff5;
-          font-size: .7rem;
-          color: #666;
-          padding-left: 1.25rem;
-          height: 2.2rem;
-          line-height: 2.2rem;
-        }
-      }
     }
-
 </style>
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
@@ -130,6 +135,7 @@ import Actionsheet from 'vux/actionsheet'
 import ShareFloat from '../interview/InterviewFloat.vue'
 import {eventMap} from '../../frame/eventConfig'
 import {statisticsMap} from '../../statistics/statisticsMap'
+import {Device, platformMap} from '../../plugin/device'
 
 export default {
   vuex: {
@@ -185,6 +191,10 @@ export default {
       } else {
         return '连载中'
       }
+    },
+    isPlatformMApp () {
+      // 若当前平台为 m 站 则显示 “提示下载图”
+      return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     }
   },
   route: {
@@ -250,11 +260,21 @@ export default {
     gotoChapterDetails (currIndex) {
      this.$route.router.go(`/giftPackage/bookChapter/${this.bookId}/${currIndex}`)
     },
+    /**
+    *  去下载 App
+    */
+    gotoDownloadApp () {
+
+    },
     setScrollerHeight () {
         // 设置滚动条高度为 页面高度-titlebar高度
         const me = this
-        const {titlebar} = this.$els
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        const {titlebar, appDownload} = this.$els
+        if (!this.isPlatformMApp) {
+          me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight - appDownload.offsetHeight) + 'px'
+        } else {
+          me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        }
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
