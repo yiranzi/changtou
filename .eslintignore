@@ -4,5 +4,4 @@ src/plugin/qrCode.js
 src/util/alloyTouch/alloy_touch.full_page.js
 src/util/alloyTouch/progress_bar.js
 src/util/alloyTouch/alloy_touch.js
-src/views/alloyTouch/alloyTouchDemo.vue
 src/views/alloyTouch/testAlloy.vue

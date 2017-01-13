@@ -77,17 +77,6 @@
   </div>
 </template>
 <style lang="less">
-  /*
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-    }
-    * {
-      box-sizing: border-box;
-    }  */
   #alloyTouchDemo{
     .section-title {
       background-image: url("../../../static/image/alloyTouch/bgTitle.png");
@@ -398,24 +387,19 @@
        ready () {
          this.init()
        },
-       route: {
-        data () {
-        //  this.init()
-        }
-       },
        methods: {
         init () {
-        var pb;
-        console.log(AlloyTouch.FullPage)
-        var fp =  new AlloyTouch.FullPage("#fullpage",{
-            animationEnd:function () {
+          var pb;
+          console.log(AlloyTouch.FullPage)
+          var fp =  new AlloyTouch.FullPage("#fullpage",{
+              animationEnd:function () {
 
-            },
-            leavePage: function (index) {
-            },
-            beginToPage: function (index) {
-            }
-        });
+              },
+              leavePage: function (index) {
+              },
+              beginToPage: function (index) {
+              }
+          });
         },
        gotoIndex () {
         this.$route.router.go('/main')
