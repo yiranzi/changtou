@@ -35,17 +35,35 @@
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="user-atavar">
-                <img :src="atavar" />
-                <p class="user-name">{{userName}}</p>
+              <div class="item-container-5">
+                <div class="user-atavar">
+                  <img :src="atavar" />
+                  <p class="user-name">{{userName}}</p>
+                </div>
+                <div class="favo-container">
+                  <a class="favo-subject">最适合懒人的基金定投课</a>
+                  <a class="favo-subject-num">4</a>
+                  <a class="favo-subject-minute">30000</a>
+                </div>
+                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
               </div>
-              <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
             </div>
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <div class="item-container-5">
+              <div class="user-atavar">
+                <img :src="atavar" />
+                <p class="user-name">{{userName}}</p>
+              </div>
+              <div class="favo-container">
+                <a class="favo-subject">理财入门课</a>
+                <a class="favo-subject-three">3</a>
+                <a class="favo-subject-two">2</a>
+              </div>
               <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
             </div>
+              </div>
           </div>
           <div>
             <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
@@ -97,7 +115,15 @@
       height: 1rem;
       display: inline-block;
     }
-
+    .user-atavar{
+      text-align: center;
+      font-size: .6rem;
+      color: white;
+    }
+    .item-container-5 {
+      position: relative;
+      top: -2rem;
+    }
     .section-title {
       background-image: url("../../../static/image/alloyTouch/bgTitle.png");
       background-position: 0% 0%;
@@ -168,11 +194,6 @@
           position: relative;
           top: 25%;
           left: 17%;
-          .user-atavar{
-            text-align: center;
-            font-size: .6rem;
-            color: white;
-          }
           .section-init-date{
             font-size: 1.45rem;
             color: #ffa530;
@@ -190,6 +211,42 @@
           position: relative;
           top: 30%;
           left: 23%;
+            .user-atavar{
+              img{
+                position: relative;
+              }
+              top:-2rem !important;
+            }
+            .favo-container{
+              color: #ffa530;
+              font-size: 1.45rem;
+              width: 18rem;
+              .favo-subject{
+                position: relative;
+                top: 4.8rem;
+                left: -1.3rem;
+                font-size: 1.2rem;
+              }
+              .favo-subject-num{
+                position: relative;
+                top: 9rem;
+                left: -9.4rem;
+                font-size: 1.45rem;
+              }
+              .favo-subject-minute{
+                top: 9.2rem;
+                position: relative;
+                left: 4.5rem;
+                font-size: 1.45rem;
+              }
+            }
+            .user-atavar{
+              text-align: center;
+              font-size: .6rem;
+              color: white;
+              position: relative;
+              top:-4rem;
+            }
         }
         .section-item-6 {
           background-position: center center;
@@ -200,6 +257,29 @@
           position: relative;
           top: 30%;
           left: 23%;
+          .favo-container{
+            color: #ffa530;
+            font-size: 1.45rem;
+            width: 18rem;
+            .favo-subject{
+              position: relative;
+              top: 2.8rem;
+              left: 1.9rem;
+              font-size: 1.2rem;
+            }
+            .favo-subject-three{
+              position: relative;
+              top: 7rem;
+              left: -0.8rem;
+              font-size: 1.45rem;
+            }
+            .favo-subject-two{
+              top: 8.8rem;
+              position: relative;
+              left: -2rem;
+              font-size: 1.45rem;
+            }
+          }
         }
         .section-item-7 {
           background-position: center center;
