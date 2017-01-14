@@ -24,7 +24,8 @@
             </div>
           </div>
           <div v-show="isUserLogin">
-            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >   <!-- user's person info if haven't then set a average by a fake data -->
+            <!-- 用户若未登录则不显示此页面 -->
+            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >
               <div class="user-atavar">
                 <span><img :src="atavar" /></span>
                 <p class="user-name">{{userName}}</p>
@@ -494,164 +495,156 @@
     import {statisticsMap} from '../../statistics/statisticsMap'
     import {userGetters} from '../../vuex/getters'
     export default {
-        vuex: {
+       vuex: {
           getters: {
             userName: userGetters.userName,
             atavar: userGetters.avatar,
             isUserLogin: userGetters.isLogin
           },
-          actions: {
-          }
-       },
-       data () {
-        return {
-        }
        },
        ready () {
          this.init()
        },
        methods: {
-        init () {
-          var pb;
-          console.log(AlloyTouch.FullPage)
-          var fp =  new AlloyTouch.FullPage("#fullpage",{
-              animationEnd:function () {
+          init () {
+            var pb;
+            var fp =  new AlloyTouch.FullPage("#fullpage",{
+                animationEnd:function () {
+                },
+                leavePage: function (index) {
+                },
+                beginToPage: function (index) {
+                }
+            });
+          },
+         gotoIndex () {
+           this.$route.router.go('/main')
+         },
+         gotoAgain () {
+           window.history.reload()
+         },
+        //分享朋友
+        shareToFriend () {
+          const me = this
+          window.Wechat.share({
+              message: {
+                title: me.interviewRecord.title, // 分享标题
+                description: '',
+                thumb: me.interviewRecord.paragraph[0].image, // 分享图标
+                media: {
+                  type: window.Wechat.Type.WEBPAGE,
+  //                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
+                  webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+                }
+              },
+              scene: window.Wechat.Scene.SESSION
+            },
+            function () {
+              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+                '访谈Id': me.interviewRecord.interviewId,
+                '分享渠道': '微信-会话'
+              })
+              me.showToast('分享成功')
+            },
+            function (reason) {
+              if (reason === '用户点击取消并返回') {
 
-              },
-              leavePage: function (index) {
-              },
-              beginToPage: function (index) {
+              } else {
+                me.showAlert({title: '分享失败', message: reason})
               }
-          });
+            }
+          )
         },
-       gotoIndex () {
-        this.$route.router.go('/main')
-       },
-       gotoAgain () {
-        window.history.reload()
-       },
-             //分享朋友
-      shareToFriend () {
-        const me = this
-        window.Wechat.share({
+
+        //分享到朋友圈
+        shareToFriendCircle () {
+          const me = this
+          window.Wechat.share({
             message: {
               title: me.interviewRecord.title, // 分享标题
               description: '',
               thumb: me.interviewRecord.paragraph[0].image, // 分享图标
               media: {
                 type: window.Wechat.Type.WEBPAGE,
-//                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
                 webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
               }
             },
-            scene: window.Wechat.Scene.SESSION
+            scene: window.Wechat.Scene.TIMELINE // share to Timeline
           },
-          function () {
-            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
-              '分享渠道': '微信-会话'
-            })
-            me.showToast('分享成功')
-          },
-          function (reason) {
-            if (reason === '用户点击取消并返回') {
-
-            } else {
-              me.showAlert({title: '分享失败', message: reason})
-            }
-          }
-        )
-      },
-
-      //分享到朋友圈
-      shareToFriendCircle () {
-        const me = this
-        window.Wechat.share({
-          message: {
-            title: me.interviewRecord.title, // 分享标题
-            description: '',
-            thumb: me.interviewRecord.paragraph[0].image, // 分享图标
-            media: {
-              type: window.Wechat.Type.WEBPAGE,
-              webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-            }
-          },
-          scene: window.Wechat.Scene.TIMELINE // share to Timeline
-        },
-          function () {
-            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
-              '分享渠道': '微信-朋友圈'
-            })
-            me.showToast('分享成功')
-          },
-          function (reason) {
-            if (reason === '用户点击取消并返回') {
-
-            } else {
-              me.showAlert({title: '分享失败', message: reason})
-            }
-          }
-        )
-      },
-      /**
-       * 分享到QQ
-       */
-      shareToQQ () {
-        if (window.YCQQ) {
-          const me = this
-          var args = {}
-          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-          args.title = me.interviewRecord.title
-          args.description = ''
-          args.imageUrl = me.interviewRecord.paragraph[0].image
-          args.appName = '长投学堂'
-          window.YCQQ.shareToQQ(
             function () {
               me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
                 '访谈Id': me.interviewRecord.interviewId,
-                '分享渠道': 'QQ'
+                '分享渠道': '微信-朋友圈'
               })
               me.showToast('分享成功')
             },
-            function (failReason) {
-              if (failReason === 'cancelled by user') {
+            function (reason) {
+              if (reason === '用户点击取消并返回') {
 
               } else {
-                me.showAlert({title: '分享失败', message: failReason})
+                me.showAlert({title: '分享失败', message: reason})
               }
-            },
-            args
+            }
           )
-        }
-      },
-      /**
-       * 分享到微博
-       */
-      shareToWeibo () {
-        if (window.YCWeibo) {
-          const me = this
-          var args = {}
-          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-          args.title = me.interviewRecord.title + 'title'
-          args.description = '长投学堂' + 'description'
-          args.imageUrl = me.interviewRecord.paragraph[0].image
-          args.defaultText = me.interviewRecord.title + 'defaultText'
-          window.YCWeibo.shareToWeibo(
-            function () {
-              me.showToast('分享成功')
-            },
-            function (failReason) {
-              if (failReason === 'cancel by user') {
+        },
+        /**
+         * 分享到QQ
+         */
+        shareToQQ () {
+          if (window.YCQQ) {
+            const me = this
+            var args = {}
+            args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+            args.title = me.interviewRecord.title
+            args.description = ''
+            args.imageUrl = me.interviewRecord.paragraph[0].image
+            args.appName = '长投学堂'
+            window.YCQQ.shareToQQ(
+              function () {
+                me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+                  '访谈Id': me.interviewRecord.interviewId,
+                  '分享渠道': 'QQ'
+                })
+                me.showToast('分享成功')
+              },
+              function (failReason) {
+                if (failReason === 'cancelled by user') {
 
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
+                } else {
+                  me.showAlert({title: '分享失败', message: failReason})
+                }
+              },
+              args
+            )
+          }
+        },
+        /**
+         * 分享到微博
+         */
+        shareToWeibo () {
+          if (window.YCWeibo) {
+            const me = this
+            var args = {}
+            args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+            args.title = me.interviewRecord.title + 'title'
+            args.description = '长投学堂' + 'description'
+            args.imageUrl = me.interviewRecord.paragraph[0].image
+            args.defaultText = me.interviewRecord.title + 'defaultText'
+            window.YCWeibo.shareToWeibo(
+              function () {
+                me.showToast('分享成功')
+              },
+              function (failReason) {
+                if (failReason === 'cancel by user') {
+
+                } else {
+                  me.showAlert({title: '分享失败', message: failReason})
+                }
+              },
+              args
+            )
+          }
         }
-      }
      }
     }
 </script>

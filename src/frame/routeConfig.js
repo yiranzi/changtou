@@ -96,7 +96,7 @@ export function configRouter (router) {
     },
     // 关于我们
     '/contact/us': {
-      component: require('../views/alloyTouch/testAlloy.vue')  //require('../views/mine/ContactUs.vue')
+      component: require('../views/mine/ContactUs.vue')
     },
     // 意见反馈
     '/feedback': {
@@ -281,10 +281,10 @@ export function configRouter (router) {
       component: require('../views/questionnaire/questionDetail1.vue')
     },
     /**
-     * alloyTouch demo
+     * big Data Activity
      */
-    'alloyTouch/demo1': {
-      component: require('../views/alloyTouch/testAlloy.vue')
+    'bigDataActivity/1': {
+      component: require('../views/alloyTouch/bigDataActivity.vue')
     }
   })
 
