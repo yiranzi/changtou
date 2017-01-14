@@ -489,7 +489,6 @@
 <script>
     import AlloyTouch from 'alloyTouch'
     import FullPage from '../../util/alloyTouch/alloy_touch.full_page.js'
-    import ProgressBar from '../../util/alloyTouch/progress_bar.js'
     import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
     import {eventMap} from '../../frame/eventConfig'
     import {statisticsMap} from '../../statistics/statisticsMap'
