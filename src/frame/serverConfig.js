@@ -19,7 +19,7 @@ const ICT_DATA_SERVER = debug ? 'http://121.40.131.112:3000' : 'http://121.40.13
 
 const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wx7cf8dd5d80048e42'
 
-const CHANNEL = debug ? 'mapp' : 'app'
+const PROJECT = debug ? 'mapp' : 'app'
 
 /**
  * 开发 + 上线
@@ -45,5 +45,5 @@ export {
   D_PLUS_ID,
   ICT_DATA_SERVER,
   WX_APPID,
-  CHANNEL
+  PROJECT
 }
