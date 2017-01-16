@@ -34,3 +34,11 @@ export const graduatedType = () => {
     P: '暂停'
   }
 }
+
+/**
+ * 获取累积学习时间
+ * @returns {number|*}
+ */
+export const accumulateTime = (state) => {
+  return state.myCourses.accumulateTime
+}
