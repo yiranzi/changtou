@@ -4,7 +4,8 @@
  */
 <template>
     <div class="essay-mark">
-      <ict-titlebar></ict-titlebar>
+      <ict-titlebar v-el:title-bar></ict-titlebar>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div class="essay">
         <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
         <div class="essay-info">
@@ -29,6 +30,7 @@
           </div>
         </div>
       </div>
+      </scroller>
     </div>
 </template>
 <script>
@@ -50,7 +52,8 @@ export default {
   data () {
     return {
       subjectId: 0,
-      lessonId: 0
+      lessonId: 0,
+      scrollerHeight: '580px'
     }
   },
   computed: {
@@ -61,6 +64,11 @@ export default {
       return this.status !== 3
     }
   },
+  watch: {
+    remarkList () {
+      this.setScrollerHeight()
+    }
+  },
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
@@ -68,6 +76,17 @@ export default {
     }
   },
   methods: {
+    setScrollerHeight () {
+      const me = this
+      setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+          top: 0
+        })
+      })
+      }, 500)
+    },
     /**
      * 点击编辑作业
      */
