@@ -64,15 +64,11 @@ export default {
       return this.status !== 3
     }
   },
-  watch: {
-    remarkList () {
-      this.setScrollerHeight()
-    }
-  },
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.subjectId = params.subjectId
+      this.setScrollerHeight()
     }
   },
   methods: {
