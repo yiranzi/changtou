@@ -284,7 +284,7 @@ export function configRouter (router) {
      * 大数据 活动
      */
     'bigDataActivity/1': {
-      component: require('../views/alloyTouch/bigDataActivity.vue')
+      component: require('../views/bigDataActivity/bigDataActivity.vue')
     }
   })
 
