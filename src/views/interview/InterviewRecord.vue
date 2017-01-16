@@ -38,7 +38,7 @@
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToWeiboInApp">
+          <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShare">
             <div class="weibo"></div>
             <div class="share-name">微博</div>
           </div>
@@ -99,6 +99,11 @@
       //只有app中才能调用插件分享
       canShare () {
         return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+      },
+
+      //ios中 暂不才显示微博分享
+      canWeiboShare () {
+        return !(Device.platform === platformMap.IOS)
       }
     },
     route: {
