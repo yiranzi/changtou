@@ -14,6 +14,7 @@ const apiUrl = {
   'register_post_password_msite': '/principal/msite/auth/user-registration-info', // 注册 登录 M站
   // 账号登录
   'principal_login': '/principal/auth/login-user-info',
+  'principal_login_msite': '/principal/msite/login-user-info',
   // 同步用户信息
   'sync_user': '/principal/msite/users/user-info',
   // 快速登录
@@ -176,6 +177,11 @@ const apiUrl = {
    */
    'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
    'get/book/progress': '/e-book/record/:bookId',                    // 获取电子书阅读进度
+
+  /**
+   * 微信sdk
+   */
+    'wx_signature': '/wx/signature',
   /**
    *  大数据活动
    */
