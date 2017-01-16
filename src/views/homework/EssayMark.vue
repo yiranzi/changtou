@@ -70,18 +70,14 @@ export default {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.subjectId = params.subjectId
-      window.alert(1)
       this.setScrollerHeight()
     }
   },
   methods: {
     setScrollerHeight () {
-      window.alert(2)
       const me = this
       setTimeout(function () {
         me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titleBar.offsetHeight) + 'px'
-        window.alert(3)
-        window.alert(me.scrollerHeight)
         me.$nextTick(() => {
           me.$refs.scroller.reset({
           top: 0
