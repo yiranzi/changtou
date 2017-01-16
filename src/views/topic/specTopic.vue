@@ -1,6 +1,6 @@
 <template>
     <div class="spec-topic">
-      <div class="top-back-btn" v-touch:tap="back" v-el:titlebar></div>
+      <ict-back-btn></ict-back-btn>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight" style="background-color: #fff">
         <div class="content">
           <div class="spec-description">
@@ -35,13 +35,13 @@
 
         </div>
       </scroller>
-      <div class="bottom-area" v-el:bottom-btn v-show="isTopicLoaded">
-        <ict-button class="buttom-btn" :disabled="isBuySubject" v-bind:class="{'disable': isBuySubject}" v-touch:tap="toBuy">
+      <div class="bottom-area" v-show="isTopicLoaded">
+        <ict-button class="buttom-btn" :disabled="!canBuySubject" v-bind:class="{'disable': !canBuySubject}" v-touch:tap="toBuy" v-el:bottom-btn>
           立即支付
           <span class="disPrice">￥{{priceObj.disPriceSum}}</span>
           <span class="origPrice">￥{{priceObj.origPriceSum}}</span>
         </ict-button>
-        <div class="buttom-tip" v-show="isBuySubject">已购买过专题中任意一课，不再享受打包购买优惠价</div>
+        <div class="buttom-tip" v-show="!canBuySubject">已购买过专题中任意一课，不再享受打包购买优惠价</div>
       </div>
 
     </div>
@@ -179,9 +179,10 @@
       }
     }
     .bottom-area{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       .buttom-btn{
-        position: absolute;
-        bottom: 0;
         height: 2.2rem;
         font-family: '微软雅黑';
         font-size: 0.85rem;
@@ -197,7 +198,9 @@
         }
       }
       .buttom-tip{
-        position: relative;
+        position: absolute;
+        top: -1.25rem;
+        width: 100%;
         font-size: 0.45rem;
         color: #fff;
         background-color: #ff9800;
@@ -208,10 +211,11 @@
   }
 </style>
 <script>
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import Scroller from 'vux/scroller'
   import IctButton from '../../components/IctButton.vue'
-  import {specTopicActions, myCoursesActions} from '../../vuex/actions'
-  import {specTopicGetters, userGetters} from '../../vuex/getters'
+  import {specTopicActions, courseRecordActions} from '../../vuex/actions'
+  import {specTopicGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -219,9 +223,10 @@
     vuex: {
       actions: {
         loadSpecTopic: specTopicActions.loadSpecTopic, // 打包课专题信息
-        loadUserCourses: myCoursesActions.loadUserCourses // 下载 用户 我的课程 信息
+        loadUserCourses: courseRecordActions.loadAllExpenseRecords // 下载 用户 我的课程 信息
       },
       getters: {
+        myCourse: courseRecordsGetters.expenseRecords,
         specTopicInfo: specTopicGetters.specTopic, //打包课程信息
         isUserLogin: userGetters.isLogin  //登录情况
       }
@@ -245,14 +250,7 @@
           taskArr.push(this.loadUserCourses())
         }
 
-        const me = this
-        Promise.all(taskArr).then(
-          function ([topic, courses]) {
-            if (courses) {
-              me.isBuySubject = !me.canSubjectBuy(topic, courses.myCourses)
-            }
-          }
-        )
+        Promise.all(taskArr).then()
       }
     },
 
@@ -260,12 +258,25 @@
       return {
         stpId: '',
         scrollerHeight: '0px',
-        isBuySubject: false,
         isTopicLoaded: false //数据是否加载完毕
       }
     },
 
     computed: {
+      canBuySubject () {
+        if (this.specTopicInfo && this.specTopicInfo.coursePackage && this.myCourse && this.myCourse.length > 0) {
+          for (let i = 0; i < this.specTopicInfo.coursePackage.length; i++) {
+            for (let j = 0; j < this.myCourse.length; j++) {
+              if (parseInt(this.specTopicInfo.coursePackage[i].subjectId) === parseInt(this.myCourse[j].subjectId)) {
+                return false
+              }
+            }
+          }
+          return true
+        } else {
+          return true
+        }
+      },
       priceObj () {
         let courseArr = this.specTopicInfo.coursePackage
         let ret = courseArr ? courseArr.reduce(function (preValue, currCourse) {
@@ -284,28 +295,10 @@
       }
     },
     methods: {
-      /**
-       * 是否购买过专题中的课程
-       */
-      canSubjectBuy (topic, myCourses) {
-        let ret = false
-        for (let i = 0; i < topic.coursePackage.length; i++) {
-          for (let j = 0; j < myCourses.length; j++) {
-            if (topic.coursePackage[i].subjectId === myCourses[j].subjectId) {
-              ret = false
-              break
-            }
-          }
-          if (ret) {
-            break
-          }
-        }
-        return ret
-      },
       resetScrollerHeight () {
         const me = this
         setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.bottomBtn.offsetHeight) + 'px'
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
@@ -342,7 +335,8 @@
     },
     components: {
       IctButton,
-      Scroller
+      Scroller,
+      IctBackBtn
     }
   }
 </script>

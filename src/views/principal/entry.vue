@@ -66,6 +66,7 @@
   import qqAuth from '../../plugin/thirdPartyQQ'
   import wxAuth from '../../plugin/thirdPartyWX'
   import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
 
   // 键盘是否弹出
   let isKeyboardPop = false
@@ -77,6 +78,7 @@
       },
       actions: {
         login: userActions.login,
+        loginInMSite: userActions.loginInMSite,
         loginByQQ: userActions.loginByQQ,
         loginByWx: userActions.loginByWx
       }
@@ -191,7 +193,7 @@
               }
           ).catch(
             err => {
-              if (err !== 'cancelled by user') {
+              if (err !== 'cancelled by user' && err !== 'QQ login cancelled') {
                 me.showAlert({message: err})
               }
             }
@@ -235,7 +237,6 @@
        */
       doLogin () {
         this.disabled = true
-        const me = this
 
         // 主动失去焦点, 隐藏键盘
         const {identity, password} = this.$refs
@@ -243,24 +244,70 @@
         password.blur()
 
         if (/\S/.test(this.identity) && /\S/.test(this.plainPassword)) {
-          this.login(this.identity, this.plainPassword).then(
-            (user) => {
-              me.disabled = true
-              me.$dispatch(eventMap.LOGIN_SUCCESS, user)
-//              window.history.back()
-              setTimeout(() => { window.history.back() }, 300)
-            }
-          ).catch(
-            err => {
-              me.errTip = err.message
-              me.disabled = false
-            }
-          )
+          //用户名&密码不为空
+          if (Device.platform === platformMap.WEB && Agent.isWx) {
+            //M站
+            this.msiteLogin()
+          } else {
+            //其他
+            this.commonLogin()
+          }
         } else {
-          me.errTip = '请输入正确的用户名和密码'
-          me.disabled = true
+          this.errTip = '请输入正确的用户名和密码'
+          this.disabled = true
         }
       },
+
+      /**
+       * 普通登录
+       */
+      commonLogin () {
+        const me = this
+        this.login(this.identity, this.plainPassword).then(
+          function (user) {
+            me.disabled = true
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            setTimeout(
+              function () {
+                window.history.back()
+              },
+              300
+            )
+          }
+        ).catch(
+          function (err) {
+           me.errTip = err.message
+            me.disabled = false
+          }
+        )
+      },
+
+      /**
+       * 在M站中
+       * 登录
+       */
+      msiteLogin () {
+        const me = this
+        const wxUserInfo = JSON.parse(window.sessionStorage.getItem('wxOauth2'))
+        this.loginInMSite(this.identity, this.plainPassword, wxUserInfo).then(
+          function (user) {
+            me.disabled = true
+            me.$dispatch(eventMap.LOGIN_SUCCESS, user)
+            setTimeout(
+              function () {
+                window.history.back()
+              },
+              300
+            )
+          }
+        ).catch(
+          function (err) {
+            me.errTip = err.message
+            me.disabled = false
+          }
+        )
+      },
+
       /**
        * 进入注册页面
        */

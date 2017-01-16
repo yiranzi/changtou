@@ -3,10 +3,13 @@
  */
 
 import 'whatwg-fetch'
-import {D_PLUS_ID, ICT_SERVER} from '../frame/serverConfig'
+import {D_PLUS_ID, ICT_DATA_SERVER, CHANNEL} from '../frame/serverConfig'
+import {Device} from '../plugin/device'
+
 const cacheItem = 'ictSessionProps'
 
-let server = ICT_SERVER
+const channel = CHANNEL
+let server = ICT_DATA_SERVER
 let sessionProps = window.JSON.parse(window.sessionStorage.getItem(cacheItem)) || {} //全局的超级属性, 仅在本次会话内有效
 
 /**
@@ -55,22 +58,22 @@ const track = function (eventName, properties = {}) {
   }
 
   // ict
-  //var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
-  ////console.log('server', server)
-  //window.fetch(server + '/event', {
-  //  method: 'POST',
-  //  headers: {
-  //    'Accept': 'application/json',
-  //    'Content-Type': 'application/json'
-  //  },
-  //  body: JSON.stringify(trackData)
-  //}).then(function (response) {
-  //  return response.json()
-  //}).then(function (json) {
-  //  //console.log('parsed json', json)
-  //}).catch(function (ex) {
-  //  console.warn('ictdata parsing failed', ex)
-  //})
+  var trackData = Object.assign({}, {userId: '00'}, sessionProps, properties, {eventName})
+  //console.log('server', server)
+  window.fetch(server + '/event', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(trackData)
+  }).then(function (response) {
+    return response.json()
+  }).then(function (json) {
+    //console.log('parsed json', json)
+  }).catch(function (ex) {
+    console.warn('ictdata parsing failed', ex)
+  })
 }
 
 /**
@@ -91,6 +94,43 @@ const updateUser = function (userProps) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(userProps)
+  }).then(function (response) {
+    return response.json()
+  }).then(function (json) {
+    //console.log('成功', json)
+  }).catch(function (ex) {
+    console.warn('ictdata parsing failed', ex)
+  })
+}
+
+/**
+ * 插入一条uv记录
+ * @param userProps
+ */
+const insertUvRecord = function (uvProps) {
+  if (!(uvProps instanceof Object)) {
+    console.warn('发送到统计数据', uvProps, '不是一个合法的对象, 忽略')
+    return
+  }
+
+  // 获取设备信息, 关联
+  const deviceObj = {
+    uuid: Device.UUID,
+    platform: Device.platform,
+    deviceVersion: Device.deviceVersion,
+    manufacturer: Device.manufacturer
+  }
+
+  const dataProps = Object.assign({}, deviceObj, uvProps)
+
+  //ict
+  window.fetch(server + '/uv/' + channel, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataProps)
   }).then(function (response) {
     return response.json()
   }).then(function (json) {
@@ -128,5 +168,6 @@ export default {
   init,
   track,
   updateUser,
-  register
+  register,
+  insertUvRecord
 }

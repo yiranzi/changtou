@@ -2,7 +2,7 @@
   <div class="interview-record">
     <ict-titlebar :right-options="rightOptions" v-el:titlebar>
       院生故事
-      <div slot="right" v-touch:tap="showActionSharePanel">
+      <div slot="right" v-touch:tap="showActionSharePanel" v-if="canShare">
         <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
@@ -24,21 +24,21 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
 
-        <div class="share-article">
+        <div class="share-article" v-if="canShare">
           <div><hr/><span>好文共赏</span><hr/></div>
-          <div class="share-item" v-touch:tap="shareToFriendCircle">
+          <div class="share-item" v-touch:tap="shareToTimelineInApp">
             <div class="timeline"></div>
             <div class="share-name">朋友圈</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToFriend">
+          <div class="share-item" v-touch:tap="shareToFriendInApp">
             <div class="wechat"></div>
             <div class="share-name">微信好友</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToQQ">
+          <div class="share-item" v-touch:tap="shareToQQInApp">
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToWeibo">
+          <div class="share-item" v-touch:tap="shareToWeiboInApp">
             <div class="weibo"></div>
             <div class="share-name">微博</div>
           </div>
@@ -50,9 +50,249 @@
         <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
       <!--</div>-->
     </scroller>
-    <actionsheet :show.sync="isShowAction" :menus="channelConfig" v-touch:tap="onActionTap" show-cancel cancel-text="取消"></actionsheet>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
   </div>
 </template>
+
+<script>
+  import Scroller from 'vux/scroller'
+  import Actionsheet from 'vux/actionsheet'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
+  import ShareFloat from './InterviewFloat.vue'
+  import {interviewActions} from '../../vuex/actions'
+  import {interviewGetters} from '../../vuex/getters'
+  import {eventMap} from '../../frame/eventConfig'
+  import {Device, platformMap} from '../../plugin/device'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  export default {
+    vuex: {
+      actions: {
+        loadInterviewRecord: interviewActions.loadInterviewRecord
+      },
+      getters: {
+        interviewRecord: interviewGetters.interviewRecord
+      }
+    },
+    data () {
+      return {
+        showShareFloat: false,
+        scrollerHeight: '580px',
+        rightOptions: {
+          disabled: false
+        },
+        isLoadSuccess: false
+      }
+    },
+    watch: {
+      'interviewRecord' (newRecord) {
+        this.shareConfig = {
+          title: '院生故事',
+          desc: newRecord.title,
+          link: window.location.href,
+          imgUrl: newRecord.paragraph[0].image
+        }
+        this.onViewChange()
+        this.setScrollerHeight()
+      }
+    },
+    computed: {
+      //只有app中才能调用插件分享
+      canShare () {
+        return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+      }
+    },
+    route: {
+      data ({to: {params: {interviewId}}}) {
+        return this.loadInterviewRecord(interviewId).then(
+          function () {
+            return {
+              isLoadSuccess: true
+            }
+          },
+          function () {
+            return {
+              isLoadSuccess: false
+            }
+          }
+        )
+      },
+      deactivate () {
+        this.shareConfig = null
+        this.onViewChange()
+      }
+    },
+    methods: {
+      setScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+              top: 0
+          })
+        })
+        }, 500)
+      },
+      showActionSharePanel () {
+        this.showShareFloat = true
+      },
+      onActionTap (event) {
+        this.showShareFloat = false
+        switch (event.target.className) {
+          case 'wechat':
+            this.shareToFriendInApp() // 分享朋友
+            break
+          case 'timeline':
+            this.shareToTimelineInApp() //分享到朋友圈
+            break
+          case 'qq':
+            this.shareToQQInApp() // 分享朋友
+            break
+          case 'weibo':
+            this.shareToWeiboInApp() //分享到朋友圈
+            break
+          default:
+                break
+        }
+      },
+      //分享朋友
+      shareToFriendInApp () {
+        const me = this
+        window.Wechat.share({
+            message: {
+              title: me.interviewRecord.title, // 分享标题
+              description: '',
+              thumb: me.interviewRecord.paragraph[0].image, // 分享图标
+              media: {
+                type: window.Wechat.Type.WEBPAGE,
+                webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+              }
+            },
+            scene: window.Wechat.Scene.SESSION
+          },
+          function () {
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '访谈Id': me.interviewRecord.interviewId,
+              '分享渠道': '微信-会话'
+            })
+            me.showToast('分享成功')
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
+
+            } else {
+              me.showAlert({title: '分享失败', message: reason})
+            }
+          }
+        )
+      },
+
+      //分享到朋友圈
+      shareToTimelineInApp () {
+        const me = this
+        window.Wechat.share({
+          message: {
+            title: me.interviewRecord.title, // 分享标题
+            description: '',
+            thumb: me.interviewRecord.paragraph[0].image, // 分享图标
+            media: {
+              type: window.Wechat.Type.WEBPAGE,
+              webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+            }
+          },
+          scene: window.Wechat.Scene.TIMELINE // share to Timeline
+        },
+          function () {
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '访谈Id': me.interviewRecord.interviewId,
+              '分享渠道': '微信-朋友圈'
+            })
+            me.showToast('分享成功')
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
+
+            } else {
+              me.showAlert({title: '分享失败', message: reason})
+            }
+          }
+        )
+      },
+      /**
+       * 分享到QQ
+       */
+      shareToQQInApp () {
+        if (window.YCQQ) {
+          const me = this
+          var args = {}
+          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+          args.title = me.interviewRecord.title
+          args.description = ''
+          args.imageUrl = me.interviewRecord.paragraph[0].image
+          args.appName = '长投学堂'
+          window.YCQQ.shareToQQ(
+            function () {
+              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+                '访谈Id': me.interviewRecord.interviewId,
+                '分享渠道': 'QQ'
+              })
+              me.showToast('分享成功')
+            },
+            function (failReason) {
+              if (failReason === 'cancelled by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        }
+      },
+      /**
+       * 分享到微博
+       */
+      shareToWeiboInApp () {
+        if (window.YCWeibo) {
+          const me = this
+          var args = {}
+          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+          args.title = me.interviewRecord.title + 'title'
+          args.description = '长投学堂' + 'description'
+          args.imageUrl = me.interviewRecord.paragraph[0].image
+          args.defaultText = me.interviewRecord.title + 'defaultText'
+          window.YCWeibo.shareToWeibo(
+            function () {
+              me.showToast('分享成功')
+            },
+            function (failReason) {
+              if (failReason === 'cancel by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        }
+      },
+
+      /**
+       * 取消分享
+       */
+      cancelShare () {
+        this.showShareFloat = false
+      }
+    },
+
+    components: {
+      IctTitlebar,
+      Scroller,
+      Actionsheet,
+      ShareFloat
+    }
+  }
+</script>
 <style lang="less">
   .interview-record{
     .right_unable{
@@ -65,8 +305,9 @@
       margin-top: 0.65rem;
     }
     .content{
-      width: 15.25rem;
-      padding: 1.25rem 1.75rem 2rem 1.75rem ;
+      width: 100%;
+      padding: 1.25rem 1.75rem 2rem;
+      box-sizing: border-box;
       background-color: #fff;
       .title{
         margin-bottom: 2.5rem;
@@ -130,17 +371,7 @@
       text-align: center;
       padding-top: 40%;
     }
-    .weui_actionsheet_cell{
-      height: 7rem;
-      background-color: #f0eff5;
-    }
-    .vux-actionsheet-gap{
-      height: 0;
-    }
-    .vux-actionsheet-cancel{
-      height: 1.2rem;
-      background-color: #ccc;
-    }
+
     .share-item{
       display: inline-block;
       width: 3.5rem;
@@ -199,238 +430,3 @@
     }
   }
 </style>
-<script>
-  import Scroller from 'vux/scroller'
-  import Actionsheet from 'vux/actionsheet'
-  import IctTitlebar from '../../components/IctTitleBar.vue'
-  import {interviewActions} from '../../vuex/actions'
-  import {interviewGetters} from '../../vuex/getters'
-  import {eventMap} from '../../frame/eventConfig'
-  import {statisticsMap} from '../../statistics/statisticsMap'
-  export default {
-    vuex: {
-      actions: {
-        loadInterviewRecord: interviewActions.loadInterviewRecord
-      },
-      getters: {
-        interviewRecord: interviewGetters.interviewRecord
-      }
-    },
-    data () {
-      return {
-        scrollerHeight: '580px',
-        rightOptions: {
-          disabled: false
-        },
-        isLoadSuccess: false,
-        isShowAction: false,
-        channelConfig: { //分享浮层内容
-          menu1: '<div class="share-box">' +
-                    '<div class="share-item">' +
-                      '<div class="timeline"></div>' +
-                      '<div class="share-name">朋友圈</div>' +
-                    '</div>' +
-                    '<div class="share-item">' +
-                      '<div class="wechat"></div>' +
-                      '<div class="share-name" >微信好友</div>' +
-                    '</div>' +
-                    '<div class="share-item">' +
-                      '<div class="qq"></div>' +
-                      '<div class="share-name">QQ</div>' +
-                    '</div>' +
-                    '<div class="share-item">' +
-                      '<div class="weibo"></div>' +
-                      '<div class="share-name">微博</div>' +
-                    '</div>' +
-                  '</div>'
-        }
-      }
-    },
-    watch: {
-      'interviewRecord' () {
-        this.setScrollerHeight()
-      }
-    },
-    route: {
-      data ({to: {params: {interviewId}}}) {
-        return this.loadInterviewRecord(interviewId).then(
-          function () {
-            return {
-              isLoadSuccess: true
-            }
-          },
-          function () {
-            return {
-              isLoadSuccess: false
-            }
-          }
-        )
-      }
-    },
-    methods: {
-      setScrollerHeight () {
-        const me = this
-        setTimeout(function () {
-          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-              top: 0
-          })
-        })
-        }, 500)
-      },
-      showActionSharePanel () {
-        const me = this
-        setTimeout(() => {
-          me.isShowAction = true
-        }, 150)
-      },
-      onActionTap (event) {
-        switch (event.target.className) {
-          case 'wechat':
-            this.shareToFriend() // 分享朋友
-            break
-          case 'timeline':
-            this.shareToFriendCircle() //分享到朋友圈
-            break
-          case 'qq':
-            this.shareToQQ() // 分享朋友
-            break
-          case 'weibo':
-            this.shareToWeibo() //分享到朋友圈
-            break
-          default:
-                break
-        }
-      },
-      //分享朋友
-      shareToFriend () {
-        const me = this
-        window.Wechat.share({
-            message: {
-              title: me.interviewRecord.title, // 分享标题
-              description: '',
-              thumb: me.interviewRecord.paragraph[0].image, // 分享图标
-              media: {
-                type: window.Wechat.Type.WEBPAGE,
-//                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
-                webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-              }
-            },
-            scene: window.Wechat.Scene.SESSION
-          },
-          function () {
-            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
-              '分享渠道': '微信-会话'
-            })
-            me.showToast('分享成功')
-          },
-          function (reason) {
-            if (reason === '用户点击取消并返回') {
-
-            } else {
-              me.showAlert({title: '分享失败', message: reason})
-            }
-          }
-        )
-      },
-
-      //分享到朋友圈
-      shareToFriendCircle () {
-        const me = this
-        window.Wechat.share({
-          message: {
-            title: me.interviewRecord.title, // 分享标题
-            description: '',
-            thumb: me.interviewRecord.paragraph[0].image, // 分享图标
-            media: {
-              type: window.Wechat.Type.WEBPAGE,
-              webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-            }
-          },
-          scene: window.Wechat.Scene.TIMELINE // share to Timeline
-        },
-          function () {
-            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
-              '分享渠道': '微信-朋友圈'
-            })
-            me.showToast('分享成功')
-          },
-          function (reason) {
-            if (reason === '用户点击取消并返回') {
-
-            } else {
-              me.showAlert({title: '分享失败', message: reason})
-            }
-          }
-        )
-      },
-      /**
-       * 分享到QQ
-       */
-      shareToQQ () {
-        if (window.YCQQ) {
-          const me = this
-          var args = {}
-          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-          args.title = me.interviewRecord.title
-          args.description = ''
-          args.imageUrl = me.interviewRecord.paragraph[0].image
-          args.appName = '长投学堂'
-          window.YCQQ.shareToQQ(
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '访谈Id': me.interviewRecord.interviewId,
-                '分享渠道': 'QQ'
-              })
-              me.showToast('分享成功')
-            },
-            function (failReason) {
-              if (failReason === 'cancelled by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        }
-      },
-      /**
-       * 分享到微博
-       */
-      shareToWeibo () {
-        if (window.YCWeibo) {
-          const me = this
-          var args = {}
-          args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
-          args.title = me.interviewRecord.title + 'title'
-          args.description = '长投学堂' + 'description'
-          args.imageUrl = me.interviewRecord.paragraph[0].image
-          args.defaultText = me.interviewRecord.title + 'defaultText'
-          window.YCWeibo.shareToWeibo(
-            function () {
-              me.showToast('分享成功')
-            },
-            function (failReason) {
-              if (failReason === 'cancel by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        }
-      }
-    },
-
-    components: {
-      IctTitlebar,
-      Scroller,
-      Actionsheet
-    }
-  }
-</script>

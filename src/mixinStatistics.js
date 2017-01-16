@@ -5,7 +5,7 @@
 import {eventMap} from './frame/eventConfig'
 import {userId, userName} from './vuex/user/getters'
 import ictData from './statistics/ictData'
-import {Device} from './plugin/device'
+import {Device, platformMap} from './plugin/device'
 import {statisticsMap} from './statistics/statisticsMap'
 import {appVersion, getNativeVersion} from './frame/versionConfig'
 
@@ -88,6 +88,13 @@ const mixin = {
       ictData.register({
         'jsVersion': appVersion
       })
+
+      const channel = window.sessionStorage.getItem('channel')
+
+      ictData.register({
+        'channel': Device.platform === platformMap.WEB ? channel || 'defalut' : 'app'
+      })
+
       getNativeVersion().then(nativeNum => {
         ictData.register({
           'nativeVersion': nativeNum

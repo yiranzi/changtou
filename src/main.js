@@ -14,6 +14,8 @@ Vue.use(VueResource)
 
 Vue.config.debug = debug
 
+ictData.init()
+
 if (debug) {
   // 网页
   appRouter.start(App, 'app')
@@ -22,7 +24,6 @@ if (debug) {
   }, 50)
 } else {
   // 手机
-  ictData.init()
   const onDeviceReady = function () {
     appRouter.start(App, 'app')
     setTimeout(function () {

@@ -4,10 +4,8 @@
  */
 import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
-import { errorType, dealType } from '../../util/pay/dealHelper'
-import store from '../../vuex/store'
+import { errorType, transactionChannel } from '../../util/pay/dealHelper'
 
-const user = store.state.user
 /**
  * 微信 扫码支付
  * @param prepayData
@@ -15,7 +13,6 @@ const user = store.state.user
  */
 const WeChatQRCodePay = (prepayData) => {
   let deal = Object.assign({}, prepayData)
-  deal.openId = user.openId
   return new Promise(
     (resolve, reject) => {
       if (!deal.openId) {
@@ -32,7 +29,7 @@ const WeChatQRCodePay = (prepayData) => {
         ).then(
           res => {
             resolve({
-              type: dealType.WX_CODE,
+              type: transactionChannel.WX_CODE,
               url: res.codeURL
             })
           }

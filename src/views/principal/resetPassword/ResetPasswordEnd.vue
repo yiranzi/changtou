@@ -22,6 +22,8 @@
       <div style="height: 1rem"></div>
 
       <ict-input title="确认密码"
+                 type="password"
+                 class="conformed-password"
                placeholder="请再次输入密码"
                :value.sync="conformedPlainPassword">
       </ict-input>
@@ -38,8 +40,17 @@
 
     </div>
 </template>
-<style>
-
+<style lang="less">
+.reset-password-end{
+  .conformed-password{
+    .eye:before{
+      content: '';
+    }
+    .hide:before{
+      content: '';
+    }
+  }
+}
 </style>
 <script>
 import IctTitlebar from '../../../components/IctTitleBar.vue'

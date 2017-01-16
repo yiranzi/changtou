@@ -1,5 +1,9 @@
+/**
+ * Created by jun on 2017/1/4.
+ *
+ */
 <template>
-  <div class="top-back-btn" v-touch:tap="back" v-bind:style="{top: activeTop}"></div>
+  <div class="top-close-btn" v-touch:tap="close" v-bind:style="{top: activeTop}"></div>
 </template>
 
 <script>
@@ -12,34 +16,30 @@
     },
 
     methods: {
-      back () {
-        if (parseInt(window.sessionStorage.getItem('count')) <= 1) {
-          this.$route.router.go('/main')
-        } else {
-          window.history.back()
-        }
+      close () {
+        this.$emit('close')
       }
     }
   }
 </script>
 
 <style>
-  .top-back-btn {
+  .top-close-btn {
     position: absolute;
     height: 2rem;
     width: 2rem;
     /*top: 0.3rem;*/
-    left: 1rem;
+    right: 0.5rem;
     z-index: 20;
   }
-  .top-back-btn:before {
+  .top-close-btn:before {
     position: absolute;
-    display: inline-block;
-    font-family: 'myicon';
-    content: '\e91b';
-    font-size: 1.6rem !important;
     line-height: 2rem;
     width: 2rem;
-    color: #999;
+    font-family: 'myicon';
+    content: '\e90d';
+    font-size: 0.8rem;
+    text-align: center;
+    color: #aaa;
   }
 </style>

@@ -13,6 +13,8 @@ import { errorType } from '../../util/pay/dealHelper'
  * @constructor
  */
 const ToubiPay = (trade) => {
+  let deal = Object.assign({}, trade)
+  delete deal['openId']
   return new Promise(
     (resolve, reject) => {
     postWithinAuth(

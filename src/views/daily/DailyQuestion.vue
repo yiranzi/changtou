@@ -1,6 +1,6 @@
 <template>
     <div class="daily-question">
-      <div class="top-back-btn" v-touch:tap="back"></div>
+      <ict-back-btn></ict-back-btn>
       <div class="top">
         <img class="question-img" v-bind:src="dailyQuestion.bgImg">
         <div class="question-title">{{dailyQuestion.content}}</div>
@@ -11,29 +11,10 @@
         </div>
         <div class="desc">{{option.content}}</div>
       </div>
-      <alert :show.sync="isAlert" title="很抱歉" @on-show="onShow" @on-hide="onHide" button-text="我知道了">您提交答案失败,请重试!</alert>
     </div>
 </template>
 <style lang="less">
   .daily-question{
-    .top-back-btn {
-      position: absolute;
-      height: 2rem;
-      width: 2rem;
-      top: 0.3rem;
-      left: 1rem;
-      z-index: 20;
-    }
-    .top-back-btn:before {
-      position: absolute;
-      display: inline-block;
-      font-family: 'myicon';
-      content: '\e91b';
-      font-size: 1.6rem !important;
-      line-height: 2rem;
-      width: 2rem;
-      color: #999;
-    }
     .top{
       position: relative;
       margin-bottom: 1rem;
@@ -89,7 +70,7 @@
   }
 </style>
 <script>
-  import Alert from 'vux/alert'
+  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   import {dailyQuestionActions} from '../../vuex/actions'
   import {dailyQuestionGetters, userGetters} from '../../vuex/getters'
   export default {
@@ -121,9 +102,6 @@
       }
     },
     methods: {
-      back () {
-        window.history.back()
-      },
       getOptionLetters (index) {
         const arr = ['A', 'B', 'C', 'D', 'E', 'F']
         return arr[index]
@@ -138,7 +116,7 @@
               me.$route.router.replace('answer')
             },
             function () {
-              me.isAlert = true //出现提示弹框
+              me.showAlert({message: '您的答案提交失败,请重试!', btnText: '知道了'})
             }
           )
         } else {
@@ -157,7 +135,7 @@
       }
     },
     components: {
-      Alert
+      IctBackBtn
     }
   }
 </script>

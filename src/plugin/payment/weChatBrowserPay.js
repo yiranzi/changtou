@@ -6,9 +6,7 @@ import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import { errorType } from '../../util/pay/dealHelper'
 import { WX_APPID } from '../../frame/serverConfig'
-import store from '../../vuex/store'
 
-const user = store.state.user
 /**
  * 预支付 下订单
  * @param prepayData
@@ -95,7 +93,6 @@ const showPayComponent = (prepayResponse) => {
  */
 const WeChatBrowserPay = (trade) => {
   let deal = Object.assign({}, trade)
-  deal.openId = user.openId
   var promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }
