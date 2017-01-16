@@ -9,7 +9,7 @@ import {getUrl} from '../../frame/apiConfig'
  * 获取个人信息
  * @param dispatch
  */
-export const loadFreeSubject = ({ dispatch }) => {
+export const getPersonInfo = ({ dispatch }) => {
   return new Promise((resolve, reject) => {
     //获取免费课程
     getWithoutAuth(
