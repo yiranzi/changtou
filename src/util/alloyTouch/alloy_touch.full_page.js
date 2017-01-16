@@ -189,7 +189,5 @@ import Transform from 'css3transform'
         }
     };
 
-    console.log(AlloyTouch)
-    console.log(FullPage)
     AlloyTouch.FullPage = FullPage;
 })();
