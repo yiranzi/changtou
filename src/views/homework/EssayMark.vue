@@ -6,30 +6,32 @@
     <div class="essay-mark">
       <ict-titlebar v-el:title-bar></ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
-      <div class="essay">
-        <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
-        <div class="essay-info">
-          <div class="score" v-bind:class="{'score-passed':!isEditable}">{{scoreNum}}</div>
-          <div class="user-info">
-            <p class="user-name">{{userName}}的作业</p>
-            <p class="create-time">{{createTime}}提交</p>
-          </div>
-        </div>
-        <div class="essay-answer">{{essayAnswer}}</div>
-      </div>
-      <div class="message">
-        <p class="title">作业留言</p>
-        <div v-for="remark in remarkList">
-          <div class="user-info">
-            <img src="../../assets/styles/image/homework/portrait.png">
-            <div class="user-box">
-              <p class="user-name">{{remark.userName}}</p>
-              <p class="create-time">发表于{{remark.create_time}}</p>
+        <div>
+          <div class="essay">
+            <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
+            <div class="essay-info">
+              <div class="score" v-bind:class="{'score-passed':!isEditable}">{{scoreNum}}</div>
+              <div class="user-info">
+                <p class="user-name">{{userName}}的作业</p>
+                <p class="create-time">{{createTime}}提交</p>
+              </div>
             </div>
-            <div class="content">{{remark.content}}</div>
+            <div class="essay-answer">{{essayAnswer}}</div>
+          </div>
+          <div class="message">
+            <p class="title">作业留言</p>
+            <div v-for="remark in remarkList">
+              <div class="user-info">
+                <img src="../../assets/styles/image/homework/portrait.png">
+                <div class="user-box">
+                  <p class="user-name">{{remark.userName}}</p>
+                  <p class="create-time">发表于{{remark.create_time}}</p>
+                </div>
+                <div class="content">{{remark.content}}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
       </scroller>
     </div>
 </template>
