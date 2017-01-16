@@ -493,6 +493,7 @@
     import {eventMap} from '../../frame/eventConfig'
     import {statisticsMap} from '../../statistics/statisticsMap'
     import {userGetters} from '../../vuex/getters'
+    import {bigDataActions} from '../../vuex/actions'
     export default {
        vuex: {
           getters: {
