@@ -212,7 +212,6 @@
               '访谈Id': me.interviewRecord.interviewId,
               '分享渠道': '微信-朋友圈'
             })
-            me.showToast('分享成功')
           },
           function (reason) {
             if (reason === '用户点击取消并返回') {
@@ -241,7 +240,6 @@
                 '访谈Id': me.interviewRecord.interviewId,
                 '分享渠道': 'QQ'
               })
-              me.showToast('分享成功')
             },
             function (failReason) {
               if (failReason === 'cancelled by user') {
@@ -268,7 +266,7 @@
           args.defaultText = me.interviewRecord.title + 'defaultText'
           window.YCWeibo.shareToWeibo(
             function () {
-              me.showToast('分享成功')
+
             },
             function (failReason) {
               if (failReason === 'cancel by user') {
