@@ -58,10 +58,8 @@
      * 缓存当前url上携带的参数
      */
     var params = window.location.href.split('?')[1]
-    if (params) {
-
-      var paramsArr = params ? params.split('&') : []
-
+    var paramsArr = params ? params.split('&') : []
+    if (paramsArr.length > 0) {
       for(var i = 0, length = paramsArr.length; i < length; i++){
         var key = paramsArr[i].split('=')[0]
         var value = paramsArr[i].split('=')[1]
@@ -81,13 +79,13 @@
      */
 //    if (window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')) {
 //      //完成授权
-//      if (window.sessionStorage.getItem('preUrl')) {
+//      var url = window.sessionStorage.getItem('preUrl')
+//      window.sessionStorage.removeItem('preUrl')
+//      if (url) {
 //        //有保存的地址 进入该地址
-//        window.location.href = window.sessionStorage.getItem('preUrl')
-//      } else {
-//        //无保存的地址 直接进入
-//        init();
+//        window.location.href = url
 //      }
+//      init();
 //    } else {
 //      //未授权
 //      //保存当前地址
