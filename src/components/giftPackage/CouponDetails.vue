@@ -117,8 +117,6 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {giftGetters} from '../../vuex/getters'
-  import moment from 'moment'
-  moment().format()     // 引入 moment.js 对时间格式化
   export default {
     vuex: {
       getters: {

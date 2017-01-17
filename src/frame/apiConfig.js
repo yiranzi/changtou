@@ -181,7 +181,11 @@ const apiUrl = {
   /**
    * 微信sdk
    */
-    'wx_signature': '/wx/signature'
+    'wx_signature': '/wx/signature',
+  /**
+   *  大数据活动
+   */
+  'getPersonInfo/BigData': '/ict-data/new-year-opt/data'             //  获取用户的一些个人信息
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

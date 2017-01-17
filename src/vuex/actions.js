@@ -25,6 +25,7 @@ import * as strategyNoticeActions from './strategy/notice/actions'
 import * as graduationDiplomaActions from './graduationDiploma/actions'
 import * as giftActions from './giftPackage/actions'
 import * as questionNaireActions from './questionNaire/actions'
+import * as bigDataActions from './bigDataActivity/actions'
 
 export {
   userActions,
@@ -50,5 +51,6 @@ export {
   strategyNoticeActions, //策略产品 通知
   graduationDiplomaActions, // 毕业证
   giftActions,          // 新手礼包
-  questionNaireActions         // 调查问卷
+  questionNaireActions,         // 调查问卷
+  bigDataActions          // 大数据活动
 }
