@@ -21,7 +21,7 @@
   import {Agent} from '../../plugin/agent'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-  import {getLocalCache} from '../../util/cache'
+  import {getLocalCache, setLocalCache} from '../../util/cache'
   export default {
     vuex: {
       getters: {
@@ -234,6 +234,11 @@
           '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
         })
+
+        if (Device.platform === platformMap.WEB && Agent.isWx && parseInt(this.subjectId) === 21) {
+          setLocalCache('daxin', true)
+        }
+
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
         const me = this
         const trade = {
