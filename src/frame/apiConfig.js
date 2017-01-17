@@ -37,7 +37,7 @@ const apiUrl = {
    * 课程模块
    */
   'my_course': '/course/my/subjects', //我的课程
-
+  'my_accumulate_time': '/student/learning-time', //累积学习时间
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
   'course_list': '/course/free/category-list', //课程列表

@@ -51,3 +51,28 @@ export const loadDefaultCourses = ({ dispatch }) => {
       )
     })
 }
+
+/**
+ * 下载累积学习时间
+ * @param dispatch
+ * @returns {Promise}
+ */
+export const loadAccumulateTime = ({ dispatch }) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('my_accumulate_time')
+        }
+      ).then(
+        accumulateTime => {
+          resolve(accumulateTime)
+          dispatch('UPDATE_ACCUMULATE_TIME', accumulateTime)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}

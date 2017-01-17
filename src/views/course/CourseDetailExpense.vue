@@ -442,6 +442,10 @@
           this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
           setTimeout(this.resetScroller, 300)
         })
+      },
+
+      'currRecord': function (record) {
+        this.currChapterRecord = record.studentChapter
       }
     },
 
@@ -623,6 +627,7 @@
             err => console.warn(err)
         )
       },
+
       /**
        * 重置 作业浮层
        */
@@ -692,8 +697,9 @@
 
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < this.currSubject.lessonList.length) {
-            this.currUseabLessonArr.push(this.currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
+          const currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === this.subjectId)
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length) {
+            this.currUseabLessonArr.push(currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
           }
         }
 
@@ -1038,10 +1044,17 @@
        * @params chapterId
        */
       canChapterUpload (selectedChapterId) {
-        if (!this.currChapterRecord) {
-          // 服务器上没有进度进入,直接上传
+        if (!this.currRecord) {
+          //未购买课程 不上传
+          console.log(1)
+          return false
+        } else if (!this.currChapterRecord) {
+          //已购买  没有进度,直接上传
+          console.log(2)
           return true
         } else {
+          //已购买 有进度
+          console.log(3)
           //chapterId 为当前点击的chapterId
           const selectedLessonId = this.selectedLesson.lessonId
 
@@ -1049,6 +1062,7 @@
           const currChapterId = this.currChapterRecord.chapterId
           const currLessonId = this.currChapterRecord.lessonId
           // 当前点击的进度大于服务器上的进度时,可以上传
+          console.log(this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId))
           return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
         }
       },

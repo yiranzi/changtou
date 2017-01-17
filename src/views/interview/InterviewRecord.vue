@@ -38,7 +38,7 @@
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item" v-touch:tap="shareToWeiboInApp">
+          <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShare">
             <div class="weibo"></div>
             <div class="share-name">微博</div>
           </div>
@@ -99,6 +99,11 @@
       //只有app中才能调用插件分享
       canShare () {
         return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+      },
+
+      //ios中 暂不才显示微博分享
+      canWeiboShare () {
+        return !(Device.platform === platformMap.IOS)
       }
     },
     route: {
@@ -207,7 +212,6 @@
               '访谈Id': me.interviewRecord.interviewId,
               '分享渠道': '微信-朋友圈'
             })
-            me.showToast('分享成功')
           },
           function (reason) {
             if (reason === '用户点击取消并返回') {
@@ -236,7 +240,6 @@
                 '访谈Id': me.interviewRecord.interviewId,
                 '分享渠道': 'QQ'
               })
-              me.showToast('分享成功')
             },
             function (failReason) {
               if (failReason === 'cancelled by user') {
@@ -263,7 +266,7 @@
           args.defaultText = me.interviewRecord.title + 'defaultText'
           window.YCWeibo.shareToWeibo(
             function () {
-              me.showToast('分享成功')
+
             },
             function (failReason) {
               if (failReason === 'cancel by user') {

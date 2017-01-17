@@ -4,31 +4,35 @@
  */
 <template>
     <div class="essay-mark">
-      <ict-titlebar></ict-titlebar>
-      <div class="essay">
-        <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
-        <div class="essay-info">
-          <div class="score" v-bind:class="{'score-passed':!isEditable}">{{scoreNum}}</div>
-          <div class="user-info">
-            <p class="user-name">{{userName}}的作业</p>
-            <p class="create-time">{{createTime}}提交</p>
-          </div>
-        </div>
-        <div class="essay-answer">{{essayAnswer}}</div>
-      </div>
-      <div class="message">
-        <p class="title">作业留言</p>
-        <div v-for="remark in remarkList">
-          <div class="user-info">
-            <img src="../../assets/styles/image/homework/portrait.png">
-            <div class="user-box">
-              <p class="user-name">{{remark.userName}}</p>
-              <p class="create-time">发表于{{remark.create_time}}</p>
+      <ict-titlebar v-el:title-bar></ict-titlebar>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
+        <div>
+          <div class="essay">
+            <span class="edit-icon" v-touch:tap="editAnswer" v-if="isEditable">编辑</span>
+            <div class="essay-info">
+              <div class="score" v-bind:class="{'score-passed':!isEditable}">{{scoreNum}}</div>
+              <div class="user-info">
+                <p class="user-name">{{userName}}的作业</p>
+                <p class="create-time">{{createTime}}提交</p>
+              </div>
             </div>
-            <div class="content">{{remark.content}}</div>
+            <div class="essay-answer">{{essayAnswer}}</div>
+          </div>
+          <div class="message">
+            <p class="title">作业留言</p>
+            <div v-for="remark in remarkList">
+              <div class="user-info">
+                <img src="../../assets/styles/image/homework/portrait.png">
+                <div class="user-box">
+                  <p class="user-name">{{remark.userName}}</p>
+                  <p class="create-time">发表于{{remark.create_time}}</p>
+                </div>
+                <div class="content">{{remark.content}}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </scroller>
     </div>
 </template>
 <script>
@@ -50,7 +54,8 @@ export default {
   data () {
     return {
       subjectId: 0,
-      lessonId: 0
+      lessonId: 0,
+      scrollerHeight: '580px'
     }
   },
   computed: {
@@ -65,9 +70,21 @@ export default {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.subjectId = params.subjectId
+      this.setScrollerHeight()
     }
   },
   methods: {
+    setScrollerHeight () {
+      const me = this
+      setTimeout(function () {
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titleBar.offsetHeight) + 'px'
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+          top: 0
+        })
+      })
+      }, 500)
+    },
     /**
      * 点击编辑作业
      */

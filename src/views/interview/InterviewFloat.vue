@@ -19,7 +19,7 @@
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item">
+          <div class="share-item" v-if="canWeiboShare">
             <div class="weibo"></div>
             <div class="share-name">微博</div>
           </div>
@@ -30,10 +30,17 @@
   </div>
 </template>
 <script>
+  import {Device, platformMap} from '../../plugin/device'
   import IctSheet from '../../components/IctActionSheet.vue'
   export default {
     props: {
       show: Boolean
+    },
+    computed: {
+      //ios中 暂不才显示微博分享
+      canWeiboShare () {
+        return !(Device.platform === platformMap.IOS)
+      }
     },
     methods: {
       onConfirmTap () {
