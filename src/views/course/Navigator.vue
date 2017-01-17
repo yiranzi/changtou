@@ -89,6 +89,7 @@
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+  import {Device, platformMap} from '../../plugin/device'
   export default {
     vuex: {
       getters: {
@@ -99,7 +100,8 @@
         isLogin: userGetters.isLogin
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData,
+        loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
+        loadNavigatorDataInWeb: navigatorActions.loadNavigatorDataInWeb,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
         loadNewertestReport: newertestActions.loadNewertestReport,
         receiveGiftPackage: giftActions.receiveGiftPackage,
@@ -144,7 +146,15 @@
     },
     ready () {
       const me = this
-      this.loadData().then(
+      let loadData = null
+
+      if (Device.platform === platformMap.WEB) {
+        loadData = this.loadNavigatorDataInWeb
+      } else {
+        loadData = this.loadNavigatorDataInApp
+      }
+
+      loadData().then(
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
@@ -154,6 +164,7 @@
         }
       )
     },
+
     computed: {
       banners () {
         let banners = this.originBanners
@@ -161,13 +172,14 @@
             banner => {
             return {
               img: banner.pic || '/static/image/subject/banner/banner.png',
-              url: (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId
+              url: banner.type === 'O' ? banner.url : (banner.url ? banner.url : (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId)
             }
           }
       )
         return newBanners
       }
     },
+
     methods: {
       /**
        * 设置滚动条高度
