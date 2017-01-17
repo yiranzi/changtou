@@ -279,6 +279,12 @@ export function configRouter (router) {
      */
     'questionNaire/:naireId': {
       component: require('../views/questionnaire/questionDetail1.vue')
+    },
+    /**
+     * 大数据 活动
+     */
+    'bigDataActivity/1': {
+      component: require('../views/bigDataActivity/bigDataActivity.vue')
     }
   })
 

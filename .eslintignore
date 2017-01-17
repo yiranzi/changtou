@@ -1,3 +1,7 @@
 build/*.js
 config/*.js
 src/plugin/qrCode.js
+src/util/alloyTouch/alloy_touch.full_page.js
+src/util/alloyTouch/progress_bar.js
+src/util/alloyTouch/alloy_touch.js
+src/views/bigDataActivity/bigDataActivity.vue
