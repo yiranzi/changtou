@@ -230,10 +230,6 @@
       }
       top:0 !important;
     }
-    .item-container-5 {
-      position: relative;
-      top: -2rem;
-    }
     .section-title {
       background: url("../../../static/image/alloyTouch/bgTitle.png") 0 0 no-repeat;
       background-size: 100%;
@@ -359,6 +355,10 @@
             top: 23.2rem;
             width: 1rem;
           }
+          .item-container-5 {
+            position: relative;
+            top: -2rem;
+          }
           .favo-container{
             color: #ffa530;
             font-size: 1.45rem;
@@ -368,16 +368,16 @@
               position: relative;
               /*top: 4.8rem;*/
               /*left: -1.3rem;*/
-              top: 3.5rem;
-              left: 2.5rem;
+              top: 4.5rem;
+              left: 1.5rem;
               font-size: 1.2rem;
             }
             .favo-subject-num{
               position: relative;
               /*top: 9rem;*/
               /*left: -9.4rem;*/
-              top: 7rem;
-              left: -2.2rem;
+              top: 9rem;
+              left: -4.7rem;
               font-size: 1.45rem;
             }
             .favo-subject-minute{
@@ -385,7 +385,7 @@
               /*top: 9.2rem;*/
               /*left: 4.5rem;*/
               top: 9.3rem;
-              left: -3rem;
+              left: 5rem;
               font-size: 1.45rem;
             }
           }
@@ -419,20 +419,23 @@
             position: relative;
             .favo-subject{
               position: relative;
-              top: 2.8rem;
-              left: 1.9rem;
+              top: 4.8rem;
+              left: -3.5rem;
+              width: 17rem;
+              display: inline-block;
               font-size: 1.2rem;
+              text-align: center;
             }
             .favo-subject-three{
               position: relative;
               top: 7.5rem;
-              left: -0.8rem;
+              left: 5.5rem;
               font-size: 1.45rem;
             }
             .favo-subject-two{
-              top: 9.5rem;
               position: relative;
-              left: -2.5rem;
+              top: 9.5rem;
+              left: 4rem;
               font-size: 1.45rem;
             }
           }
