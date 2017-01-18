@@ -1046,15 +1046,12 @@
       canChapterUpload (selectedChapterId) {
         if (!this.currRecord) {
           //未购买课程 不上传
-          console.log(1)
           return false
         } else if (!this.currChapterRecord) {
           //已购买  没有进度,直接上传
-          console.log(2)
           return true
         } else {
           //已购买 有进度
-          console.log(3)
           //chapterId 为当前点击的chapterId
           const selectedLessonId = this.selectedLesson.lessonId
 
@@ -1062,7 +1059,6 @@
           const currChapterId = this.currChapterRecord.chapterId
           const currLessonId = this.currChapterRecord.lessonId
           // 当前点击的进度大于服务器上的进度时,可以上传
-          console.log(this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId))
           return this.getLessonIndexOfIds(selectedLessonId) >= this.getLessonIndexOfIds(currLessonId) && this.getChapterSequences(selectedChapterId) > this.getChapterSequences(currChapterId)
         }
       },

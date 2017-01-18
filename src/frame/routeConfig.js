@@ -283,8 +283,8 @@ export function configRouter (router) {
     /**
      * 大数据 活动
      */
-    'bigDataActivity/1': {
-      component: require('../views/bigDataActivity/bigDataActivity.vue')
+    'annual/report': {
+      component: require('../views/annualReport/AnnualReport.vue')
     }
   })
 
