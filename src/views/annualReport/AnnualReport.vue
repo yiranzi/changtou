@@ -1,37 +1,77 @@
 <template>
   <div id="alloyTouchDemo">
-      <span class="section-title"></span>
-      <ict-close-btn @close="onCloseTap"></ict-close-btn>
-      <div class="section">
+      <span class="section-title"> </span>
+      <ict-close-btn @close="onCloseTap"> </ict-close-btn>
+      <div class="section" >
         <div id="fullpage" :class='{unshow: isUserLogin}' class="site_header">
           <div>
             <div class="section-item-0 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page1.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-1 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page2.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-2 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page3.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-3 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page4.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
+            </div>
+          </div>
+          <div>
+            <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <div class="item-container-5">
+                <div class="user-atavar">
+                  <img src="../../../static/image/alloyTouch/default-avatar.png" />
+                  <p class="user-name">长投学员</p>
+                </div>
+                <div class="favo-container">
+                  <a class="favo-subject">理财入门课</a>
+                  <a class="favo-subject-num">4</a>
+                  <a class="favo-subject-minute">4125</a>
+                </div>
+                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
+              </div>
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
+            </div>
+          </div>
+          <div>
+            <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <div class="item-container-5">
+                <div class="user-atavar">
+                  <img src="../../../static/image/alloyTouch/default-avatar.png" />
+                  <p class="user-name">长投学员</p>
+                </div>
+                <div class="favo-container">
+                  <a class="favo-subject">理财入门课</a>
+                  <a class="favo-subject-three">7</a>
+                  <a class="favo-subject-two">11</a>
+                </div>
+                <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
+              </div>
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
+            </div>
+          </div>
+          <div>
+            <div class="section-item-7 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-8 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
-            </div>
-          </div>
-          <div>
-            <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page9.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div class="section-item-9">
@@ -40,19 +80,19 @@
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
             <div class="share-article" v-if="isInApp">
               <div><hr/><span>分享至</span><hr/></div>
-              <div class="share-item" v-touch:tap="shareToFriendCircle">
+              <div class="share-item" v-touch:tap="shareToTimelineInApp">
                 <div class="timeline"></div>
                 <div class="share-name">朋友圈</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToFriend">
+              <div class="share-item" v-touch:tap="shareToFriendInApp">
                 <div class="wechat"></div>
                 <div class="share-name">微信好友</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToQQ">
+              <div class="share-item" v-touch:tap="shareToQQInApp">
                 <div class="qq"></div>
                 <div class="share-name">QQ</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToWeibo" v-if="canWeiboShow">
+              <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShow">
                 <div class="weibo"></div>
                 <div class="share-name">微博</div>
               </div>
@@ -63,21 +103,25 @@
           <div>
             <div class="section-item-0 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page1.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-1 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page2.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-2 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page3.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-3 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page4.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
@@ -86,10 +130,13 @@
                 <span><img :src="atavar" /></span>
                 <p class="user-name">{{userName}}</p>
               </div>
-              <span class="section-init-date">{{report.registrationDate.split('-')[0]}}
-                <span class="inner-cell" ></span> {{report.registrationDate.split('-')[1]}}
-                <span class="inner-cell2" ></span> {{report.registrationDate.split('-')[2].split('T')[0]}}</span>
+              <span class="section-init-date">{{isUserLogin ? report.registrationDate.split('-')[0] : ''}}
+                <span class="inner-cell" >年</span> {{isUserLogin ? report.registrationDate.split('-')[1] : ''}}
+                <span class="inner-cell" >月</span> {{isUserLogin ? report.registrationDate ? report.registrationDate.split('-')[2].split('T')[0] : '' : ''}}
+                <span class="inner-cell" >日</span>
+              </span>
               <img src="../../../static/image/alloyTouch/personInfo1.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
@@ -102,10 +149,11 @@
                 <div class="favo-container">
                   <a class="favo-subject">{{report.fastestSubject ? report.fastestSubject : '理财入门课'}}</a>
                   <a class="favo-subject-num">{{report.subjectNum}}</a>
-                  <a class="favo-subject-minute">{{report.learningTime}}</a>
+                  <a class="favo-subject-minute">{{parseInt(report.learningTime/60)}}</a>
                 </div>
                 <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
               </div>
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
@@ -122,16 +170,19 @@
                 </div>
                 <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
               </div>
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
-            <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+            <div class="section-item-7 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-8 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page9.png" width="100%" height="100%" />
+              <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div class="section-item-9">
@@ -140,19 +191,19 @@
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
             <div class="share-article" v-if="isInApp">
               <div><hr/><span>分享至</span><hr/></div>
-              <div class="share-item" v-touch:tap="shareToFriendCircle">
+              <div class="share-item" v-touch:tap="shareToTimelineInApp">
                 <div class="timeline"></div>
                 <div class="share-name">朋友圈</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToFriend">
+              <div class="share-item" v-touch:tap="shareToFriendInApp">
                 <div class="wechat"></div>
                 <div class="share-name">微信好友</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToQQ">
+              <div class="share-item" v-touch:tap="shareToQQInApp">
                 <div class="qq"></div>
                 <div class="share-name">QQ</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToWeibo" v-if="canWeiboShow">
+              <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShow">
                 <div class="weibo"></div>
                 <div class="share-name">微博</div>
               </div>
@@ -167,29 +218,24 @@
     p{
       margin: 0;
     }
-    .inner-cell{
-      width: .3rem;
-      height: 1rem;
-      display: inline-block;
-    }
-    .inner-cell2{
-      width: .1rem;
-      height: 1rem;
-      display: inline-block;
-    }
     .user-atavar{
       text-align: center;
       font-size: .6rem;
       color: white;
+      img{
+        width: 3rem;
+        height: 3rem;
+        position: relative;
+        border-radius: 50%;
+      }
+      top:0 !important;
     }
     .item-container-5 {
       position: relative;
       top: -2rem;
     }
     .section-title {
-      background-image: url("../../../static/image/alloyTouch/bgTitle.png");
-      background-position: 0% 0%;
-      background-repeat: no-repeat;
+      background: url("../../../static/image/alloyTouch/bgTitle.png") 0 0 no-repeat;
       background-size: 100%;
       position: fixed;
       top: 1.5rem;
@@ -219,6 +265,12 @@
           position: relative;
           top: 30%;
           left: 30%;
+          .drag-up{
+            position: absolute;
+            left: 3.2rem;
+            top: 20rem;
+            width: 1rem;
+          }
         }
         .section-item-1 {
           width: 15.025rem;
@@ -226,6 +278,12 @@
           position: relative;
           top: 19%;
           left: 5%;
+          .drag-up{
+            position: absolute;
+            left: 8rem;
+            top: 23.5rem;
+            width: 1rem;
+          }
         }
         .section-item-2 {
           background-position: center center;
@@ -236,6 +294,12 @@
           position: relative;
           top: 20%;
           left: 10%;
+          .drag-up{
+            position: absolute;
+            left: 7rem;
+            top: 23.2rem;
+            width: 1rem;
+          }
         }
         .section-item-3 {
           background-position: center center;
@@ -246,6 +310,12 @@
           position: relative;
           top: 15%;
           left: 15%;
+          .drag-up{
+            position: absolute;
+            left: 6.2rem;
+            top: 24.7rem;
+            width: 1rem;
+          }
         }
         .section-item-4 {
           background-position: center center;
@@ -256,12 +326,22 @@
           position: relative;
           top: 25%;
           left: 17%;
+          .inner-cell{
+            font-size: 1rem;
+            color: #fff;
+          }
           .section-init-date{
             font-size: 1.45rem;
             color: #ffa530;
             position: relative;
             left: 2.66rem;
-            top: 1.1rem;
+            top: 1.5rem;
+          }
+          .drag-up{
+            position: absolute;
+            left: 5.7rem;
+            top: 21.6rem;
+            width: 1rem;
           }
         }
         .section-item-5 {
@@ -271,51 +351,51 @@
           width: 11.3rem;
           height: 13.4rem;
           position: relative;
-          top: 30%;
+          top: 20%;
           left: 23%;
-            .user-atavar{
-              img{
-                position: relative;
-              }
-              top:-2rem !important;
+          .drag-up{
+            position: absolute;
+            left: 4.6rem;
+            top: 23.2rem;
+            width: 1rem;
+          }
+          .favo-container{
+            color: #ffa530;
+            font-size: 1.45rem;
+            font-weight: bold;
+            position: relative;
+            .favo-subject{
+              position: relative;
+              /*top: 4.8rem;*/
+              /*left: -1.3rem;*/
+              top: 3.5rem;
+              left: 2.5rem;
+              font-size: 1.2rem;
             }
-            .favo-container{
-              color: #ffa530;
+            .favo-subject-num{
+              position: relative;
+              /*top: 9rem;*/
+              /*left: -9.4rem;*/
+              top: 7rem;
+              left: -2.2rem;
               font-size: 1.45rem;
-              width: 18rem;
-              position: relative;
-              .favo-subject{
-                position: relative;
-                /*top: 4.8rem;*/
-                /*left: -1.3rem;*/
-                top: 3.5rem;
-                left: 2.5rem;
-                font-size: 1.2rem;
-              }
-              .favo-subject-num{
-                position: relative;
-                /*top: 9rem;*/
-                /*left: -9.4rem;*/
-                top: 7rem;
-                left: -2.2rem;
-                font-size: 1.45rem;
-              }
-              .favo-subject-minute{
-                position: relative;
-                /*top: 9.2rem;*/
-                /*left: 4.5rem;*/
-                top: 9.3rem;
-                left: -1.5rem;
-                font-size: 1.45rem;
-              }
             }
-            .user-atavar{
-              text-align: center;
-              font-size: .6rem;
-              color: white;
+            .favo-subject-minute{
               position: relative;
-              top:-4rem;
+              /*top: 9.2rem;*/
+              /*left: 4.5rem;*/
+              top: 9.3rem;
+              left: -3rem;
+              font-size: 1.45rem;
             }
+          }
+          .user-atavar{
+            text-align: center;
+            font-size: .6rem;
+            color: white;
+            position: relative;
+            top:-4rem;
+          }
         }
         .section-item-6 {
           background-position: center center;
@@ -324,12 +404,18 @@
           width: 9.45rem;
           height: 15.8rem;
           position: relative;
-          top: 30%;
+          top: 20%;
           left: 23%;
+          .drag-up{
+            position: absolute;
+            left: 4.6rem;
+            top: 23.2rem;
+            width: 1rem;
+          }
           .favo-container{
             color: #ffa530;
             font-size: 1.45rem;
-            width: 18rem;
+            font-weight: bold;
             position: relative;
             .favo-subject{
               position: relative;
@@ -346,7 +432,7 @@
             .favo-subject-two{
               top: 9.5rem;
               position: relative;
-              left: -2rem;
+              left: -2.5rem;
               font-size: 1.45rem;
             }
           }
@@ -360,6 +446,12 @@
           position: relative;
           top: 15%;
           left: 10%;
+          .drag-up{
+            position: absolute;
+            left: 7.1rem;
+            top: 24.7rem;
+            width: 1rem;
+          }
         }
         .section-item-8 {
           background-position: center center;
@@ -370,6 +462,12 @@
           position: relative;
           top: 15%;
           left: 10%;
+          .drag-up{
+            position: absolute;
+            left: 7rem;
+            top: 24.7rem;
+            width: 1rem;
+          }
         }
         .section-item-9 {
           background: #fcf8f4;
@@ -560,111 +658,114 @@
   }
 </style>
 <script>
-    import AlloyTouch from 'alloyTouch'
-    import FullPage from '../../util/alloyTouch/alloy_touch.full_page.js'
-    import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
-    import {eventMap} from '../../frame/eventConfig'
-    import {statisticsMap} from '../../statistics/statisticsMap'
-    import {userGetters, annualReportGetters} from '../../vuex/getters'
-    import {annualReportActions} from '../../vuex/actions'
-    import {Device, platformMap} from '../../plugin/device'
-    import IctCloseBtn from '../../components/IctCloseBtn.vue'
-    export default {
-       vuex: {
-          getters: {
-            userName: userGetters.userName,
-            atavar: userGetters.avatar,
-            isUserLogin: userGetters.isLogin,
-            annualReport: annualReportGetters.annualReport
-          },
-         actions: {
-           getAnnualReport: annualReportActions.getAnnualReport
-         }
-       },
+  import AlloyTouch from 'alloyTouch'
+  import FullPage from '../../util/alloyTouch/alloy_touch.full_page.js'
+  import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
+  import {eventMap} from '../../frame/eventConfig'
+  import {statisticsMap} from '../../statistics/statisticsMap'
+  import {userGetters, annualReportGetters} from '../../vuex/getters'
+  import {annualReportActions} from '../../vuex/actions'
+  import {Device, platformMap} from '../../plugin/device'
+  import IctCloseBtn from '../../components/IctCloseBtn.vue'
+  export default {
+    vuex: {
+      getters: {
+        userName: userGetters.userName,
+        atavar: userGetters.avatar,
+        isUserLogin: userGetters.isLogin,
+        annualReport: annualReportGetters.annualReport
+      },
+      actions: {
+       getAnnualReport: annualReportActions.getAnnualReport
+      }
+    },
+    data () {
+      return {
+        report: {
+          elapsedTime: 0,
+          fastestSubject: '',
+          fiveNum: 0,
+          fourNum: 0,
+          lastestSubject: '',
+          learningTime: 0,
+          leastDays: '',
+          longestSubject: '',
+          registrationDate: '',
+          strategyLevel: '',
+          subjectNum: 0
+        }
+      }
+    },
+    computed: {
+      isInApp () {
+        return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+      },
+      canWeiboShow () {
+        return Device.platform !== platformMap.IOS
+      }
+    },
+    route: {
       data () {
-        return {
-          report: {
-            elapsedTime: 0,
-            fastestSubject: '',
-            fiveNum: 0,
-            fourNum: 0,
-            lastestSubject: '',
-            learningTime: 0,
-            leastDays: '',
-            longestSubject: '',
-            registrationDate: '',
-            strategyLevel: '',
-            subjectNum: 0
-          }
+        const me = this
+        if (this.isUserLogin) {
+          this.getAnnualReport().then(
+            (report) => {
+              me.report = report
+            }
+          )
         }
-      },
-      computed: {
-        isInApp () {
-          return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
-        },
-        canWeiboShow () {
-          return Device.platform !== platformMap.IOS
+        this.shareConfig = {
+          title: '2016年度理财报告|长投学堂',
+          desc: '看，这是曾带给你欢乐与痛苦的2016',
+//                link: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report',
+//                imgUrl: 'http://h5.ichangtou.com/mapp_new/static/image/alloyTouch/shareImage.png'
+          link: 'http://h5test.ichangtou.com.cn/juns/index.html#!/annual/report',
+          imgUrl: 'http://h5test.ichangtou.com.cn/juns/static/image/alloyTouch/shareImage.png'
         }
+        this.onViewChange()
+        setTimeout(
+          me.init,
+          500
+        )
       },
-      route: {
-        data () {
-          if (this.isUserLogin) {
-            const me = this
-            this.getAnnualReport().then(
-              function (report) {
-                me.report = report
-              }
-            )
-          }
-        }
+      deactivate () {
+        this.shareConfig = null
+        this.onViewChange()
+      }
+    },
+    methods: {
+      init () {
+          var pb
+          var fp =  new AlloyTouch.FullPage(this.isUserLogin ? '#fullpage-user' : '#fullpage',{
+            animationEnd: function () {
+            },
+            leavePage: function (index) {
+            },
+            beginToPage: function (index) {
+            }
+          })
       },
-       ready () {
-         this.init()
-       },
-       methods: {
-          init () {
-            var pb
-            var fp =  new AlloyTouch.FullPage(this.isUserLogin ? '#fullpage-user' : '#fullpage',{
-                animationEnd: function () {
-                },
-                leavePage: function (index) {
-                },
-                beginToPage: function (index) {
-                }
-            })
-          },
-         onCloseTap () {
-           window.history.back()
-         },
-         gotoIndex () {
-           this.$route.router.go('/main')
-         },
-         gotoAgain () {
-           window.history.reload()
-         },
-         /**
-          * 点击下载app
-          */
-         onDownAppTap () {
-           if (Device.platform === platformMap.IOS) {
-             //ios
-             window.location.href = 'http://android.myapp.com/myapp/detail.htm?apkName=com.changtou.ichangtou'
-           } else if (Device.platform === platformMap.ANDROID) {
-             //android
-             window.location.href = 'http://itunes.apple.com/cn/app/zhang-tou-xue-tang-li-cai/id953920021'
-           }
-         },
-        //分享朋友
-        shareToFriend () {
-          const me = this
+      onCloseTap () {
+       this.$route.router.go('/main')
+      },
+      /**
+      * 点击下载app
+      */
+      onDownAppTap () {
+         window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.changtou.ichangtou'
+      },
+      //分享朋友
+      shareToFriendInApp () {
+        const me = this
+        if (window.Wechat) {
           window.Wechat.share({
               message: {
-                title: me.interviewRecord.title, // 分享标题
-                description: '',
-                thumb: me.interviewRecord.paragraph[0].image, // 分享图标
+                title: me.shareConfig.title, // 分享标题
+                description: me.shareConfig.desc,
+                thumb: me.shareConfig.imgUrl, // 分享图标
                 media: {
                   type: window.Wechat.Type.WEBPAGE,
-                  webpageUrl: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
+                  webpageUrl: me.shareConfig.link
                 }
               },
               scene: window.Wechat.Scene.SESSION
@@ -683,19 +784,23 @@
               }
             }
           )
-        },
+        } else {
+          this.showAlert('请先安装微信客户端')
+        }
+      },
 
-        //分享到朋友圈
-        shareToFriendCircle () {
-          const me = this
+      //分享到朋友圈
+      shareToTimelineInApp () {
+        const me = this
+        if (window.Wechat) {
           window.Wechat.share({
             message: {
-              title: me.interviewRecord.title, // 分享标题
-              description: '',
-              thumb: me.interviewRecord.paragraph[0].image, // 分享图标
+              title: me.shareConfig.title, // 分享标题
+              description: me.shareConfig.desc,
+              thumb: me.shareConfig.imgUrl, // 分享图标
               media: {
                 type: window.Wechat.Type.WEBPAGE,
-                webpageUrl: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
+                webpageUrl: me.shareConfig.link
               }
             },
             scene: window.Wechat.Scene.TIMELINE // share to Timeline
@@ -714,67 +819,74 @@
               }
             }
           )
-        },
-        /**
-         * 分享到QQ
-         */
-        shareToQQ () {
-          if (window.YCQQ) {
-            const me = this
-            var args = {}
-            args.url = 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
-            args.title = me.interviewRecord.title
-            args.description = ''
-            args.imageUrl = me.interviewRecord.paragraph[0].image
-            args.appName = '长投学堂'
-            window.YCQQ.shareToQQ(
-              function () {
-                me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                  '访谈Id': me.interviewRecord.interviewId,
-                  '分享渠道': 'QQ'
-                })
-              },
-              function (failReason) {
-                if (failReason === 'cancelled by user') {
-
-                } else {
-                  me.showAlert({title: '分享失败', message: failReason})
-                }
-              },
-              args
-            )
-          }
-        },
-        /**
-         * 分享到微博
-         */
-        shareToWeibo () {
-          if (window.YCWeibo) {
-            const me = this
-            var args = {}
-            args.url = 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
-            args.title = me.interviewRecord.title + 'title'
-            args.description = '长投学堂' + 'description'
-            args.imageUrl = me.interviewRecord.paragraph[0].image
-            args.defaultText = me.interviewRecord.title + 'defaultText'
-            window.YCWeibo.shareToWeibo(
-              function () {
-              },
-              function (failReason) {
-                if (failReason === 'cancel by user') {
-
-                } else {
-                  me.showAlert({title: '分享失败', message: failReason})
-                }
-              },
-              args
-            )
-          }
+        } else {
+          this.showAlert('请先安装微信客户端')
         }
-     },
-      components: {
-        IctCloseBtn
+      },
+      /**
+       * 分享到QQ
+       */
+      shareToQQInApp () {
+        if (window.YCQQ) {
+          const me = this
+          var args = {}
+          args.url = me.shareConfig.link
+          args.title = me.shareConfig.title
+          args.description = me.shareConfig.desc
+          args.imageUrl = me.shareConfig.imgUrl
+          args.appName = '长投学堂'
+          window.YCQQ.shareToQQ(
+            function () {
+              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+                '访谈Id': me.interviewRecord.interviewId,
+                '分享渠道': 'QQ'
+              })
+            },
+            function (failReason) {
+              if (failReason === 'cancelled by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        } else {
+          this.showAlert('请先安装QQ客户端')
+        }
+      },
+      /**
+       * 分享到微博
+       */
+      shareToWeiboInApp () {
+        if (window.YCWeibo) {
+          const me = this
+          var args = {}
+          args.url = me.shareConfig.link
+          args.title = me.shareConfig.title
+          args.description = '长投学堂' + me.shareConfig.desc
+          args.imageUrl = me.shareConfig.imgUrl
+          args.defaultText = me.shareConfig.desc
+          window.YCWeibo.shareToWeibo(
+            function () {
+            },
+            function (failReason) {
+              if (failReason === 'cancel by user') {
+
+              } else {
+                me.showAlert({title: '分享失败', message: failReason})
+              }
+            },
+            args
+          )
+        } else {
+          this.showAlert('请先安装微博客户端')
+        }
       }
+   },
+    components: {
+      IctCloseBtn
     }
+  }
 </script>
 
