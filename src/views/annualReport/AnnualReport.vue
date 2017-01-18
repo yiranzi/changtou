@@ -1,8 +1,9 @@
 <template>
   <div id="alloyTouchDemo">
       <span class="section-title"></span>
+      <ict-close-btn @close="onCloseTap"></ict-close-btn>
       <div class="section">
-        <div id="fullpage" class="site_header">
+        <div id="fullpage" :class='{unshow: isUserLogin}' class="site_header">
           <div>
             <div class="section-item-0 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page1.png" width="100%" height="100%" />
@@ -23,51 +24,8 @@
               <img src="../../../static/image/alloyTouch/page4.png" width="100%" height="100%" />
             </div>
           </div>
-          <div v-show="isUserLogin">
-            <!-- 用户若未登录则不显示此页面 -->
-            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >
-              <div class="user-atavar">
-                <span><img :src="atavar" /></span>
-                <p class="user-name">{{userName}}</p>
-              </div>
-              <span class="section-init-date">2017 <span class="inner-cell" ></span> 12 <span class="inner-cell2" ></span> 12</span>
-              <img src="../../../static/image/alloyTouch/personInfo1.png" width="100%" height="100%" />
-            </div>
-          </div>
           <div>
-            <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-                <div class="user-atavar">
-                  <img :src="atavar" />
-                  <p class="user-name">{{userName}}</p>
-                </div>
-                <div class="favo-container">
-                  <a class="favo-subject">最适合懒人的基金定投课</a>
-                  <a class="favo-subject-num">4</a>
-                  <a class="favo-subject-minute">30000</a>
-                </div>
-                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-              <div class="user-atavar">
-                <img :src="atavar" />
-                <p class="user-name">{{userName}}</p>
-              </div>
-              <div class="favo-container">
-                <a class="favo-subject">理财入门课</a>
-                <a class="favo-subject-three">3</a>
-                <a class="favo-subject-two">2</a>
-              </div>
-              <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
-            </div>
-              </div>
-          </div>
-          <div>
-            <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+            <div class="section-item-8 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
               <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
             </div>
           </div>
@@ -77,10 +35,10 @@
             </div>
           </div>
           <div class="section-item-9">
-            <div class="section-title"></div>
-            <div class="section-mid"></div>
-            <div class="section-down"></div>
-            <div class="share-article">
+            <div class="item-title"></div>
+            <div class="item-mid"></div>
+            <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
+            <div class="share-article" v-if="isInApp">
               <div><hr/><span>分享至</span><hr/></div>
               <div class="share-item" v-touch:tap="shareToFriendCircle">
                 <div class="timeline"></div>
@@ -94,18 +52,121 @@
                 <div class="qq"></div>
                 <div class="share-name">QQ</div>
               </div>
-              <div class="share-item" v-touch:tap="shareToWeibo">
+              <div class="share-item" v-touch:tap="shareToWeibo" v-if="canWeiboShow">
                 <div class="weibo"></div>
                 <div class="share-name">微博</div>
               </div>
             </div>
           </div>
-        </div>  <!-- fullpage end -->
+        </div>
+        <div id="fullpage-user" :class='{unshow: !isUserLogin}' class="site_header">
+          <div>
+            <div class="section-item-0 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page1.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-1 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page2.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-2 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page3.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-3 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page4.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >
+              <div class="user-atavar">
+                <span><img :src="atavar" /></span>
+                <p class="user-name">{{userName}}</p>
+              </div>
+              <span class="section-init-date">{{report.registrationDate.split('-')[0]}}
+                <span class="inner-cell" ></span> {{report.registrationDate.split('-')[1]}}
+                <span class="inner-cell2" ></span> {{report.registrationDate.split('-')[2].split('T')[0]}}</span>
+              <img src="../../../static/image/alloyTouch/personInfo1.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <div class="item-container-5">
+                <div class="user-atavar">
+                  <img :src="atavar" />
+                  <p class="user-name">{{userName}}</p>
+                </div>
+                <div class="favo-container">
+                  <a class="favo-subject">{{report.fastestSubject ? report.fastestSubject : '理财入门课'}}</a>
+                  <a class="favo-subject-num">{{report.subjectNum}}</a>
+                  <a class="favo-subject-minute">{{report.learningTime}}</a>
+                </div>
+                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <div class="item-container-5">
+                <div class="user-atavar">
+                  <img :src="atavar" />
+                  <p class="user-name">{{userName}}</p>
+                </div>
+                <div class="favo-container">
+                  <a class="favo-subject">{{report.lastSubject ? report.lastSubject : '你还没有提交哟'}}</a>
+                  <a class="favo-subject-three">{{report.fiveNum}}</a>
+                  <a class="favo-subject-two">{{report.fourNum}}</a>
+                </div>
+                <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="section-item-8 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page8.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div>
+            <div class="section-item-8 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
+              <img src="../../../static/image/alloyTouch/page9.png" width="100%" height="100%" />
+            </div>
+          </div>
+          <div class="section-item-9">
+            <div class="item-title"></div>
+            <div class="item-mid"></div>
+            <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
+            <div class="share-article" v-if="isInApp">
+              <div><hr/><span>分享至</span><hr/></div>
+              <div class="share-item" v-touch:tap="shareToFriendCircle">
+                <div class="timeline"></div>
+                <div class="share-name">朋友圈</div>
+              </div>
+              <div class="share-item" v-touch:tap="shareToFriend">
+                <div class="wechat"></div>
+                <div class="share-name">微信好友</div>
+              </div>
+              <div class="share-item" v-touch:tap="shareToQQ">
+                <div class="qq"></div>
+                <div class="share-name">QQ</div>
+              </div>
+              <div class="share-item" v-touch:tap="shareToWeibo" v-if="canWeiboShow">
+                <div class="weibo"></div>
+                <div class="share-name">微博</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
   </div>
 </template>
 <style lang="less">
   #alloyTouchDemo{
+    p{
+      margin: 0;
+    }
     .inner-cell{
       width: .3rem;
       height: 1rem;
@@ -147,7 +208,7 @@
       background-position: 0% 0%;
       background-repeat: no-repeat;
       background-size: 100%;
-      #fullpage {
+      #fullpage, #fullpage-user {
         visibility: hidden;
         .section-item-0 {
           background-position: center center;
@@ -222,22 +283,29 @@
               color: #ffa530;
               font-size: 1.45rem;
               width: 18rem;
+              position: relative;
               .favo-subject{
                 position: relative;
-                top: 4.8rem;
-                left: -1.3rem;
+                /*top: 4.8rem;*/
+                /*left: -1.3rem;*/
+                top: 3.5rem;
+                left: 2.5rem;
                 font-size: 1.2rem;
               }
               .favo-subject-num{
                 position: relative;
-                top: 9rem;
-                left: -9.4rem;
+                /*top: 9rem;*/
+                /*left: -9.4rem;*/
+                top: 7rem;
+                left: -2.2rem;
                 font-size: 1.45rem;
               }
               .favo-subject-minute{
-                top: 9.2rem;
                 position: relative;
-                left: 4.5rem;
+                /*top: 9.2rem;*/
+                /*left: 4.5rem;*/
+                top: 9.3rem;
+                left: -1.5rem;
                 font-size: 1.45rem;
               }
             }
@@ -262,6 +330,7 @@
             color: #ffa530;
             font-size: 1.45rem;
             width: 18rem;
+            position: relative;
             .favo-subject{
               position: relative;
               top: 2.8rem;
@@ -270,12 +339,12 @@
             }
             .favo-subject-three{
               position: relative;
-              top: 7rem;
+              top: 7.5rem;
               left: -0.8rem;
               font-size: 1.45rem;
             }
             .favo-subject-two{
-              top: 8.8rem;
+              top: 9.5rem;
               position: relative;
               left: -2rem;
               font-size: 1.45rem;
@@ -304,17 +373,18 @@
         }
         .section-item-9 {
           background: #fcf8f4;
-          .section-title {
+          .item-title {
             background-image: url("../../../static/image/alloyTouch/backCover1.png");
             background-position: center center;
             background-repeat: no-repeat;
-            background-size: 90%;
-            width: 18.75rem;
+            background-size: 100%;
+            width: 100%;
             height: 7.15rem;
             position: relative;
-            left: 1%;
+            left: 0;
+            top: 3rem;
           }
-          .section-mid {
+          .item-mid {
             background-image: url("../../../static/image/alloyTouch/backCover2.png");
             background-position: center center;
             background-repeat: no-repeat;
@@ -323,10 +393,10 @@
             height: 3.25rem;
             position: relative;
             left: 13%;
-            margin-bottom: 5rem;
+            margin-bottom: 6.5rem;
             margin-top: 5rem;
           }
-          .section-down {
+          .item-down {
             background-image: url("../../../static/image/alloyTouch/backCover3.png");
             background-position: center center;
             background-repeat: no-repeat;
@@ -460,9 +530,9 @@
             text-align: center;
           }
           .share-article {
-            margin-top: 3rem;
+            padding-top: 1.5rem;
             font-size: 26/40rem;
-            color: #aaa;
+            color: #00b0f0;
             text-align: center;
             hr {
               margin: 0.32rem .5rem;
@@ -483,6 +553,9 @@
           /************        share     part  *********************/
         }
       }
+      .unshow {
+        display: none;
+      }
     }
   }
 </style>
@@ -492,36 +565,94 @@
     import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
     import {eventMap} from '../../frame/eventConfig'
     import {statisticsMap} from '../../statistics/statisticsMap'
-    import {userGetters} from '../../vuex/getters'
-    import {bigDataActions} from '../../vuex/actions'
+    import {userGetters, annualReportGetters} from '../../vuex/getters'
+    import {annualReportActions} from '../../vuex/actions'
+    import {Device, platformMap} from '../../plugin/device'
+    import IctCloseBtn from '../../components/IctCloseBtn.vue'
     export default {
        vuex: {
           getters: {
             userName: userGetters.userName,
             atavar: userGetters.avatar,
-            isUserLogin: userGetters.isLogin
+            isUserLogin: userGetters.isLogin,
+            annualReport: annualReportGetters.annualReport
           },
+         actions: {
+           getAnnualReport: annualReportActions.getAnnualReport
+         }
        },
+      data () {
+        return {
+          report: {
+            elapsedTime: 0,
+            fastestSubject: '',
+            fiveNum: 0,
+            fourNum: 0,
+            lastestSubject: '',
+            learningTime: 0,
+            leastDays: '',
+            longestSubject: '',
+            registrationDate: '',
+            strategyLevel: '',
+            subjectNum: 0
+          }
+        }
+      },
+      computed: {
+        isInApp () {
+          return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+        },
+        canWeiboShow () {
+          return Device.platform !== platformMap.IOS
+        }
+      },
+      route: {
+        data () {
+          if (this.isUserLogin) {
+            const me = this
+            this.getAnnualReport().then(
+              function (report) {
+                me.report = report
+              }
+            )
+          }
+        }
+      },
        ready () {
          this.init()
        },
        methods: {
           init () {
-            var pb;
-            var fp =  new AlloyTouch.FullPage("#fullpage",{
-                animationEnd:function () {
+            var pb
+            var fp =  new AlloyTouch.FullPage(this.isUserLogin ? '#fullpage-user' : '#fullpage',{
+                animationEnd: function () {
                 },
                 leavePage: function (index) {
                 },
                 beginToPage: function (index) {
                 }
-            });
+            })
           },
+         onCloseTap () {
+           window.history.back()
+         },
          gotoIndex () {
            this.$route.router.go('/main')
          },
          gotoAgain () {
            window.history.reload()
+         },
+         /**
+          * 点击下载app
+          */
+         onDownAppTap () {
+           if (Device.platform === platformMap.IOS) {
+             //ios
+             window.location.href = 'http://android.myapp.com/myapp/detail.htm?apkName=com.changtou.ichangtou'
+           } else if (Device.platform === platformMap.ANDROID) {
+             //android
+             window.location.href = 'http://itunes.apple.com/cn/app/zhang-tou-xue-tang-li-cai/id953920021'
+           }
          },
         //分享朋友
         shareToFriend () {
@@ -533,8 +664,7 @@
                 thumb: me.interviewRecord.paragraph[0].image, // 分享图标
                 media: {
                   type: window.Wechat.Type.WEBPAGE,
-  //                webpageUrl: SEVER_URL + '#interview/content/' +  me.interviewRecord.interviewId
-                  webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+                  webpageUrl: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
                 }
               },
               scene: window.Wechat.Scene.SESSION
@@ -544,7 +674,6 @@
                 '访谈Id': me.interviewRecord.interviewId,
                 '分享渠道': '微信-会话'
               })
-              me.showToast('分享成功')
             },
             function (reason) {
               if (reason === '用户点击取消并返回') {
@@ -566,7 +695,7 @@
               thumb: me.interviewRecord.paragraph[0].image, // 分享图标
               media: {
                 type: window.Wechat.Type.WEBPAGE,
-                webpageUrl: 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+                webpageUrl: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
               }
             },
             scene: window.Wechat.Scene.TIMELINE // share to Timeline
@@ -576,7 +705,6 @@
                 '访谈Id': me.interviewRecord.interviewId,
                 '分享渠道': '微信-朋友圈'
               })
-              me.showToast('分享成功')
             },
             function (reason) {
               if (reason === '用户点击取消并返回') {
@@ -594,7 +722,7 @@
           if (window.YCQQ) {
             const me = this
             var args = {}
-            args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+            args.url = 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
             args.title = me.interviewRecord.title
             args.description = ''
             args.imageUrl = me.interviewRecord.paragraph[0].image
@@ -605,7 +733,6 @@
                   '访谈Id': me.interviewRecord.interviewId,
                   '分享渠道': 'QQ'
                 })
-                me.showToast('分享成功')
               },
               function (failReason) {
                 if (failReason === 'cancelled by user') {
@@ -625,14 +752,13 @@
           if (window.YCWeibo) {
             const me = this
             var args = {}
-            args.url = 'http://h5.ichangtou.com/mapp/index.html#interview/content/' + me.interviewRecord.interviewId
+            args.url = 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report/'
             args.title = me.interviewRecord.title + 'title'
             args.description = '长投学堂' + 'description'
             args.imageUrl = me.interviewRecord.paragraph[0].image
             args.defaultText = me.interviewRecord.title + 'defaultText'
             window.YCWeibo.shareToWeibo(
               function () {
-                me.showToast('分享成功')
               },
               function (failReason) {
                 if (failReason === 'cancel by user') {
@@ -645,7 +771,10 @@
             )
           }
         }
-     }
+     },
+      components: {
+        IctCloseBtn
+      }
     }
 </script>
 

@@ -25,6 +25,7 @@ import * as strategyNoticeGetters from './strategy/notice/getters'
 import * as graduationDiplomaGetters from './graduationDiploma/getters'
 import * as giftGetters from './giftPackage/getters'
 import * as questionNaireGetters from './questionNaire/getters'
+import * as annualReportGetters from './annualReport/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -49,5 +50,6 @@ export {
   strategyNoticeGetters,  //策略产品 通知
   graduationDiplomaGetters,  //毕业证
   giftGetters,                           // 新手礼包
-  questionNaireGetters          // 问卷调查
+  questionNaireGetters,          // 问卷调查
+  annualReportGetters
 }
