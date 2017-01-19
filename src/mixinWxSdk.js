@@ -1,5 +1,8 @@
 /**
  * Created by jun on 2017/1/11.
+ * 单独写微信分享的页面
+ * 需要添加函数setViewWxShareConfig 用于在微信准备好时调用,配置分享的信息
+ *
  */
 import Vue from 'vue'
 import {postWithoutAuth} from './frame/ajax'
@@ -279,7 +282,11 @@ const mixin = {
           })
           window.wx.ready(function () {
             setTimeout(function () {
-              me.onViewChange()
+              if (me.setViewWxShareConfig) {
+                me.setViewWxShareConfig()
+              } else {
+                me.onViewChange()
+              }
             }, 200)
           })
         }

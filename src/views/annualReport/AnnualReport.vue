@@ -30,35 +30,27 @@
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-                <div class="user-atavar">
-                  <img src="../../../static/image/alloyTouch/default-avatar.png" />
-                  <p class="user-name">长投学员</p>
-                </div>
-                <div class="favo-container">
-                  <a class="favo-subject">理财入门课</a>
-                  <a class="favo-subject-num">4</a>
-                  <a class="favo-subject-minute">4125</a>
-                </div>
-                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
+              <div class="user-atavar">
+                <img src="../../../static/image/alloyTouch/default-avatar.png" />
+                <p class="user-name">长投学员</p>
               </div>
+              <span class="fast-subject">理财入门课</span>
+              <span class="buy-subject-num">4</span>
+              <span class="accumulate-time">4125</span>
+              <img src="../../../static/image/alloyTouch/personInfo2.png" style="width:11.3rem;height:13.4rem;" />
               <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-                <div class="user-atavar">
-                  <img src="../../../static/image/alloyTouch/default-avatar.png" />
-                  <p class="user-name">长投学员</p>
-                </div>
-                <div class="favo-container">
-                  <a class="favo-subject">理财入门课</a>
-                  <a class="favo-subject-three">7</a>
-                  <a class="favo-subject-two">11</a>
-                </div>
-                <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
+              <div class="user-atavar">
+                <img src="../../../static/image/alloyTouch/default-avatar.png" />
+                <p class="user-name">长投学员</p>
               </div>
+              <span class="favo-subject">理财入门课</span>
+              <span class="favo-subject-three">7</span>
+              <span class="favo-subject-two">11</span>
+              <img src="../../../static/image/alloyTouch/personInfo3.png" style="width: 9.45rem;height: 15.8rem;"/>
               <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
@@ -141,35 +133,27 @@
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-                <div class="user-atavar">
-                  <img :src="atavar" />
-                  <p class="user-name">{{userName}}</p>
-                </div>
-                <div class="favo-container">
-                  <a class="favo-subject">{{report.fastestSubject ? report.fastestSubject : '理财入门课'}}</a>
-                  <a class="favo-subject-num">{{report.subjectNum}}</a>
-                  <a class="favo-subject-minute">{{parseInt(report.learningTime/60)}}</a>
-                </div>
-                <img src="../../../static/image/alloyTouch/personInfo2.png" width="100%" height="100%" />
+              <div class="user-atavar">
+                <img :src="atavar" />
+                <p class="user-name">{{userName}}</p>
               </div>
+              <span class="fast-subject">{{report.fastestSubject ? report.fastestSubject : '理财入门课'}}</span>
+              <span class="buy-subject-num">{{report.subjectNum}}</span>
+              <span class="accumulate-time">{{parseInt(report.learningTime/60)}}</span>
+              <img src="../../../static/image/alloyTouch/personInfo2.png" style="width:11.3rem;height:13.4rem;" />
               <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <div class="item-container-5">
-                <div class="user-atavar">
-                  <img :src="atavar" />
-                  <p class="user-name">{{userName}}</p>
-                </div>
-                <div class="favo-container">
-                  <a class="favo-subject">{{report.lastSubject ? report.lastSubject : '你还没有提交哟'}}</a>
-                  <a class="favo-subject-three">{{report.fiveNum}}</a>
-                  <a class="favo-subject-two">{{report.fourNum}}</a>
-                </div>
-                <img src="../../../static/image/alloyTouch/personInfo3.png" width="100%" height="100%" />
+              <div class="user-atavar">
+                <img :src="atavar" />
+                <p class="user-name">{{userName}}</p>
               </div>
+              <span class="favo-subject">{{report.lastSubject ? report.lastSubject : '你还没有提交哟'}}</span>
+              <span class="favo-subject-three">{{report.fiveNum}}</span>
+              <span class="favo-subject-two">{{report.fourNum}}</span>
+              <img src="../../../static/image/alloyTouch/personInfo3.png" style="width: 9.45rem;height: 15.8rem;"/>
               <img src="../../../static/image/alloyTouch/drag-up.png" class="drag-up">
             </div>
           </div>
@@ -228,7 +212,6 @@
         position: relative;
         border-radius: 50%;
       }
-      top:0 !important;
     }
     .section-title {
       background: url("../../../static/image/alloyTouch/bgTitle.png") 0 0 no-repeat;
@@ -344,100 +327,90 @@
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 90%;
-          width: 11.3rem;
-          height: 13.4rem;
           position: relative;
+          width: 100%;
           top: 20%;
-          left: 23%;
+          font-size: 1.45rem;
+          color: #ffa530;
+          font-weight: bold;
+          text-align: center;
+
           .drag-up{
             position: absolute;
-            left: 4.6rem;
+            left: 8.6rem;
             top: 23.2rem;
             width: 1rem;
-          }
-          .item-container-5 {
-            position: relative;
-            top: -2rem;
-          }
-          .favo-container{
-            color: #ffa530;
-            font-size: 1.45rem;
-            font-weight: bold;
-            position: relative;
-            .favo-subject{
-              position: relative;
-              /*top: 4.8rem;*/
-              /*left: -1.3rem;*/
-              top: 4.5rem;
-              left: 1.5rem;
-              font-size: 1.2rem;
-            }
-            .favo-subject-num{
-              position: relative;
-              /*top: 9rem;*/
-              /*left: -9.4rem;*/
-              top: 9rem;
-              left: -4.7rem;
-              font-size: 1.45rem;
-            }
-            .favo-subject-minute{
-              position: relative;
-              /*top: 9.2rem;*/
-              /*left: 4.5rem;*/
-              top: 9.3rem;
-              left: 5rem;
-              font-size: 1.45rem;
-            }
           }
           .user-atavar{
             text-align: center;
             font-size: .6rem;
             color: white;
-            position: relative;
-            top:-4rem;
+            margin-bottom: 1rem;
+          }
+          .fast-subject{
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            top: 6.5rem;
+            left: 0;
+            font-size: 1.2rem;
+          }
+          .buy-subject-num{
+            position: absolute;
+            top: 10rem;
+            left: 8rem;
+            font-size: 1.45rem;
+          }
+          .accumulate-time{
+            position: absolute;
+            top: 12.3rem;
+            left: 8.5rem;
+            font-size: 1.45rem;
           }
         }
         .section-item-6 {
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 90%;
-          width: 9.45rem;
-          height: 15.8rem;
           position: relative;
+          width: 100%;
           top: 20%;
-          left: 23%;
+          font-size: 1.45rem;
+          color: #ffa530;
+          font-weight: bold;
+          text-align: center;
+          .user-atavar{
+            text-align: center;
+            font-size: .6rem;
+            color: white;
+            margin-bottom: 1rem;
+          }
           .drag-up{
             position: absolute;
-            left: 4.6rem;
+            left: 8.6rem;
             top: 23.2rem;
             width: 1rem;
           }
-          .favo-container{
-            color: #ffa530;
+          .favo-subject{
+            position: absolute;
+            top: 7rem;
+            left: 0;
+            width: 100%;
+            display: inline-block;
+            font-size: 1.2rem;
+            text-align: center;
+          }
+          .favo-subject-three{
+            position: absolute;
+            top: 10.3rem;
+            left: 10.2rem;
             font-size: 1.45rem;
-            font-weight: bold;
-            position: relative;
-            .favo-subject{
-              position: relative;
-              top: 4.8rem;
-              left: -3.5rem;
-              width: 17rem;
-              display: inline-block;
-              font-size: 1.2rem;
-              text-align: center;
-            }
-            .favo-subject-three{
-              position: relative;
-              top: 7.5rem;
-              left: 5.5rem;
-              font-size: 1.45rem;
-            }
-            .favo-subject-two{
-              position: relative;
-              top: 9.5rem;
-              left: 4rem;
-              font-size: 1.45rem;
-            }
+          }
+          .favo-subject-two{
+            position: absolute;
+            top: 12rem;
+            left: 10.2rem;
+            font-size: 1.45rem;
           }
         }
         .section-item-7 {
@@ -670,6 +643,7 @@
   import {annualReportActions} from '../../vuex/actions'
   import {Device, platformMap} from '../../plugin/device'
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
+  import {MSITE_URL} from '../../frame/serverConfig'
   export default {
     vuex: {
       getters: {
@@ -689,7 +663,7 @@
           fastestSubject: '',
           fiveNum: 0,
           fourNum: 0,
-          lastestSubject: '',
+          lastSubject: '',
           learningTime: 0,
           leastDays: '',
           longestSubject: '',
@@ -712,23 +686,17 @@
         const me = this
         if (this.isUserLogin) {
           this.getAnnualReport().then(
-            (report) => {
+            function (report) {
               me.report = report
             }
           )
         }
-        this.shareConfig = {
-          title: '2016年度理财报告|长投学堂',
-          desc: '看，这是曾带给你欢乐与痛苦的2016',
-//                link: 'http://h5.ichangtou.com/mapp_new/index.html#!/annual/report',
-//                imgUrl: 'http://h5.ichangtou.com/mapp_new/static/image/alloyTouch/shareImage.png'
-          link: 'http://h5test.ichangtou.com.cn/juns/index.html#!/annual/report',
-          imgUrl: 'http://h5test.ichangtou.com.cn/juns/static/image/alloyTouch/shareImage.png'
-        }
-        this.onViewChange()
         setTimeout(
-          me.init,
-          500
+          function () {
+            me.init()
+            me.setViewWxShareConfig()
+          },
+          200
         )
       },
       deactivate () {
@@ -737,6 +705,15 @@
       }
     },
     methods: {
+      setViewWxShareConfig () {
+        this.shareConfig = {
+          title: '2016年度理财报告|长投学堂',
+          desc: '看，这是曾带给你欢乐与痛苦的2016',
+          link: MSITE_URL + 'index.html#!/annual/report',
+          imgUrl: MSITE_URL + 'static/image/alloyTouch/shareImage.png'
+        }
+        this.onViewChange()
+      },
       init () {
           var pb
           var fp =  new AlloyTouch.FullPage(this.isUserLogin ? '#fullpage-user' : '#fullpage',{

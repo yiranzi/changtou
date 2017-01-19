@@ -11,7 +11,7 @@ const apiUrl = {
   // 注册
   'register_post_pone': '/principal/users/registration-vericode', //  注册 发送手机号
   'register_post_password_app': '/principal/auth/user-registration-info', //  注册 登录 app
-  'register_post_password_msite': '/principal/msite/auth/user-registration-info', // 注册 登录 M站
+  'register_post_password_msite': '/principal/msite/user-registration-info', // 注册 登录 M站
   // 账号登录
   'principal_login': '/principal/auth/login-user-info',
   'principal_login_msite': '/principal/msite/login-user-info',
