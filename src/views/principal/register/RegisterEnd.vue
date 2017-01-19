@@ -214,7 +214,7 @@
         const me = this
         this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
           function (user) {
-            this.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            me.$dispatch(eventMap.REGISTER_SUCCESS, user)
             if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
               // 个人中心 进入注册
               window.history.go(-2)
@@ -242,7 +242,7 @@
         const wxUserInfo = JSON.parse(window.sessionStorage.getItem('wxOauth2'))
         this.registerEndInMSite(this.phone, this.plainPassword, this.validationCode, wxUserInfo).then(
           function (user) {
-            this.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            me.$dispatch(eventMap.REGISTER_SUCCESS, user)
             if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
               // 个人中心 进入注册
               window.history.go(-2)
