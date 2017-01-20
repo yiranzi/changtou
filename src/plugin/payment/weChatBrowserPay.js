@@ -6,9 +6,7 @@ import { postWithinAuth } from '../../frame/ajax'
 import { getUrl } from '../../frame/apiConfig'
 import { errorType } from '../../util/pay/dealHelper'
 import { WX_APPID } from '../../frame/serverConfig'
-import store from '../../vuex/store'
-
-const user = store.state.user
+import {getLocalCache, clearLocalCache} from '../../util/cache'
 /**
  * 预支付 下订单
  * @param prepayData
@@ -51,10 +49,12 @@ const prepay = (prepayData) => {
  * @returns {Promise}
  */
 const showPayComponent = (prepayResponse) => {
+  const isDaXin = getLocalCache('daxin')
+  clearLocalCache('daxin')
   return new Promise(
     (resolve, reject) => {
       let params = {
-        appId: WX_APPID,
+        appId: isDaXin ? 'wxe95fb252e5bc8152' : WX_APPID,
         timeStamp: prepayResponse.timeStamp.toString(),
         nonceStr: prepayResponse.nonceStr,
         package: 'prepay_id=' + prepayResponse.prepayId.toString(),
@@ -95,7 +95,6 @@ const showPayComponent = (prepayResponse) => {
  */
 const WeChatBrowserPay = (trade) => {
   let deal = Object.assign({}, trade)
-  deal.openId = user.openId
   var promise = Promise.resolve(deal)
   return promise.then(prepay).then(showPayComponent)
 }

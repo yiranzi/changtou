@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=Content-Security-Policy content="default-src *; font-src *  data:;img-src data: *; style-src 'self' https://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"><meta name=format-detection content="telephone=no"><meta name=msapplication-tap-highlight content=no><meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width"><title>长投学堂</title><link href=./static/css/app.b4c4c0c1085c84469fa7c43f3e83dd47.css rel=stylesheet></head><script>/**
+<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=Content-Security-Policy content="default-src * 'self' gap://ready file://* * ; font-src *  data:;img-src data: *; style-src 'self' https://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"><meta name=format-detection content="telephone=no"><meta name=msapplication-tap-highlight content=no><meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width"><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-touch-fullscreen content=yes><title>长投学堂</title><link href=./static/css/app.696a75185853cd9395347d46478c9f57.css rel=stylesheet></head><body><div id=appFontTester style="width: 18.75rem;height: 1px"></div><script>/**
    * 初始化，设置rem
    */
   function init (){
@@ -6,7 +6,23 @@
     var DEFAULT_REM = 20;
     var html = document.getElementsByTagName('html')[0];
 
-    html.style.fontSize = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM + 'px';
+    // 字体缩放比(1rem = fontScale px)
+    window.fontScale = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM
+    html.style.fontSize = window.fontScale + 'px';
+
+    /**
+     * 用户有可能设置了系统字体，此时等比例反缩放 //todo
+     */
+    var appFontTester = document.getElementById('appFontTester')
+    var scale = appFontTester.offsetWidth / html.offsetWidth;
+
+    document.body.removeChild(appFontTester)
+    if( scale !== 1 ){
+      html.style.fontSize = parseFloat(window.fontScale) / scale + 'px';
+    }
+
+    // 阻止document页面滚动 (ios系统的webview的滚动)
+    document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
   }
 
-  init();</script><script src=cordova.js></script><body><app></app><script type=text/javascript src=./static/js/manifest.8e419f2703dabcc11f2e.js></script><script type=text/javascript src=./static/js/vendor.03f683d5c41f5fe164e5.js></script><script type=text/javascript src=./static/js/app.9317e3c912c60b635257.js></script></body></html>
+  init();</script><script src=cordova.js></script><app></app><script type=text/javascript src=./static/js/manifest.dad7ed8baad33a7f230b.js></script><script type=text/javascript src=./static/js/vendor.a26088299e43e834b71d.js></script><script type=text/javascript src=./static/js/app.a43516df380aa6d763a4.js></script></body></html>

@@ -40,3 +40,47 @@ npm install -g cordova-hot-code-push-cli
 cordova plugin add [plugin路径]
 //IOS 添加友盟插件 （需要配置AppDelegate.m文件）
 cordova plugin add [plugin路径]
+//安卓 友盟插件初始化
+cordova/plftforms/android/src/com/changtou/MainActivity.java 修改为下面代码
+__________________________________________________________________________
+package com.changtou.ichangtou;
+
+import android.os.Bundle;
+
+import com.umeng.analytics.MobclickAgent;
+
+import org.apache.cordova.*;
+
+public class MainActivity extends CordovaActivity
+{
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        initUmengSDK();
+        // Set by <content src="index.html" /> in config.xml
+        loadUrl(launchUrl);
+
+    }
+
+    private void initUmengSDK() {
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setDebugMode(true);
+        MobclickAgent.openActivityDurationTrack(false);
+        // MobclickAgent.setSessionContinueMillis(1000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+}
+__________________________________________________________________________

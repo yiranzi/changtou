@@ -291,6 +291,12 @@ export function configRouter (router) {
      */
     'newerStrategy/page/2': {
       component: require('../views/newerStrategy/newerStrategy2.vue')
+    },
+    /**
+     * 大数据 活动
+     */
+    'annual/report': {
+      component: require('../views/annualReport/AnnualReport.vue')
     }
   })
 

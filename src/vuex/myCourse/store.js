@@ -4,7 +4,8 @@
 
 const state = {
   information: '',
-  myCourses: []
+  myCourses: [],
+  accumulateTime: 0
 }
 
 const mutations = {
@@ -18,6 +19,10 @@ const mutations = {
   UPDATE_MY_COURSES (state, courses) {
     state.information = courses.information
     state.myCourses = courses.myCourses
+  },
+
+  UPDATE_ACCUMULATE_TIME (state, time) {
+    state.accumulateTime = time
   }
 }
 

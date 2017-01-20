@@ -22,6 +22,7 @@
   import {commonTopicActions} from '../../vuex/actions'
   import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {Device, platformMap} from '../../plugin/device'
+  import {Agent} from '../../plugin/agent'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {getLocalCache} from '../../util/cache'
@@ -217,6 +218,7 @@
         const trade = {
           sum: this.sum,
           body: '长投课程',
+          openId: Device.platform === platformMap.WEB && Agent.isWx ? JSON.parse(window.sessionStorage.getItem('wxOauth2')).openId : null,
           deal: {
             cardUsed: !!(this.selectedCoupon && !this.selectedCoupon.couponNo),
             channel: (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) ? 'APP' : 'MAPP',
@@ -233,7 +235,6 @@
 
         pay({
           channel: channel,
-          isSubscriber: me.$route.query.subscriber,
           trade: trade
         }).then(
           result => {
@@ -249,11 +250,17 @@
           (err) => me.onPayFail(err)
         )
       },
+      /**
+       * 支付成功
+       */
       goToPaySuccess () {
         this.hideLoading()
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_SUCCESSFUL, this.statisticData)
         this.$route.router.replace(`/pay/success/CT/${this.ctpId}`)
       },
+      /**
+       * 支付失败
+       */
       onPayFail (err) {
         this.hideLoading()
         Object.assign(this.statisticData, {
@@ -264,6 +271,39 @@
           this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_FAIL, this.statisticData)
           this.showAlert({message: err.reason})
         }
+      },
+
+      /**
+       * 显示支付二维码
+       * @param url
+         */
+      showCodePanel (url) {
+        this.showMask({
+          component: 'payment/WxQrCode.vue',
+          hideOnMaskTap: true,
+          callbackName: 'qrCodePress',
+          componentData: url,
+          callbackFn: this.onQrCodePress.bind(this) //组件上的
+        })
+      },
+
+      /**
+       * 长按二维码
+       */
+      onQrCodePress () {
+        setTimeout(
+          () => {
+            this.showConfirm({
+              title: '',
+              message: '是否完成支付?',
+              okText: '已完成',
+              okCallback: this.onPayFinish.bind(this),
+              cancelText: '未完成',
+              cancelCallback: this.hideLoading
+            })
+          },
+          2000
+        )
       }
     },
     components: {

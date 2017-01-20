@@ -11,9 +11,10 @@ const apiUrl = {
   // 注册
   'register_post_pone': '/principal/users/registration-vericode', //  注册 发送手机号
   'register_post_password_app': '/principal/auth/user-registration-info', //  注册 登录 app
-  'register_post_password_msite': '/principal/msite/auth/user-registration-info', // 注册 登录 M站
+  'register_post_password_msite': '/principal/msite/user-registration-info', // 注册 登录 M站
   // 账号登录
   'principal_login': '/principal/auth/login-user-info',
+  'principal_login_msite': '/principal/msite/login-user-info',
   // 同步用户信息
   'sync_user': '/principal/msite/users/user-info',
   // 快速登录
@@ -36,7 +37,7 @@ const apiUrl = {
    * 课程模块
    */
   'my_course': '/course/my/subjects', //我的课程
-
+  'my_accumulate_time': '/student/learning-time', //累积学习时间
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
   'course_list': '/course/free/category-list', //课程列表
@@ -175,7 +176,16 @@ const apiUrl = {
    *  电子书阅读进度
    */
    'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
-   'get/book/progress': '/e-book/record/:bookId'                    // 获取电子书阅读进度
+   'get/book/progress': '/e-book/record/:bookId',                    // 获取电子书阅读进度
+
+  /**
+   * 微信sdk
+   */
+    'wx_signature': '/wx/signature',
+  /**
+   *  大数据活动
+   */
+  'user_annual_report': '/ict-data/new-year-opt/data'             //  获取用户的一些个人信息
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

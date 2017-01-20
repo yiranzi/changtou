@@ -8,7 +8,7 @@
         <div>
           <div class="time-box">
             <p>累计学习时间</p>
-            <p><span class="time">{{accumulatedTime}}</span>分钟</p>
+            <p><span class="time">{{parseInt(accumulateTime/60)}}</span>分钟</p>
           </div>
 
           <div class="homework-panel" v-if="isShowHomeWorkPanel">
@@ -68,6 +68,7 @@ export default {
       graduatedType: myCoursesGetters.graduatedType, //课程状态类型
       recommend: myCoursesGetters.recommend, //推荐信息
       myCourseList: myCoursesGetters.myCourseList, //我的课程列表
+      accumulateTime: myCoursesGetters.accumulateTime, //累积学习时间
       isLogin: userGetters.isLogin, //是否登录
       card: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
@@ -77,6 +78,7 @@ export default {
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
       loadUserCourses: myCoursesActions.loadUserCourses, // 下载 用户 我的课程 信息
+      loadAccumulateTime: myCoursesActions.loadAccumulateTime, //下载 累积学习时间
       getBookProgress: giftActions.getBookProgress,   // 得到上次阅读进度
       receiveGiftPackage: giftActions.receiveGiftPackage,  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
       isQualifyGiftPackage: giftActions.isQualifyGiftPackage
@@ -112,17 +114,7 @@ export default {
         return expireTimeValue.toLocaleDateString().replace(/\//g, '-')
       }
     },
-    // 累计学习时间
-    accumulatedTime () {
-      let accumulatedTime = 0
-      this.expenseRecords.map(
-        function (record) {
-          accumulatedTime = accumulatedTime + record.accumulatedTime
-          return record.accumulatedTime
-        }
-      )
-      return accumulatedTime
-    },
+
     // 如果登录并且有付费课程显示 '我的作业' 和 '毕业证书'
     isShowHomeWorkPanel () {
       if (!this.isLogin) {
@@ -145,7 +137,7 @@ export default {
       let promiseArray = []
       const me = this
       if (this.isLogin) {
-        promiseArray = [this.loadUserCourses()]
+        promiseArray = [this.loadUserCourses(), this.loadAccumulateTime()]
       } else {
         promiseArray = [this.loadDefaultCourses()]
       }
@@ -167,15 +159,14 @@ export default {
         this.isQualifyGiftPackage().then(
           function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
             if (!res.qualification) {
-              me.receiveGiftPackage().then(
-                (message) => {
-                  }).catch(function (err) {
-              if (err.message === '您已领取过新手礼包' && me.isLogin) {
-                me.isShowEBook = true
-              if (me.expenseRecords.length > 0) {
-                me.isBookPlacedDown = true
-              }
-            }
+              me.receiveGiftPackage().then((message) => {})
+              .catch(function (err) {
+                if (err.message === '您已领取过新手礼包' && me.isLogin) {
+                  me.isShowEBook = true
+                  if (me.expenseRecords.length > 0) {
+                    me.isBookPlacedDown = true
+                  }
+                }
               })
             }
           }

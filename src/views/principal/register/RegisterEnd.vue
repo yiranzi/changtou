@@ -54,11 +54,15 @@
   import {eventMap} from '../../../frame/eventConfig'
   import {statisticsMap} from '../../../statistics/statisticsMap'
   import {getSessionCache} from '../../../util/cache'
+  import {Device, platformMap} from '../../../plugin/device'
+  import {Agent} from '../../../plugin/agent'
+
   export default {
     vuex: {
       actions: {
         registerStart: userActions.registerStart,
-        registerEnd: userActions.registerEnd
+        registerEnd: userActions.registerEnd,
+        registerEndInMSite: userActions.registerEndInMSite
       }
     },
     components: {
@@ -181,36 +185,80 @@
           }
         )
       },
+
       /**
        * 点击提交
        */
       doRegister () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.REGISTER_TAP_SUBMIT, {})
-        const me = this
         this.isDisabled = true
         if (this.verifyCode()) {
-          this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
-            (user) => {
-              this.$dispatch(eventMap.REGISTER_SUCCESS, user)
-              if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
-                // 个人中心 进入注册
-                window.history.go(-2)
-              } else if (/\/entry/.test(getSessionCache('register-sources-page').sourcesPage)) {
-                // 登录页面 进入注册
-                window.history.go(-3)
-              }
-              me.isDisabled = false
-            }).catch(
-              (err) => {
-                clearInterval(me.timer)
-                me.errTip = err.message
-                me.isDisabled = false
-              }
-          )
+          if (Device.platform === platformMap.WEB && Agent.isWx) {
+            //M站
+            this.msiteLoginRegister()
+          } else {
+            //其他
+            this.commonRegister()
+          }
         } else {
-          me.errTip = '请输入正确的验证码'
-          me.isDisabled = false
+          this.errTip = '请输入正确的验证码'
+          this.isDisabled = false
         }
+      },
+
+        /**
+         * 普通
+         * 注册
+         */
+      commonRegister () {
+        const me = this
+        this.registerEnd(this.phone, this.plainPassword, this.validationCode).then(
+          function (user) {
+            me.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
+              // 个人中心 进入注册
+              window.history.go(-2)
+            } else if (/\/entry/.test(getSessionCache('register-sources-page').sourcesPage)) {
+              // 登录页面 进入注册
+              window.history.go(-3)
+            }
+          me.isDisabled = false
+          }
+        ).catch(
+          function (err) {
+            clearInterval(me.timer)
+            me.errTip = err.message
+            me.isDisabled = false
+          }
+        )
+      },
+
+      /**
+       * M站
+       * 注册
+       */
+      msiteLoginRegister () {
+        const me = this
+        const wxUserInfo = JSON.parse(window.sessionStorage.getItem('wxOauth2'))
+        this.registerEndInMSite(this.phone, this.plainPassword, this.validationCode, wxUserInfo).then(
+          function (user) {
+            me.$dispatch(eventMap.REGISTER_SUCCESS, user)
+            if (/\/setting/.test(getSessionCache('register-sources-page').sourcesPage)) {
+              // 个人中心 进入注册
+              window.history.go(-2)
+            } else if (/\/entry/.test(getSessionCache('register-sources-page').sourcesPage)) {
+              // 登录页面 进入注册
+              window.history.go(-3)
+            }
+            me.isDisabled = false
+          }
+        ).catch(
+          function (err) {
+            clearInterval(me.timer)
+            me.errTip = err.message
+            me.isDisabled = false
+          }
+        )
       },
 
       onTitlebarBack () {

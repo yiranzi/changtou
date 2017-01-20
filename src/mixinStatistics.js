@@ -5,7 +5,7 @@
 import {eventMap} from './frame/eventConfig'
 import {userId, userName} from './vuex/user/getters'
 import ictData from './statistics/ictData'
-import {Device} from './plugin/device'
+import {Device, platformMap} from './plugin/device'
 import {statisticsMap} from './statistics/statisticsMap'
 import {appVersion, getNativeVersion} from './frame/versionConfig'
 
@@ -79,15 +79,25 @@ const mixin = {
      * 设置超级属性
      */
     registerStatistics: function () {
-      ictData.register({
+      ictData.register({ //平台
         'platform': Device.platform
       })
-      ictData.register({
+      ictData.register({  //用户id
         'userId': this.userId || '00'
       })
-      ictData.register({
+      ictData.register({  //功能版本
         'jsVersion': appVersion
       })
+      ictData.register({  //设备id
+        'uuid': Device.UUID
+      })
+
+      const channel = window.sessionStorage.getItem('channel')
+
+      ictData.register({
+        'channel': Device.platform === platformMap.WEB ? channel || 'defalut' : 'app'
+      })
+
       getNativeVersion().then(nativeNum => {
         ictData.register({
           'nativeVersion': nativeNum

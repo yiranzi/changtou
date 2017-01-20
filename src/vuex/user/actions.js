@@ -107,6 +107,41 @@ export const login = ({ dispatch }, identity, plainPassword) => {
 }
 
 /**
+ * 在M站中
+ * 登录
+ * @param dispatch
+ * @param identity
+ * @param plainPassword
+ * @returns {Promise}
+ */
+export const loginInMSite = ({ dispatch }, identity, plainPassword, wxUserInfo) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('principal_login_msite'),
+          data: {
+            identity,
+            plainPassword,
+            wxUserInfo
+          }
+        }
+      ).then(
+        user => {
+          user.openId = wxUserInfo.openId
+          const zhouleUser = JSON.parse(window.sessionStorage.getItem('zhouLe'))
+          user.zhouLeId = zhouleUser && zhouleUser.openId
+          updateAppUser(dispatch, user)
+          resolve(user)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+
+/**
  * 登出
  * @param dispatch
  */
@@ -176,6 +211,7 @@ export const fastLoginStart = ({ dispatch }, phone) => {
     }
   )
 }
+
 /**
  * 快速登录
  * @param dispatch
@@ -260,6 +296,39 @@ export const registerEnd = ({ dispatch }, phone, plainPassword, validationCode) 
       }
     )
   })
+}
+
+/**
+ * 在M站中
+ * 注册2 发送  用户名 密码 验证码
+ * @param dispatch
+ * @param phone
+ * @param plainPassword
+ * @param validationCode
+ */
+export const registerEndInMSite = ({ dispatch }, phone, plainPassword, validationCode, wxUserInfo) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth(
+        {
+          url: getUrl('register_post_password_msite'),
+          data: {
+            phone,
+            plainPassword,
+            validationCode,
+            wxUserInfo
+          }
+        }
+      ).then(
+        user => {
+          updateAppUser(dispatch, user)
+          resolve(user)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
 }
 
 /**

@@ -89,6 +89,7 @@
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+  import {Device, platformMap} from '../../plugin/device'
   export default {
     vuex: {
       getters: {
@@ -99,7 +100,8 @@
         isLogin: userGetters.isLogin
       },
       actions: {
-        loadData: navigatorActions.loadNavigatorData,
+        loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
+        loadNavigatorDataInWeb: navigatorActions.loadNavigatorDataInWeb,
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
         loadNewertestReport: newertestActions.loadNewertestReport,
         receiveGiftPackage: giftActions.receiveGiftPackage,
@@ -144,7 +146,15 @@
     },
     ready () {
       const me = this
-      this.loadData().then(
+      let loadData = null
+
+      if (Device.platform === platformMap.WEB) {
+        loadData = this.loadNavigatorDataInWeb
+      } else {
+        loadData = this.loadNavigatorDataInApp
+      }
+
+      loadData().then(
         function () {
           // 设置滚动条高度
           me.setScrollerHeight()
@@ -154,6 +164,7 @@
         }
       )
     },
+
     computed: {
       banners () {
         let banners = this.originBanners
@@ -161,13 +172,14 @@
             banner => {
             return {
               img: banner.pic || '/static/image/subject/banner/banner.png',
-              url: (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId
+              url: banner.type === 'O' ? banner.url : (banner.url ? banner.url : (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId)
             }
           }
       )
         return newBanners
       }
     },
+
     methods: {
       /**
        * 设置滚动条高度
@@ -190,6 +202,10 @@
         })
         }, 150)
       },
+
+      /**
+       * 跳转到课程详情页
+       */
       goToCourseDetail (subject, index) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           type: subject.type,
@@ -199,6 +215,10 @@
         })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
+
+      /**
+       * 跳转到推荐课程
+       */
       goToRecommendDetail (subject, index) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
           type: 'P',
@@ -207,6 +227,10 @@
         })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },
+
+      /**
+       * 跳转到全部课程列表
+       */
       onListTap (type) {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_TEXT_TAP, {
           titile: '全部课程',
@@ -214,7 +238,10 @@
         })
         this.$route.router.go('/totalList')
       },
-      //跳转到理财揭秘起始页
+
+      /**
+       * 跳转到理财揭秘起始页
+       */
       goToNewertestStart () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '新手测试'
@@ -230,14 +257,20 @@
           me.showAlert('信息加载失败，请重试！')
         })
       },
-      //跳转到院生访谈列表页面
+
+      /**
+       * 跳转到院生访谈列表页面
+       */
       goToInterviewList () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
       },
-      //跳转到每日一题
+
+      /**
+       * 跳转到每日一题
+       */
       goToDailyQuestion () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '每日一题'
@@ -265,14 +298,22 @@
         })
         this.$route.router.go('/strategy/professional/intro')
       },
+
+        /**
+         * 显示新手礼包浮层
+         */
       showPackage () {
         this.showMask({
           component: 'giftPackage/GiftMask.vue',
           hideOnMaskTap: true,
           callbackName: 'gotoGiftPackageDetails',
           callbackFn: this.gotoGiftPackageDetails.bind(this)
-      })
+        })
       },
+
+        /**
+         * 跳转到新手礼包详情
+         */
       gotoGiftPackageDetails () {
         const me = this
         me.hideMask()

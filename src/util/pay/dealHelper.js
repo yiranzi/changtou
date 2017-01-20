@@ -253,7 +253,8 @@ const getPostponeOrder = (type, id) => {
  * @param channel
  * @returns {Promise}
  */
-const pay = ({trade, channel, isSubscriber}) => {
+const pay = ({trade, channel}) => {
+  const isSubscriber = window.sessionStorage.getItem('subscriber')
   return new Promise(
     (resolve, reject) => {
       let pay
@@ -288,7 +289,8 @@ const pay = ({trade, channel, isSubscriber}) => {
             //window.alert('WEB')
             if (Agent.isWx) {
               //window.alert('isWx')
-              if (isSubscriber) {
+              if (isSubscriber === 'Y') {
+                //window.alert('isSubscriber')
                 pay = WeChatQRCodePay
               } else {
                 pay = WeChatBrowserPay

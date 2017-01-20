@@ -320,6 +320,8 @@
        * 页面隐藏时
        */
       deactivate ({to, next}) {
+        this.shareConfig = null
+        this.onViewChange()
         // 如果是跳转到横屏页面, 不打断音频
         if (to.path && to.path.indexOf('landscape/') > -1) {
           next()
@@ -336,6 +338,18 @@
     },
 
     watch: {
+      /**
+       * 当前课程详情加载成功
+       */
+      'currSubject': function (newSubject) {
+        this.shareConfig = {
+          title: newSubject.title,
+          desc: newSubject.subtitle,
+          link: window.location.href,
+          imgUrl: newSubject.pic
+        }
+        this.onViewChange()
+      },
       'currTabIndex': function () {
         this.$nextTick(() => {
             this.$refs.scroller.reset({
@@ -428,6 +442,10 @@
           this.scrollerHeight = (window.document.body.offsetHeight - this.$els.bottomBtn.offsetHeight) + 'px'
           setTimeout(this.resetScroller, 300)
         })
+      },
+
+      'currRecord': function (record) {
+        this.currChapterRecord = record.studentChapter
       }
     },
 
@@ -609,6 +627,7 @@
             err => console.warn(err)
         )
       },
+
       /**
        * 重置 作业浮层
        */
@@ -678,8 +697,9 @@
 
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < this.currSubject.lessonList.length) {
-            this.currUseabLessonArr.push(this.currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
+          const currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === this.subjectId)
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length) {
+            this.currUseabLessonArr.push(currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
           }
         }
 
@@ -1024,10 +1044,14 @@
        * @params chapterId
        */
       canChapterUpload (selectedChapterId) {
-        if (!this.currChapterRecord) {
-          // 服务器上没有进度进入,直接上传
+        if (!this.currRecord) {
+          //未购买课程 不上传
+          return false
+        } else if (!this.currChapterRecord) {
+          //已购买  没有进度,直接上传
           return true
         } else {
+          //已购买 有进度
           //chapterId 为当前点击的chapterId
           const selectedLessonId = this.selectedLesson.lessonId
 
