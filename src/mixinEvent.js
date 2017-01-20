@@ -176,9 +176,9 @@ const mixin = {
      */
     hideSplashscreen: function () {
       //if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
-        if (window.navigator.splashscreen) {
-          window.navigator.splashscreen.hide()
-        }
+      if (window.navigator.splashscreen) {
+        window.navigator.splashscreen.hide()
+      }
       //}
     },
 

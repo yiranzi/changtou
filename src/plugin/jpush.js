@@ -25,7 +25,7 @@ const setAlias = (alias) => {
  * 监听接收消息
  * @param handler
  */
-const addReceiveHandler = function (handler) {
+const addReceiveHandler = (handler) => {
   document.addEventListener('jpush.receiveNotification', handler, false)
   document.addEventListener('jpush.openNotification', handler, false)
 }
