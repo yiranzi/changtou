@@ -74,7 +74,7 @@
   import {messageActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {platformMap, Device} from '../../plugin/device'
-
+  import {Jpush} from'./plugin/jpush'
   export default {
     vuex: {
       actions: {
@@ -86,14 +86,9 @@
     },
 
     route: {
-      data (transition) {
+      data () {
         this.loadMsgArr().then(
-          function () {
-            transition.next()
-          },
-          function () {
-            transition.next()
-          }
+          Jpush.setIconBadgeNumber(0)
         )
       }
     },
@@ -122,14 +117,12 @@
         setTimeout(function () {
           me.$nextTick(() => {
             me.$refs.scroller.reset({
-//              top: 0
+              top: 0
             })
           })
         }, 1500)
       }
-//      'tip': function (newTip) {
-//        this.tip = newTip
-//      }
+
     },
     methods: {
       onTapTip () {

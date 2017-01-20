@@ -5,7 +5,7 @@
  */
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
-import {jpushInit, jpushSetAlias, jpushAddReceiveHandler, jpushOpenNotification, jpushSetRouter} from './vuex/jpush/actions'
+import {Jpush} from'./plugin/jpush'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
@@ -21,11 +21,6 @@ const mixin = {
       loadAllFreeRecords,
       loadAllExpenseRecords,
       resetRecords,
-      jpushInit,
-      jpushSetAlias,
-      jpushAddReceiveHandler,
-      jpushOpenNotification,
-      jpushSetRouter,
       getDiplomaList,
       getHomeworkList,
       syncUser
@@ -38,13 +33,7 @@ const mixin = {
   },
 
   watch: {
-    //'isLogin': function (currLoginStatus, preloginStatus) {
-    //  if (currLoginStatus) {
-    //    this.setAlias(this.userId)
-    //  } else {
-    //    this.setAlias('00')
-    //  }
-    //}
+
   },
 
   events: {
@@ -55,16 +44,15 @@ const mixin = {
       console.info('APP_START')
 
       // 设置推送配置
-      this.jpushInit()
+      Jpush.init()
       // 默认用户 设置成'00'
-      this.jpushSetAlias('00')
-      //传入路由对象用于跳转页面
-      this.jpushSetRouter(this.$route.router)
-
-      // 增加推送消息接收处理
-      this.jpushAddReceiveHandler(this.onReceiveNotification)
-      // 添加点击通知事件
-      this.jpushOpenNotification()
+      Jpush.setAlias('00')
+      // 传入路由对象用于跳转页面
+      Jpush.setRouter(this.$route.router)
+      // 打开app后,设置icon上的数字为0
+      Jpush.setIconBadgeNumber(0)
+      // 添加收到推送的处理
+      Jpush.addReceiveHandler(this.onReceiveNotification.bind(this))
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
@@ -152,15 +140,17 @@ const mixin = {
       // 插入访问记录
       ictData.insertUvRecord(user)
 
+      // 设置jpush用户关联
+      Jpush.setAlias(user.userId)
+      Jpush.setIconBadgeNumber(user.newMessageNum)
+
       let tasks = []
       // 获取课程进度
       tasks.push(this.loadAllFreeRecords())
       tasks.push(this.loadAllExpenseRecords())
-      // 设置jpush用户关联
-      tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
       // 获取毕业证列表
       tasks.push(this.getDiplomaList().then(this.onGraduationDiplomaLoaded))
-
+      // 获取作业目录
       tasks.push(this.getHomeworkList())
 
       return Promise.all(tasks).then(
@@ -179,7 +169,8 @@ const mixin = {
       // 清理课程进度
       this.resetRecords()
       // 设置推送关联
-      this.jpushSetAlias('00')
+      Jpush.setAlias('00')
+      Jpush.setIconBadgeNumber(0)
     },
 
     /**
@@ -199,6 +190,17 @@ const mixin = {
     onGraduationDiplomaLoaded: function () {
       if (this.newShowDiploma) {
         this.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
+      }
+    },
+
+    /**
+     * 跳转到指定页面
+     * @param event
+     */
+    onReceiveNotification: function(event) {
+      if (event.extras['type'] === 'IN_APP') {
+        let desurl = event.extras['desurl']
+        this.$route.router.go(desurl)
       }
     }
   }

@@ -29,46 +29,45 @@ const setAlias = (alias) => {
  */
 const addReceiveHandler = function (handler) {
   document.addEventListener('jpush.receiveNotification', handler, false)
+  document.addEventListener('jpush.openNotification', handler, false)
 }
 
 /**
  * 设置应用显示的数字
  */
-export const setIconBadgeNumber = (num) => {
+const setIconBadgeNumber = (num) => {
   if (window.plugins && Device.platform === platformMap.IOS) {
     window.plugins.jPushPlugin.setApplicationIconBadgeNumber(num)
   }
 }
 
-/**
- *  打开通知消息
- */
+const Jpush = {
+  get init () {
+    return init
+  },
 
-//- 在你需要接收通知的的 js 文件中加入:
-export const openNotification = () => {
-  document.addEventListener('jpush.openNotification', onOpenNotification, false)
-}
+  get setAlias () {
+    return setAlias
+  },
 
-/**
- * 设置路由
- * @param router
- */
-const setRouter = (router) => {
-  _router = router
-}
+  get addReceiveHandler () {
+    return addReceiveHandler
+  },
 
-const onOpenNotification = (event) => {
-  if (event.extras['type'] === 'IN_APP') {
-    let desurl = event.extras['desurl']
-    _router.router.go(desurl)
+  get setIconBadgeNumber () {
+    return setIconBadgeNumber
+  },
+
+  get openNotification () {
+    return openNotification
+  },
+
+  get setRouter () {
+    return setRouter
   }
 }
 
-export default {
-  init,
-  setAlias,
-  addReceiveHandler,
-  openNotification,
-  setRouter,
-  setIconBadgeNumber
+
+export {
+  Jpush
 }
