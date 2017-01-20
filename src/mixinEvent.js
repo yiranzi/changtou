@@ -44,12 +44,17 @@ const mixin = {
       console.info('APP_START')
 
       // 设置推送配置
+      window.alert(1)
+      console.log(Jpush.init)
       Jpush.init()
       // 默认用户 设置成'00'
+      window.alert(2)
       Jpush.setAlias('00')
       // 打开app后,设置icon上的数字为0
+      window.alert(3)
       Jpush.setIconBadgeNumber(0)
       // 添加收到推送的处理
+      window.alert(4)
       Jpush.addReceiveHandler(this.onReceiveNotification.bind(this))
 
       // 同步用户信息
@@ -139,8 +144,11 @@ const mixin = {
       ictData.insertUvRecord(user)
 
       // 设置jpush用户关联
+      window.alert(6)
       Jpush.setAlias(user.userId)
+      window.alert(7)
       Jpush.setIconBadgeNumber(user.newMessageNum)
+      window.alert(8)
 
       let tasks = []
       // 获取课程进度
