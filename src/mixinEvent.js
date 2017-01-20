@@ -5,7 +5,7 @@
  */
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
-import {Jpush} from'./plugin/jpush'
+import {Jpush} from './plugin/jpush'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
@@ -197,7 +197,7 @@ const mixin = {
      * 跳转到指定页面
      * @param event
      */
-    onReceiveNotification: function(event) {
+    onReceiveNotification: function (event) {
       if (event.extras['type'] === 'IN_APP') {
         let desurl = event.extras['desurl']
         this.$route.router.go(desurl)

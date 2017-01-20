@@ -74,7 +74,7 @@
   import {messageActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {platformMap, Device} from '../../plugin/device'
-  import {Jpush} from'./plugin/jpush'
+  import {Jpush} from '../../plugin/jpush'
   export default {
     vuex: {
       actions: {

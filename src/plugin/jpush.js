@@ -3,8 +3,6 @@
  */
 import {Device, platformMap} from './device'
 
-let _router = {}
-
 /**
  *初始化
  */
@@ -56,17 +54,8 @@ const Jpush = {
 
   get setIconBadgeNumber () {
     return setIconBadgeNumber
-  },
-
-  get openNotification () {
-    return openNotification
-  },
-
-  get setRouter () {
-    return setRouter
   }
 }
-
 
 export {
   Jpush
