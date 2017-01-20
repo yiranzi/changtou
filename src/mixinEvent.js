@@ -47,8 +47,6 @@ const mixin = {
       Jpush.init()
       // 默认用户 设置成'00'
       Jpush.setAlias('00')
-      // 传入路由对象用于跳转页面
-      Jpush.setRouter(this.$route.router)
       // 打开app后,设置icon上的数字为0
       Jpush.setIconBadgeNumber(0)
       // 添加收到推送的处理

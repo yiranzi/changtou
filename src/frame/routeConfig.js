@@ -283,19 +283,19 @@ export function configRouter (router) {
     /**
      * 新手攻略 页面一 (提示: 若用户已领取攻略则直接跳转页面二)
      */
-    'newerStrategy/page/1': {
+    '/newerStrategy/page/1': {
       component: require('../views/newerStrategy/newerStrategy1.vue')
     },
     /**
      * 新手攻略 页面二
      */
-    'newerStrategy/page/2': {
+    '/newerStrategy/page/2': {
       component: require('../views/newerStrategy/newerStrategy2.vue')
     },
     /**
      * 大数据 活动
      */
-    'annual/report': {
+    '/annual/report': {
       component: require('../views/annualReport/AnnualReport.vue')
     }
   })
