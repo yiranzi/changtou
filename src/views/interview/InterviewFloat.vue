@@ -80,7 +80,7 @@
         margin: 0 0.35rem;
         text-align: center;
       }
-      .wechat,.timeline{
+      .wechat,.timeline, .qq, .weibo{
         display: inline-block;
         width: 2.5rem;
         height: 2.5rem;
@@ -90,6 +90,12 @@
       }
       .timeline{
         background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
+      }
+      .qq{
+        background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
+      }
+      .weibo{
+        background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
       }
       .share-name{
         width: 100%;
