@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="eng">
+  <head>
+    <meta content="70076401-4f40-4b6a-987e-5cfa23f55520" name="dtb:uid"/>
+    <meta content="4" name="dtb:depth"/>
+    <meta content="calibre (2.76.0)" name="dtb:generator"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Unknown</text>
+  </docTitle>
+  <navMap>
+    <navPoint class="chapter" id="num_1" playOrder="1">
+      <navLabel>
+        <text>1 认识一个好老师</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387017"/>
+      <navPoint class="chapter" id="num_2" playOrder="2">
+        <navLabel>
+          <text>1.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387018"/>
+        <navPoint class="chapter" id="num_3" playOrder="3">
+          <navLabel>
+            <text>1.1.1 投资的想法被妈妈打击了</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387019"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_4" playOrder="4">
+          <navLabel>
+            <text>1.1.2 新老师是个怪老头</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387020"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_5" playOrder="5">
+          <navLabel>
+            <text>1.1.3 股票是什么</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387021"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_6" playOrder="6">
+          <navLabel>
+            <text>1.1.4 股票为什么会上涨</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387022"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_7" playOrder="7">
+          <navLabel>
+            <text>1.1.5 买股票=买打折商品</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387023"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_8" playOrder="8">
+      <navLabel>
+        <text>2 了解是投资的基础</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387024"/>
+      <navPoint class="chapter" id="num_9" playOrder="9">
+        <navLabel>
+          <text>2.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387025"/>
+        <navPoint class="chapter" id="num_10" playOrder="10">
+          <navLabel>
+            <text>2.1.1 一只竹蜻蜓值多少钱</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387026"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_11" playOrder="11">
+          <navLabel>
+            <text>2.1.2 了解一家公司的途径有哪些</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387027"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_12" playOrder="12">
+          <navLabel>
+            <text>2.1.3 初识三表</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387028"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_13" playOrder="13">
+          <navLabel>
+            <text>2.1.4 神奇的耳机</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387029"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_14" playOrder="14">
+          <navLabel>
+            <text>2.1.5 志同道合的小伙伴来啦</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387030"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_15" playOrder="15">
+      <navLabel>
+        <text>3 赚多赚少大不同</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387031"/>
+      <navPoint class="chapter" id="num_16" playOrder="16">
+        <navLabel>
+          <text>3.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387032"/>
+        <navPoint class="chapter" id="num_17" playOrder="17">
+          <navLabel>
+            <text>3.1.1初识综合损益表</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387033"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_18" playOrder="18">
+          <navLabel>
+            <text>3.1.2卖一把小提琴赚多少钱</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387034"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_19" playOrder="19">
+          <navLabel>
+            <text>3.1.3卖一个铜锣烧赚多少钱</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387035"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_20" playOrder="20">
+          <navLabel>
+            <text>3.1.4哪个更赚钱</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387036"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_21" playOrder="21">
+          <navLabel>
+            <text>3.1.5神奇的毛利率</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387037"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_22" playOrder="22">
+          <navLabel>
+            <text>3.1.6人见人爱的公司信息分析机</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387038"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_23" playOrder="23">
+          <navLabel>
+            <text>3.1.7时间的力量</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387039"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_24" playOrder="24">
+      <navLabel>
+        <text>4 资产负债大盘点</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387040"/>
+      <navPoint class="chapter" id="num_25" playOrder="25">
+        <navLabel>
+          <text>4.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387041"/>
+        <navPoint class="chapter" id="num_26" playOrder="26">
+          <navLabel>
+            <text>4.1.1和资产负债表的第一次亲密接触</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387042"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_27" playOrder="27">
+          <navLabel>
+            <text>4.1.2解读资产</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387043"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_28" playOrder="28">
+          <navLabel>
+            <text>4.1.3解读负债</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387044"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_29" playOrder="29">
+          <navLabel>
+            <text>4.1.4全家齐上阵</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387045"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_30" playOrder="30">
+          <navLabel>
+            <text>4.1.5来自巴菲特的分析</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387046"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_31" playOrder="31">
+          <navLabel>
+            <text>4.1.6怎么办，大雄家破产了</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387047"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_32" playOrder="32">
+          <navLabel>
+            <text>4.1.7相约星期三</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387048"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_33" playOrder="33">
+      <navLabel>
+        <text>5 钱从哪儿来，又到哪去</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387049"/>
+      <navPoint class="chapter" id="num_34" playOrder="34">
+        <navLabel>
+          <text>5.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387050"/>
+        <navPoint class="chapter" id="num_35" playOrder="35">
+          <navLabel>
+            <text>5.1.1烦人的数学题</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387051"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_36" playOrder="36">
+          <navLabel>
+            <text>5.1.2钱从哪里来</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387052"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_37" playOrder="37">
+          <navLabel>
+            <text>5.1.3钱到哪儿去啦</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387053"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_38" playOrder="38">
+          <navLabel>
+            <text>5.1.4现金流的重要性</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387054"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint class="chapter" id="num_39" playOrder="39">
+      <navLabel>
+        <text>6 投资的路才刚刚开始</text>
+      </navLabel>
+      <content src="index.html#id_Toc375387055"/>
+      <navPoint class="chapter" id="num_40" playOrder="40">
+        <navLabel>
+          <text>6.1导读</text>
+        </navLabel>
+        <content src="index.html#id_Toc375387056"/>
+        <navPoint class="chapter" id="num_41" playOrder="41">
+          <navLabel>
+            <text>6.1.1巴菲特的考试</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387057"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_42" playOrder="42">
+          <navLabel>
+            <text>6.1.2爱上读年报</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387058"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_43" playOrder="43">
+          <navLabel>
+            <text>6.1.3最后一课：学会独立思考</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387059"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_44" playOrder="44">
+          <navLabel>
+            <text>6.1.4原来如此！</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387060"/>
+        </navPoint>
+        <navPoint class="chapter" id="num_45" playOrder="45">
+          <navLabel>
+            <text>6.1.5坚定信念向前走！</text>
+          </navLabel>
+          <content src="index.html#id_Toc375387061"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>

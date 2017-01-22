@@ -1,0 +1,166 @@
+.calibre {
+    display: block;
+    font-size: 1.125em;
+    line-height: 1.2;
+    padding: 0;
+    margin: 0 5pt
+    }
+.calibre1 {
+    padding: 0;
+    margin: 0
+    }
+.calibre2 {
+    display: list-item;
+    padding: 0;
+    margin: 0
+    }
+.p-p {
+    color: #008080;
+    display: block;
+    font-family: Calibri, sans-serif;
+    font-size: 1.62963em;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+    padding: 0;
+    margin: 0.1665in 0 0
+    }
+.p-p1 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 1.25926em;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: justify;
+    padding: 0;
+    margin: 0
+    }
+.p-p2 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 1.25926em;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+    padding: 0;
+    margin: 0
+    }
+.p-p3 {
+    display: block;
+    font-family: Calibri, sans-serif;
+    font-size: 0.88889em;
+    line-height: 150%;
+    text-align: justify;
+    text-indent: 0.2917in;
+    padding: 0;
+    margin: 0
+    }
+.p-p4 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 1.25926em;
+    font-weight: bold;
+    line-height: 200%;
+    text-align: justify;
+    padding: 0;
+    margin: 0.2362in 0 0.2291in
+    }
+.p-p5 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 1.25926em;
+    font-weight: bold;
+    line-height: 173%;
+    text-align: justify;
+    padding: 0;
+    margin: 0.1807in 0
+    }
+.p-p6 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    line-height: 150%;
+    text-align: left;
+    text-indent: 0.2917in;
+    padding: 0;
+    margin: 0
+    }
+.p-p7 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    text-align: left;
+    text-indent: 0.2917in;
+    padding: 0;
+    margin: 0
+    }
+.p-p8 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    text-align: justify;
+    padding: 0;
+    margin: 0
+    }
+.p-p9 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    line-height: 150%;
+    text-align: justify;
+    text-indent: 0.2917in;
+    padding: 0;
+    margin: 0
+    }
+.p-p10 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    line-height: 150%;
+    text-align: justify;
+    padding: 0;
+    margin: 0
+    }
+.p-p11 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    line-height: 150%;
+    text-align: justify;
+    text-indent: 0;
+    padding: 0;
+    margin: 0 0 0 0.7291in
+    }
+.p-p12 {
+    display: block;
+    font-family: 宋体, sans-serif;
+    font-size: 0.88889em;
+    text-align: justify;
+    text-indent: 0.2917in;
+    padding: 0;
+    margin: 0
+    }
+.s-t {
+    color: #000;
+    font-family: 黑体, SimHei, monospace;
+    font-size: 0.90909em;
+    font-weight: normal;
+    line-height: 1.2;
+    padding: 0;
+    margin: 0
+    }
+.s-t1 {
+    font-family: 宋体, sans-serif;
+    padding: 0;
+    margin: 0
+    }
+.ww8num1_ {
+    display: block;
+    list-style-type: decimal;
+    margin-bottom: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    padding-top: 0
+    }
