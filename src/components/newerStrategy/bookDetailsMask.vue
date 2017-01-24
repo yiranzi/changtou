@@ -1,16 +1,24 @@
 <template>
-  <div v-touch:tap="closeMask">
-    <img src="../../../static/image/newerStrategy/shareFloatMask.png" style="height: 180%; width: 180%; margin: auto auto; display: block; margin-top: 10%; margin-left:-40%;"/>
+  <div v-touch:tap="closeMask" class="guide-book">
+    <img src="../../../static/image/newerStrategy/shareFloatMask.png"/>
   </div>
 </template>
-<style>
-</style>
 <script>
-   export default {
-     methods: {
-       closeMask () {
-         this.$dispatch('closeMask')
-      }
+ export default {
+   methods: {
+     closeMask () {
+       this.$dispatch('closeMask')
+     }
    }
-}
+ }
 </script>
+<style lang="less">
+.guide-book{
+  width: 632/40rem;
+  height: 489/40rem;
+  img{
+    width: 632/40rem;
+    height: 489/40rem;
+  }
+}
+</style>

@@ -7,16 +7,19 @@
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
                 :show-desc-mask="false" dots-class="dots-class"></swiper>
-        <div class="financial-interview">
-          <span v-touch:tap="goToNewertestStart">
-            <i class="finan-icon finan-icon-expose"></i>
-            理财揭秘
-          </span>
-          <i class="vertical-line-yan"></i>
-          <span v-touch:tap="goToInterviewList">
-            <i class="finan-icon finan-icon-story"></i>
-            院生故事
-          </span>
+        <div class="under-banner">
+          <div v-touch:tap="goToNewertestStart" class="under-banner-item">
+            <i class="under-banner-icon newer-test "></i>
+            <span class="under-banner-title">理财揭秘</span>
+          </div>
+          <div v-touch:tap="goToNewerGuide" class="under-banner-item">
+            <i class="under-banner-icon newer-guide"></i>
+            <span class="under-banner-title">新手指南</span>
+          </div>
+          <div v-touch:tap="goToInterviewList" class="under-banner-item">
+            <i class="under-banner-icon interview"></i>
+            <span class="under-banner-title">院生故事</span>
+          </div>
         </div>
         <div class="expenselist-area popularSpe">
           <p class="area-label">
@@ -258,6 +261,15 @@
         })
       },
 
+      goToNewerGuide () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '新手指南'
+        })
+        // (提示: 若用户已领取攻略跳转到present页)
+        this.$route.router.go('/guide/test')
+//        this.$route.router.go('/guide/present')
+      },
+
       /**
        * 跳转到院生访谈列表页面
        */
@@ -424,24 +436,7 @@
         -webkit-transform: rotate(45deg);
       }
     }
-    /*新增理财揭秘，院生访谈的样式*/
-    .financial-interview{
-      width: 100%;
-      line-height: 3.5rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #fff;
-      border-bottom: 0.5rem #f0eff5 solid;
-      font-size: 0.75rem;
-      color: #444;
 
-      span{
-        width: 50%;
-        text-align: center;
-      }
-    }
 
     .expenselistSpe{
       border-bottom: .4rem solid #f0eff5;
@@ -565,7 +560,7 @@
       font-size: .75rem;
       color:#444;
       line-height: 1.2rem;
-      background: #f2f2f2 url("../../assets/styles/image/meiriyiti.png")  no-repeat 7% center / 20% ;
+      background: #f2f2f2 url("../../assets/styles/image/navigator/daily-question.png")  no-repeat 7% center / 20% ;
       position: relative;
     }
 
@@ -577,34 +572,52 @@
     .daily-anpic-container {
       width: 1.725rem;
       height: 1.05rem;
-      background: url("../../assets/styles/image/feiji.png") no-repeat  bottom  right / contain;
+      background: url("../../assets/styles/image/navigator/plane.png") no-repeat  bottom  right / contain;
       display: inline-block;
       position: absolute;
       left: 86%;
       top: 40%;
     }
 
-    .finan-icon{
+    .under-banner{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      border-bottom: 0.5rem #f0eff5 solid;
+      font-size: 0.75rem;
+      color: #444;
+
+      .under-banner-item{
+        text-align: center;
+        padding: 34/40rem 0 26/40rem;
+        box-sizing: border-box;
+        flex: 1;
+      }
+    }
+    .under-banner-icon{
       width: 1.5rem;
       height: 1.5rem;
       vertical-align: middle;
-      display: inline-block;
+      display: block;
+      margin: 0 auto 0.35rem;
     }
 
-    .finan-icon.finan-icon-expose{
-      background: url("../../assets/styles/image/xinshouceshi.png") no-repeat bottom right / contain;
+    .under-banner-icon.newer-test{
+      background: url("../../assets/styles/image/navigator/newer-test.png") no-repeat center center / contain;
     }
 
-    .finan-icon.finan-icon-story{
-      background: url("../../assets/styles/image/fangtan.png") no-repeat center right / contain;
+    .under-banner-icon.interview{
+      background: url("../../assets/styles/image/navigator/interview.png") no-repeat center center / contain;
     }
 
-    .vertical-line-yan{
-      display: inline-block;
-      width:.08rem;
-      height:1.5rem;
-      background: #eee;
+    .under-banner-icon.newer-guide{
+      background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
     }
+
+
   }
 
 </style>

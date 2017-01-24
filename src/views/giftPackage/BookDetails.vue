@@ -6,7 +6,7 @@
         <img class="share-pic" src='../../assets/styles/image/share.png'>
       </div>
     </ict-titlebar>
-    <div class="app-download-mask" v-touch:tap="gotoDownloadApp" v-if="!isPlatformMApp" v-el:app-download></div>
+    <div class="app-download-mask" v-touch:tap="gotoDownloadApp" v-if="!isInApp" v-el:app-download></div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div class="set-height" style="height: 100%;">
       <div class="book-info-container">
@@ -19,7 +19,7 @@
         <div class="strategy-receive-btn" v-if="this.bookId === '2' ? true : false" v-touch:tap="showActionSharePanel">通知你的小伙伴们一起领取吧</div>
       </div>
       <div class="book-chapter">
-        <p class="book-chapter-title book-chapter-item">目录</p>
+        <p class="book-chapter-item book-chapter-title">目录</p>
         <p class="book-chapter-item" v-for="bookItem in bookTitleList" v-touch:tap="gotoChapterDetails($index)"
         >第{{$index+1}}章  {{bookItem}}</p>
       </div>
@@ -32,6 +32,9 @@
 
 <style lang="less">
     .book-info {
+      p{
+        margin: 0;
+      }
       background: white !important;
       .share-pic {
         width: 1.3rem;
@@ -39,15 +42,18 @@
         margin-top: 0.65rem;
       }
       .app-download-mask {
-        background: url("../../../static/image/newerStrategy/appdownload.png") 0 0 no-repeat/90%;
+        background: url("../../../static/image/newerStrategy/appdownload.png") 0 0 no-repeat;
+        background-size: 100%;
         width: 18.75rem;
         height: 5.5rem;
       }
       .set-height {
         padding-bottom: 1.4rem;
         .book-info-container {
-          margin-top: 1.75rem;
+          padding-top: 1.75rem;
+          box-sizing: border-box;
           text-align: center;
+          position: relative;
           .book-avatar {
             width: 5.75rem;
             height: 7.5rem;
@@ -58,20 +64,21 @@
             margin-top: 1.25rem;
           }
           .book-status {
-            width: 3rem;
+            width: 2rem;
             height: .8rem;
             font-size: 60%;
             color: #00b0f0;
             border: 1px solid #00b0f0;
             position: absolute;
-            top: 8rem;
-            left: 12.2rem;
+            top: 10.5rem;
+            left: 12.5rem;
             line-height: .8rem;
           }
           .book-intro {
             margin: 1rem 1.25rem 1rem 1.25rem;
             color: #888;
             font-size: .65rem;
+            text-align: left;
           }
           .strategy-receive-btn {
             width: 13rem;
@@ -106,19 +113,20 @@
         .book-chapter {
           background: white !important;
           border-top: .5rem solid #f0eff5;
-          .book-chapter-title {
-            background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 43% center no-repeat /4%;
-            text-align: center;
-            font-size: .75rem;
-            color: #00b0f0;
-            height: 2.2rem;
-            line-height: 2.2rem;
-          }
           .book-chapter-item {
             border-bottom: 1px solid #f0eff5;
             font-size: .7rem;
             color: #666;
             padding-left: 1.25rem;
+            height: 2.2rem;
+            line-height: 2.2rem;
+          }
+          .book-chapter-title {
+            background: url("../../assets/styles/image/giftPackage/bookChapterIndex.png") 46% center no-repeat;
+            background-size: 0.75rem 0.7rem;
+            text-align: center;
+            font-size: .75rem;
+            color: #00b0f0;
             height: 2.2rem;
             line-height: 2.2rem;
           }
@@ -192,7 +200,7 @@ export default {
         return '连载中'
       }
     },
-    isPlatformMApp () {
+    isInApp () {
       // 若当前平台为 m 站 则显示 “提示下载图”
       return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     }
@@ -270,7 +278,7 @@ export default {
         // 设置滚动条高度为 页面高度-titlebar高度
         const me = this
         const {titlebar, appDownload} = this.$els
-        if (!this.isPlatformMApp) {
+        if (!this.isInApp) {
           me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight - appDownload.offsetHeight) + 'px'
         } else {
           me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'

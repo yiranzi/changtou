@@ -281,22 +281,36 @@ export function configRouter (router) {
       component: require('../views/questionnaire/questionDetail1.vue')
     },
     /**
-     * 新手攻略 页面一 (提示: 若用户已领取攻略则直接跳转页面二)
+     * 新手攻略 页面一
      */
-    '/newerStrategy/page/1': {
-      component: require('../views/newerStrategy/newerStrategy1.vue')
+    '/guide/test': {
+      component: require('../views/newerGuide/GuideTest.vue')
     },
     /**
      * 新手攻略 页面二
      */
-    '/newerStrategy/page/2': {
-      component: require('../views/newerStrategy/newerStrategy2.vue')
+    '/guide/present': {
+      component: require('../views/newerGuide/GuidePresent.vue')
     },
     /**
      * 大数据 活动
      */
     '/annual/report': {
       component: require('../views/annualReport/AnnualReport.vue')
+    },
+
+    /**
+     * 电子书 简介页
+     */
+    'ebook/detail/:bookId': {
+      component: require('../views/ebook/Detail.vue')
+    },
+
+    /**
+     * 电子书 阅读页
+     */
+    '/ebook/chapter/:bookId/:chapterId': {
+      component: require('../views/ebook/Chapter.vue')
     }
   })
 

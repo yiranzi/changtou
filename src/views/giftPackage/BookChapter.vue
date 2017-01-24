@@ -2,28 +2,28 @@
   <div class="chapter-detail-container">
     <ict-titlebar v-el:titlebar :left-options="leftOptions">阅读材料</ict-titlebar>
     <scroller :lock-x="true" v-ref:scroller :height.sync="scrollerHeight" class="scroller-container" :bounce='false' :lock-y="true">
-    <div class="swiper-container">
-      <swiper height="300px" :index.sync='lastReadPage' @on-index-change="bookChapterIndexChange" :duration=100>
-        <swiper-item class="black" v-for="chapter in currBookChapter">
-          <div class="book-use-top">
-            <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
-          <div v-if="book_index === 0 ? true : false" class="chapter-info-container">  {{{chapter.index}}} {{{chapter.title}}}  </div>
-          </div>
-            <div class="book-content">
-              {{{chapter.content}}}
+      <div class="swiper-container">
+        <swiper height="300px" :index.sync='lastReadPage' @on-index-change="bookChapterIndexChange" :duration=100>
+          <swiper-item class="black" v-for="chapter in currBookChapter">
+            <div class="book-use-top">
+              <p class="chapter-line">{{{chapter.index}}} {{{chapter.title}}}</p>
+            <div v-if="book_index === 0 ? true : false" class="chapter-info-container">  {{{chapter.index}}} {{{chapter.title}}}  </div>
             </div>
-        </swiper-item>
-      </swiper>
-    </div>
-    <div class="toggle-index-btn" v-touch:tap="gotoSetMask">
-      <img src="../../assets/styles/image/giftPackage/indexBtn.png" width="3.25rem" height="3.15rem" />
-    </div>
-    <div id="mask" v-touch:tap="gotoSetMask" v-if="showIndexMask">
-      <book-mask :book-title-list-sub="bookTitleList"></book-mask>
-    </div>
-    <p style="text-align:'right';" class="book-paganition">
-      {{book_index+1}} / {{currBookChapter.length}}
-    </p>
+              <div class="book-content">
+                {{{chapter.content}}}
+              </div>
+          </swiper-item>
+        </swiper>
+      </div>
+      <div class="toggle-index-btn" v-touch:tap="gotoSetMask">
+        <img src="../../assets/styles/image/giftPackage/indexBtn.png" width="3.25rem" height="3.15rem" />
+      </div>
+      <div id="mask" v-touch:tap="gotoSetMask" v-if="showIndexMask">
+        <book-mask :book-title-list-sub="bookTitleList"></book-mask>
+      </div>
+      <p style="text-align:'right';" class="book-paganition">
+        {{book_index+1}} / {{currBookChapter.length}}
+      </p>
     </scroller>
   </div>
 </template>

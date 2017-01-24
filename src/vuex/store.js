@@ -28,6 +28,7 @@ import graduationDiploma from './graduationDiploma/store'
 import giftPackage from './giftPackage/store'
 import questionNaire from './questionNaire/store'
 import annualReport from './annualReport/store'
+import ebook from './ebook/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -55,6 +56,7 @@ export default new Vuex.Store({
     graduationDiploma, //毕业证
     giftPackage,  // 新手礼包
     questionNaire, // 问卷调查
-    annualReport
+    annualReport,
+    ebook   //电子书
   }
 })

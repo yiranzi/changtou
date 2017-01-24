@@ -26,7 +26,7 @@ import * as graduationDiplomaActions from './graduationDiploma/actions'
 import * as giftActions from './giftPackage/actions'
 import * as questionNaireActions from './questionNaire/actions'
 import * as annualReportActions from './annualReport/actions'
-
+import * as ebookActions from './ebook/actions'
 export {
   userActions,
   navigatorActions,
@@ -52,5 +52,6 @@ export {
   graduationDiplomaActions, // 毕业证
   giftActions,          // 新手礼包
   questionNaireActions,         // 调查问卷
-  annualReportActions          // 大数据活动
+  annualReportActions,          // 大数据活动
+  ebookActions      //电子书
 }

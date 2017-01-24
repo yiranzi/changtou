@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+  <metadata xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <meta name="calibre:timestamp" content="2017-01-23T02:06:34.695370+00:00"/>
+    <dc:creator opf:file-as="Unknown" opf:role="aut">jun</dc:creator>
+    <dc:contributor opf:role="bkp">calibre (2.76.0) [https://calibre-ebook.com]</dc:contributor>
+    <dc:title>目录</dc:title>
+    <dc:language>en</dc:language>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">617cfed2-76fb-46a2-bd71-06ca0dc39743</dc:identifier>
+  </metadata>
+  <manifest>
+    <item href="index_split_000.xhtml" id="id215" media-type="application/xhtml+xml"/>
+    <item href="index_split_001.xhtml" id="id214" media-type="application/xhtml+xml"/>
+    <item href="index_split_002.xhtml" id="id213" media-type="application/xhtml+xml"/>
+    <item href="index_split_003.xhtml" id="id212" media-type="application/xhtml+xml"/>
+    <item href="index_split_004.xhtml" id="id211" media-type="application/xhtml+xml"/>
+    <item href="index_split_005.xhtml" id="id210" media-type="application/xhtml+xml"/>
+    <item href="index_split_006.xhtml" id="id29" media-type="application/xhtml+xml"/>
+    <item href="index_split_007.xhtml" id="id28" media-type="application/xhtml+xml"/>
+    <item href="index_split_008.xhtml" id="id27" media-type="application/xhtml+xml"/>
+    <item href="index_split_009.xhtml" id="id26" media-type="application/xhtml+xml"/>
+    <item href="index_split_010.xhtml" id="id25" media-type="application/xhtml+xml"/>
+    <item href="index_split_011.xhtml" id="id24" media-type="application/xhtml+xml"/>
+    <item href="index_split_012.xhtml" id="id23" media-type="application/xhtml+xml"/>
+    <item href="index_split_013.xhtml" id="id22" media-type="application/xhtml+xml"/>
+    <item href="index_split_014.xhtml" id="id21" media-type="application/xhtml+xml"/>
+    <item href="page_styles.css" id="page_css" media-type="text/css"/>
+    <item href="stylesheet.css" id="css" media-type="text/css"/>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="id215"/>
+    <itemref idref="id214"/>
+    <itemref idref="id213"/>
+    <itemref idref="id212"/>
+    <itemref idref="id211"/>
+    <itemref idref="id210"/>
+    <itemref idref="id29"/>
+    <itemref idref="id28"/>
+    <itemref idref="id27"/>
+    <itemref idref="id26"/>
+    <itemref idref="id25"/>
+    <itemref idref="id24"/>
+    <itemref idref="id23"/>
+    <itemref idref="id22"/>
+    <itemref idref="id21"/>
+  </spine>
+  <guide/>
+</package>

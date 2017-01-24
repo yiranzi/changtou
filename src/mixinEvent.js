@@ -42,9 +42,7 @@ const mixin = {
      */
     [eventMap.APP_START]: function () {
       console.info('APP_START')
-
       // 设置推送配置
-      console.log(Jpush.init)
       Jpush.init()
       // 默认用户 设置成'00'
       Jpush.setAlias('00')
