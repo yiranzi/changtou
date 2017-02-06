@@ -13,23 +13,23 @@ const allBookChapters = [
     },
     {
       name: '了解是投资的基础',
-      chapterId: 6
+      chapterId: 1
     },
     {
       name: '赚多赚少大不同',
-      chapterId: 12
+      chapterId: 2
     },
     {
       name: '资产负债大盘点',
-      chapterId: 20
+      chapterId: 3
     },
     {
       name: '钱从哪儿来，又到哪去',
-      chapterId: 28
+      chapterId: 4
     },
     {
       name: '投资的路才刚刚开始',
-      chapterId: 33
+      chapterId: 5
     }
   ],
   [
@@ -39,11 +39,11 @@ const allBookChapters = [
     },
     {
       name: '初识基金',
-      chapterId: 1
+      chapterId: 2
     },
     {
       name: '如何找到好基金',
-      chapterId: 1
+      chapterId: 3
     }
   ]
 ]

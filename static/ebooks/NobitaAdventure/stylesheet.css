@@ -1,5 +1,4 @@
 .block_ {
-    color: black;
     display: block;
     font-size: 1.41667em;
     font-weight: normal;
@@ -11,7 +10,6 @@
     padding: 0
     }
 .block_1 {
-    color: black;
     display: block;
     font-family: "Calibri Light", sans-serif;
     font-size: 1.125em;
@@ -43,14 +41,6 @@
     padding: 0
     }
 .block_4 {
-    color: black;
-    display: block;
-    text-align: left;
-    margin: 0;
-    padding: 0
-    }
-.block_5 {
-    color: black;
     display: block;
     font-size: 1.125em;
     font-weight: bold;
@@ -61,17 +51,7 @@
     margin: 13pt 0;
     padding: 0
     }
-.block_6 {
-    color: black;
-    display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 27pt;
-    margin: 0;
-    padding: 0
-    }
-.block_7 {
-    color: black;
+.block_5 {
     display: block;
     font-size: 1.125em;
     font-weight: normal;
@@ -82,51 +62,47 @@
     margin: 13pt 0;
     padding: 0
     }
-.block_8 {
-    color: black;
+.block_6 {
     display: block;
     line-height: 1.5;
     text-align: justify;
     text-indent: 2em;
+    margin: 0;
+    padding: 0
+    }
+.block_7 {
+    color: black;
+    display: block;
+    font-family: serif;
+    font-size: 0.75em;
+    line-height: 1.5;
+    text-align: justify;
+    text-indent: 2em;
+    margin: 0;
+    padding: 0
+    }
+.block_8 {
+    color: black;
+    display: block;
+    font-family: serif;
+    font-size: 0.75em;
+    text-align: justify;
     margin: 0;
     padding: 0
     }
 .block_9 {
-    color: black;
     display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    line-height: 1.5;
     text-align: justify;
-    text-indent: 2em;
     margin: 0;
     padding: 0
     }
 .block_10 {
-    color: black;
-    display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    text-align: justify;
-    margin: 0;
-    padding: 0
-    }
-.block_11 {
-    color: #0F80FD;
-    display: block;
-    text-align: justify;
-    margin: 0;
-    padding: 0
-    }
-.block_12 {
-    color: #0F80FD;
     display: block;
     text-align: left;
     margin: 0;
     padding: 0
     }
-.block_13 {
-    color: black;
+.block_11 {
     display: block;
     font-size: 1.41667em;
     line-height: 1.2;
@@ -134,8 +110,7 @@
     margin: 0;
     padding: 0
     }
-.block_14 {
-    color: black;
+.block_12 {
     display: block;
     font-size: 1.41667em;
     font-weight: bold;
@@ -146,12 +121,30 @@
     margin: 17pt 0 16.5pt;
     padding: 0
     }
-.block_15 {
-    color: black;
+.block_13 {
     display: block;
     line-height: 1.5;
     text-align: left;
     text-indent: 21pt;
+    margin: 0;
+    padding: 0
+    }
+.block_14 {
+    color: black;
+    display: block;
+    font-family: serif;
+    font-size: 0.75em;
+    line-height: 1.5;
+    text-align: left;
+    text-indent: 21pt;
+    margin: 0;
+    padding: 0
+    }
+.block_15 {
+    display: block;
+    line-height: 1.5;
+    text-align: justify;
+    text-indent: 1em;
     margin: 0;
     padding: 0
     }
@@ -161,17 +154,16 @@
     font-family: serif;
     font-size: 0.75em;
     line-height: 1.5;
-    text-align: left;
-    text-indent: 21pt;
+    text-align: justify;
+    text-indent: 1em;
     margin: 0;
     padding: 0
     }
 .block_17 {
-    color: black;
     display: block;
     line-height: 1.5;
-    text-align: justify;
-    text-indent: 1em;
+    text-align: left;
+    text-indent: 24pt;
     margin: 0;
     padding: 0
     }
@@ -181,33 +173,12 @@
     font-family: serif;
     font-size: 0.75em;
     line-height: 1.5;
-    text-align: justify;
-    text-indent: 1em;
+    text-align: left;
+    text-indent: 24pt;
     margin: 0;
     padding: 0
     }
 .block_19 {
-    color: black;
-    display: block;
-    line-height: 1.5;
-    text-align: left;
-    text-indent: 24pt;
-    margin: 0;
-    padding: 0
-    }
-.block_20 {
-    color: black;
-    display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    line-height: 1.5;
-    text-align: left;
-    text-indent: 24pt;
-    margin: 0;
-    padding: 0
-    }
-.block_21 {
-    color: black;
     display: block;
     font-family: "Calibri Light", sans-serif;
     font-size: 1.41667em;
@@ -219,115 +190,121 @@
     margin: 13pt 0;
     padding: 0
     }
+.block_20 {
+    display: block;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    padding: 0
+    }
+.block_21 {
+    display: block;
+    line-height: 1.5;
+    text-align: left;
+    text-indent: 2em;
+    margin: 0;
+    padding: 0
+    }
 .block_22 {
     color: black;
     display: block;
-    font-weight: bold;
+    font-family: serif;
+    font-size: 0.75em;
+    line-height: 1.5;
     text-align: left;
+    text-indent: 2em;
     margin: 0;
     padding: 0
     }
 .block_23 {
-    color: black;
     display: block;
     line-height: 1.5;
     text-align: center;
+    text-indent: 21pt;
     margin: 0;
     padding: 0
     }
 .block_24 {
     color: black;
     display: block;
+    font-family: serif;
+    font-size: 0.75em;
     line-height: 1.5;
-    text-align: left;
-    text-indent: 2em;
+    text-align: center;
     margin: 0;
     padding: 0
     }
 .block_25 {
-    color: black;
     display: block;
-    font-family: serif;
-    font-size: 0.75em;
     line-height: 1.5;
-    text-align: left;
-    text-indent: 2em;
+    text-align: justify;
+    text-indent: 21pt;
     margin: 0;
     padding: 0
     }
 .block_26 {
     color: black;
     display: block;
+    font-family: serif;
+    font-size: 0.75em;
     line-height: 1.5;
-    text-align: center;
+    text-align: justify;
     text-indent: 21pt;
     margin: 0;
     padding: 0
     }
 .block_27 {
-    color: black;
     display: block;
-    font-family: serif;
-    font-size: 0.75em;
     line-height: 1.5;
-    text-align: center;
+    text-align: justify;
+    text-indent: 24pt;
     margin: 0;
     padding: 0
     }
 .block_28 {
     color: black;
     display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 21pt;
-    margin: 0;
-    padding: 0
-    }
-.block_29 {
-    color: black;
-    display: block;
     font-family: serif;
     font-size: 0.75em;
     line-height: 1.5;
     text-align: justify;
-    text-indent: 21pt;
+    text-indent: 24pt;
+    margin: 0;
+    padding: 0
+    }
+.block_29 {
+    display: block;
+    line-height: 1.5;
+    text-align: justify;
     margin: 0;
     padding: 0
     }
 .block_30 {
     color: black;
     display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 24pt;
+    font-family: serif;
+    font-size: 0.75em;
+    text-align: left;
     margin: 0;
     padding: 0
     }
 .block_31 {
-    color: #00B0F0;
     display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 2em;
+    font-weight: bold;
+    text-align: left;
     margin: 0;
     padding: 0
     }
 .block_32 {
-    color: black;
     display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 24pt;
+    text-align: center;
     margin: 0;
     padding: 0
     }
 .block_33 {
-    color: black;
     display: block;
     line-height: 1.5;
-    text-align: justify;
+    text-align: left;
     margin: 0;
     padding: 0
     }
@@ -336,45 +313,49 @@
     display: block;
     font-family: serif;
     font-size: 0.75em;
-    text-align: left;
-    margin: 0;
-    padding: 0
-    }
-.block_35 {
-    color: #00B0F0;
-    display: block;
-    text-align: left;
-    margin: 0;
-    padding: 0
-    }
-.block_36 {
-    display: block;
-    line-height: 1.5;
     text-align: justify;
     text-indent: 2em;
     margin: 0;
     padding: 0
     }
-.block_37 {
+.block_35 {
+    color: black;
     display: block;
+    font-family: serif;
+    font-size: 0.75em;
     line-height: 1.5;
     text-align: justify;
-    text-indent: 24pt;
     margin: 0;
     padding: 0
     }
-.block_38 {
-    color: black;
+.block_36 {
     display: block;
+    font-size: 0.75em;
     text-align: center;
     margin: 0;
     padding: 0
     }
+.block_37 {
+    display: block;
+    font-size: 0.75em;
+    text-align: left;
+    margin: 0;
+    padding: 0
+    }
+.block_38 {
+    display: block;
+    font-size: 0.75em;
+    line-height: 1.5;
+    text-align: justify;
+    text-indent: 21pt;
+    margin: 0;
+    padding: 0
+    }
 .block_39 {
-    color: black;
     display: block;
     line-height: 1.5;
-    text-align: left;
+    text-align: justify;
+    text-indent: 21.8pt;
     margin: 0;
     padding: 0
     }
@@ -383,75 +364,13 @@
     display: block;
     font-family: serif;
     font-size: 0.75em;
+    line-height: 1.5;
     text-align: justify;
-    text-indent: 2em;
+    text-indent: 21.8pt;
     margin: 0;
     padding: 0
     }
 .block_41 {
-    color: black;
-    display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    line-height: 1.5;
-    text-align: justify;
-    margin: 0;
-    padding: 0
-    }
-.block_42 {
-    color: #00B0F0;
-    display: block;
-    text-align: justify;
-    margin: 0;
-    padding: 0
-    }
-.block_43 {
-    color: black;
-    display: block;
-    font-size: 0.75em;
-    text-align: center;
-    margin: 0;
-    padding: 0
-    }
-.block_44 {
-    color: black;
-    display: block;
-    font-size: 0.75em;
-    text-align: left;
-    margin: 0;
-    padding: 0
-    }
-.block_45 {
-    color: black;
-    display: block;
-    font-size: 0.75em;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 21pt;
-    margin: 0;
-    padding: 0
-    }
-.block_46 {
-    color: black;
-    display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 21.8pt;
-    margin: 0;
-    padding: 0
-    }
-.block_47 {
-    color: black;
-    display: block;
-    font-family: serif;
-    font-size: 0.75em;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 21.8pt;
-    margin: 0;
-    padding: 0
-    }
-.block_48 {
     display: block;
     line-height: 1.5;
     text-align: justify;
@@ -459,8 +378,7 @@
     margin: 0;
     padding: 0
     }
-.block_49 {
-    color: black;
+.block_42 {
     display: block;
     font-size: 0.75em;
     line-height: 1.5;
@@ -468,8 +386,7 @@
     margin: 0;
     padding: 0
     }
-.block_50 {
-    color: black;
+.block_43 {
     display: block;
     font-size: 0.75em;
     font-weight: bold;
@@ -478,7 +395,7 @@
     margin: 0;
     padding: 0
     }
-.block_51 {
+.block_44 {
     color: black;
     display: block;
     font-family: serif;
@@ -488,8 +405,7 @@
     margin: 0;
     padding: 0
     }
-.block_52 {
-    color: black;
+.block_45 {
     display: block;
     font-size: 1.41667em;
     font-weight: bold;
@@ -498,26 +414,7 @@
     margin: 0;
     padding: 0
     }
-.block_53 {
-    color: #833C0B;
-    display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 24.1pt;
-    margin: 0;
-    padding: 0
-    }
-.block_54 {
-    color: #833C0B;
-    display: block;
-    line-height: 1.5;
-    text-align: justify;
-    text-indent: 21pt;
-    margin: 0;
-    padding: 0
-    }
-.block_55 {
-    color: black;
+.block_46 {
     display: block;
     font-weight: bold;
     line-height: 1.73;
@@ -527,8 +424,7 @@
     margin: 13pt 0;
     padding: 0
     }
-.block_56 {
-    color: black;
+.block_47 {
     display: block;
     font-size: 0.75em;
     line-height: 1.5;
@@ -537,8 +433,7 @@
     margin: 0;
     padding: 0
     }
-.block_57 {
-    color: black;
+.block_48 {
     display: block;
     font-family: serif;
     line-height: 1.5;
@@ -547,8 +442,7 @@
     margin: 0;
     padding: 0
     }
-.block_58 {
-    color: black;
+.block_49 {
     display: block;
     font-family: serif;
     line-height: 1.5;
@@ -557,8 +451,7 @@
     margin: 0;
     padding: 0
     }
-.block_59 {
-    color: black;
+.block_50 {
     display: block;
     font-family: "宋体", serif;
     line-height: 1.5;
@@ -568,7 +461,7 @@
     padding: 0
     }
 .calibre {
-    color: #C45911;
+    color: #000;
     display: block;
     font-family: "Calibri", sans-serif;
     font-size: 1em;
@@ -601,17 +494,17 @@
     margin-left: 0;
     margin-top: 0;
     text-indent: 0;
-    padding: 0;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0
     }
 .table_1 {
     border-collapse: collapse;
     border-spacing: 2px;
     display: table;
     text-indent: 0;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .table_2 {
     border-collapse: collapse;
@@ -619,9 +512,9 @@
     display: table;
     text-indent: 0;
     width: 200pt;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .table_3 {
     border-collapse: collapse;
@@ -629,9 +522,9 @@
     display: table;
     text-indent: 0;
     width: 193pt;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .table_4 {
     border-collapse: collapse;
@@ -639,9 +532,9 @@
     display: table;
     text-indent: 0;
     width: 194pt;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .table_5 {
     border-collapse: collapse;
@@ -649,9 +542,9 @@
     display: table;
     text-indent: 0;
     width: 245pt;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .table_6 {
     border-collapse: collapse;
@@ -659,709 +552,709 @@
     display: table;
     text-indent: 0;
     width: 238pt;
+    border: #000 solid 1pt;
     margin: 0 auto;
-    padding: 0;
-    border: #000 solid 1pt
+    padding: 0
     }
 .td_ {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 90.5pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_1 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 78pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_2 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 70.8pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_3 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 90.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_4 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 78pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_5 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 70.8pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_6 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 90.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_7 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 78pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_8 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 70.8pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_9 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 112pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_10 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 91.1pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_11 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 112pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_12 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 91.1pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_13 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 112pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_14 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 91.1pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_15 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 88.6pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_16 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.6pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_17 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 60.3pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_18 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 88.6pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_19 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.6pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_20 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 60.3pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_21 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 88.6pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_22 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.6pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_23 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 60.3pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_24 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.3pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_25 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 39.2pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_26 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 54.5pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_27 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.3pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_28 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 39.2pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_29 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 54.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_30 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.3pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_31 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 39.2pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_32 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 54.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_33 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.5pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_34 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 43.1pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_35 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 51.5pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_36 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_37 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 43.1pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_38 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 51.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_39 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 99.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_40 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 43.1pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_41 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 51.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_42 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 98.8pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_43 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 35.5pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_44 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 111pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_45 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 98.8pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_46 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 35.5pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_47 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 111pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_48 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 98.8pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_49 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 35.5pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_50 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 111pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_51 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 102pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_52 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 101pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_53 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 102pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_54 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 101pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_55 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 102pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_56 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 101pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_57 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 171pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_58 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 37pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_59 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 38pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_60 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 171pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_61 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 37pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_62 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 38pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_63 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 171pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_64 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 37pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_65 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 38pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_66 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 160pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_67 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 42.4pt;
-    padding: 0.5ex 5.4pt;
     border-right: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_68 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.1pt;
-    padding: 0.5ex 5.4pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_69 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 160pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-bottom: #000 solid 1pt
+    border-bottom: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_70 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 42.4pt;
-    padding: 0.5ex 5.4pt;
-    border: #000 solid 1pt
+    border: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_71 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.1pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-bottom: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_72 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 160pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-right: #000 solid 1pt
+    border-right: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_73 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 42.4pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
     border-right: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .td_74 {
     display: table-cell;
     text-align: inherit;
     vertical-align: top;
     width: 50.1pt;
-    padding: 0.5ex 5.4pt;
     border-top: #000 solid 1pt;
-    border-left: #000 solid 1pt
+    border-left: #000 solid 1pt;
+    padding: 0.5ex 5.4pt
     }
 .text_ {
     font-size: 1em

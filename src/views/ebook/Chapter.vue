@@ -114,7 +114,8 @@ export default {
       this.book.renderTo(this.$els.ebook)
 
       //为电子书初始化页码
-      this.book.generatePagination().then(function () {})
+      this.book.generatePagination().then(function () {
+      })
 
       //跳转到指定位置
       setTimeout(
@@ -126,7 +127,7 @@ export default {
     },
 
     /**
-     * 回去chapterId对应的文件名
+     * 返回chapterId对应的文件名
      */
     getHref (chapterId) {
       let idString = chapterId + ''

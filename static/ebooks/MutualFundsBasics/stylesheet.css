@@ -17,7 +17,7 @@
 .p-p {
     color: #008080;
     display: block;
-    font-family: Calibri, sans-serif;
+    font-family: Calibri;
     font-size: 1.62963em;
     font-weight: bold;
     line-height: 1.2;
@@ -67,7 +67,7 @@
     }
 .p-p5 {
     display: block;
-    font-family: 宋体, sans-serif;
+    font-family: Calibri;
     font-size: 1.25926em;
     font-weight: bold;
     line-height: 200%;
@@ -77,7 +77,7 @@
     }
 .p-p6 {
     display: block;
-    font-family: 宋体, sans-serif;
+    font-family: "Calibri Light", Calibri;
     font-size: 1.25926em;
     font-weight: bold;
     line-height: 173%;
@@ -98,17 +98,18 @@
 .p-p8 {
     display: block;
     font-family: Calibri;
-    font-size: 0.88889em;
-    line-height: 150%;
-    text-align: left;
-    text-indent: 0.2917in;
-    margin: 0;
+    font-size: 1.25926em;
+    font-weight: bold;
+    line-height: 173%;
+    text-align: justify;
+    margin: 0.1807in 0;
     padding: 0
     }
 .p-p9 {
     display: block;
     font-family: Calibri;
     font-size: 0.88889em;
+    line-height: 150%;
     text-align: justify;
     margin: 0;
     padding: 0
@@ -119,20 +120,11 @@
     font-size: 0.88889em;
     line-height: 150%;
     text-align: justify;
-    margin: 0;
-    padding: 0
-    }
-.p-p11 {
-    display: block;
-    font-family: Calibri;
-    font-size: 0.88889em;
-    line-height: 150%;
-    text-align: justify;
     text-indent: 0;
     margin: 0 0 0 0.7291in;
     padding: 0
     }
-.p-p12 {
+.p-p11 {
     display: block;
     font-family: Calibri;
     font-size: 0.88889em;
@@ -141,7 +133,7 @@
     margin: 0;
     padding: 0
     }
-.p-p13 {
+.p-p12 {
     display: block;
     font-family: Calibri;
     font-size: 0.88889em;

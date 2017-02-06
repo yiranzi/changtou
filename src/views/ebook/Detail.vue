@@ -14,18 +14,20 @@
         <img src="../../../static/image/newerStrategy/appdownload.png">
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
-      <div class="intro-panel">
-        <img :src="intro && intro.img">
-        <span class="title">{{intro ? intro.bookName : '材料名称'}}<span>连载中</span></span>
-        <p class="intro">{{intro ? intro.bookIntro : '材料简介'}}</p>
-        <span class="share-tip" v-touch:tap="showActionSharePanel" v-if="isInApp">通知你的小伙伴们一起来领取吧</span>
-      </div>
-      <div class="catalog-panel">
-        <div class="catalog-content">
-          <p class="catalog-item catalog-title">目录</p>
-          <p class="catalog-item" v-for="chapter in currChapters" v-touch:tap="goToChapter(chapter)">第{{$index+1}}章 {{chapter.name}}</p>
+        <div>
+          <div class="intro-panel">
+            <img :src="intro && intro.img">
+            <span class="title">{{intro ? intro.bookName : '材料名称'}}<span>连载中</span></span>
+            <p class="intro">{{intro ? intro.bookIntro : '材料简介'}}</p>
+            <span class="share-tip" v-touch:tap="showActionSharePanel" v-if="isInApp">通知你的小伙伴们一起来领取吧</span>
+          </div>
+          <div class="catalog-panel">
+            <div class="catalog-content">
+              <p class="catalog-item catalog-title">目录</p>
+              <p class="catalog-item" v-for="chapter in currChapters" v-touch:tap="goToChapter(chapter)">第{{$index+1}}章 {{chapter.name}}</p>
+            </div>
+          </div>
         </div>
-      </div>
       </scroller>
       <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
     </div>
