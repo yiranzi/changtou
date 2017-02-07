@@ -77,7 +77,6 @@ export default {
   route: {
     data ({to: {params}}) {
       this.bookId = params.bookId
-      console.log(this.$route.router.path)
       this.setViewWxShareConfig()
     },
     deactivate () {

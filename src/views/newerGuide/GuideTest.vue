@@ -65,6 +65,7 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import StrOption from '../../components/newerStrategy/StrOption.vue'
+import {setLocalCache} from '../../util/cache'
   export default {
     data () {
       return {
@@ -93,6 +94,7 @@ import StrOption from '../../components/newerStrategy/StrOption.vue'
     methods: {
      goToGuidePresent () {
       if (this.isBtnActive) {
+        setLocalCache('guide-answered', {'answered': true})
         this.$route.router.go('/guide/present')
       }
      }

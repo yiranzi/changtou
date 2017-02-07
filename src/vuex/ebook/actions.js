@@ -35,7 +35,7 @@ const allBookChapters = [
   [
     {
       name: '理财是一件迫在眉睫的事情',
-      chapterId: 1
+      chapterId: 0
     },
     {
       name: '初识基金',

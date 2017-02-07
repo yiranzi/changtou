@@ -113,15 +113,35 @@
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
 import StrOption from '../../components/newerStrategy/StrOption.vue'
+import {ebookActions} from '../../vuex/actions'
+import {userGetters} from '../../vuex/getters'
   export default {
+    vuex: {
+      actions: {
+        getBookProgress: ebookActions.getBookProgress   // 阅读进度
+      },
+      getters: {
+        isLogin: userGetters.isLogin //是否登录
+      }
+    },
     data () {
       return {
-        scrollerHeight: '580px'
+        scrollerHeight: '580px',
+        bookProgress: null //阅读进度
       }
     },
     route: {
       data () {
         this.setScrollerHeight()
+        const bookId = 2
+        const me = this
+        if (this.isLogin) {
+          this.getBookProgress(bookId).then(
+            function (progress) {
+              me.bookProgress = progress
+            }
+          )
+        }
       }
     },
     methods: {
@@ -136,15 +156,38 @@ import StrOption from '../../components/newerStrategy/StrOption.vue'
           })
         }, 200)
       },
+      /**
+       * 跳转到 入门课
+       */
       goToRudiments () {
         this.$route.router.go('/subject/detail/F/1/0')
       },
+      /**
+       * 跳转到 指数基金定投
+       */
       goToAip () {
         this.$route.router.go('/subject/detail/P/15/0')
       },
+      /**
+       * 领取电子书
+       */
       goToReceiveBook () {
         const bookId = 2
-        this.$route.router.go(`/giftPackage/newerBookDetails/${bookId}`)
+        const me = this
+        if (this.isLogin) {
+          // 已登录
+          let currIndex = this.bookProgress ? parseInt(this.bookProgress.sectionIndex) : 0
+          if (currIndex !== 0) {
+            // 有进度 跳转到章节
+            me.$route.router.go(`/ebook/chapter/${bookId}/${currIndex - 1}`)
+          } else {
+            // 无进度 跳转到介绍
+            me.$route.router.go(`/ebook/detail/${bookId}`)
+          }
+        } else {
+          //未登录
+          this.$route.router.go('/entry')
+        }
       }
     },
     components: {

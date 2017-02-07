@@ -89,7 +89,7 @@
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters, userGetters} from '../../vuex/getters'
   import {navigatorActions, dailyQuestionActions, newertestActions, giftActions} from '../../vuex/actions'
-  import {setLocalCache} from '../../util/cache'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
@@ -266,8 +266,11 @@
           position: '新手指南'
         })
         // (提示: 若用户已领取攻略跳转到present页)
-        this.$route.router.go('/guide/test')
-//        this.$route.router.go('/guide/present')
+        if (getLocalCache('guide-answered')) {
+          this.$route.router.go('/guide/present')
+        } else {
+          this.$route.router.go('/guide/test')
+        }
       },
 
       /**

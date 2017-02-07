@@ -20,7 +20,7 @@
         <div class="tap-area" v-touch:tap="goToPrePage"></div>
         <div class="tap-area" v-touch:tap="goToNextPage"></div>
       </div>
-      <div class="ebook-content" v-el:ebook :style="ebookHeight"></div>
+      <div class="ebook-content" v-if="book" v-el:ebook :style="ebookHeight"></div>
       <span class="pageNum">阅读进度 {{(percentage * 100).toFixed(1)}}%</span>
     </div>
 </template>
@@ -72,7 +72,17 @@ export default {
     data ({to: {params}}) {
       this.bookId = params.bookId
       this.chapterId = params.chapterId
-      this.initEBook()
+      this.book = {}
+
+      setTimeout(
+        this.initEBook,
+        300
+      )
+    },
+
+    deactivate () {
+      this.book.destroy()
+      this.book = null
     }
   },
 
@@ -99,6 +109,12 @@ export default {
         bookChapterView.percentage = location.percentage
       })
 
+      //渲染电子书
+      this.book.renderTo(this.$els.ebook)
+
+      //为电子书初始化页码
+      this.book.generatePagination().then(function () {})
+
       //监听章节变化
       this.book.on('renderer:chapterDisplayed', function (chapter) {
         bookChapterView.href = chapter.href
@@ -108,13 +124,6 @@ export default {
         if (bookChapterView.login) {
           bookChapterView.updateBookProgress(bookChapterView.bookId, chapter.spinePos)
         }
-      })
-
-      //渲染电子书
-      this.book.renderTo(this.$els.ebook)
-
-      //为电子书初始化页码
-      this.book.generatePagination().then(function () {
       })
 
       //跳转到指定位置

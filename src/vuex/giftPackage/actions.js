@@ -99,6 +99,13 @@ export const getBookProgress = ({ dispatch }, bookId) => {
         url: getUrl('get/book/progress').replace(':bookId', bookId)
       }).then(
         function (message) {   // 信息: Id, createTime, Chapter
+          if (message) {
+            dispatch('LOAD_BOOK_PROGRESS', {
+              bookId,
+              bookProgress: message
+            })
+          }
+
           resolve(message)
         },
         function (err) {
