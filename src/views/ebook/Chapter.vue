@@ -27,16 +27,18 @@
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {ebookActions} from '../../vuex/actions'
-  import {userGetters} from '../../vuex/getters'
+  import {userGetters, ebookGetters} from '../../vuex/getters'
 export default {
   vuex: {
     actions: {
       bookArr: ebookActions.bookArr,
       bookChapters: ebookActions.bookChapters,
-      updateBookProgress: ebookActions.updateBookProgress
+      updateBookProgress: ebookActions.updateBookProgress,
+      getBookProgress: ebookActions.getBookProgress
     },
     getters: {
-      login: userGetters.isLogin
+      login: userGetters.isLogin,
+      book1Progress: ebookGetters.book1Progress
     }
   },
   data () {
@@ -47,9 +49,9 @@ export default {
       catalog: [], //每一页的cfi和页码对应的数组
       titleHeight: 0,  //titleBar的高度
       percentage: 0, //当前进度
-      href: '', //章节对应路由
-      spinePos: '', //章节对应id
-      isCatalogShow: false //是否显示目录
+      isCatalogShow: false, //是否显示目录
+      chapterPageNum: 0,
+      spinePos: 0
     }
   },
 
@@ -58,13 +60,26 @@ export default {
     tapMaskTop () {
       return `top: ${(this.titleHeight)}px`
     },
+
     //book渲染容器的高度
     ebookHeight () {
       return `height: ${(window.document.body.offsetHeight - this.titleHeight)}px`
     },
+    //电子书1 领取的周数
+    book1CreateWeeksAmount () {
+      return parseInt((new Date().getTime() - new Date(this.book1Progress.createTime.replace('-', '/')).getTime() - 1000 * 3600 * 7 * 24) / (1000 * 3600 * 7 * 24))
+    },
+    //电子书1 章节数
+    book1ChaptersAmount () {
+      return this.bookChapters(1).length
+    },
+    //电子书1 可读章节数
+    book1AvailableChapterNum () {
+      return this.book1CreateWeeksAmount + 2 >= this.book1ChaptersAmount ? this.book1ChaptersAmount : this.book1CreateWeeksAmount + 2
+    },
     //当前book的章节
     currChapters () {
-      return this.bookChapters(this.bookId)
+      return parseInt(this.bookId) === 1 ? this.bookChapters(this.bookId).slice(0, this.book1AvailableChapterNum) : this.bookChapters(this.bookId)
     }
   },
 
@@ -74,9 +89,11 @@ export default {
       this.chapterId = params.chapterId
       this.book = {}
 
+      this.getBookProgress(this.bookId)
+
       setTimeout(
         this.initEBook,
-        300
+        500
       )
     },
 
@@ -104,35 +121,34 @@ export default {
         restore: true
       })
 
-      //监听页面翻页
-      this.book.on('book:pageChanged', function (location) {
-        bookChapterView.percentage = location.percentage
+      // 翻页变化
+      this.book.on('book:pageChanged', function (page) {
+        bookChapterView.percentage = page.percentage
+       })
+
+      // 章节变化
+      bookChapterView.book.on('renderer:chapterDisplayed', function (chapter) {
+        bookChapterView.spinePos = chapter.spinePos
+
+        if (parseInt(bookChapterView.bookId) === 1 && chapter.spinePos === bookChapterView.book1AvailableChapterNum - 1) {
+          bookChapterView.chapterPageNum = 1
+        }
+
+        //上传 阅读进度
+        if (bookChapterView.login && chapter.spinePos > bookChapterView.chapterId) {
+          bookChapterView.updateBookProgress(bookChapterView.bookId, chapter.spinePos + 1)
+        }
       })
 
       //渲染电子书
       this.book.renderTo(this.$els.ebook)
 
+      this.showLoading()
       //为电子书初始化页码
-      this.book.generatePagination().then(function () {})
-
-      //监听章节变化
-      this.book.on('renderer:chapterDisplayed', function (chapter) {
-        bookChapterView.href = chapter.href
-        bookChapterView.spinePos = chapter.spinePos
-
-          //上传 阅读进度
-        if (bookChapterView.login) {
-          bookChapterView.updateBookProgress(bookChapterView.bookId, chapter.spinePos)
-        }
+      this.book.generatePagination().then(function () {
+        bookChapterView.book.goto(bookChapterView.getHref(bookChapterView.chapterId))
+        bookChapterView.hideLoading()
       })
-
-      //跳转到指定位置
-      setTimeout(
-        function () {
-          bookChapterView.book.goto(bookChapterView.getHref(bookChapterView.chapterId))
-        },
-        200
-      )
     },
 
     /**
@@ -141,7 +157,7 @@ export default {
     getHref (chapterId) {
       let idString = chapterId + ''
       let re = new RegExp(`\\d{${idString.length}}\\.`)
-      let href = this.href || 'index_split_000.html'
+      let href = this.book.currentChapter.href || 'index_split_000.html'
       return href.replace(re, idString + '.')
     },
 
@@ -149,13 +165,25 @@ export default {
      * 跳转到上一页
      */
     goToPrePage () {
+      if (parseInt(this.bookId) === 1 && this.spinePos === this.book1AvailableChapterNum - 1) {
+        this.chapterPageNum -= 1
+      }
       this.book.prevPage()
     },
     /**
      * 跳转到下一页
      */
     goToNextPage () {
-      this.book.nextPage()
+      if (parseInt(this.bookId) === 1 && this.spinePos === this.book1AvailableChapterNum - 1) {
+        if (this.chapterPageNum >= this.book.currentChapter.pages) {
+          this.showToast('精彩内容,敬请期待~')
+        } else {
+          this.chapterPageNum += 1
+          this.book.nextPage()
+        }
+      } else {
+        this.book.nextPage()
+      }
     },
 
     /**

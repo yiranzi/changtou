@@ -39,14 +39,14 @@
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)" >{{course.status}}<span class="course-list-price" v-if="expenseRecords.length <= 0 && course.price > 0">￥{{course.price}}</span></p>
-              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{bookProgress.totalOwnerNum}}人阅读过</p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{book1Progress.totalOwnerNum}}人阅读过</p>
             </div>
             <!-- 电子书 介绍 -->
             <div class="course-list-info" v-touch:tap="gotoReadBook" v-if="$index === parseInt(this.expenseRecords.length) && this.isLogin && isShowEBook">
               <p class="course-list-title">{{course.title}}</p>
               <p class="course-list-subtitle">{{course.subtitle}}</p>
               <p class="course-list-state" v-if="$index !== parseInt(this.expenseRecords.length)">{{course.status}}</p>
-              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{bookProgress.totalOwnerNum}}人阅读过</p>
+              <p class="course-list-state" v-if="$index === parseInt(this.expenseRecords.length)">{{book1Progress.totalOwnerNum}}人阅读过</p>
             </div>
             <span class="read-book-tip" v-if="$index === parseInt(this.expenseRecords.length)">伴学礼包</span>
           </div>
@@ -59,7 +59,7 @@
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import {myCoursesActions, ebookActions, giftActions} from '../../vuex/actions'
-  import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters} from '../../vuex/getters'
+  import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
 export default {
@@ -73,7 +73,8 @@ export default {
       card: userGetters.card, //长投卡信息
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
       freeRecords: courseRecordsGetters.freeRecords, //免费课程记录
-      newDrawDiploma: graduationDiplomaGetters.newDrawDiploma // 有新的毕业证书
+      newDrawDiploma: graduationDiplomaGetters.newDrawDiploma, // 有新的毕业证书
+      book1Progress: ebookGetters.book1Progress //电子书1的阅读进度
     },
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
@@ -86,12 +87,6 @@ export default {
   },
   data () {
     return {
-      bookProgress: {
-        bookId: 1,
-        createTime: null,
-        sectionIndex: 0,
-        totalOwnerNum: 0
-      },
       scrollerHeight: '1000px',
       courseList: [], //课程列表
       isShowEBook: false, // 是否显示电子书
@@ -152,22 +147,22 @@ export default {
        const bookId = 1
        if (this.isLogin) {
           this.getBookProgress(bookId)
-        // 是否显示电子书
-        this.isQualifyGiftPackage().then(
-          function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
-            if (!res.qualification) {
-              me.receiveGiftPackage().then((message) => {})
-              .catch(function (err) {
-                if (err.message === '您已领取过新手礼包' && me.isLogin) {
-                  me.isShowEBook = true
-                  if (me.expenseRecords.length > 0) {
-                    me.isBookPlacedDown = true
+          // 是否显示电子书
+          this.isQualifyGiftPackage().then(
+            function (res) {        // 没有资格领取新手礼包 可能包含已经领取过电子书
+              if (!res.qualification) {
+                me.receiveGiftPackage().then((message) => {})
+                .catch(function (err) {
+                  if (err.message === '您已领取过新手礼包' && me.isLogin) {
+                    me.isShowEBook = true
+                    if (me.expenseRecords.length > 0) {
+                      me.isBookPlacedDown = true
+                    }
                   }
-                }
-              })
+                })
+              }
             }
-          }
-        )
+          )
       }
 
       return Promise.all(promiseArray).then(
@@ -188,7 +183,7 @@ export default {
      */
     gotoReadBook () {
       const bookId = 1
-      let currIndex = parseInt(this.bookProgress.sectionIndex)
+      let currIndex = parseInt(this.book1Progress.sectionIndex)
       if (this.isLogin && currIndex !== 0) {
           // 有进度 跳转到章节
         this.$route.router.go(`/ebook/chapter/${bookId}/${currIndex - 1}`)

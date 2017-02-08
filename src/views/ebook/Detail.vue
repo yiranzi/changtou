@@ -157,6 +157,7 @@ export default {
       padding: 70/40rem 50/40rem 30/40rem;
       box-sizing: border-box;
       border-bottom: 20/40rem solid #f0eff5;
+      text-align: center;
       img{
         width: 230/40rem;
         height: 300/40rem;
@@ -185,6 +186,7 @@ export default {
       .intro{
         font-size: 26/40rem;
         color: #888;
+        text-align: left;
       }
       .share-tip{
         display: inline-block;

@@ -114,6 +114,11 @@ export const getBookProgress = ({ dispatch }, bookId) => {
         url: getUrl('get/book/progress').replace(':bookId', bookId)
       }).then(
         function (message) {   // 信息: Id, createTime, Chapter
+          if (parseInt(bookId) === 1) {
+            dispatch('LOAD_BOOK1_PROGRESS', message)
+          } else if (parseInt(bookId) === 2) {
+            dispatch('LOAD_BOOK2_PROGRESS', message)
+          }
           resolve(message)
         },
         function (err) {
