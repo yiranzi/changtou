@@ -1,6 +1,6 @@
 <template>
   <div class="guide-present">
-    <ict-titlebar v-el:title-bar>新手攻略</ict-titlebar>
+    <ict-titlebar v-el:titlebar>新手攻略</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
         <img src="../../../static/image/newerGuide/present-top-tip.png" class="present-tip"/>
@@ -33,7 +33,7 @@
       text-align: center;
       .strategy-item-container {
         margin: 0 auto;
-        background: url("../../../static/image/newerStrategy/page2Option.png") 0 0 no-repeat;
+        background: url("../../../static/image/newerGuide/present-bg.png") 0 0 no-repeat;
         background-size: 100%;
         width: 680/40rem;
         height: 770/40rem;
@@ -53,15 +53,15 @@
           box-sizing: border-box;
         }
         .strategy-item-1 {
-          background: url("../../../static/image/newerStrategy/strategyBar1.png") 0 0 no-repeat;
+          background: url("../../../static/image/newerGuide/present-bar1.png") 0 0 no-repeat;
           background-size: 100%;
         }
         .strategy-item-2 {
-          background: url("../../../static/image/newerStrategy/strategyBar2.png") 0 0 no-repeat;
+          background: url("../../../static/image/newerGuide/present-bar2.png") 0 0 no-repeat;
           background-size: 100%;
         }
         .strategy-item-3 {
-          background: url("../../../static/image/newerStrategy/strategyBar3.png") 0 0 no-repeat;
+          background: url("../../../static/image/newerGuide/present-bar3.png") 0 0 no-repeat;
           background-size: 100%;
         }
         .strategy-book-container {
@@ -70,7 +70,7 @@
           box-sizing: border-box;
           display: inline-block;
           .strategy-book {
-            background: url("../../../static/image/newerStrategy/page2BookEntry.png") 0 0 no-repeat;
+            background: url("../../../static/image/newerGuide/book2Cover.png") 0 0 no-repeat;
             background-size: 100% 100%;
             width: 241/40rem;
             height: 204/40rem;
@@ -112,7 +112,6 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
-import StrOption from '../../components/newerStrategy/StrOption.vue'
 import {ebookActions} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
   export default {
@@ -149,7 +148,7 @@ import {userGetters} from '../../vuex/getters'
         const me = this
         setTimeout(function () {
           me.$nextTick(() => {
-            me.scrollerHeight = (window.document.body.offsetHeight - me.$parent.$els.titleBar) + 'px'
+            me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
             me.$refs.scroller.reset({
               top: 0
             })
@@ -192,7 +191,6 @@ import {userGetters} from '../../vuex/getters'
     },
     components: {
       IctTitlebar,
-      StrOption,
       Scroller
     }
   }

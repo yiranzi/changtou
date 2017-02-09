@@ -4,21 +4,84 @@
 **/
 <template>
   <div class="guide-test">
-    <div>
-      <ict-titlebar>新手攻略</ict-titlebar>
-    </div>
-    <img src="../../../static/image/newerGuide/test-tip.png" class="test-tip">
-    <div class="strategy-option">
-      <div class="option-container">
-        <str-option title="股票" order="a#" option="A" :group="activeList"></str-option>
-        <str-option title="基金" order="a#" option="A" :group="activeList"></str-option>
-        <str-option title="理财产品"order="a#" option="A" :group="activeList"></str-option>
-        <str-option id="option-nope" title="我没有买过以上产品" order="a#" option="B" :group="activeList"></str-option>
+    <ict-titlebar v-el:titlebar>新手攻略</ict-titlebar>
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
+      <div>
+        <img src="../../../static/image/newerGuide/test-tip.png" class="test-tip">
+        <div class="strategy-option">
+          <div class="option-container">
+            <str-option title="股票" order="a#" option="A" :group="activeList"></str-option>
+            <str-option title="基金" order="a#" option="A" :group="activeList"></str-option>
+            <str-option title="理财产品"order="a#" option="A" :group="activeList"></str-option>
+            <str-option id="option-nope" title="我没有买过以上产品" order="a#" option="B" :group="activeList"></str-option>
+          </div>
+          <div :class=" isBtnActive?'strategy-call-btn strategy-btn-active':'strategy-call-btn' " v-touch:tap="goToGuidePresent"></div>
+        </div>
       </div>
-      <div :class=" isBtnActive?'strategy-call-btn strategy-btn-active':'strategy-call-btn' " v-touch:tap="goToGuidePresent"></div>
-    </div>
+    </scroller>
     </div>
 </template>
+
+<script>
+import IctTitlebar from '../../components/IctTitleBar.vue'
+import StrOption from '../../components/newerGuide/StrOption.vue'
+import {setLocalCache} from '../../util/cache'
+import Scroller from 'vux/scroller'
+  export default {
+    data () {
+      return {
+        activeList: [],
+        scrollerHeight: '580px'
+      }
+    },
+    computed: {
+      isBtnActive () {
+        return this.activeList.indexOf('A') >= 0 || this.activeList.indexOf('B') >= 0
+      }
+    },
+    route: {
+      data () {
+        this.setScrollerHeight()
+      },
+      deactivate () {
+        this.isBtnActive = false
+        this.activeOpt = false
+      }
+    },
+    events: {
+      addActiveList (option) {
+        this.activeList.push(option)
+      },
+      reduceActiveList (option) {
+        this.activeList.splice(this.activeList.indexOf(option), 1)
+      }
+    },
+    methods: {
+      setScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
+            me.$refs.scroller.reset({
+              top: 0
+            })
+          })
+        }, 200)
+      },
+     goToGuidePresent () {
+      if (this.isBtnActive) {
+        setLocalCache('guide-answered', {'answered': true})
+        this.$route.router.go('/guide/present')
+      }
+     }
+    },
+    components: {
+      IctTitlebar,
+      StrOption,
+      Scroller
+    }
+ }
+</script>
 <style lang="less">
   .guide-test{
     height: 100%;
@@ -62,48 +125,4 @@
     }
   }
 </style>
-<script>
-import IctTitlebar from '../../components/IctTitleBar.vue'
-import StrOption from '../../components/newerStrategy/StrOption.vue'
-import {setLocalCache} from '../../util/cache'
-  export default {
-    data () {
-      return {
-        activeList: []
-      }
-    },
-    computed: {
-      isBtnActive () {
-        return this.activeList.indexOf('A') >= 0 || this.activeList.indexOf('B') >= 0
-      }
-    },
-    route: {
-      deactivate () {
-        this.isBtnActive = false
-        this.activeOpt = false
-      }
-    },
-    events: {
-      addActiveList (option) {
-        this.activeList.push(option)
-      },
-      reduceActiveList (option) {
-        this.activeList.splice(this.activeList.indexOf(option), 1)
-      }
-    },
-    methods: {
-     goToGuidePresent () {
-      if (this.isBtnActive) {
-        setLocalCache('guide-answered', {'answered': true})
-        this.$route.router.go('/guide/present')
-      }
-     }
-    },
-    components: {
-      IctTitlebar,
-      StrOption
-    }
- }
-</script>
-
 

@@ -1,4 +1,4 @@
-import {getWithinAuth, putWithinAuth} from '../../frame/ajax'
+import {getWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 /**
  * 用户领取礼包，如资格不符提示信息
@@ -56,57 +56,6 @@ export const loadingCouponList = ({ dispatch }) => {
         function (couponList) {   // 优惠券
           dispatch('LOADING_COUPON_LIST', couponList)
           resolve(couponList)
-        },
-        function (err) {
-          reject(err)
-        }
-      )
-    }
-  )
-}
-
-/**
- * 更新电子书阅读进度
- * /:bookId/:sectionIndex
- * update/book/progress
- */
-export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
-  return new Promise(
-    (resolve, reject) => {
-      putWithinAuth({
-        url: getUrl('update/book/progress').replace(':bookId', bookId).replace(':sectionIndex', sectionIndex)
-      }).then(
-        function (message) {   // 更新成功与否
-          resolve(message)
-        },
-        function (err) {
-          reject(err)
-        }
-      )
-    }
-  )
-}
-
-/**
- * 获取电子书阅读进度
- * '/e-book/record/:bookId'
- * get/book/progress
- */
-export const getBookProgress = ({ dispatch }, bookId) => {
-  return new Promise(
-    (resolve, reject) => {
-      getWithinAuth({
-        url: getUrl('get/book/progress').replace(':bookId', bookId)
-      }).then(
-        function (message) {   // 信息: Id, createTime, Chapter
-          if (message) {
-            dispatch('LOAD_BOOK_PROGRESS', {
-              bookId,
-              bookProgress: message
-            })
-          }
-
-          resolve(message)
         },
         function (err) {
           reject(err)

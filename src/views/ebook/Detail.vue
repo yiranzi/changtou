@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/1/22.
- *
+ * 电子书介绍页
  */
 <template>
     <div class="ebook-detail">
@@ -11,7 +11,7 @@
         </div>
       </ict-titlebar>
       <div class="download-panel" v-touch:tap="showSharePanel" v-touch:tap="downloadAPP" v-if="!isInApp" v-el:downloadpanel>
-        <img src="../../../static/image/newerStrategy/appdownload.png">
+        <img src="../../../static/image/ebook/appdownload.png">
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
@@ -40,15 +40,14 @@
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinShare from '../../mixinShare'
+  import {getLocalCache, setLocalCache} from '../../util/cache'
 export default {
   mixins: [mixinShare],
   vuex: {
-    getters: {
-
-    },
     actions: {
       bookArr: ebookActions.bookArr,
-      bookChapters: ebookActions.bookChapters
+      bookChapters: ebookActions.bookChapters,
+      getBook: ebookActions.getBook //领取电子书
     }
   },
   data () {
@@ -71,13 +70,11 @@ export default {
       return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     }
   },
-  watch: {
-
-  },
   route: {
     data ({to: {params}}) {
       this.bookId = params.bookId
       this.setViewWxShareConfig()
+      this.showBook2Mask()
     },
     deactivate () {
       this.shareConfig = null
@@ -88,6 +85,9 @@ export default {
     this.setScrollerHeight()
   },
   methods: {
+    /**
+     * 设置分享选项
+     */
     setViewWxShareConfig () {
       this.shareConfig = {
         title: this.intro.bookName,
@@ -96,6 +96,32 @@ export default {
         imgUrl: `${MSITE_URL}index.html#!/${this.intro.img.substring(9)}`
       }
       this.onViewChange()
+    },
+
+    /**
+     * 显示电子书2 的领取浮层
+     */
+    showBook2Mask () {
+      if (!getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
+        this.showMask({
+          component: 'ebook/Book2Mask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'closeMask',
+          callbackFn: this.onBook2MaskTap.bind(this)
+        })
+        setLocalCache('ebook2-mask-show', {
+          show: true
+        })
+      }
+    },
+
+    /**
+     * 电子书2的浮层 被点击
+     */
+    onBook2MaskTap () {
+      this.getBook(this.bookId).then(
+        this.hideMask.bind(this)
+      )
     },
 
     setScrollerHeight () {
@@ -175,9 +201,9 @@ export default {
           position: absolute;
           left: 70%;
           top: -0.5rem;
-          width: 2rem;
-          height: 32/40rem;
-          line-height: 32/40rem;
+          width: 2.5rem;
+          height: 1rem;
+          line-height: 1rem;
           border:1px solid #00b0f0;
           font-size: 20/40rem;
           color: #00b0f0;

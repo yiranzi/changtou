@@ -1,6 +1,6 @@
 <template>
   <div v-touch:tap="closeMask" class="guide-book">
-    <img src="../../../static/image/newerStrategy/shareFloatMask.png"/>
+    <img src="../../../static/image/ebook/book2Mask.png"/>
   </div>
 </template>
 <script>

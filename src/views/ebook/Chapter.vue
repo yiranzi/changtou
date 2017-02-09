@@ -38,7 +38,7 @@ export default {
     },
     getters: {
       login: userGetters.isLogin,
-      book1Progress: ebookGetters.book1Progress
+      bookProgress: ebookGetters.bookProgress
     }
   },
   data () {
@@ -67,7 +67,7 @@ export default {
     },
     //电子书1 领取的周数
     book1CreateWeeksAmount () {
-      return parseInt((new Date().getTime() - new Date(this.book1Progress.createTime.replace('-', '/')).getTime() - 1000 * 3600 * 7 * 24) / (1000 * 3600 * 7 * 24))
+      return parseInt((new Date().getTime() - new Date(this.bookProgress.createTime.replace('-', '/')).getTime() - 1000 * 3600 * 7 * 24) / (1000 * 3600 * 7 * 24))
     },
     //电子书1 章节数
     book1ChaptersAmount () {
@@ -121,24 +121,11 @@ export default {
         restore: true
       })
 
-      // 翻页变化
-      this.book.on('book:pageChanged', function (page) {
-        bookChapterView.percentage = page.percentage
-       })
+      // 监听 翻页变化
+      this.addPageChangeListener()
 
-      // 章节变化
-      bookChapterView.book.on('renderer:chapterDisplayed', function (chapter) {
-        bookChapterView.spinePos = chapter.spinePos
-
-        if (parseInt(bookChapterView.bookId) === 1 && chapter.spinePos === bookChapterView.book1AvailableChapterNum - 1) {
-          bookChapterView.chapterPageNum = 1
-        }
-
-        //上传 阅读进度
-        if (bookChapterView.login && chapter.spinePos > bookChapterView.chapterId) {
-          bookChapterView.updateBookProgress(bookChapterView.bookId, chapter.spinePos + 1)
-        }
-      })
+      // 监听 章节变化
+      this.addChapterDisplayedListener()
 
       //渲染电子书
       this.book.renderTo(this.$els.ebook)
@@ -149,6 +136,41 @@ export default {
         bookChapterView.book.goto(bookChapterView.getHref(bookChapterView.chapterId))
         bookChapterView.hideLoading()
       })
+    },
+
+    /**
+     * 添加 翻页事件 监听
+     */
+    addPageChangeListener () {
+      const me = this
+      this.book.on('book:pageChanged', function (page) {
+        me.percentage = page.percentage
+      })
+    },
+
+    /**
+     * 添加 章节渲染 监听
+     */
+    addChapterDisplayedListener () {
+      this.book.on('renderer:chapterDisplayed', this.onChapterDisplayed.bind(this))
+    },
+
+    /**
+     * 章节渲染 回调
+     */
+    onChapterDisplayed (chapter) {
+      this.spinePos = chapter.spinePos
+
+      if (parseInt(this.bookId) === 1 && chapter.spinePos === this.book1AvailableChapterNum - 1) {
+        this.chapterPageNum = 1
+      }
+
+      //上传 阅读进度
+      if (this.login) {
+        this.updateBookProgress(this.bookId, chapter.spinePos + 1).then(
+          this.getBookProgress(this.bookId)
+        )
+      }
     },
 
     /**

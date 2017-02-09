@@ -319,7 +319,7 @@
          */
       showPackage () {
         this.showMask({
-          component: 'giftPackage/GiftMask.vue',
+          component: 'newerGift/GiftMask.vue',
           hideOnMaskTap: true,
           callbackName: 'gotoGiftPackageDetails',
           callbackFn: this.gotoGiftPackageDetails.bind(this)
@@ -333,7 +333,7 @@
         const me = this
         me.hideMask()
         me.receiveGiftPackage().then(function () {
-            me.$route.router.go('/giftPackage/giftPackageDetails')
+            me.$route.router.go('/newerGift/giftPackageDetails')
         }).catch(function (err) {
             me.showAlert(err.message)
         })

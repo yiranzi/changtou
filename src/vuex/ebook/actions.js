@@ -1,7 +1,7 @@
 /**
  * Created by jun on 2017/1/24
  */
-import {getWithinAuth, putWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, putWithinAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 //全部电子书章节信息
@@ -81,28 +81,6 @@ export const bookChapters = ({dispatch}, bookId) => {
 }
 
 /**
- * 更新电子书阅读进度
- * /:bookId/:sectionIndex
- * update/book/progress
- */
-export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
-  return new Promise(
-    (resolve, reject) => {
-      putWithinAuth({
-        url: getUrl('update/book/progress').replace(':bookId', bookId).replace(':sectionIndex', sectionIndex)
-      }).then(
-        function (message) {   // 更新成功与否
-          resolve(message)
-        },
-        function (err) {
-          reject(err)
-        }
-      )
-    }
-  )
-}
-
-/**
  * 获取电子书阅读进度
  * '/e-book/record/:bookId'
  * get/book/progress
@@ -114,11 +92,52 @@ export const getBookProgress = ({ dispatch }, bookId) => {
         url: getUrl('get/book/progress').replace(':bookId', bookId)
       }).then(
         function (message) {   // 信息: Id, createTime, Chapter
-          if (parseInt(bookId) === 1) {
-            dispatch('LOAD_BOOK1_PROGRESS', message)
-          } else if (parseInt(bookId) === 2) {
-            dispatch('LOAD_BOOK2_PROGRESS', message)
-          }
+          dispatch('LOAD_BOOK_PROGRESS', message)
+          resolve(message)
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 更新电子书阅读进度
+ * /:bookId/:sectionIndex
+ * update/book/progress
+ */
+export const updateBookProgress = ({ dispatch }, bookId, sectionIndex) => {
+  return new Promise(
+    (resolve, reject) => {
+      putWithinAuth({
+        url: getUrl('update/book/progress').replace(':bookId', bookId).replace(':sectionIndex', sectionIndex)
+      }).then(
+        function (message) {
+          resolve(message)
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 领取电子书
+ * @param dispatch
+ * @param bookId
+ * @returns {Promise}
+ */
+export const getBook = ({ dispatch }, bookId) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithinAuth({
+        url: getUrl('get/ebook').replace(':bookId', bookId)
+      }).then(
+        function (message) {
           resolve(message)
         },
         function (err) {

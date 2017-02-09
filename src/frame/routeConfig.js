@@ -131,7 +131,7 @@ export function configRouter (router) {
      * 支付模块
      */
     // 支付成功
-    'pay/success/:type/:id': {
+    '/pay/success/:type/:id': {
       component: require('../views/pay/Success.vue')
     },
 
@@ -253,31 +253,19 @@ export function configRouter (router) {
     /**
      * 新手礼包
      */
-     '/giftPackage/giftPackageDetails': {
-      component: require('../views/giftPackage/giftPackageDetails.vue')
+     '/newerGift/giftPackageDetails': {
+      component: require('../views/newerGift/giftPackageDetails.vue')
     },
     /**
      * 优惠信息
      */
-    'coupon/details': {
-      component: require('../components/giftPackage/CouponDetails.vue')
-    },
-    /**
-     * 新手读物详情页
-     */
-    'giftPackage/newerBookDetails/:bookId': {
-      component: require('../views/giftPackage/BookDetails.vue')
-    },
-    /**
-     * 图书内容页                  // 使用动态匹配向内传值更改 DATA
-     */
-    'giftPackage/bookChapter/:bookId/:currIndex': {
-      component: require('../views/giftPackage/BookChapter.vue')
+    '/coupon/details': {
+      component: require('../views/newerGift/CouponDetails.vue')
     },
     /**
      * 问卷调查
      */
-    'questionNaire/:naireId': {
+    '/questionNaire/:naireId': {
       component: require('../views/questionnaire/questionDetail1.vue')
     },
     /**
@@ -302,7 +290,7 @@ export function configRouter (router) {
     /**
      * 电子书 简介页
      */
-    'ebook/detail/:bookId': {
+    '/ebook/detail/:bookId': {
       component: require('../views/ebook/Detail.vue')
     },
 
