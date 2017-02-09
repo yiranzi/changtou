@@ -19,7 +19,7 @@
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
-  import {commonTopicActions} from '../../vuex/actions'
+  import {commonTopicActions, userActions} from '../../vuex/actions'
   import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {Device, platformMap} from '../../plugin/device'
   import {Agent} from '../../plugin/agent'
@@ -29,7 +29,8 @@
   export default {
     vuex: {
       actions: {
-        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy
+        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy,
+        syncUser: userActions.syncUser
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -210,7 +211,7 @@
       payByChannel (channel) {
         this.showLoading()
         Object.assign(this.statisticData, {
-          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '支付方式': Device.platform === platformMap.WEB ? channel === 'wechat' ? '微信-web' : '支付宝-web' : channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
         })
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
@@ -243,13 +244,26 @@
               me.showCodePanel(result.url)
             } else {
               // 其他支付 （不包括支付宝网页支付）
-              me.goToPaySuccess()
+              me.onPayFinish()
             }
           }
         ).catch(
           (err) => me.onPayFail(err)
         )
       },
+
+      /**
+       * 支付结束
+       */
+      onPayFinish () {
+        if (parseInt(this.itemId) === 0 && parseInt(this.mchantType) === 3) {
+          //长投卡
+          this.syncUser()
+        } else {
+          this.goToPaySuccess()
+        }
+      },
+
       /**
        * 支付成功
        */
