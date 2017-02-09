@@ -125,7 +125,7 @@
         window.history.back()
       },
       toBuy () {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TICKET_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.COMMON_TOPIC_CONFIRM_TAP, {
           '商品名称': this.commonTopicInfo.title,
           '价格': this.commonTopicInfo.price
         })

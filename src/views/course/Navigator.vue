@@ -223,10 +223,11 @@
        * 跳转到推荐课程
        */
       goToRecommendDetail (subject, index) {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
-          type: 'P',
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          type: subject.type,
           subjectid: subject.subjectId,
-          index: index
+          index: index,
+          position: '人气必备'
         })
         this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
       },

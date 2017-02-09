@@ -27,9 +27,9 @@ export const statisticsMap = {
   /**
    * 专题
    */
-  TOPIC_CONFIRM_TAP: '专题-点击“立即支付”按钮',
-  TOPIC_SUBJECT_TAP: '专题-点击课程',
-  TICKET_CONFIRM_TAP: '年会-点击“立即支付”按钮',
+  TOPIC_CONFIRM_TAP: '课程专题-点击“立即支付”按钮',
+  TOPIC_SUBJECT_TAP: '课程专题专题-点击课程',
+  COMMON_TOPIC_CONFIRM_TAP: '通用专题-点击“立即支付”按钮',
 
   /**
    * 支付流程

@@ -258,7 +258,9 @@
       onPayFinish () {
         if (parseInt(this.itemId) === 0 && parseInt(this.mchantType) === 3) {
           //长投卡
-          this.syncUser()
+          this.syncUser().then(
+            this.goToPaySuccess
+          )
         } else {
           this.goToPaySuccess()
         }
