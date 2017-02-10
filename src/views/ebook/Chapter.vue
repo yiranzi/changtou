@@ -28,6 +28,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {ebookActions} from '../../vuex/actions'
   import {userGetters, ebookGetters} from '../../vuex/getters'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
 export default {
   vuex: {
     actions: {
@@ -67,7 +68,7 @@ export default {
     },
     //电子书1 领取的周数
     book1CreateWeeksAmount () {
-      return parseInt((new Date().getTime() - new Date(this.bookProgress.createTime.replace('-', '/')).getTime() - 1000 * 3600 * 7 * 24) / (1000 * 3600 * 7 * 24))
+      return parseInt((new Date().getTime() - new Date(this.bookProgress.createTime.replace('-', '/')).getTime()) / (1000 * 3600 * 7 * 24))
     },
     //电子书1 章节数
     book1ChaptersAmount () {
@@ -135,7 +136,33 @@ export default {
       this.book.generatePagination().then(function () {
         bookChapterView.book.goto(bookChapterView.getHref(bookChapterView.chapterId))
         bookChapterView.hideLoading()
+        bookChapterView.showTipMask()
       })
+    },
+
+    /**
+     * 显示 阅读提示浮层
+     */
+    showTipMask () {
+      if (!getLocalCache('ebook-tip-show')) {
+        this.showMask({
+          component: 'ebook/ReadTipMask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'bookChapterTipTap',
+          callbackFn: this.onTipTap.bind(this)
+        })
+
+        setLocalCache('ebook-tip-show', {
+          show: true
+        })
+      }
+    },
+
+    /**
+     * 阅读浮层 被点击
+     */
+    onTipTap () {
+      this.hideMask.bind(this)
     },
 
     /**

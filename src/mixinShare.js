@@ -67,7 +67,7 @@ const mixin = {
           },
           function () {
             me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
+              '分享内容': me.shareConfig.title,
               '分享渠道': '微信-会话'
             })
           },
@@ -102,7 +102,7 @@ const mixin = {
           },
           function () {
             me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
+              '分享内容': me.shareConfig.title,
               '分享渠道': '微信-朋友圈'
             })
           },
@@ -133,7 +133,7 @@ const mixin = {
         window.YCQQ.shareToQQ(
           function () {
             me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-              '访谈Id': me.interviewRecord.interviewId,
+              '分享内容': me.shareConfig.title,
               '分享渠道': 'QQ'
             })
           },
@@ -164,6 +164,10 @@ const mixin = {
         args.defaultText = me.shareConfig.desc
         window.YCWeibo.shareToWeibo(
           function () {
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '分享内容': me.shareConfig.title,
+              '分享渠道': '微博'
+            })
           },
           function (failReason) {
             if (failReason === 'cancel by user') {

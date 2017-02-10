@@ -53,14 +53,14 @@ const allBookArr = [
   {
     bookName: '大雄股市历险记',
     bookIntro: '大雄萌发学习股票投资的念头，可是这个念头差点被曾经投资失败的爸爸妈妈扼杀在摇篮里。幸好神通广大的小叮当支持大雄，为大雄找了一个神秘的老师',
-    img: '../../../static/image/ebook/bookCover1.png',
+    img: 'static/image/ebook/bookCover1.png',
     bookId: 1,
     docName: 'NobitaAdventure'
   },
   {
     bookName: '手把手教你选基金',
     bookIntro: '不久前我们另一本基金宝典受到了各位小伙伴们热情的欢迎，小伙伴们纷纷表示对基金的知识非常感兴趣，想要进一步系统的学习基金投资的有关知识。应大家的强烈要求，我们快马加鞭，呕心沥血，日夜兼程，又为大家带来了这本《零基础小白的基金探索之旅》，小伙伴们是不是很惊喜呢！',
-    img: '../../../static/image/ebook/bookCover2.png',
+    img: 'static/image/ebook/bookCover2.png',
     bookId: 2,
     docName: 'MutualFundsBasics'
   }

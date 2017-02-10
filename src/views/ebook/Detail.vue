@@ -10,7 +10,7 @@
           <img class="share-pic" src='../../assets/styles/image/share.png'>
         </div>
       </ict-titlebar>
-      <div class="download-panel" v-touch:tap="showSharePanel" v-touch:tap="downloadAPP" v-if="!isInApp" v-el:downloadpanel>
+      <div class="download-panel" v-touch:tap="downloadAPP" v-if="!isInApp" v-el:downloadpanel>
         <img src="../../../static/image/ebook/appdownload.png">
       </div>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
@@ -35,19 +35,25 @@
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import {ebookActions} from '../../vuex/actions'
   import ShareFloat from '../interview/InterviewFloat.vue'
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinShare from '../../mixinShare'
   import {getLocalCache, setLocalCache} from '../../util/cache'
-export default {
+  import {ebookActions} from '../../vuex/actions'
+  import {ebookGetters} from '../../vuex/getters'
+
+  export default {
   mixins: [mixinShare],
   vuex: {
     actions: {
       bookArr: ebookActions.bookArr,
       bookChapters: ebookActions.bookChapters,
+      getBookProgress: ebookActions.getBookProgress,
       getBook: ebookActions.getBook //领取电子书
+    },
+    getters: {
+      bookProgress: ebookGetters.bookProgress
     }
   },
   data () {
@@ -63,16 +69,32 @@ export default {
     intro () {
       return this.bookArr(this.bookId)
     },
-    currChapters () {
-      return this.bookChapters(this.bookId)
-    },
     isInApp () {
       return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+    },
+    //电子书1 领取的周数
+    book1CreateWeeksAmount () {
+      return parseInt(this.bookId) === 1 ? parseInt((new Date().getTime() - new Date(this.bookProgress.createTime.replace('-', '/')).getTime()) / (1000 * 3600 * 7 * 24)) : 0
+    },
+    //电子书1 章节数
+    book1ChaptersAmount () {
+      return this.bookChapters(1).length
+    },
+    //电子书1 可读章节数
+    book1AvailableChapterNum () {
+      return this.book1CreateWeeksAmount + 2 >= this.book1ChaptersAmount ? this.book1ChaptersAmount : this.book1CreateWeeksAmount + 2
+    },
+    //当前book的章节
+    currChapters () {
+      return parseInt(this.bookId) === 1 ? this.bookChapters(this.bookId).slice(0, this.book1AvailableChapterNum) : this.bookChapters(this.bookId)
     }
   },
   route: {
     data ({to: {params}}) {
       this.bookId = params.bookId
+      this.getBookProgress(this.bookId).then(
+        this.setScrollerHeight
+      )
       this.setViewWxShareConfig()
       this.showBook2Mask()
     },
@@ -80,9 +102,6 @@ export default {
       this.shareConfig = null
       this.onViewChange()
     }
-  },
-  ready () {
-    this.setScrollerHeight()
   },
   methods: {
     /**
@@ -92,8 +111,8 @@ export default {
       this.shareConfig = {
         title: this.intro.bookName,
         desc: this.intro.bookIntro,
-        link: `${MSITE_URL}index.html#!${this.$route.router.path}`,
-        imgUrl: `${MSITE_URL}index.html#!/${this.intro.img.substring(9)}`
+        link: `${MSITE_URL}index.html#!/ebook/detail/${this.bookId}`,
+        imgUrl: `${MSITE_URL}${this.intro.img}`
       }
       this.onViewChange()
     },

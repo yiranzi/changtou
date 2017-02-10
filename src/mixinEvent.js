@@ -93,6 +93,8 @@ const mixin = {
     [eventMap.LOGOUT]: function (user) {
       //console.info('LOGOUT', user)
       this.doWhenUserNotValid(user)
+      // 清除缓存
+      window.localStorage.clear()
     },
 
     /**

@@ -14,7 +14,7 @@
           </div>
           <div v-touch:tap="goToNewerGuide" class="under-banner-item">
             <i class="under-banner-icon newer-guide"></i>
-            <span class="under-banner-title">新手指南</span>
+            <span class="under-banner-title">入门指南</span>
           </div>
           <div v-touch:tap="goToInterviewList" class="under-banner-item">
             <i class="under-banner-icon interview"></i>
