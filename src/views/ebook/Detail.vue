@@ -146,7 +146,7 @@
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
-        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.downloadpanel.offsetHeight) + 'px'
+        me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight - me.$els.downloadpanel ? me.$els.downloadpanel.offsetHeight : 0) + 'px'
         me.$nextTick(() => {
           me.$refs.scroller.reset({
             top: 0
