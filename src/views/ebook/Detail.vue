@@ -41,7 +41,7 @@
   import mixinShare from '../../mixinShare'
   import {getLocalCache, setLocalCache} from '../../util/cache'
   import {ebookActions} from '../../vuex/actions'
-  import {ebookGetters} from '../../vuex/getters'
+  import {ebookGetters, userGetters} from '../../vuex/getters'
 
   export default {
   mixins: [mixinShare],
@@ -53,6 +53,7 @@
       getBook: ebookActions.getBook //领取电子书
     },
     getters: {
+      isLogin: userGetters.isLogin,
       bookProgress: ebookGetters.bookProgress
     }
   },
@@ -121,16 +122,30 @@
      * 显示电子书2 的领取浮层
      */
     showBook2Mask () {
-      if (!getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
-        this.showMask({
-          component: 'ebook/Book2Mask.vue',
-          hideOnMaskTap: true,
-          callbackName: 'closeMask',
-          callbackFn: this.onBook2MaskTap.bind(this)
-        })
-        setLocalCache('ebook2-mask-show', {
-          show: true
-        })
+      if (this.isLogin) {
+        //已登录
+        if (!getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
+          //未领取
+          this.showMask({
+            component: 'ebook/Book2Mask.vue',
+            hideOnMaskTap: true,
+            callbackName: 'closeMask',
+            callbackFn: this.onBook2MaskTap.bind(this)
+          })
+          setLocalCache('ebook2-mask-show', {
+            show: true
+          })
+        }
+      } else {
+        //未登录
+        if (parseInt(this.bookId) === 2) {
+          this.showMask({
+            component: 'ebook/Book2Mask.vue',
+            hideOnMaskTap: true,
+            callbackName: 'closeMask',
+            callbackFn: this.onBook2MaskTap.bind(this)
+          })
+        }
       }
     },
 
@@ -138,9 +153,13 @@
      * 电子书2的浮层 被点击
      */
     onBook2MaskTap () {
-      this.getBook(this.bookId).then(
-        this.hideMask.bind(this)
-      )
+      if (this.isLogin) {
+        this.getBook(this.bookId).then(
+          this.hideMask.bind(this)
+        )
+      } else {
+        this.$route.router.go('/entry')
+      }
     },
 
     setScrollerHeight () {
@@ -159,7 +178,11 @@
      * 跳转到对应章节
      */
     goToChapter (chapter) {
-      this.$route.router.go(`/ebook/chapter/${this.bookId}/${chapter.chapterId}`)
+      if (this.isLogin) {
+        this.$route.router.go(`/ebook/chapter/${this.bookId}/${chapter.chapterId}`)
+      } else {
+        this.$route.router.go('/entry')
+      }
     },
 
       /**
