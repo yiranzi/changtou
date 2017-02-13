@@ -89,8 +89,9 @@ export default {
       this.bookId = params.bookId
       this.chapterId = params.chapterId
       this.book = {}
-
-      this.getBookProgress(this.bookId)
+      if (this.login) {
+        this.getBookProgress(this.bookId)
+      }
 
       setTimeout(
         this.initEBook,
@@ -116,6 +117,8 @@ export default {
       const bookChapterView = this
       //找到书名
       const bookName = this.bookArr(this.bookId).docName
+
+//      window.EPUBJS.cssPath = `../../../static/ebooks/${bookName}/`
 
       //注册epub
       this.book = window.ePub(`../../../static/ebooks/${bookName}/`, {
