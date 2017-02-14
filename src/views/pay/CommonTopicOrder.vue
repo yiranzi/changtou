@@ -77,15 +77,15 @@
       // 支付按钮 信息
       btnOptions () {
         return {
-          state: this.isLogin && this.isBuyTopic ? 'exception' : '',
+          state: '', //因长投卡去掉购买限制  state: this.isLogin && this.isBuyTopic ? 'exception' : '',
           leftOptions: {
             price: this.sum,
-            text: '你已成功购买过,不可重复购买'
+            text: '' //因长投卡去掉购买限制 text: '你已成功购买过,不可重复购买'
           },
           rightOptions: {
             text: '回首页',
             disabled: !this.isLogin,
-            callback: this.isBuyTopic ? this.goToHome : this.onConfirmTap
+            callback: this.onConfirmTap //因长投卡去掉购买限制 callback: this.isBuyTopic ? this.goToHome : this.onConfirmTap
           }
         }
       }
@@ -172,16 +172,16 @@
        */
       getCoupons (order) {
         let coupons = []
-
-        if (order.coupons) {
-          coupons = order.coupons
-        }
-        if (order.card) {
-          coupons.push({
-            name: '长投卡(7折)',
-            userBene: Math.floor(this.price * 0.3)
-          })
-        }
+//
+//        if (order.coupons) {
+//          coupons = order.coupons
+//        }
+//        if (order.card) {
+//          coupons.push({
+//            name: '长投卡(7折)',
+//            userBene: Math.floor(this.price * 0.3)
+//          })
+//        }
         return coupons
       },
       onConfirmTap () {
