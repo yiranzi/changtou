@@ -9,10 +9,11 @@
       </div>
     </scroller>
     <div class="bottom-area" v-show="isTopicLoaded && commonTopicInfo.price > 0">
-      <ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
+      <!--<ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn> //因长投卡去掉购买限制-->
+      <ict-button class="ict-button"  v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
+      <!--<div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div> //因长投卡去掉购买限制-->
     </div>
   </div>
 </template>
