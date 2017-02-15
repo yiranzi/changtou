@@ -202,6 +202,7 @@ const mixin = {
      * @param event
      */
     onReceiveNotification: function (event) {
+      window.alert(JSON.stringify(event))
       if (event.extras['type'] === 'IN_APP') {
         let desurl = event.extras['desurl']
         this.$route.router.go(desurl)

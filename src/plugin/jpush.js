@@ -58,6 +58,8 @@ const setRouter = (router) => {
 }
 
 const onOpenNotification = (event) => {
+  setIconBadgeNumber(0)
+  window.alert(JSON.stringify(event))
   if (event.extras['type'] === 'IN_APP') {
     let desurl = event.extras['desurl']
     _router.router.go(desurl)

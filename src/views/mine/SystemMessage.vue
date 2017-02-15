@@ -87,9 +87,7 @@
 
     route: {
       data () {
-        this.loadMsgArr().then(
-          Jpush.setIconBadgeNumber(0)
-        )
+        this.loadMsgArr()
       }
     },
 
