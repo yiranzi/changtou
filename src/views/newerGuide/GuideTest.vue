@@ -24,7 +24,7 @@
 
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
-import StrOption from '../../components/newerGuide/StrOption.vue'
+import StrOption from '../../components/newerGuide/newerGuideOption.vue'
 import {setLocalCache} from '../../util/cache'
 import Scroller from 'vux/scroller'
   export default {
