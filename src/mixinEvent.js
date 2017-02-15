@@ -48,8 +48,13 @@ const mixin = {
       Jpush.setAlias('00')
       // 打开app后,设置icon上的数字为0
       Jpush.setIconBadgeNumber(0)
+      //传入路由对象用于跳转页面
+      Jpush.setRouter(this.$route.router)
+
       // 添加收到推送的处理
-      Jpush.addReceiveHandler(this.onReceiveNotification.bind(this))
+      Jpush.addReceiveHandler(this.onReceiveNotification.bind(this))//todo
+      // 添加点击通知事件
+      Jpush.openNotification()
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
