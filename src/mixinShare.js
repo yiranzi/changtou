@@ -1,5 +1,6 @@
 /**
  * Created by jun on 2017/1/24.
+ * app中可以分享的页面有: 院生访谈/电子书2/年报
  */
 import {eventMap} from './frame/eventConfig'
 import {statisticsMap} from './statistics/statisticsMap'

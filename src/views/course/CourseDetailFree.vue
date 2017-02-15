@@ -64,7 +64,7 @@
   import {setSessionCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-
+  import {MSITE_URL} from '../../frame/serverConfig'
   export default {
     vuex: {
       getters: {
@@ -117,7 +117,7 @@
         this.shareConfig = {
           title: newSubject.title,
           desc: newSubject.subtitle,
-          link: window.location.href,
+          link: `${MSITE_URL}index.html#!/subject/detail/F${this.subjectId}/0`,
           imgUrl: newSubject.pic
         }
         this.onViewChange()

@@ -38,7 +38,7 @@ const MSITE_URL = debug ? 'http://h5test.ichangtou.com.cn/juns/' : 'http://h5tes
 //
 //const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wxd6c823882698f217'
 
-//const CHANNEL = debug ? 'mapp' : 'app'
+//const PROJECT = debug ? 'mapp' : 'app'
 
 //const MSITE_URL = debug ? 'http://h5test.ichangtou.com.cn/juns/' : 'http://h5.ichangtou.com/mapp_new/'
 
