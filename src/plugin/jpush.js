@@ -24,11 +24,11 @@ const setAlias = (alias) => {
 }
 
 /**
- * 监听接收消息
- * @param handler
+ * 设置路由
+ * @param router
  */
-const addReceiveHandler = (handler) => {
-  document.addEventListener('jpush.receiveNotification', handler, false)
+const setRouter = (router) => {
+  _router = router
 }
 
 /**
@@ -41,29 +41,39 @@ const setIconBadgeNumber = (num) => {
 }
 
 /**
- *  打开通知消息
+ * 接收消息 回调
+ * @param event
  */
-
-//- 在你需要接收通知的的 js 文件中加入:
-export const openNotification = () => {
-  document.addEventListener('jpush.openNotification', onOpenNotification, false)
+const onReceiveNotification = (event) => {
+  setIconBadgeNumber(0)
+  //if (event.extras['msgType'] === 'IN_APP') {
+  //  _router.router.go(event.extras['desUrl'])
+  //}
 }
 
 /**
- * 设置路由
- * @param router
+ * 添加 监听接收消息
  */
-const setRouter = (router) => {
-  _router = router
+const addReceiveHandler = () => {
+  document.addEventListener('jpush.receiveNotification', onReceiveNotification, false)
 }
 
+/**
+ * 收到消息 回调
+ * @param event
+ */
 const onOpenNotification = (event) => {
   setIconBadgeNumber(0)
-  window.alert(JSON.stringify(event))
-  if (event.extras['type'] === 'IN_APP') {
-    let desurl = event.extras['desurl']
-    _router.router.go(desurl)
+  if (event.extras['msgType'] === 'IN_APP') {
+    _router.router.go(event.extras['desUrl'])
   }
+}
+
+/**
+ *  添加  打开通知消息
+ */
+const addOpenHandler = () => {
+  document.addEventListener('jpush.openNotification', onOpenNotification, false)
 }
 
 const Jpush = {
@@ -83,8 +93,8 @@ const Jpush = {
     return setIconBadgeNumber
   },
 
-  get openNotification () {
-    return openNotification
+  get addOpenHandler () {
+    return addOpenHandler
   },
 
   get setRouter () {

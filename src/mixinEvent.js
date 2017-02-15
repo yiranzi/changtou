@@ -49,12 +49,12 @@ const mixin = {
       // 打开app后,设置icon上的数字为0
       Jpush.setIconBadgeNumber(0)
       //传入路由对象用于跳转页面
-      Jpush.setRouter(this.$route.router)
+      Jpush.setRouter(this.$route)
 
       // 添加收到推送的处理
-      Jpush.addReceiveHandler(this.onReceiveNotification.bind(this))//todo
+      Jpush.addReceiveHandler()
       // 添加点击通知事件
-      Jpush.openNotification()
+      Jpush.addOpenHandler()
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
@@ -194,18 +194,6 @@ const mixin = {
     onGraduationDiplomaLoaded: function () {
       if (this.newShowDiploma) {
         this.$dispatch(eventMap.SUBJECT_GRADUATION, this.newShowDiploma)
-      }
-    },
-
-    /**
-     * 跳转到指定页面
-     * @param event
-     */
-    onReceiveNotification: function (event) {
-      window.alert(JSON.stringify(event))
-      if (event.extras['type'] === 'IN_APP') {
-        let desurl = event.extras['desurl']
-        this.$route.router.go(desurl)
       }
     }
   }
