@@ -6,7 +6,7 @@
     <div class="ebook-detail">
       <ict-titlebar v-el:titlebar :right-options="rightOptions">
         阅读材料
-        <div slot="right" v-touch:tap="showActionSharePanel" v-if="isInApp">
+        <div slot="right" v-touch:tap="showActionSharePanel" v-if="isInApp && (parseInt(bookId) !== 1)">
           <img class="share-pic" src='../../assets/styles/image/share.png'>
         </div>
       </ict-titlebar>
@@ -19,7 +19,7 @@
             <img :src="intro && intro.img">
             <span class="title">{{intro ? intro.bookName : '材料名称'}}<span>连载中</span></span>
             <p class="intro">{{intro ? intro.bookIntro : '材料简介'}}</p>
-            <span class="share-tip" v-touch:tap="showActionSharePanel" v-if="isInApp">通知你的小伙伴们一起来领取吧</span>
+            <span class="share-tip" v-touch:tap="showActionSharePanel" v-if="isInApp && (parseInt(bookId) !== 1)">通知你的小伙伴们一起来领取吧</span>
           </div>
           <div class="catalog-panel">
             <div class="catalog-content">
@@ -90,12 +90,18 @@
       return parseInt(this.bookId) === 1 ? this.bookChapters(this.bookId).slice(0, this.book1AvailableChapterNum) : this.bookChapters(this.bookId)
     }
   },
+    watch: {
+      currChapters () {
+        this.setScrollerHeight()
+      }
+    },
   route: {
     data ({to: {params}}) {
       this.bookId = params.bookId
-      this.getBookProgress(this.bookId).then(
-        this.setScrollerHeight
-      )
+      if (this.isLogin) {
+        this.getBookProgress(this.bookId)
+      }
+
       this.setViewWxShareConfig()
       this.showBook2Mask()
     },
@@ -122,30 +128,17 @@
      * 显示电子书2 的领取浮层
      */
     showBook2Mask () {
-      if (this.isLogin) {
-        //已登录
-        if (!getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
-          //未领取
-          this.showMask({
-            component: 'ebook/Book2Mask.vue',
-            hideOnMaskTap: true,
-            callbackName: 'closeMask',
-            callbackFn: this.onBook2MaskTap.bind(this)
-          })
-          setLocalCache('ebook2-mask-show', {
-            show: true
-          })
-        }
-      } else {
-        //未登录
-        if (parseInt(this.bookId) === 2) {
-          this.showMask({
-            component: 'ebook/Book2Mask.vue',
-            hideOnMaskTap: true,
-            callbackName: 'closeMask',
-            callbackFn: this.onBook2MaskTap.bind(this)
-          })
-        }
+      if (this.isLogin && !getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
+        //未领取
+        this.showMask({
+          component: 'ebook/Book2Mask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'closeMask',
+          callbackFn: this.onBook2MaskTap.bind(this)
+        })
+        setLocalCache('ebook2-mask-show', {
+          show: true
+        })
       }
     },
 
@@ -153,13 +146,9 @@
      * 电子书2的浮层 被点击
      */
     onBook2MaskTap () {
-      if (this.isLogin) {
-        this.getBook(this.bookId).then(
-          this.hideMask.bind(this)
-        )
-      } else {
-        this.$route.router.go('/entry')
-      }
+      this.getBook(this.bookId).then(
+        this.hideMask.bind(this)
+      )
     },
 
     setScrollerHeight () {
@@ -178,11 +167,7 @@
      * 跳转到对应章节
      */
     goToChapter (chapter) {
-      if (this.isLogin) {
-        this.$route.router.go(`/ebook/chapter/${this.bookId}/${chapter.chapterId}`)
-      } else {
-        this.$route.router.go('/entry')
-      }
+      this.$route.router.go(`/ebook/chapter/${this.bookId}/${chapter.chapterId}`)
     },
 
       /**

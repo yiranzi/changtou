@@ -96,7 +96,7 @@ import {userGetters} from '../../vuex/getters'
           }
         } else {
           //未登录
-          this.$route.router.go('/entry')
+          this.$route.router.go(`/ebook/detail/${bookId}`)
         }
       }
     },

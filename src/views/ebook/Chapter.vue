@@ -38,7 +38,7 @@ export default {
       getBookProgress: ebookActions.getBookProgress
     },
     getters: {
-      login: userGetters.isLogin,
+      isLogin: userGetters.isLogin,
       bookProgress: ebookGetters.bookProgress
     }
   },
@@ -89,7 +89,7 @@ export default {
       this.bookId = params.bookId
       this.chapterId = params.chapterId
       this.book = {}
-      if (this.login) {
+      if (this.isLogin) {
         this.getBookProgress(this.bookId)
       }
 
@@ -196,7 +196,7 @@ export default {
       }
 
       //上传 阅读进度
-      if (this.login) {
+      if (this.isLogin) {
         this.updateBookProgress(this.bookId, chapter.spinePos + 1).then(
           this.getBookProgress(this.bookId)
         )
