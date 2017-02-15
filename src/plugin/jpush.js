@@ -64,8 +64,14 @@ const addReceiveHandler = () => {
  */
 const onOpenNotification = (event) => {
   setIconBadgeNumber(0)
-  if (event.extras['msgType'] === 'IN_APP') {
-    _router.router.go(event.extras['desUrl'])
+  if (Device.platform === platformMap.IOS) {
+    if (event['msgType'] === 'IN_APP') {
+      _router.router.go(event['desUrl'])
+    }
+  } else if (Device.platform === platformMap.ANDROID) {
+    if (event.extras['msgType'] === 'IN_APP') {
+      _router.router.go(event.extras['desUrl'])
+    }
   }
 }
 
