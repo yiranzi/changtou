@@ -118,11 +118,10 @@ export default {
       //找到书名
       const bookName = this.bookArr(this.bookId).docName
 
-//      window.EPUBJS.cssPath = `../../../static/ebooks/${bookName}/`
-
       //注册epub
-      this.book = window.ePub(`../../../static/ebooks/${bookName}/`, {
-        restore: true
+      this.book = window.ePub(`./static/ebooks/${bookName}/`, {
+        restore: true,
+        width: window.document.body.offsetWidth
       })
 
       // 监听 翻页变化
