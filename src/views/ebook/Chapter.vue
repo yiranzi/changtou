@@ -119,7 +119,7 @@ export default {
       const bookName = this.bookArr(this.bookId).docName
 
       //注册epub
-      this.book = window.ePub(`./static/ebooks/${bookName}/`, {
+      this.book = window.ePub(`http://source.ichangtou.com/file/ebooks/${bookName}/`, {
         restore: true,
         width: window.document.body.offsetWidth
       })
