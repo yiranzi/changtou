@@ -101,9 +101,10 @@
       if (this.isLogin) {
         this.getBookProgress(this.bookId)
       }
-
-      this.setViewWxShareConfig()
-      this.showBook2Mask()
+      if (parseInt(this.bookId) === 2) {
+        this.setViewWxShareConfig()
+        this.showBook2Mask()
+      }
     },
     deactivate () {
       this.shareConfig = null
@@ -128,7 +129,7 @@
      * 显示电子书2 的领取浮层
      */
     showBook2Mask () {
-      if (this.isLogin && !getLocalCache('ebook2-mask-show') && parseInt(this.bookId) === 2) {
+      if (this.isLogin && !getLocalCache('ebook2-mask-show')) {
         //未领取
         this.showMask({
           component: 'ebook/Book2Mask.vue',

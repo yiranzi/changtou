@@ -8,7 +8,7 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <img :src="vipIntro.promotionUrl" class="intro-promotion">
-        <p class="available-tip">为保证策略有效性，限制VIP总数，当前剩余席位<span>{{vipIntro.availableNum}}</span>个</p>
+        <!--<p class="available-tip">为保证策略有效性，限制VIP总数，当前剩余席位<span>{{vipIntro.availableNum}}</span>个</p>-->
         <strategy-intro :intro="vipIntro.intro">什么是长投宝VIP版?</strategy-intro>
         <target-user :target-user="vipIntro.targetUser">面向人群</target-user>
         <feature-product :featured-strategy="vipIntro.featuredStrategy">王牌策略</feature-product>
