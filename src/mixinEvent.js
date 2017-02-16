@@ -146,7 +146,6 @@ const mixin = {
 
       // 设置jpush用户关联
       Jpush.setAlias(user.userId)
-      Jpush.setIconBadgeNumber(user.newMessageNum)
 
       let tasks = []
       // 获取课程进度
