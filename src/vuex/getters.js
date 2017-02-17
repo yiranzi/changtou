@@ -27,6 +27,7 @@ import * as giftGetters from './newerGift/getters'
 import * as questionNaireGetters from './questionNaire/getters'
 import * as annualReportGetters from './annualReport/getters'
 import * as ebookGetters from './ebook/getters'
+import * as newerGuideGetters from './newerGuide/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -53,5 +54,6 @@ export {
   giftGetters,                           // 新手礼包
   questionNaireGetters,          // 问卷调查
   annualReportGetters,  //年度报告
-  ebookGetters    //电子书
+  ebookGetters,    //电子书
+  newerGuideGetters //入门指南
 }
