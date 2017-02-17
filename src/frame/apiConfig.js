@@ -189,7 +189,7 @@ const apiUrl = {
   /**
    * 入门指南
    */
-  'guide_audio_list': '/homepage/guideaudio-list' //音频列表
+  'guide_audio_list': '/homepage/guideaudio-list', //音频列表
   /**
    *  大咖读经典
    */

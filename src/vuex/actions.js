@@ -57,6 +57,6 @@ export {
   questionNaireActions,         // 调查问卷
   annualReportActions,          // 大数据活动
   ebookActions,      //电子书
-  newerGuide  //入门指南
+  newerGuide,  //入门指南
   classicReadingActions   //大咖读经典
 }
