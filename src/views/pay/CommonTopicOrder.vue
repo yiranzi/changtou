@@ -19,7 +19,7 @@
   import PayPic from '../../components/payment/PayPic.vue'
   import PayBase from '../../components/payment/PayBase.vue'
   import {getOrder, dealType, pay, payChannel, transactionChannel, errorType} from '../../util/pay/dealHelper'
-  import {commonTopicActions} from '../../vuex/actions'
+  import {commonTopicActions, userActions} from '../../vuex/actions'
   import {commonTopicGetters, userGetters} from '../../vuex/getters'
   import {Device, platformMap} from '../../plugin/device'
   import {Agent} from '../../plugin/agent'
@@ -29,7 +29,8 @@
   export default {
     vuex: {
       actions: {
-        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy
+        isCommonTopicBuy: commonTopicActions.isCommonTopicBuy,
+        syncUser: userActions.syncUser
       },
       getters: {
         isLogin: userGetters.isLogin,
@@ -77,15 +78,15 @@
       // 支付按钮 信息
       btnOptions () {
         return {
-          state: this.isLogin && this.isBuyTopic ? 'exception' : '',
+          state: '', //因长投卡去掉购买限制  state: this.isLogin && this.isBuyTopic ? 'exception' : '',
           leftOptions: {
             price: this.sum,
-            text: '你已成功购买过,不可重复购买'
+            text: '' //因长投卡去掉购买限制 text: '你已成功购买过,不可重复购买'
           },
           rightOptions: {
             text: '回首页',
             disabled: !this.isLogin,
-            callback: this.isBuyTopic ? this.goToHome : this.onConfirmTap
+            callback: this.onConfirmTap //因长投卡去掉购买限制 callback: this.isBuyTopic ? this.goToHome : this.onConfirmTap
           }
         }
       }
@@ -172,16 +173,16 @@
        */
       getCoupons (order) {
         let coupons = []
-
-        if (order.coupons) {
-          coupons = order.coupons
-        }
-        if (order.card) {
-          coupons.push({
-            name: '长投卡(7折)',
-            userBene: Math.floor(this.price * 0.3)
-          })
-        }
+//
+//        if (order.coupons) {
+//          coupons = order.coupons
+//        }
+//        if (order.card) {
+//          coupons.push({
+//            name: '长投卡(7折)',
+//            userBene: Math.floor(this.price * 0.3)
+//          })
+//        }
         return coupons
       },
       onConfirmTap () {
@@ -210,7 +211,7 @@
       payByChannel (channel) {
         this.showLoading()
         Object.assign(this.statisticData, {
-          '支付方式': channel === 'wechat' ? '微信-app' : '支付宝-app',
+          '支付方式': Device.platform === platformMap.WEB ? channel === 'wechat' ? '微信-web' : '支付宝-web' : channel === 'wechat' ? '微信-app' : '支付宝-app',
           '入口页': getLocalCache('statistics-entry-page') && getLocalCache('statistics-entry-page').entryPage
         })
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.PAY_CONFIRM_TAP, this.statisticData)
@@ -243,13 +244,28 @@
               me.showCodePanel(result.url)
             } else {
               // 其他支付 （不包括支付宝网页支付）
-              me.goToPaySuccess()
+              me.onPayFinish()
             }
           }
         ).catch(
           (err) => me.onPayFail(err)
         )
       },
+
+      /**
+       * 支付结束
+       */
+      onPayFinish () {
+        if (parseInt(this.itemId) === 0 && parseInt(this.mchantType) === 3) {
+          //长投卡
+          this.syncUser().then(
+            this.goToPaySuccess
+          )
+        } else {
+          this.goToPaySuccess()
+        }
+      },
+
       /**
        * 支付成功
        */

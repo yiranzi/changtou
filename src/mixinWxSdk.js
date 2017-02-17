@@ -2,19 +2,19 @@
  * Created by jun on 2017/1/11.
  * 单独写微信分享的页面
  * 需要添加函数setViewWxShareConfig 用于在微信准备好时调用,配置分享的信息
- *
+ * 微信中分享的页面: 院生访谈/电子书2/年报/课程详情页
  */
 import Vue from 'vue'
 import {postWithoutAuth} from './frame/ajax'
 import {eventMap} from './frame/eventConfig'
 import {getUrl} from './frame/apiConfig'
 import {statisticsMap} from './statistics/statisticsMap'
-
+import {MSITE_URL} from './frame/serverConfig'
 const defaultShareConfig = {
   title: '长投学堂',
   desc: '长投学堂--财富增长的魔法学院',
-  link: window.location.href.split('#')[0],
-  imgUrl: 'http://h5.ichangtou.com/mapp/resources/image/wx/default.png'
+  link: `${MSITE_URL}index.html#!/main`,
+  imgUrl: `${MSITE_URL}resources/image/wx/default.png`
 }
 
 Vue.mixin({

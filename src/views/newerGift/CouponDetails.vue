@@ -40,7 +40,6 @@
       .coupon-item{
         background: white;
         width: 16.5rem;
-        height: 6.25rem;
         border: 1px solid #ddd;
         margin-bottom: .55rem;
         padding-left: .5rem;

@@ -5,7 +5,7 @@
  */
 import {eventMap} from './frame/eventConfig'
 import {loadAllFreeRecords, loadAllExpenseRecords, resetRecords} from './vuex/courseRecords/actions'
-import {jpushInit, jpushSetAlias, jpushAddReceiveHandler, jpushOpenNotification, jpushSetRouter} from './vuex/jpush/actions'
+import {Jpush} from './plugin/jpush'
 import {getDiplomaList} from './vuex/graduationDiploma/actions'
 import {getHomeworkList} from './vuex/homework/mine/actions'
 import {syncUser} from './vuex/user/actions'
@@ -21,11 +21,6 @@ const mixin = {
       loadAllFreeRecords,
       loadAllExpenseRecords,
       resetRecords,
-      jpushInit,
-      jpushSetAlias,
-      jpushAddReceiveHandler,
-      jpushOpenNotification,
-      jpushSetRouter,
       getDiplomaList,
       getHomeworkList,
       syncUser
@@ -38,13 +33,7 @@ const mixin = {
   },
 
   watch: {
-    //'isLogin': function (currLoginStatus, preloginStatus) {
-    //  if (currLoginStatus) {
-    //    this.setAlias(this.userId)
-    //  } else {
-    //    this.setAlias('00')
-    //  }
-    //}
+
   },
 
   events: {
@@ -53,18 +42,19 @@ const mixin = {
      */
     [eventMap.APP_START]: function () {
       console.info('APP_START')
-
       // 设置推送配置
-      this.jpushInit()
+      Jpush.init()
       // 默认用户 设置成'00'
-      this.jpushSetAlias('00')
+      Jpush.setAlias('00')
+      // 打开app后,设置icon上的数字为0
+      Jpush.setIconBadgeNumber(0)
       //传入路由对象用于跳转页面
-      this.jpushSetRouter(this.$route.router)
+      Jpush.setRouter(this.$route)
 
-      // 增加推送消息接收处理
-      this.jpushAddReceiveHandler(this.onReceiveNotification)
+      // 添加收到推送的处理
+      Jpush.addReceiveHandler()
       // 添加点击通知事件
-      this.jpushOpenNotification()
+      Jpush.addOpenHandler()
 
       // 同步用户信息
       this.syncUser().then(this.doWhenUserValid)
@@ -108,6 +98,8 @@ const mixin = {
     [eventMap.LOGOUT]: function (user) {
       //console.info('LOGOUT', user)
       this.doWhenUserNotValid(user)
+      // 清除缓存
+      window.localStorage.clear()
     },
 
     /**
@@ -152,15 +144,16 @@ const mixin = {
       // 插入访问记录
       ictData.insertUvRecord(user)
 
+      // 设置jpush用户关联
+      Jpush.setAlias(user.userId)
+
       let tasks = []
       // 获取课程进度
       tasks.push(this.loadAllFreeRecords())
       tasks.push(this.loadAllExpenseRecords())
-      // 设置jpush用户关联
-      tasks.push(Promise.resolve(user.userId).then(this.jpushSetAlias))
       // 获取毕业证列表
       tasks.push(this.getDiplomaList().then(this.onGraduationDiplomaLoaded))
-
+      // 获取作业目录
       tasks.push(this.getHomeworkList())
 
       return Promise.all(tasks).then(
@@ -179,7 +172,8 @@ const mixin = {
       // 清理课程进度
       this.resetRecords()
       // 设置推送关联
-      this.jpushSetAlias('00')
+      Jpush.setAlias('00')
+      Jpush.setIconBadgeNumber(0)
     },
 
     /**
@@ -187,9 +181,9 @@ const mixin = {
      */
     hideSplashscreen: function () {
       //if (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS) {
-        if (window.navigator.splashscreen) {
-          window.navigator.splashscreen.hide()
-        }
+      if (window.navigator.splashscreen) {
+        window.navigator.splashscreen.hide()
+      }
       //}
     },
 

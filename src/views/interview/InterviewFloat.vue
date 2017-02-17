@@ -5,7 +5,7 @@
 <template>
   <div class="interview-share-float">
     <ict-sheet title="" :show.sync="show" btn-text="取消" @confirm="onConfirmTap">
-      <div >
+      <div>
         <div class="share-box">
           <div class="share-item">
             <div class="wechat"></div>
@@ -13,16 +13,16 @@
           </div>
           <div class="share-item">
             <div class="timeline"></div>
-            <div class="share-name">微信朋友圈</div>
+            <div class="share-name">朋友圈</div>
           </div>
           <div class="share-item">
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <div class="share-item" v-if="canWeiboShare">
-            <div class="weibo"></div>
-            <div class="share-name">微博</div>
-          </div>
+          <!--<div class="share-item" v-if="canWeiboShare">-->
+            <!--<div class="weibo"></div>-->
+            <!--<div class="share-name">微博</div>-->
+          <!--</div>-->
         </div>
 
       </div>

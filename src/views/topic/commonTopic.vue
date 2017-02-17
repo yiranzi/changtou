@@ -9,10 +9,11 @@
       </div>
     </scroller>
     <div class="bottom-area" v-show="isTopicLoaded && commonTopicInfo.price > 0">
-      <ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
+      <!--<ict-button class="ict-button" :disabled="isBuy" v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn> //因长投卡去掉购买限制-->
+      <ict-button class="ict-button"  v-bind:class="{'disable': isBuy}" v-touch:tap="toBuy" v-el:btn>
         立即购买<span class="price">￥{{commonTopicInfo.price}}</span>
       </ict-button>
-      <div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div>
+      <!--<div class="ticket-tip" v-show="isBuy">你已成功购买{{commonTopicInfo.title}},不可重复购买</div> //因长投卡去掉购买限制-->
     </div>
   </div>
 </template>
@@ -125,7 +126,7 @@
         window.history.back()
       },
       toBuy () {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TICKET_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.COMMON_TOPIC_CONFIRM_TAP, {
           '商品名称': this.commonTopicInfo.title,
           '价格': this.commonTopicInfo.price
         })

@@ -24,32 +24,6 @@ const setAlias = (alias) => {
 }
 
 /**
- * 监听接收消息
- * @param handler
- */
-const addReceiveHandler = function (handler) {
-  document.addEventListener('jpush.receiveNotification', handler, false)
-}
-
-/**
- * 设置应用显示的数字
- */
-export const setIconBadgeNumber = (num) => {
-  if (window.plugins && Device.platform === platformMap.IOS) {
-    window.plugins.jPushPlugin.setApplicationIconBadgeNumber(num)
-  }
-}
-
-/**
- *  打开通知消息
- */
-
-//- 在你需要接收通知的的 js 文件中加入:
-export const openNotification = () => {
-  document.addEventListener('jpush.openNotification', onOpenNotification, false)
-}
-
-/**
  * 设置路由
  * @param router
  */
@@ -57,18 +31,83 @@ const setRouter = (router) => {
   _router = router
 }
 
-const onOpenNotification = (event) => {
-  if (event.extras['type'] === 'IN_APP') {
-    let desurl = event.extras['desurl']
-    _router.router.go(desurl)
+/**
+ * 设置应用显示的数字
+ */
+const setIconBadgeNumber = (num) => {
+  if (window.plugins && Device.platform === platformMap.IOS) {
+    window.plugins.jPushPlugin.setApplicationIconBadgeNumber(num)
   }
 }
 
-export default {
-  init,
-  setAlias,
-  addReceiveHandler,
-  openNotification,
-  setRouter,
-  setIconBadgeNumber
+/**
+ * 接收消息 回调
+ * @param event
+ */
+const onReceiveNotification = (event) => {
+  setIconBadgeNumber(0)
+  //if (event.extras['msgType'] === 'IN_APP') {
+  //  _router.router.go(event.extras['desUrl'])
+  //}
+}
+
+/**
+ * 添加 监听接收消息
+ */
+const addReceiveHandler = () => {
+  document.addEventListener('jpush.receiveNotification', onReceiveNotification, false)
+}
+
+/**
+ * 收到消息 回调
+ * @param event
+ */
+const onOpenNotification = (event) => {
+  setIconBadgeNumber(0)
+  if (Device.platform === platformMap.IOS) {
+    if (event['msgType'] === 'IN_APP') {
+      _router.router.go(event['desUrl'])
+    }
+  } else if (Device.platform === platformMap.ANDROID) {
+    if (event.extras['msgType'] === 'IN_APP') {
+      _router.router.go(event.extras['desUrl'])
+    }
+  }
+}
+
+/**
+ *  添加  打开通知消息
+ */
+const addOpenHandler = () => {
+  document.addEventListener('jpush.openNotification', onOpenNotification, false)
+}
+
+const Jpush = {
+  get init () {
+    return init
+  },
+
+  get setAlias () {
+    return setAlias
+  },
+
+  get addReceiveHandler () {
+    return addReceiveHandler
+  },
+
+  get setIconBadgeNumber () {
+    return setIconBadgeNumber
+  },
+
+  get addOpenHandler () {
+    return addOpenHandler
+  },
+
+  get setRouter () {
+    return setRouter
+  }
+}
+
+export {
+  Jpush
 }

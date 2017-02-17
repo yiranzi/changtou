@@ -4,17 +4,23 @@
  */
 <template>
     <div class="choice-answer">
-      <span class="close-icon" v-touch:tap="onCloseTap"></span>
-      <div class="choice-title">
-        {{questionOrderTip}} <br/>
-        {{title}}
-      </div>
-      <div class="choice-options" v-for="option in currQuestion.content"
-           :class="{'select-right': optionTaped && $index === selectedOptionIndex && $index === currQuestion.answer, 'select-wrong': optionTaped && $index === selectedOptionIndex && $index !== currQuestion.answer}"
-           v-touch:tap="onOptionsTap($index)">
-        {{option}}
-      </div>
-      <ict-button :disabled="isBtnDisabled" v-touch:tap="onNextTap">{{btnText}}</ict-button>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+        <div style="position: relative;">
+          <div class="choice-title-bar">
+            <span class="close-icon" v-touch:tap="onCloseTap"></span>
+          </div>
+          <div class="choice-title">
+            {{questionOrderTip}} <br/>
+            {{title}}
+          </div>
+          <div class="choice-options" v-for="option in currQuestion.content"
+               :class="{'select-right': optionTaped && $index === selectedOptionIndex && $index === currQuestion.answer, 'select-wrong': optionTaped && $index === selectedOptionIndex && $index !== currQuestion.answer}"
+               v-touch:tap="onOptionsTap($index)">
+            {{option}}
+          </div>
+          <ict-button :disabled="isBtnDisabled" v-touch:tap="onNextTap">{{btnText}}</ict-button>
+        </div>
+      </scroller>
       <div class="explain" v-show="isExplainShow">
         <span class="close-icon" v-touch:tap="onExplainClose"></span>
         <p class="title">答案提示</p>
@@ -24,6 +30,7 @@
 </template>
 <script>
   import IctButton from '../../components/IctButton.vue'
+  import Scroller from 'vux/scroller'
   import {choiceGetters, userGetters} from '../../vuex/getters'
   import {choiceActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
@@ -45,6 +52,7 @@ export default {
   },
   data () {
     return {
+      scrollerHeight: '580px',
       subjectId: 0,
       lessonId: 0,
       btnText: '下一题', // 按钮文案
@@ -105,11 +113,27 @@ export default {
       this.getQuestion(this.lessonId).then(
         (choiceQuestion) => {
           this.initPointData(choiceQuestion)
+          this.setScrollerHeight()
         }
       )
     }
   },
   methods: {
+    /**
+     * 设置滚动条高度
+     */
+    setScrollerHeight () {
+      // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
+      const me = this
+      me.scrollerHeight = window.document.body.offsetHeight + 'px'
+      setTimeout(function () {
+        me.$nextTick(() => {
+          me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+      }, 150)
+    },
     initPointData (choiceQuestion) {
       const idArr = []
       const countArr = []
@@ -299,7 +323,8 @@ export default {
     }
   },
   components: {
-    IctButton
+    IctButton,
+    Scroller
   }
 }
 </script>
@@ -310,9 +335,12 @@ export default {
     }
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    padding-top: 2.95rem;
     background: #fff;
+    .choice-title-bar{
+      width: 100%;
+      height: 2.95rem;
+      position: relative;
+    }
     .close-icon:before{
       position: absolute;
       display: inline-block;

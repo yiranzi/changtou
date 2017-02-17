@@ -27,7 +27,7 @@
                   v-touch:tap="onStrategyTap">
         </ict-item>
         <ict-item title="优惠信息"
-                  link="coupon/details"  v-if='isCouponShow'>
+                  link="/coupon/details"  v-if='isCouponShow'>
         </ict-item>
         <div style="height: 1rem" class="spacer"></div>
         <ict-item title="系统消息"

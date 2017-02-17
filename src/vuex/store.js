@@ -25,9 +25,10 @@ import strategyIntro from './strategy/intro/store'
 import strategyProduct from './strategy/product/store'
 import strategyNotice from './strategy/notice/store'
 import graduationDiploma from './graduationDiploma/store'
-import giftPackage from './giftPackage/store'
+import newerGift from './newerGift/store'
 import questionNaire from './questionNaire/store'
 import annualReport from './annualReport/store'
+import ebook from './ebook/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -53,8 +54,9 @@ export default new Vuex.Store({
     strategyProduct, // 策略产品 数据
     strategyNotice, // 滚动通知文字
     graduationDiploma, //毕业证
-    giftPackage,  // 新手礼包
+    newerGift,  // 新手礼包
     questionNaire, // 问卷调查
-    annualReport
+    annualReport,
+    ebook   //电子书
   }
 })

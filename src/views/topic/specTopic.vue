@@ -325,7 +325,7 @@
        * 点击课程
        */
       onSubjectTap (subject, index) {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_CONFIRM_TAP, {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.TOPIC_SUBJECT_TAP, {
           'type': subject.type,
           'subjectid': subject.subjectId,
           'index': index
