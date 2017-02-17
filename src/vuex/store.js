@@ -29,6 +29,8 @@ import newerGift from './newerGift/store'
 import questionNaire from './questionNaire/store'
 import annualReport from './annualReport/store'
 import ebook from './ebook/store'
+import newerGuide from './newerGuide/store'
+
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -57,6 +59,7 @@ export default new Vuex.Store({
     newerGift,  // 新手礼包
     questionNaire, // 问卷调查
     annualReport,
-    ebook   //电子书
+    ebook,   //电子书
+    newerGuide //入门指南
   }
 })
