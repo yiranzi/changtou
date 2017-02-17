@@ -39,6 +39,22 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
+        <!--大咖读经典-->
+        <div class="expenselist-area classic-reading" v-touch:tap="goToClassicReading(readingClassics.cbId)">
+          <p class="area-label">
+            <span class="color-span"></span>
+            <span class="title">大咖读经典</span>
+          </p>
+          <div class="classic-content">
+            <img class="classic-cover" :src="readingClassics.pic"/>
+            <div class="classic-info">
+              <p class="classic-name">{{readingClassics.classicsName}}</p>
+              <p class="classic-detail">主播：{{readingClassics.anchor}}</p>
+              <p class="classic-detail">播放：{{readingClassics.playTimes}}次</p>
+            </div>
+          </div>
+        </div>
+        <!---->
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
@@ -97,6 +113,7 @@
         freeList: navigatorGetters.freeCourseList,
         expenseList: navigatorGetters.expenseCourseList,
         recommends: navigatorGetters.recommends,
+        readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin
       },
       actions: {
@@ -286,6 +303,18 @@
           me.showAlert('信息加载失败，请重试！')
         })
       },
+
+      /**
+       * 跳转到大咖读经典
+       * */
+
+      goToClassicReading (classicId) {   /*统计数据*/
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '大咖读经典'
+        })
+        this.$route.router.go(`/classicReading/${classicId}`)   /*classicId放在url中传递*/
+      },
+
       backHandler () {
         window.alert('main')
       },
@@ -605,6 +634,41 @@
       height:1.5rem;
       background: #eee;
     }
+  /*新增大咖读经典*/
+    .classic-info >p {
+      text-align: left;
+    }
+    .classic {
+      &-content {
+        margin: 0 .7rem;
+        background: url("../../assets/styles/image/classicReading/classic_background.png") no-repeat;
+        background-size: contain;
+        text-align: left;
+        padding: .5rem 0 0;
+      }
+      &-cover {
+        display: inline-block;
+        padding: 0 .7rem .5rem .5rem;
+        width: 4.1rem;
+        height: 5.35rem;
+      }
+      &-info {
+        display: inline-block;
+        vertical-align: top;
+        line-height: 1.3rem;
+      }
+      &-name {
+        color: #444;
+        padding-top: .3rem;
+        font-size: .7rem;
+      }
+      &-detail {
+        font-size: .65rem;
+        color: #aaa;
+      }
+
+    }
+
   }
 
 </style>

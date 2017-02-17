@@ -20,3 +20,8 @@ export const freeCourseList = (state) => {
 export const recommends = (state) => {
    return state.navigator.recommends
 }
+
+// 大咖读经典，专辑简介
+export const readingClassics = (state) => {
+  return state.navigator.readingClassics
+}

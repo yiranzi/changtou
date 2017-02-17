@@ -26,6 +26,8 @@ import * as graduationDiplomaGetters from './graduationDiploma/getters'
 import * as giftGetters from './giftPackage/getters'
 import * as questionNaireGetters from './questionNaire/getters'
 import * as annualReportGetters from './annualReport/getters'
+import * as classicReadingGetters from './classicReading/getters'
+
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -51,5 +53,6 @@ export {
   graduationDiplomaGetters,  //毕业证
   giftGetters,                           // 新手礼包
   questionNaireGetters,          // 问卷调查
-  annualReportGetters
+  annualReportGetters,  // 大数据活动
+  classicReadingGetters  //大咖读经典
 }

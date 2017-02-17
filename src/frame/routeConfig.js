@@ -297,6 +297,10 @@ export function configRouter (router) {
      */
     'annual/report': {
       component: require('../views/annualReport/AnnualReport.vue')
+    },
+    /*大咖读经典*/
+    '/classicReading/:classicId': {
+      component: require('../views/classicReading/ClassicReading.vue')
     }
   })
 
