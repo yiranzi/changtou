@@ -2,17 +2,17 @@
  * Created by zhongyan on 2017/2/15.
  */
 const state = {
-  classicReadingDetails: {
-    anchor: '',
-    cbId: 0,
-    classicsName: '',
-    fansNum: 0,
-    pic: '',
-    playTimes: 0
+  classicReadingDetails: {    //经典详情全部内容
+    anchor: '',       //主播
+    cbId: 0,          //经典id
+    classicsName: '',  // 经典名称
+    fansNum: 0,       // 粉丝数量
+    pic: '',          // 经典封面
+    playTimes: 0      //播放次数
   },
-  audio: [],
-  fansImgs: [],
-  classicIntroText: ''
+  audio: [],           //经典音频
+  fansImgs: [],       //经典粉丝头像
+  classicIntroText: ''  // 经典的介绍文案
 }
 
 const mutations = {

@@ -5,8 +5,9 @@ import {getWithoutAuth, postWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /*
-加载大咖读经典模块的经典专辑详情
-* */
+*加载大咖读经典模块的经典专辑详情
+*
+*/
 
 export const loadClassicReadingDetails = ({ dispatch }, classicId) => {
   return new Promise(
@@ -26,8 +27,11 @@ export const loadClassicReadingDetails = ({ dispatch }, classicId) => {
   )
 }
 
+/*
+* 更新音频播放次数
+* */
+
 export const updatePlayedTime = ({ dispatch }, classicId, id) => {
-  console.log('classicId', classicId, 'id', id)
   return new Promise(
     (resolve, reject) => {
       postWithoutAuth({

@@ -1,8 +1,7 @@
 <template>
     <div >
-      <div class="module-title" v-el:titlebar>
-        <ict-titlebar class="title-bar">大咖读经典</ict-titlebar>
-      </div>
+      <div class="module-title" v-el:titlebar><ict-titlebar class="title-bar">大咖读经典</ict-titlebar></div>
+
       <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <div class="classic-intro-area">
@@ -22,27 +21,25 @@
 
           <div class="listening">
             <div class="listening-title"><span></span> 试听 <span></span></div>
-            <div class="audio-list" v-for="testAudio in testAudioList "v-touch:tap="changeTestAudioPlayStatus(testAudio.id, testAudio.audioUrl)">
-              <span :class="{ 'play-btn': (activeAudioId === testAudio.id),'pause-btn': (activeAudioId !== testAudio.id)}"></span> <!--播放按钮-->
+            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in testAudioList "v-touch:tap="onAuditionTap(audio.id, audio.audioUrl)">
+              <span class="pause-btn"></span> <!--播放按钮-->
               <div class="audio-detail">
-                <div class="audio-title" :class="{'audio-title-playing-style': (activeAudioId === testAudio.id)}">0{{$index + 1}}{{testAudio.audioName}}</div>
+                <div class="audio-title">0{{$index + 1}}{{audio.audioName}}</div>
                 <div class="audio-info">
-                  <span class="person-icon"></span><span>{{testAudio.playTimes}}</span><span class="time-icon"></span><span>{{testAudio.audioDuration}}</span><span class="update-time" v-show="todayTime !== testAudio.updateTime">{{testAudio.updateTime}}</span><span class="update-time" v-show="todayTime === testAudio.updateTime">今天</span>
+                  <span class="person-icon"></span><span>{{audio.playTimes}}</span><span class="time-icon"></span><span>{{audio.audioDuration}}</span><span class="update-time" v-show="todayTime !== audio.updateTime">{{audio.updateTime}}</span><span class="update-time" v-show="todayTime === audio.updateTime">今天</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="listening" v-if="lastedAudioList !== null">
-            <div class="listening-title">
-              <span></span> 最近更新 <span></span>
-            </div>
-            <div class="audio-list" v-for="lastedAudio in lastedAudioList" v-touch:tap="changeLatestAudioPlayStatus(lastedAudio.id)">
-              <span :class="{ 'play-btn': (activeAudioId === lastedAudio.id),'pause-btn': (activeAudioId !== lastedAudio.id)}"></span> <!--播放按钮-->
+            <div class="listening-title"><span></span> 最近更新 <span></span></div>
+            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in lastedAudioList" v-touch:tap="onAudioTap(audio.id, audio.audioUrl)">
+              <span class="pause-btn"></span> <!--播放按钮-->
               <div class="audio-detail">
-                <div class="audio-title" :class="{'audio-title-playing-style': (activeAudioId === lastedAudio.id)}"><span v-show="(audioLength - $index) < 10">0</span>{{audioLength - $index}}{{lastedAudio.audioName}}</div>
+                <div class="audio-title"><span v-show="(audioLength - $index) < 10">0</span>{{audioLength - $index}}{{audio.audioName}}</div>
                 <div class="audio-info">
-                  <span class="person-icon"></span><span>{{lastedAudio.playTimes}}</span><span class="time-icon"></span><span>{{lastedAudio.audioDuration}}</span><span class="update-time" v-show="todayTime !== lastedAudio.updateTime">{{lastedAudio.updateTime}}</span><span class="update-time" v-show="todayTime === lastedAudio.updateTime">今天</span>
+                  <span class="person-icon"></span><span>{{audio.playTimes}}</span><span class="time-icon"></span><span>{{audio.audioDuration}}</span><span class="update-time" v-show="todayTime !== audio.updateTime">{{audio.updateTime}}</span><span class="update-time" v-show="todayTime === audio.updateTime">今天</span>
                 </div>
               </div>
             </div>
@@ -52,7 +49,6 @@
             <span></span><span>粉丝</span><span>{{fansNum}}</span>
             <div class="fans-list">
               <img class="fans-img" v-for="fansImg in fansImages" :src="fansImg"/>
-              <img v-show="isLogin" class="fans-img" :src="avatar"/>
             </div>
           </div>
         </div>
@@ -70,9 +66,10 @@
   export default {
     data () {
       return {
+        scrollerHeight: '580px',
         classicId: 0,
-        activeAudioId: -1,
         status: 'pause',
+        isInitListeners: false,
         audioUrl: ''
       }
     },
@@ -91,6 +88,9 @@
       }
     },
     computed: {
+      isPlayed () {
+        return this.status === 'play'
+      },
       classicIntro () {
         if (this.classicIntroText !== '') {
           return this.classicIntroText.split('#')[0]
@@ -110,17 +110,11 @@
         return this.classicReadingDetails.fansNum
       },
       fansImages () {
-        if (this.fansImgs.length < 2) {
-          return this.fansImgs
-        }
         const unorderedArray = this.fansImgs.sort(function (a, b) { return Math.random() > 0.5 ? -1 : 1 })
-        if (unorderedArray.length < 5) {
-          return unorderedArray
+        if (this.isLogin) {
+          return unorderedArray.slice(0, 4).concat([this.avatar])
         } else {
-          if (this.isLogin) {
-            return unorderedArray.slice(0, 4)
-          }
-          return unorderedArray.slice(0, 5)
+        return unorderedArray.slice(0, 5)
         }
       },
       testAudioList () {
@@ -153,37 +147,29 @@
         return result
       }
     },
+    watch: {
+      audioUrl (newValue, oldValue) {
+        if (newValue && !this.isInitListeners) {
+          this.isInitListeners = true
+          this.addAudioListens()
+          this.initStatus()        /*初次渲染界面,初始化音频状态*/
+        }
+        webAudio.create(newValue)
+        //设置音频地址后, 200毫秒开始自动播放
+        setTimeout(() => {
+          webAudio.play()
+        }, 200)
+      }
+    },
     route: {
       data ({to: {params}}) {
         this.classicId = params.classicId
         this.getClassicDetails(this.classicId).then(
           this.setScrollerHeight()
         )
-      }
-    },
-    components: {
-      IctTitlebar,
-      Scroller
-    },
-    watch: {
-      audioUrl (newValue, oldValue) {
-        // 若是空音频文件, 不播放
-        var regExp = new RegExp(/empty.mp3/)
-        if (regExp.test(newValue)) {
-          this.pause()
-        //  this.isEmptyTipShow = true
-       // } else {
-       //   this.isEmptyTipShow = false
-        }
-
-        if (newValue && !this.isInitListeners) {
-          this.isInitListeners = true
-          this.addAudioListens()
-          this.initStatus()
-        }
-        webAudio.create(newValue)
-        //设置音频地址后, 200毫秒开始自动播放
-        setTimeout(() => webAudio.play(), 200)
+      },
+      deactivate () {
+        this.pause()
       }
     },
     methods: {
@@ -204,52 +190,49 @@
       /*
       * 点击播放试听列表
       * */
-      changeTestAudioPlayStatus (id, audioUrl) {
-        this.audioUrl = audioUrl
-        if (this.activeAudioId !== id) {
-          this.activeAudioId = id
-          this.play()
-          this.updatePlayedTime(this.classicId, id)
-        } else {
+      onAuditionTap (id, audioUrl) {
+        if (this.audioUrl !== audioUrl) { //点击新的音频
+          this.audioUrl = audioUrl
+          this.updatePlayedTime(this.classicId, id)    //更新音频播放次数
+        } else { //点击原来的音频
+          this.toggle()
+        }
+      },
+
+      toggle () {
+        if (this.status === 'play') {
           this.pause()
-          this.activeAudioId = -1
+        } else if (this.status === 'pause') {
+          this.play()
         }
       },
 
       /*
-      * 点击播放最近更新列表
+      * 点击播放最近更新列表,只有登录后才能听此部分
       * */
-      changeLatestAudioPlayStatus (id) {
+      onAudioTap (id, audioUrl) {
         if (!this.isLogin) {
           this.$route.router.go('/entry')
         } else {
-          if (this.activeAudioId !== id) {
-            this.activeAudioId = id
-            this.updatePlayedTime(this.classicId, id)
-          } else {
-            this.activeAudioId = -1
-          }
+          this.onAuditionTap(id, audioUrl)
         }
       },
+
+      /*
+      *监听播放状态
+      **/
 
       addAudioListens () {
         const me = this
         webAudio.on(webAudio.events.play, () => {
           me.status = 'play'
-      })
+        })
         webAudio.on(webAudio.events.pause, () => {
           me.status = 'pause'
-      })
+        })
         webAudio.on(webAudio.events.ended, () => {
           me.status = 'pause'
-        me.stopTimerTask()
-        me.activeAudioId
-        //     me.$dispatch('audioPlayEnd')
-      })
-
-//        webAudio.on(webAudio.events.loadMediaDuration, () => {
-//          me.totalTime = convertAudioTimeToString(webAudio.duration)
-//      })
+        })
       },
       play () {
         webAudio.play()
@@ -261,15 +244,11 @@
       // 初始化音频状态
       initStatus () {
         this.status = webAudio.status
-      },
-      events: {
-        'pause': function () {
-          this.pause()
-        },
-        'play': function () {
-          this.play()
-        }
       }
+    },
+    components: {
+      IctTitlebar,
+      Scroller
     }
   }
 </script>
@@ -345,7 +324,6 @@
         border-top: 1px solid #ccc;
       }
     }
-
   }
 }
 
@@ -383,14 +361,9 @@
 .audio-list {
   margin: 0 1.25rem;
   padding-bottom: .7rem;
+
 }
-.play-btn::before {
-  content: '\E928';
-  color: #FFA12D;
-  font-size: 1.5rem;
-  font-family: 'myicon';
-  vertical-align: middle;
-}
+
 .pause-btn::before {
   content: '\E927';
   color: #FFA12D;
@@ -398,6 +371,21 @@
   font-family: 'myicon';
   vertical-align: middle;
 }
+
+.playing-style {
+  div:nth-child(1) {
+    color: #FFA12D;
+  }
+
+  > span::before {
+    content: '\E928';
+    color: #FFA12D;
+    font-size: 1.5rem;
+    font-family: 'myicon';
+    vertical-align: middle;
+  }
+}
+
 
 .person-icon::before {
   content: '\E92C';
@@ -417,9 +405,6 @@
   margin-bottom: .35rem;
 }
 
-.audio-title-playing-style {
-  color: #FFA12D;
-}
 .audio-info {
   font-size: .6rem;
   color: #ccc;
