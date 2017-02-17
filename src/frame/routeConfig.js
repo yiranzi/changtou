@@ -131,7 +131,7 @@ export function configRouter (router) {
      * 支付模块
      */
     // 支付成功
-    'pay/success/:type/:id': {
+    '/pay/success/:type/:id': {
       component: require('../views/pay/Success.vue')
     },
 
@@ -253,50 +253,52 @@ export function configRouter (router) {
     /**
      * 新手礼包
      */
-     '/giftPackage/giftPackageDetails': {
-      component: require('../views/giftPackage/giftPackageDetails.vue')
+     '/newerGift/giftPackageDetails': {
+      component: require('../views/newerGift/giftPackageDetails.vue')
     },
     /**
      * 优惠信息
      */
-    'coupon/details': {
-      component: require('../components/giftPackage/CouponDetails.vue')
-    },
-    /**
-     * 新手读物详情页
-     */
-    'giftPackage/newerBookDetails/:bookId': {
-      component: require('../views/giftPackage/BookDetails.vue')
-    },
-    /**
-     * 图书内容页                  // 使用动态匹配向内传值更改 DATA
-     */
-    'giftPackage/bookChapter/:bookId/:currIndex': {
-      component: require('../views/giftPackage/BookChapter.vue')
+    '/coupon/details': {
+      component: require('../views/newerGift/CouponDetails.vue')
     },
     /**
      * 问卷调查
      */
-    'questionNaire/:naireId': {
+    '/questionNaire/:naireId': {
       component: require('../views/questionnaire/questionDetail1.vue')
     },
     /**
-     * 新手攻略 页面一 (提示: 若用户已领取攻略则直接跳转页面二)
+     * 新手攻略 页面一
      */
-    'newerStrategy/page/1': {
-      component: require('../views/newerStrategy/newerStrategy1.vue')
+    '/guide/test': {
+      component: require('../views/newerGuide/GuideTest.vue')
     },
     /**
      * 新手攻略 页面二
      */
-    'newerStrategy/page/2': {
-      component: require('../views/newerStrategy/newerStrategy2.vue')
+    '/guide/present': {
+      component: require('../views/newerGuide/GuidePresent.vue')
     },
     /**
      * 大数据 活动
      */
-    'annual/report': {
+    '/annual/report': {
       component: require('../views/annualReport/AnnualReport.vue')
+    },
+
+    /**
+     * 电子书 简介页
+     */
+    '/ebook/detail/:bookId': {
+      component: require('../views/ebook/Detail.vue')
+    },
+
+    /**
+     * 电子书 阅读页
+     */
+    '/ebook/chapter/:bookId/:chapterId': {
+      component: require('../views/ebook/Chapter.vue')
     },
     /*大咖读经典*/
     '/classicReading/:classicId': {

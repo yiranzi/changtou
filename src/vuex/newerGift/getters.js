@@ -3,5 +3,5 @@
  */
 // 获取优惠券列表
 export const couponList = (state) => {
-  return state.giftPackage.couponList
+  return state.newerGift.couponList
 }

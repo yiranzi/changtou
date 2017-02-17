@@ -177,7 +177,7 @@ const apiUrl = {
    */
    'update/book/progress': '/e-book/record/:bookId/:sectionIndex',  // 用户离开阅读界面,更新阅读电子书进度
    'get/book/progress': '/e-book/record/:bookId',                    // 获取电子书阅读进度
-
+   'get/ebook': '/e-book/receive/:bookId',       //领取电子书
   /**
    * 微信sdk
    */

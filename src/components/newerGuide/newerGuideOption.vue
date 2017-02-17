@@ -2,7 +2,7 @@
 *  专用于新手攻略的按钮，可以点击切换状态 :)
 */
 <template>
-  <div class="ict-item-questionnaire" :disabled="disabled" :class="{'ict-item-disabled': disabled, 'ict-item-active': btnActive}" v-touch:tap="onTap"
+  <div class="newer-guide-item" :disabled="disabled" :class="{'ict-item-disabled': disabled, 'newer-guide-item-active': btnActive}" v-touch:tap="onTap"
        :order="order" :option="option" :group="group">
     {{title}}
   </div>
@@ -40,7 +40,7 @@ export default {
 }
 </script>
 <style lang="less">
-  .ict-item-questionnaire{
+  .newer-guide-item{
     color: #384879;
     height: .8rem;
     border-radius: 1rem;
@@ -53,7 +53,7 @@ export default {
     font-size: .75rem;
     font-weight: bold;
   }
-  .ict-item-active{
+  .newer-guide-item-active{
     color: white;
     background: #00b0f0;
   }

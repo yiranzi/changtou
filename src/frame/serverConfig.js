@@ -21,6 +21,8 @@ const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wx7cf8dd5d80048e42'
 
 const PROJECT = debug ? 'mapp' : 'app'
 
+const MSITE_URL = debug ? 'http://h5test.ichangtou.com.cn/juns/' : 'http://h5test.ichangtou.com.cn/juns/'
+
 /**
  * 开发 + 上线
  */
@@ -36,7 +38,9 @@ const PROJECT = debug ? 'mapp' : 'app'
 //
 //const WX_APPID = debug ? 'wx7cf8dd5d80048e42' : 'wxd6c823882698f217'
 
-//const CHANNEL = debug ? 'mapp' : 'app'
+//const PROJECT = debug ? 'mapp' : 'app'
+
+//const MSITE_URL = debug ? 'http://h5test.ichangtou.com.cn/juns/' : 'http://h5.ichangtou.com/mapp_new/'
 
 export {
   SEVER_URL,
@@ -45,5 +49,6 @@ export {
   D_PLUS_ID,
   ICT_DATA_SERVER,
   WX_APPID,
-  PROJECT
+  PROJECT,
+  MSITE_URL
 }

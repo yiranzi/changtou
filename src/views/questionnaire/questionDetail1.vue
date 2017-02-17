@@ -43,62 +43,11 @@
     <ict-button type="default"  v-touch:tap="doSubmit" :disabled="!isAccordSubmit" v-el:ictbutton >提交</ict-button>
  </div>
 </template>
-<style lang="less">
-  .question-naire-container{
-    background: #fff;
-    .question-detail-container{
-      font-size: .7rem;
-      .ict-btn{
-        border-radius: 0;
-      }
-      .question-container{
-        background: #f0eff5;
-        color: #666;
-        font-size: .65rem;
-        padding: 1rem 1.25rem;
-      }
-      .inner-for-padding{
-        width: 100%;
-        height: 1.5rem;
-        background: #fff;
-      }
-      .question-option-container{
-        background: white;
-        .option-item-title{
-          text-align: center;
-          font-size: .65rem;
-          color: #aaa;
-          margin-bottom: 1rem;
-        }
-        .option-item-title + p{
-          text-align: center;
-          margin-bottom: 2.5rem;
-          font-size: .6rem;
-          span{
-            color: #666;
-            width: 3.75rem;
-            height: 1.35rem;
-            border-radius: .675rem;
-            border: 1px solid #eee;
-            padding: .2rem .5rem;
-            margin-right: .5rem;
-          }
-        }
-        .option-item-title + p:last-child{
-          margin-bottom: 2.32rem;
-        }
-      }
-      .option-blue-text{
-        color: #00b0f0;
-      }
-    }
-  }
-</style>
 <script>
   import Swiper from 'vux/swiper'
   import SwiperItem from 'vux/swiper-item'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import IctOption from '../../components/questionnaire/IctOption.vue'
+  import IctOption from '../../components/questionnaire/questionnaireOption.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
   import {questionNaireActions} from '../../vuex/actions'
@@ -187,3 +136,54 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .question-naire-container{
+    background: #fff;
+    .question-detail-container{
+      font-size: .7rem;
+      .ict-btn{
+        border-radius: 0;
+      }
+      .question-container{
+        background: #f0eff5;
+        color: #666;
+        font-size: .65rem;
+        padding: 1rem 1.25rem;
+      }
+      .inner-for-padding{
+        width: 100%;
+        height: 1.5rem;
+        background: #fff;
+      }
+      .question-option-container{
+        background: white;
+        .option-item-title{
+          text-align: center;
+          font-size: .65rem;
+          color: #aaa;
+          margin-bottom: 1rem;
+        }
+        .option-item-title + p{
+          text-align: center;
+          margin-bottom: 2.5rem;
+          font-size: .6rem;
+          span{
+            color: #666;
+            width: 3.75rem;
+            height: 1.35rem;
+            border-radius: .675rem;
+            border: 1px solid #eee;
+            padding: .2rem .5rem;
+            margin-right: .5rem;
+          }
+        }
+        .option-item-title + p:last-child{
+          margin-bottom: 2.32rem;
+        }
+      }
+      .option-blue-text{
+        color: #00b0f0;
+      }
+    }
+  }
+</style>

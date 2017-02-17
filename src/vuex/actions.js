@@ -23,9 +23,10 @@ import * as strategyIntroActions from './strategy/intro/actions'
 import * as strategyProductActions from './strategy/product/actions'
 import * as strategyNoticeActions from './strategy/notice/actions'
 import * as graduationDiplomaActions from './graduationDiploma/actions'
-import * as giftActions from './giftPackage/actions'
+import * as giftActions from './newerGift/actions'
 import * as questionNaireActions from './questionNaire/actions'
 import * as annualReportActions from './annualReport/actions'
+import * as ebookActions from './ebook/actions'
 import * as classicReadingActions from './classicReading/actions'
 
 export {
@@ -54,5 +55,6 @@ export {
   giftActions,          // 新手礼包
   questionNaireActions,         // 调查问卷
   annualReportActions,          // 大数据活动
+  ebookActions,      //电子书
   classicReadingActions   //大咖读经典
 }

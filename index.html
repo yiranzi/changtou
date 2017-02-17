@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' gap://ready file://* * ; font-src *  data:;img-src data: *; style-src 'self' https://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' gap://ready file://* http://* https://* * ; font-src *  data:;img-src data: *; style-src 'self' http://* https://* 'unsafe-inline' blob: ; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -18,12 +18,13 @@
 
   <!--以下为m站必须-->
   <!-- 微信js sdk -->
-  <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <!--<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
 
 </head>
 
 <body>
 <div id="appFontTester" style="width: 18.75rem;height: 1px"></div>
+
 <script>
 
   /**
@@ -120,6 +121,9 @@
 
 </script>
 <script type="text/javascript" src="cordova.js"></script>
+<!--电子书阅读器-->
+<script src="./static/ebooks/lib/epub.min.js"></script>
+
 <app></app>
 <!-- built files will be auto injected -->
 </body>

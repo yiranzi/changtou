@@ -51,6 +51,45 @@
     </scroller>
   </div>
 </template>
+<script>
+  import IctTitlebar from '../../components/IctTitleBar.vue'
+  import Scroller from 'vux/scroller'
+  export default {
+    data () {
+      return {
+        scrollerHeight: '0px'
+      }
+    },
+    ready () {
+    this.setScrollerHeight()
+    },
+    components: {
+      IctTitlebar,
+      Scroller
+    },
+    methods: {
+      goToIndexPage () {
+      this.$route.router.go('/main')
+    },
+      gotoBookDetails () {
+      this.$route.router.go('/ebook/detail/1')
+    },
+      setScrollerHeight () {
+        // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
+        const me = this
+        const {titlebar} = this.$els
+        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
+        setTimeout(function () {
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 150)
+    }
+  }
+}
+</script>
 <style lang="less">
   .gift-package-details{
     background: white ;
@@ -118,42 +157,3 @@
     }
   }
 </style>
-<script>
-  import IctTitlebar from '../../components/IctTitleBar.vue'
-  import Scroller from 'vux/scroller'
-  export default {
-    data () {
-      return {
-        scrollerHeight: '0px'
-      }
-    },
-    ready () {
-    this.setScrollerHeight()
-    },
-    components: {
-      IctTitlebar,
-      Scroller
-    },
-    methods: {
-      goToIndexPage () {
-      this.$route.router.go('/main')
-    },
-      gotoBookDetails () {
-      this.$route.router.go('/giftPackage/newerBookDetails')
-    },
-      setScrollerHeight () {
-        // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
-        const me = this
-        const {titlebar} = this.$els
-        me.scrollerHeight = (window.document.body.offsetHeight - titlebar.offsetHeight) + 'px'
-        setTimeout(function () {
-          me.$nextTick(() => {
-            me.$refs.scroller.reset({
-            top: 0
-          })
-        })
-        }, 150)
-    }
-  }
-}
-</script>

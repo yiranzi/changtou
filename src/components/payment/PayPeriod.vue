@@ -7,7 +7,7 @@
     <label v-for="period in periods" for="coupons_{{$index}}" class="coupon-item">
       <span>{{period.name}}</span>
       <span class="price">￥{{period.price}}</span>
-      <span v-if="period.discount">({{period.discount}}折)</span>
+      <span v-if="period.discount">({{period.discount*10}}折)</span>
       <input class="coupon-item-check" type="radio" value="{{$index}}" checked="{{!$index}}" v-model="value" id="coupons_{{$index}}">
       <span class="coupon-item-checked"></span>
     </label>

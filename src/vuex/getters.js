@@ -23,9 +23,10 @@ import * as strategyIntroGetters from './strategy/intro/getters'
 import * as strategyProductGetters from './strategy/product/getters'
 import * as strategyNoticeGetters from './strategy/notice/getters'
 import * as graduationDiplomaGetters from './graduationDiploma/getters'
-import * as giftGetters from './giftPackage/getters'
+import * as giftGetters from './newerGift/getters'
 import * as questionNaireGetters from './questionNaire/getters'
 import * as annualReportGetters from './annualReport/getters'
+import * as ebookGetters from './ebook/getters'
 import * as classicReadingGetters from './classicReading/getters'
 
 export {
@@ -53,6 +54,7 @@ export {
   graduationDiplomaGetters,  //毕业证
   giftGetters,                           // 新手礼包
   questionNaireGetters,          // 问卷调查
-  annualReportGetters,  // 大数据活动
+  annualReportGetters,  //年度报告
+  ebookGetters,    //电子书
   classicReadingGetters  //大咖读经典
 }
