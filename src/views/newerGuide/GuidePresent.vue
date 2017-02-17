@@ -209,8 +209,9 @@ import {webAudio} from '../../util/audio/web'
       autoPlay () {
         if (!this.currAudioUrl) {
           this.currAudioUrl = this.audioList[0].url
+        } else {
+          this.toggle()
         }
-        this.toggle()
       }
     },
     components: {
