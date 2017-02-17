@@ -11,7 +11,7 @@ cordova-hcp build
   "release": "2016.05.29-20.57.39",
   "content_url": "http://app.ichangtou.com.cn/update/www",
   "min_native_interface": 10200,
-  "update": "start"
+  "update": "now"
 }
 
 //正式环境
@@ -20,7 +20,7 @@ cordova-hcp build
   "release": "2016.05.29-20.57.39",
   "content_url": "http://m.ichangtou.net/update/www",
   "min_native_interface": 10200,
-  "update": "start"
+  "update": "now"
 }
 
 
