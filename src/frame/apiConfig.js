@@ -186,7 +186,10 @@ const apiUrl = {
    *  大数据活动
    */
   'user_annual_report': '/ict-data/new-year-opt/data',             //  获取用户的一些个人信息
-
+  /**
+   * 入门指南
+   */
+  'guide_audio_list': '/homepage/guideaudio-list' //音频列表
   /**
    *  大咖读经典
    */
