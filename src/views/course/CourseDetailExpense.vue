@@ -446,7 +446,7 @@
       },
 
       'currRecord': function (record) {
-        this.currChapterRecord = record.studentChapter
+        this.currChapterRecord = record && record.studentChapter
       }
     },
 
