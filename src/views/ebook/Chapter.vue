@@ -119,16 +119,18 @@ export default {
       const bookChapterView = this
       //找到书名
       const bookName = this.bookArr(this.bookId).docName
+      const width = parseInt(window.document.body.offsetWidth * 0.8)
+      const height = parseInt((window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) * 0.8)
 
       //注册epub
       this.book = window.ePub(`http://source.ichangtou.com/file/ebooks/${bookName}/`, {
         restore: true,
-        width: window.document.body.offsetWidth * 0.8,
-        height: this.ebookHeight * 0.8
+        width: width,
+        height: height
       })
 
-      this.book.setStyle('width', '100%')
-      this.book.setStyle('height', '100%')
+      this.book.setStyle('width', `${width}px`)
+      this.book.setStyle('height', `${height}px`)
 
       // 监听 翻页变化
       this.addPageChangeListener()
