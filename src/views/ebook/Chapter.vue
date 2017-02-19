@@ -20,7 +20,9 @@
         <div class="tap-area" v-touch:tap="goToPrePage"></div>
         <div class="tap-area" v-touch:tap="goToNextPage"></div>
       </div>
-      <div class="ebook-content" v-if="book" v-el:ebook :style="ebookHeight"></div>
+      <div class="ebook" :style="ebookHeight">
+        <div class="ebook-content" v-if="book" v-el:ebook ></div>
+      </div>
       <span class="pageNum">阅读进度 {{(percentage * 100).toFixed(1)}}%</span>
     </div>
 </template>
@@ -125,8 +127,8 @@ export default {
         height: this.ebookHeight * 0.8
       })
 
-      this.book.setStyle('width', `${window.document.body.offsetWidth * 0.8}px`)
-      this.book.setStyle('height', `${this.ebookHeight * 0.8}px`)
+      this.book.setStyle('width', '100%')
+      this.book.setStyle('height', '100%')
 
       // 监听 翻页变化
       this.addPageChangeListener()
@@ -333,10 +335,13 @@ export default {
         }
       }
     }
-    .ebook-content{
+    .ebook{
       width: 100%;
-      padding: 10%;
-      box-sizing: border-box;
+    }
+    .ebook-content{
+      margin: 10%;
+      width: 80%;
+      height: 80%;
     }
     .pageNum{
       position: absolute;
