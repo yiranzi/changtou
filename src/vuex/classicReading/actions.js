@@ -13,7 +13,7 @@ export const loadClassicReadingDetails = ({ dispatch }, classicId) => {
   return new Promise(
     (resolve, reject) => {
       getWithoutAuth({
-        url: getUrl('load_classicReading_details').replace(':cbId', classicId)
+        url: getUrl('load_classic_reading_details').replace(':cbId', classicId)
       }).then(
         data => {
           dispatch('CLASSIC_READING_DETAILS', data)
@@ -35,7 +35,7 @@ export const updatePlayedTime = ({ dispatch }, classicId, id) => {
   return new Promise(
     (resolve, reject) => {
       postWithoutAuth({
-        url: getUrl('update_played_time').replace(':cbId', classicId).replace(':cbaId', id)
+        url: getUrl('update_classic_played_time').replace(':cbId', classicId).replace(':cbaId', id)
       }).then(
         () => {
           resolve()

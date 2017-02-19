@@ -301,7 +301,7 @@ export function configRouter (router) {
       component: require('../views/ebook/Chapter.vue')
     },
     /*大咖读经典*/
-    '/classicReading/:classicId': {
+    '/classic/reading/:classicId': {
       component: require('../views/classicReading/ClassicReading.vue')
     }
   })

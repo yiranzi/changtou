@@ -1,7 +1,6 @@
 <template>
     <div >
-      <div class="module-title" v-el:titlebar><ict-titlebar class="title-bar">大咖读经典</ict-titlebar></div>
-
+     <ict-titlebar v-el:titlebar>大咖读经典</ict-titlebar>
       <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <div class="classic-intro-area">
@@ -21,7 +20,7 @@
 
           <div class="listening">
             <div class="listening-title"><span></span> 试听 <span></span></div>
-            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in testAudioList "v-touch:tap="onAuditionTap(audio.id, audio.audioUrl)">
+            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in testAudioList "v-touch:tap="onAudioTap(audio.id, audio.audioUrl)">
               <span class="pause-btn"></span> <!--播放按钮-->
               <div class="audio-detail">
                 <div class="audio-title">0{{$index + 1}}{{audio.audioName}}</div>
@@ -32,12 +31,12 @@
             </div>
           </div>
 
-          <div class="listening" v-if="lastedAudioList !== null">
+          <div class="listening" v-if="latestAudioList !== null">
             <div class="listening-title"><span></span> 最近更新 <span></span></div>
-            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in lastedAudioList" v-touch:tap="onAudioTap(audio.id, audio.audioUrl)">
+            <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in latestAudioList" v-touch:tap="onLatestAudioTap(audio.id, audio.audioUrl)">
               <span class="pause-btn"></span> <!--播放按钮-->
               <div class="audio-detail">
-                <div class="audio-title"><span v-show="(audioLength - $index) < 10">0</span>{{audioLength - $index}}{{audio.audioName}}</div>
+                <p class="audio-title"><span v-show="(audioAmount - $index) < 10">0</span>{{audioAmount - $index}}{{audio.audioName}}</p>
                 <div class="audio-info">
                   <span class="person-icon"></span><span>{{audio.playTimes}}</span><span class="time-icon"></span><span>{{audio.audioDuration}}</span><span class="update-time" v-show="todayTime !== audio.updateTime">{{audio.updateTime}}</span><span class="update-time" v-show="todayTime === audio.updateTime">今天</span>
                 </div>
@@ -46,7 +45,7 @@
           </div>
 
           <div class="fans">
-            <span></span><span>粉丝</span><span>{{fansNum}}</span>
+            <span class="line-before-title"></span><span class="fans-title">粉丝</span><span class="fans-num">{{fansNum}}</span>
             <div class="fans-list">
               <img class="fans-img" v-for="fansImg in fansImages" :src="fansImg"/>
             </div>
@@ -94,20 +93,23 @@
       classicIntro () {
         if (this.classicIntroText !== '') {
           return this.classicIntroText.split('#')[0]
+        } else {
+          return this.classicIntroText
         }
-        return this.classicIntroText
       },
       updateMethod () {
         if (this.classicIntroText !== '') {
           return this.classicIntroText.split('#')[1]
+        } else {
+          return this.classicIntroText
         }
-        return this.classicIntroText
       },
       fansNum () {
         if (this.isLogin) {
           return this.classicReadingDetails.fansNum + 1
+        } else {
+          return this.classicReadingDetails.fansNum
         }
-        return this.classicReadingDetails.fansNum
       },
       fansImages () {
         const unorderedArray = this.fansImgs.sort(function (a, b) { return Math.random() > 0.5 ? -1 : 1 })
@@ -120,14 +122,18 @@
       testAudioList () {
         return this.audio.slice(0, 2)
       },
-      lastedAudioList () {
+      latestAudioList () {
         if (this.audio.length > 2) {
           const lastAudio = this.audio.slice(2)
           return lastAudio.reverse()
+        } else {
+          return null
         }
-        return null
       },
-      audioLength () {
+
+      /*专辑音频个数*/
+
+      audioAmount () {
         return this.audio.length
       },
 
@@ -190,7 +196,7 @@
       /*
       * 点击播放试听列表
       * */
-      onAuditionTap (id, audioUrl) {
+      onAudioTap (id, audioUrl) {
         if (this.audioUrl !== audioUrl) { //点击新的音频
           this.audioUrl = audioUrl
           this.updatePlayedTime(this.classicId, id)    //更新音频播放次数
@@ -210,11 +216,11 @@
       /*
       * 点击播放最近更新列表,只有登录后才能听此部分
       * */
-      onAudioTap (id, audioUrl) {
+      onLatestAudioTap (id, audioUrl) {
         if (!this.isLogin) {
           this.$route.router.go('/entry')
         } else {
-          this.onAuditionTap(id, audioUrl)
+          this.onAudioTap(id, audioUrl)
         }
       },
 
@@ -255,15 +261,6 @@
 
 <style lang="less" scoped> /*scoped属性，使得样式仅作用于此组件*/
 
-.module-title {
-  height: 3.2rem;
-  width:100%;
-  background-color: #00B0F0;
-}
-.title-bar{
-  padding-top: 1rem;
-}
-
 .classic-intro-area {
   width:100%;
   background-color: #fff;
@@ -274,6 +271,7 @@
     &-content {
       padding: .75rem 1.25rem;
       border-bottom: 1px solid #f0eff5;
+      box-sizing: border-box;
     }
     &-cover {
       width: 4.2rem;
@@ -331,19 +329,19 @@
   background-color: #fff;
   padding-left: 1.5rem;
 
-  span:nth-child(1) {
+  .line-before-title {
     display: inline-block;
     width: .15rem;
     height:.9rem;
     vertical-align: middle;
     background-color: #00b0f0;
   }
-  span:nth-child(2) {
+  &-title {
     padding: 0 .4rem 0 .25rem;
     font-size: .65rem;
     color: #00b0f0;
   }
-  span:nth-child(3) {
+  &-num {
     color: #ccc;
     font-size: .6rem;
   }
@@ -402,7 +400,7 @@
 .audio-title {
   font-size: .7rem;
   color: #666;
-  margin-bottom: .35rem;
+  margin: 0 0 .35rem 0;
 }
 
 .audio-info {

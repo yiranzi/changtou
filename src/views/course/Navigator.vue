@@ -21,7 +21,7 @@
             <span class="under-banner-title">院生故事</span>
           </div>
         </div>
-        <div class="expenselist-area popularSpe">
+        <div class="popularlist-area popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -43,7 +43,7 @@
           <span class="daily-anpic-container"></span>
         </div>
         <!--大咖读经典-->
-        <div class="expenselist-area classic-reading" v-touch:tap="goToClassicReading(readingClassics.cbId)">
+        <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
             <span class="color-span"></span>
             <span class="title">大咖读经典</span>
@@ -328,7 +328,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
         })
-        this.$route.router.go(`/classicReading/${classicId}`)   /*classicId放在url中传递*/
+        this.$route.router.go(`/classic/reading/${classicId}`)   /*classicId放在url中传递*/
       },
 
       backHandler () {
@@ -384,7 +384,7 @@
     .popularSpe{
       padding-bottom: .8rem;
     }
-    .expenselist-area{
+    .popularlist-area{
       .box-container{
         width: 37.5rem;
         margin-left: .3rem;
