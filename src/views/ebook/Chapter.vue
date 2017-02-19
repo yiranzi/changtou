@@ -121,8 +121,12 @@ export default {
       //注册epub
       this.book = window.ePub(`http://source.ichangtou.com/file/ebooks/${bookName}/`, {
         restore: true,
-        width: window.document.body.offsetWidth
+        width: window.document.body.offsetWidth * 0.8,
+        height: this.ebookHeight * 0.8
       })
+
+      this.book.setStyle('width', `${window.document.body.offsetWidth * 0.8}px`)
+      this.book.setStyle('height', `${this.ebookHeight * 0.8}px`)
 
       // 监听 翻页变化
       this.addPageChangeListener()
@@ -331,7 +335,7 @@ export default {
     }
     .ebook-content{
       width: 100%;
-      padding: 2rem 1.25rem 1.25rem;
+      padding: 10%;
       box-sizing: border-box;
     }
     .pageNum{
