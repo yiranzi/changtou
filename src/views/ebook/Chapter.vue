@@ -20,7 +20,9 @@
         <div class="tap-area" v-touch:tap="goToPrePage"></div>
         <div class="tap-area" v-touch:tap="goToNextPage"></div>
       </div>
-      <div class="ebook-content" v-if="book" v-el:ebook :style="ebookHeight"></div>
+      <div :style="ebookHeight">
+        <div class="ebook-content" v-if="book" v-el:ebook :style="ebookHeight"></div>
+      </div>
       <span class="pageNum">阅读进度 {{(percentage * 100).toFixed(1)}}%</span>
     </div>
 </template>
