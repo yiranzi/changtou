@@ -34,7 +34,7 @@
         <p class="option-item-content">
           <ict-option title="每门课免费3次" :disabled="activeOpt" order="h#" option="C"></ict-option>
           <ict-option title="付费提问" :disabled="activeOpt" order="i#" option="C"></ict-option>
-          <ict-option title="完成任务获提问机会" :disabled="activeOpt" order="g#" option="C"></ict-option>
+          <ict-option title="完成任务获提问机会" :disabled="activeOpt" order="j#" option="C"></ict-option>
         </p>
       </div>
     </div>
