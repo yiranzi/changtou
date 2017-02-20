@@ -70,7 +70,12 @@
             <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
-            <p class="expense-course-price">￥{{course.price}}</p>
+            <p class="expense-course-price">
+              <span v-if="course.discountPrice === null">￥{{course.price}}</span>
+              <span v-if="course.discountPrice !== null">{{course.discountPrice}}
+                <span class="expense-course-original-price">￥{{course.price}}</span>
+              </span>
+            </p>
           </div>
         </div>
 
@@ -489,6 +494,12 @@
           font-size: 0.75rem;
           line-height: 1rem;
           color: #ff5b45;
+        }
+        &-original-price{
+          text-decoration: line-through;
+          padding-left: .2rem;
+          color: #bbbbbb;
+          font-size: .6rem;
         }
         &-promotion{
           display: none;

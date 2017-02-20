@@ -4,7 +4,12 @@
     <div class="detail-specific" v-if="subject">
       <div class="title-box">
       <p class="title">{{subject.title}}</p>
-      <p class="price">{{priceTip}}</p>
+      <p class="price">
+        <span v-if="!showDiscountPrice">{{priceTip}}</span>
+        <span v-if="showDiscountPrice">{{discountPriceTip}}
+          <span class="original-price">{{priceTip}}</span>
+        </span>
+      </p>
       <p class="tip">
         <span class="number-tip">{{subject.studentCount}}人学过</span>
         <span class="timer-icon"></span>
@@ -117,6 +122,8 @@
     data () {
       return {
         priceTip: '',
+        discountPriceTip: '',
+        showDiscountPrice: false,
         timeTip: '',
         status: 'L'
        }
@@ -126,7 +133,8 @@
       'record': function (newRecord, oldRecord) {
         let timeTip = ''
         let priceTip = ''
-
+        let discountPriceTip = ''
+        let showDiscountPrice = false
         if (newRecord) {
           switch (newRecord.graduated) {
             case 'I':
@@ -155,16 +163,29 @@
         } else {
           timeTip = `课程有效期${this.subject.period}天`
           priceTip = `￥${this.subject.price}`
+          if (this.subject.discountPrice !== null) {
+            showDiscountPrice = true
+            discountPriceTip = `￥${this.subject.discountPrice}`
+          } else {
+            showDiscountPrice = false
+          }
         }
-//
         this.timeTip = timeTip
         this.priceTip = priceTip
+        this.discountPriceTip = discountPriceTip
+        this.showDiscountPrice = showDiscountPrice
       },
 
       'subject': function (newSubject) {
         if (!this.record) {
           this.priceTip = `￥${newSubject.price}`
           this.timeTip = `课程有效期${newSubject.period}天`
+          if (newSubject.discountPrice !== null) {
+            this.showDiscountPrice = true
+            this.discountPriceTip = `￥${newSubject.discountPrice}`
+          } else {
+            this.showDiscountPrice = false
+          }
         }
       }
     },
@@ -226,6 +247,12 @@
       margin-top: 20/40rem;
       font-size: 30/40rem;
       color: #ff5b45;
+    }
+    .original-price {
+      text-decoration: line-through;
+      padding-left: .2rem;
+      color: #bbbbbb;
+      font-size: .65rem;
     }
     .tip {
       margin: 0;
