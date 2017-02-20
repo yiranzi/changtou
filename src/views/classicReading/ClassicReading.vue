@@ -23,7 +23,7 @@
             <div class="audio-list" :class="{'playing-style' : (isPlayed && audioUrl === audio.audioUrl)}" v-for="audio in testAudioList "v-touch:tap="onAudioTap(audio.id, audio.audioUrl)">
               <span class="pause-btn"></span> <!--播放按钮-->
               <div class="audio-detail">
-                <div class="audio-title">0{{$index + 1}}{{audio.audioName}}</div>
+                <p class="audio-title">0{{$index + 1}}{{audio.audioName}}</p>
                 <div class="audio-info">
                   <span class="person-icon"></span><span>{{audio.playTimes}}</span><span class="time-icon"></span><span>{{audio.audioDuration}}</span><span class="update-time" v-show="todayTime !== audio.updateTime">{{audio.updateTime}}</span><span class="update-time" v-show="todayTime === audio.updateTime">今天</span>
                 </div>
@@ -352,7 +352,7 @@
     width: 2.4rem;
     height: 2.4rem;
     border-radius: 50%;
-    padding-right: .75rem;
+    margin-right: .75rem;
   }
 }
 
@@ -371,7 +371,7 @@
 }
 
 .playing-style {
-  div:nth-child(1) {
+  p {
     color: #FFA12D;
   }
 

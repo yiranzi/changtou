@@ -5,10 +5,10 @@
       <div class="title-box">
       <p class="title">{{subject.title}}</p>
       <p class="price">
-        <span v-if="!showDiscountPrice">{{priceTip}}</span>
-        <span v-if="showDiscountPrice">{{discountPriceTip}}
+        <span v-if="!record && discountPrice">{{discountPrice}}
           <span class="original-price">{{priceTip}}</span>
         </span>
+        <span v-else>{{priceTip}}</span>
       </p>
       <p class="tip">
         <span class="number-tip">{{subject.studentCount}}人学过</span>
@@ -122,19 +122,21 @@
     data () {
       return {
         priceTip: '',
-        discountPriceTip: '',
-        showDiscountPrice: false,
         timeTip: '',
         status: 'L'
        }
+    },
+
+    computed: {
+      discountPrice () {
+        return this.record ? '' : this.subject ? this.subject.discountPrice ? `￥${this.subject.discountPrice}` : '' : ''
+      }
     },
 
     watch: {
       'record': function (newRecord, oldRecord) {
         let timeTip = ''
         let priceTip = ''
-        let discountPriceTip = ''
-        let showDiscountPrice = false
         if (newRecord) {
           switch (newRecord.graduated) {
             case 'I':
@@ -163,17 +165,9 @@
         } else {
           timeTip = `课程有效期${this.subject.period}天`
           priceTip = `￥${this.subject.price}`
-          if (this.subject.discountPrice !== null) {
-            showDiscountPrice = true
-            discountPriceTip = `￥${this.subject.discountPrice}`
-          } else {
-            showDiscountPrice = false
-          }
         }
         this.timeTip = timeTip
         this.priceTip = priceTip
-        this.discountPriceTip = discountPriceTip
-        this.showDiscountPrice = showDiscountPrice
       },
 
       'subject': function (newSubject) {
@@ -181,10 +175,7 @@
           this.priceTip = `￥${newSubject.price}`
           this.timeTip = `课程有效期${newSubject.period}天`
           if (newSubject.discountPrice !== null) {
-            this.showDiscountPrice = true
-            this.discountPriceTip = `￥${newSubject.discountPrice}`
-          } else {
-            this.showDiscountPrice = false
+            this.discountPrice = `￥${newSubject.discountPrice}`
           }
         }
       }
