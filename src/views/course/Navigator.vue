@@ -21,7 +21,7 @@
             <span class="under-banner-title">院生故事</span>
           </div>
         </div>
-        <div class="expenselist-area popularSpe">
+        <div class="popularlist-area popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -42,6 +42,22 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
+        <!--大咖读经典-->
+        <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
+          <p class="area-label">
+            <span class="color-span"></span>
+            <span class="title">大咖读经典</span>
+          </p>
+          <div class="classic-content">
+            <img class="classic-cover" :src="readingClassics.pic"/>
+            <div class="classic-info">
+              <p class="classic-name">{{readingClassics.classicsName}}</p>
+              <p class="classic-detail">主播：{{readingClassics.anchor}}</p>
+              <p class="classic-detail">播放：{{readingClassics.playTimes}}次</p>
+            </div>
+          </div>
+        </div>
+        <!---->
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
@@ -54,7 +70,12 @@
             <img v-bind:src=expenseList[$index].pic class="expense-course-img"/>
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
-            <p class="expense-course-price">￥{{course.price}}</p>
+            <p class="expense-course-price">
+              <span v-if="course.discountPrice === null">￥{{course.price}}</span>
+              <span v-if="course.discountPrice !== null">￥{{course.discountPrice}}
+                <span class="expense-course-original-price">￥{{course.price}}</span>
+              </span>
+            </p>
           </div>
         </div>
 
@@ -100,6 +121,7 @@
         freeList: navigatorGetters.freeCourseList,
         expenseList: navigatorGetters.expenseCourseList,
         recommends: navigatorGetters.recommends,
+        readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin
       },
       actions: {
@@ -302,6 +324,18 @@
           me.showAlert('信息加载失败，请重试！')
         })
       },
+
+      /**
+       * 跳转到大咖读经典
+       * */
+
+      goToClassicReading (classicId) {   /*统计数据*/
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '大咖读经典'
+        })
+        this.$route.router.go(`/classic/reading/${classicId}`)   /*classicId放在url中传递*/
+      },
+
       backHandler () {
         window.alert('main')
       },
@@ -355,7 +389,7 @@
     .popularSpe{
       padding-bottom: .8rem;
     }
-    .expenselist-area{
+    .popularlist-area{
       .box-container{
         width: 37.5rem;
         margin-left: .3rem;
@@ -460,6 +494,12 @@
           font-size: 0.75rem;
           line-height: 1rem;
           color: #ff5b45;
+        }
+        &-original-price{
+          text-decoration: line-through;
+          padding-left: .2rem;
+          color: #bbbbbb;
+          font-size: .6rem;
         }
         &-promotion{
           display: none;
@@ -620,7 +660,40 @@
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
     }
+  /*新增大咖读经典*/
+    .classic-info >p {
+      text-align: left;
+    }
+    .classic {
+      &-content {
+        margin: 0 .7rem;
+        background: url("../../assets/styles/image/classicReading/classic_background.png") no-repeat;
+        background-size: contain;
+        text-align: left;
+        padding: .5rem 0 0;
+      }
+      &-cover {
+        display: inline-block;
+        padding: 0 .7rem .5rem .5rem;
+        width: 4.1rem;
+        height: 5.35rem;
+      }
+      &-info {
+        display: inline-block;
+        vertical-align: top;
+        line-height: 1.3rem;
+      }
+      &-name {
+        color: #444;
+        padding-top: .3rem;
+        font-size: .7rem;
+      }
+      &-detail {
+        font-size: .65rem;
+        color: #aaa;
+      }
 
+    }
 
   }
 

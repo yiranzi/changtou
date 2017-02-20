@@ -29,6 +29,7 @@ import newerGift from './newerGift/store'
 import questionNaire from './questionNaire/store'
 import annualReport from './annualReport/store'
 import ebook from './ebook/store'
+import classicReading from './classicReading/store'
 import newerGuide from './newerGuide/store'
 
 Vue.use(Vuex)
@@ -60,6 +61,7 @@ export default new Vuex.Store({
     questionNaire, // 问卷调查
     annualReport,
     ebook,   //电子书
+    classicReading, // 大咖读经典
     newerGuide //入门指南
   }
 })
