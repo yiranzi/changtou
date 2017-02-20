@@ -71,8 +71,8 @@
             <p class="expense-course-promotion">{{course.promotion}}</p>
             <p class="expense-course-title">{{course.title}}</p>
             <p class="expense-course-price">
-              <span v-if="course.discountPrice === null">￥{{course.price}}</span>
-              <span v-if="course.discountPrice !== null">￥{{course.discountPrice}}
+              <span v-if="!course.discountPrice">￥{{course.price}}</span>
+              <span v-else >￥{{course.discountPrice}}
                 <span class="expense-course-original-price">￥{{course.price}}</span>
               </span>
             </p>
