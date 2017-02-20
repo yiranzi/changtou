@@ -39,3 +39,8 @@ export const loadNavigatorDataInWeb = ({ dispatch }) => {
     )
   })
 }
+
+// 更新首页大咖读经典播放次数
+export const updateNavigatorNum = ({dispatch}) => {
+  dispatch('UPDATE_NAVIGATOR_CLASSIC_PLAYNUM')
+}
