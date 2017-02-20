@@ -174,7 +174,7 @@
         if (!this.record) {
           this.priceTip = `￥${newSubject.price}`
           this.timeTip = `课程有效期${newSubject.period}天`
-          if (newSubject.discountPrice !== null) {
+          if (newSubject.discountPrice) {
             this.discountPrice = `￥${newSubject.discountPrice}`
           }
         }
