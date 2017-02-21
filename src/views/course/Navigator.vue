@@ -138,27 +138,12 @@
       data () {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
-        // 显示礼包模块
-        const me = this
-        if (this.isLogin) {
-        this.isQualifyGiftPackage().then(
-          function (isQualify) {
-            if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
-              me.showPackage()
-              me.giftMaskCount += 1
-            }
-          }
-         )
-        }
-
-        this.$nextTick(() => {
-          this.$refs.scroller.reset({
-          top: 0
-          })
-          this.$refs.vscroller.reset({
-            left: 0
-          })
-        })
+        //加载首页
+        this.loadNavigator()
+        //加载新手礼包
+        this.loadNewerGift()
+        //重置页面滚动位置
+        this.resetScroller()
       }
     },
 
@@ -170,24 +155,7 @@
       }
     },
     ready () {
-      const me = this
-      let loadData = null
 
-      if (Device.platform === platformMap.WEB) {
-        loadData = this.loadNavigatorDataInWeb
-      } else {
-        loadData = this.loadNavigatorDataInApp
-      }
-
-      loadData().then(
-        function () {
-          // 设置滚动条高度
-          me.setScrollerHeight()
-          setTimeout(() => {
-            me.$dispatch(eventMap.NAVIGATOR_LOADED)
-          }, 200)
-        }
-      )
     },
 
     computed: {
@@ -200,7 +168,7 @@
               url: banner.type === 'O' ? banner.url : (banner.url ? banner.url : (banner.topicType === 'C' ? '/common/topic/' : '/spec/topic/') + banner.topicId)
             }
           }
-      )
+        )
         return newBanners
       }
     },
@@ -226,6 +194,61 @@
           })
         })
         }, 150)
+      },
+
+      /**
+       * 下载首页数据
+       */
+      loadNavigator () {
+        const me = this
+        let loadData = null
+
+        if (Device.platform === platformMap.WEB) {
+          loadData = this.loadNavigatorDataInWeb
+        } else {
+          loadData = this.loadNavigatorDataInApp
+        }
+
+        loadData().then(
+          function () {
+            // 设置滚动条高度
+            me.setScrollerHeight()
+            setTimeout(() => {
+              me.$dispatch(eventMap.NAVIGATOR_LOADED)
+          }, 200)
+          }
+        )
+      },
+
+      /**
+       * 下载新手礼包
+       */
+      loadNewerGift () {
+        const me = this
+        if (this.isLogin) {
+          this.isQualifyGiftPackage().then(
+            function (isQualify) {
+              if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+                me.showPackage()
+                me.giftMaskCount += 1
+              }
+            }
+          )
+        }
+      },
+
+      /**
+       * 每次进入页面 重置滚动位置(尤其是横向的)
+       */
+      resetScroller () {
+        this.$nextTick(() => {
+          this.$refs.scroller.reset({
+            top: 0
+          })
+          this.$refs.vscroller.reset({
+            left: 0
+          })
+        })
       },
 
       /**

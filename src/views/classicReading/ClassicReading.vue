@@ -60,7 +60,7 @@
   import Scroller from 'vux/scroller'
   import {userGetters, classicReadingGetters} from '../../vuex/getters'
   import {webAudio} from '../../util/audio/web'
-  import {classicReadingActions, navigatorActions} from '../../vuex/actions'
+  import {classicReadingActions} from '../../vuex/actions'
 
   export default {
     data () {
@@ -83,8 +83,7 @@
       },
       actions: {
         getClassicDetails: classicReadingActions.loadClassicReadingDetails,
-        updatePlayedTime: classicReadingActions.updatePlayedTime,
-        updateNavigatorNum: navigatorActions.updateNavigatorNum
+        updatePlayedTime: classicReadingActions.updatePlayedTime
       }
     },
     computed: {
@@ -201,7 +200,6 @@
         if (this.audioUrl !== audioUrl) { //点击新的音频
           this.audioUrl = audioUrl
           this.updatePlayedTime(this.classicId, id)    //更新音频播放次数
-          this.updateNavigatorNum()         //更新首页播放次数数据
         } else { //点击原来的音频
           this.toggle()
         }
