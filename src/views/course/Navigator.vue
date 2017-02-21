@@ -230,12 +230,18 @@
         if (this.isLogin) {
           this.isQualifyGiftPackage().then(
             function (isQualify) {
-              if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              if (!isQualify.qualification) {
+                me.showNewerGiftIcon = false
+              } else if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
                 me.showPackage()
                 me.giftMaskCount += 1
+              } else if (isQualify.qualification) {
+                me.showNewerGiftIcon = true
               }
             }
           )
+        } else {
+          this.showNewerGiftIcon = true
         }
       },
 
