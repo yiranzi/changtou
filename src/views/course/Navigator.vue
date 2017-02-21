@@ -1,7 +1,7 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
-    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png"/>
+    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png"v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
@@ -153,7 +153,7 @@
         scrollerHeight: '0px',
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
-        showNewerGiftIcon: false  // 显示新手礼包领取图标
+        showNewerGiftIcon: true  // 显示新手礼包领取图标
       }
     },
     ready () {
@@ -236,6 +236,17 @@
               }
             }
           )
+        }
+      },
+
+      /**
+      * 点击新手礼包领取图标，，未登录进入登录页面，已登录进入领取页面
+      */
+      getNewerGift () {
+        if (this.isLogin) {
+          this.$route.router.go('/newerGift/giftPackageDetails')
+        } else {
+          this.$route.router.go('/entry')
         }
       },
 
