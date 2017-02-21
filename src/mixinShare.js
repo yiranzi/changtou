@@ -50,7 +50,8 @@ const mixin = {
           break
       }
     },
-    //分享朋友
+
+    //分享 链接 到 微信好友
     shareToFriendInApp () {
       const me = this
       if (window.Wechat) {
@@ -85,7 +86,7 @@ const mixin = {
       }
     },
 
-    //分享到朋友圈
+    //分享 链接 到 微信朋友圈
     shareToTimelineInApp () {
       const me = this
       if (window.Wechat) {
@@ -119,6 +120,78 @@ const mixin = {
         this.showAlert('请先安装微信客户端')
       }
     },
+
+    //分享 图片 到 微信好友
+    shareToFriendInApp () {
+      const me = this
+      if (window.Wechat) {
+        window.Wechat.share({
+            message: {
+              title: me.shareConfig.title, // 分享标题
+              description: me.shareConfig.desc,
+              thumb: me.shareConfig.imgUrl, // 分享图标
+              media: {
+                type: window.Wechat.Type.IMAGE,
+                webpageUrl: me.shareConfig.link
+              }
+            },
+            scene: window.Wechat.Scene.SESSION
+          },
+          function () {
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '分享内容': me.shareConfig.title,
+              '分享渠道': '微信-会话'
+            })
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
+
+            } else {
+              me.showAlert({title: '分享失败', message: reason})
+            }
+          }
+        )
+      } else {
+        this.showAlert('请先安装微信客户端')
+      }
+    },
+
+    //分享 图片 到 微信朋友圈
+    shareToTimelineInApp () {
+      const me = this
+      if (window.Wechat) {
+        window.Wechat.share({
+            message: {
+              title: me.shareConfig.title, // 分享标题
+              description: me.shareConfig.desc,
+              thumb: me.shareConfig.imgUrl, // 分享图标
+              media: {
+                type: window.Wechat.Type.IMAGE,
+                webpageUrl: me.shareConfig.link
+              }
+            },
+            scene: window.Wechat.Scene.TIMELINE // share to Timeline
+          },
+          function () {
+            me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
+              '分享内容': me.shareConfig.title,
+              '分享渠道': '微信-朋友圈'
+            })
+          },
+          function (reason) {
+            if (reason === '用户点击取消并返回') {
+
+            } else {
+              me.showAlert({title: '分享失败', message: reason})
+            }
+          }
+        )
+      } else {
+        this.showAlert('请先安装微信客户端')
+      }
+    },
+
+
     /**
      * 分享到QQ
      */
