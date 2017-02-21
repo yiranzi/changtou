@@ -185,7 +185,16 @@ const apiUrl = {
   /**
    *  大数据活动
    */
-  'user_annual_report': '/ict-data/new-year-opt/data'             //  获取用户的一些个人信息
+  'user_annual_report': '/ict-data/new-year-opt/data',             //  获取用户的一些个人信息
+  /**
+   * 入门指南
+   */
+  'guide_audio_list': '/homepage/guideaudio-list', //音频列表
+  /**
+   *  大咖读经典
+   */
+  'load_classic_reading_details': '/homepage/classicbook/classicbook-data/:cbId',  // 大咖读经典 详情页面
+  'update_classic_played_time': '/homepage/classicbook/classicbookaudio-play/:cbId/:cbaId'       // 大咖读经典 详情页面更新播放次数
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

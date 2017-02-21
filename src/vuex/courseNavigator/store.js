@@ -6,7 +6,8 @@ const state = {
   banners: [],
   expenseCourseList: [],
   freeCourseList: [],
-  recommends: []
+  recommends: [],
+  readingClassics: {}
 }
 
 const mutations = {
@@ -15,6 +16,7 @@ const mutations = {
     state.expenseCourseList = data.expenseCourseList
     state.freeCourseList = data.freeCourseList
     state.recommends = data.recommends
+    state.readingClassics = data.readingClassics
   }
 }
 

@@ -299,6 +299,10 @@ export function configRouter (router) {
      */
     '/ebook/chapter/:bookId/:chapterId': {
       component: require('../views/ebook/Chapter.vue')
+    },
+    /*大咖读经典*/
+    '/classic/reading/:classicId': {
+      component: require('../views/classicReading/ClassicReading.vue')
     }
   })
 

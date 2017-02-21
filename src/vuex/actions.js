@@ -27,6 +27,9 @@ import * as giftActions from './newerGift/actions'
 import * as questionNaireActions from './questionNaire/actions'
 import * as annualReportActions from './annualReport/actions'
 import * as ebookActions from './ebook/actions'
+import * as newerGuide from './newerGuide/actions'
+import * as classicReadingActions from './classicReading/actions'
+
 export {
   userActions,
   navigatorActions,
@@ -53,5 +56,7 @@ export {
   giftActions,          // 新手礼包
   questionNaireActions,         // 调查问卷
   annualReportActions,          // 大数据活动
-  ebookActions      //电子书
+  ebookActions,      //电子书
+  newerGuide,  //入门指南
+  classicReadingActions   //大咖读经典
 }

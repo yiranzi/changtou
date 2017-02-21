@@ -14,6 +14,18 @@
               <div class="strategy-receive-btn">限时免费领</div>
             </div>
           </div>
+          <div class="guide-audio-list">
+            <p class="audio-list-title">听点理财知识</p>
+            <div class="audio-list-content">
+              <span class="auto-play" :class="{'pause': isPlayed}" v-touch:tap=autoPlay()></span>
+              <div v-for="audio in audioList">
+                <p class="audio-list-item" :class="{'audio-list-item-selected': isPlayed && audio.url === currAudioUrl}" v-touch:tap=onAudioTap(audio) >
+                  <span class="play"></span>
+                  <span class="audio-title" >{{audio.title}}</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <img src="../../../static/image/newerGuide/present-down-tip.png"  class="present-tip"/>
       </div>
@@ -23,11 +35,13 @@
 <script>
 import IctTitlebar from '../../components/IctTitleBar.vue'
 import Scroller from 'vux/scroller'
-import {ebookActions} from '../../vuex/actions'
+import {ebookActions, newerGuide} from '../../vuex/actions'
 import {userGetters} from '../../vuex/getters'
+import {webAudio} from '../../util/audio/web'
   export default {
     vuex: {
       actions: {
+        loadAudio: newerGuide.loadGuideAudio, //下载音频列表
         getBookProgress: ebookActions.getBookProgress   // 阅读进度
       },
       getters: {
@@ -37,14 +51,41 @@ import {userGetters} from '../../vuex/getters'
     data () {
       return {
         scrollerHeight: '580px',
-        bookProgress: null //阅读进度
+        bookProgress: null, //阅读进度
+        audioList: [], //音频列表
+        currAudioUrl: '', //当前播放的audio
+        isInitListeners: false, //是否初始化过音频播放
+        status: 'pause' // {'play' | 'pause' | 'stop'} //当前audio的状态
+      }
+    },
+    computed: {
+      isPlayed () {
+        return this.status === 'play'
+      }
+    },
+    watch: {
+      currAudioUrl (url) {
+        if (url && !this.isInitListeners) {
+          this.isInitListeners = true
+          this.addAudioListens()
+          this.initStatus()
+        }
+
+        webAudio.create(url)
+        //设置音频地址后, 200毫秒开始自动播放
+        setTimeout(() => webAudio.play(), 200)
       }
     },
     route: {
       data () {
-        this.setScrollerHeight()
         const bookId = 2
         const me = this
+        this.loadAudio().then(
+          (audioList) => {
+            me.audioList = audioList
+            me.setScrollerHeight()
+           }
+        )
         if (this.isLogin) {
           this.getBookProgress(bookId).then(
             function (progress) {
@@ -52,6 +93,9 @@ import {userGetters} from '../../vuex/getters'
             }
           )
         }
+      },
+      deactivate () {
+        this.pause()
       }
     },
     methods: {
@@ -98,6 +142,76 @@ import {userGetters} from '../../vuex/getters'
           //未登录
           this.$route.router.go(`/ebook/detail/${bookId}`)
         }
+      },
+
+      /**
+       * 监听音频播放事件
+       */
+      addAudioListens () {
+        const me = this
+
+        webAudio.on(webAudio.events.play, () => {
+          me.status = 'play'
+        })
+
+        webAudio.on(webAudio.events.pause, () => {
+          me.status = 'pause'
+        })
+
+        webAudio.on(webAudio.events.ended, () => {
+          me.status = 'pause'
+        })
+      },
+
+      /**
+       *初始化音频状态
+       */
+      initStatus () {
+        this.status = webAudio.status
+      },
+
+      /**
+       * 点击音频
+       * @param audio
+       */
+      onAudioTap (audio) {
+        if (audio.url !== this.currAudioUrl) {
+          this.currAudioUrl = audio.url
+        }
+        this.toggle()
+      },
+
+      toggle () {
+        if (this.status === 'play') {
+          this.pause()
+        } else if (this.status === 'pause') {
+          this.play()
+        }
+      },
+
+      /**
+       * 播放音频
+       */
+      play () {
+        webAudio.play()
+      },
+
+      /**
+       * 暂停音频
+       */
+      pause () {
+        webAudio.pause()
+      },
+
+      /**
+       * 自动播放音频
+       */
+      autoPlay () {
+        if (!this.currAudioUrl) {
+          this.currAudioUrl = this.audioList[0].url
+        } else {
+          this.toggle()
+        }
       }
     },
     components: {
@@ -110,6 +224,9 @@ import {userGetters} from '../../vuex/getters'
   .guide-present{
     height: 100%;
     background-color: #00b0f0;
+    p{
+      margin: 0;
+    }
     .present-tip{
       width: 15.4rem;
       height: 3.75rem;
@@ -189,6 +306,79 @@ import {userGetters} from '../../vuex/getters'
               opacity: .2;
               transform: scale(1);
             }
+          }
+        }
+      }
+    }
+    .guide-audio-list{
+      width: 90%;
+      margin: 50/40rem 5%;
+      padding: 1rem 0.75rem;
+      box-sizing: border-box;
+      background: #fff;
+      text-align: left;
+      .audio-list-title{
+        font-size: 0.75rem;
+        color: #444;
+      }
+      .audio-list-content{
+        position: relative;
+        font-size: 0.7rem;
+        color: #aaa;
+        margin-top: 0.75rem;
+        &:before{
+          content: ' ';
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background: #f0eff5;
+        }
+        .auto-play{
+          width: 3rem;
+          height: 3rem;
+          display: inline-block;
+          position: absolute;
+          top: 2rem;
+          right: 1rem;
+        }
+        .auto-play:before{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 3rem;
+          height: 3rem;
+          display: inline-block;
+          color: #ff9800;
+          font-family: 'myicon';
+          font-size: 2.8rem;
+          line-height: 3rem;
+          content: '\E927';
+        }
+        .pause:before{
+          content: '\E928';
+        }
+        .audio-list-item{
+          padding-top: 0.75rem;
+          box-sizing: border-box;
+          .play:before{
+            width: 0.7rem;
+            height: 0.7rem;
+            display: inline-block;
+            font-family: 'myicon';
+            content: '\E927';
+            font-size: 0.7rem;
+            line-height: 0.7rem;
+          }
+
+        }
+        .audio-list-item-selected{
+          color: #ff9800;
+          .play:before{
+            content: '\E928';
+            color: #ff9800;
           }
         }
       }
