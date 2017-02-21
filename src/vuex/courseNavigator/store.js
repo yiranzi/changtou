@@ -17,11 +17,7 @@ const mutations = {
     state.freeCourseList = data.freeCourseList
     state.recommends = data.recommends
     state.readingClassics = data.readingClassics
-  },
-
-  UPDATE_NAVIGATOR_CLASSIC_PLAYNUM (state) {
-  state.readingClassics.playTimes = state.readingClassics.playTimes + 1
-}
+  }
 }
 
 export default {
