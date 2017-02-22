@@ -433,4 +433,22 @@
     width: 4rem;
     height: 4rem;
   }
+  .in-app-image-share-panel{
+    background: #fff;
+    text-align: center;
+    .qrcode-panel{
+      width: 100%;
+      padding: 1rem 0;
+      text-align: center;
+      .qr-code{
+        width: 3rem;
+        height: 3rem;
+      }
+      .app-info{
+        display: inline-block;
+        margin: 0.5rem 0 0.5rem 0.75rem;
+        width: 12rem;
+      }
+    }
+  }
 </style>

@@ -4,16 +4,20 @@
  */
 <template>
     <div class="graduation-diploma">
-      <ict-titlebar :right-options="titleRightOptions" :left-Options="titleLeftOptions" v-el:titlebar>
-        <a slot="right">{{titleText}}</a>
+      <ict-titlebar :right-options="rightOptions" v-el:titlebar>
+        <div slot="right" v-touch:tap="showActionSharePanel">
+          <img class="share-pic" src='../../assets/styles/image/share.png'>
+        </div>
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
-          <div class="subject-diploma">
-            <img src="../../../static/image/graduationDiploma/diploma.png">
-            <p class="user-name">{{userName}}</p>
-            <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
-            <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
+          <div  v-el:diploma>
+            <div class="subject-diploma">
+              <img src="../../../static/image/graduationDiploma/diploma.png">
+              <p class="user-name">{{userName}}</p>
+              <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
+              <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
+            </div>
           </div>
           <div>
             <p class="draw-title">－长投毕业激励金抽奖－</p>
@@ -64,6 +68,7 @@
           </div>
         </div>
       </scroller>
+      <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
     </div>
 </template>
 <script>
@@ -71,7 +76,10 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {graduationDiplomaActions} from '../../vuex/actions'
   import {graduationDiplomaGetters, userGetters} from '../../vuex/getters'
+  import ShareFloat from '../../components/share/ImageShareFloat.vue'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+  mixins: [mixinImageShare],
   vuex: {
     getters: {
       userName: userGetters.userName,
@@ -105,21 +113,6 @@
     }
   },
   computed: {
-    // titlebar 右边按钮
-    titleRightOptions () {
-      return this.isFromList ? {callback: null, disabled: false} : this.rightOptions
-    },
-
-    // titlebar 左边按钮
-    titleLeftOptions () {
-      return this.isFromList ? {showBack: true} : {showBack: false}
-    },
-
-    // titlebar 右边按钮 文案
-    titleText () {
-      return this.isFromList ? '' : '完成'
-    },
-
     // 用来显示抽奖机会的状态
     drawStatusCls () {
       return {
@@ -143,12 +136,36 @@
       this.subjectId = params.subjectId
       this.getDiplomaDetails(this.subjectId).then(
         details => {
+          this.shareConfig = {
+            title: '毕业奖状',
+            desc: '',
+            link: '',
+            imgUrl: 'http://h5.ichangtou.com/mapp_new/static/image/graduationDiploma/diploma.png'
+          }
+          this.onViewChange()
+
+          setTimeout(
+            () => {
+              this.loadShareImageUrl()
+            },
+          200)
+
           this.setScrollerHeight()
         }
       )
     }
   },
+    ready () {
+
+    },
   methods: {
+    /**
+     *
+     */
+    loadShareImageUrl () {
+      const element = this.$els.diploma
+      this.getShareImageUrl(element)
+    },
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
@@ -170,13 +187,6 @@
           this.setScrollerHeight()
         }
       )
-    },
-
-    /**
-     * 点击完成
-     */
-    onFinishTap () {
-      window.history.back()
     },
 
     /**
@@ -208,7 +218,8 @@
   },
   components: {
     IctTitlebar,
-    Scroller
+    Scroller,
+    ShareFloat
   }
 }
 </script>
@@ -218,6 +229,11 @@
     height: 100%;
     p{
       margin: 0;
+    }
+    .share-pic{
+      width: 1.3rem;
+      height: 1rem;
+      margin-top: 0.65rem;
     }
     .subject-diploma{
       position: relative;

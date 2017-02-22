@@ -119,6 +119,31 @@ const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
   })
 }
 
+const postFileWithinAuth = ({url, options = {}, data, user = userStore}) => {
+  return new Promise((resolve, reject) => {
+    if (!user.isLogin && !user.userId) {
+      reject('请先登录')
+      return null
+    }
+
+    options.headers = {
+      'X-iChangTou-Json-Api-Token': API_TOKEN,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-iChangTou-Json-Api-Session': user.sessionId,
+      'X-iChangTou-Json-Api-User': user.userId
+    }
+
+    Vue.http.post(url, data, options).then(
+      (response) => {
+        resolve(response.data)
+      },
+      (response) => {
+        reject(response.data)
+      }
+    )
+  })
+}
+
 /**
  *
  * @type {Function}
@@ -204,6 +229,7 @@ const responseCodeMap = {
 }
 
 export {
+  postFileWithinAuth,
   postWithinAuth,
   postWithoutAuth,
   getWithinAuth,
