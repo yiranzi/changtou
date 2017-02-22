@@ -6,25 +6,44 @@ import {eventMap} from './frame/eventConfig'
 import {statisticsMap} from './statistics/statisticsMap'
 import html2canvas from 'html2canvas'
 import {shareActions} from './vuex/actions'
+import {userGetters} from './vuex/getters'
 const mixin = {
   vuex: {
     actions: {
       uploadImage: shareActions.uploadFile
+    },
+    getters: {
+      userId: userGetters.userId
     }
   },
   data () {
     return {
-      showShareFloat: false
+      shareConfig: null,
+      showShareFloat: false,
+      shareImageWidth: 0,
+      shareImageHeight: 0
     }
   },
   methods: {
-    getShareImageUrl (element) {
-      const me = this
-      const width = element.offsetWidth
-      const height = element.offsetHeight
-      this.convertHtmlToBase64(element).then(
-        (base64) => {
-          me.renderShareHtml(base64, width, height)
+    setShareImageUrl (element) {
+      this.convertHtmlToBase64(element).then(this.renderShareHtml).then(this.convertHtmlToBase64).then(this.convertBase64ToBlob).then(this.uploadShareImage).then(
+        (url) => {
+          this.shareConfig.imgUrl = url
+        }
+      )
+    },
+
+    uploadShareImage (blob) {
+      let formData = new window.FormData()
+      let imageName = `app-diploma-${this.userId}.png`
+      formData.append('image', blob, imageName)
+      return new Promise(
+        (resolve, reject) => {
+          this.uploadImage(formData).then(
+            url => { resolve(url) }
+          ).catch(
+            err => { reject(err) }
+          )
         }
       )
     },
@@ -34,22 +53,20 @@ const mixin = {
      * @returns {Promise}
        */
     convertHtmlToBase64 (element) {
-      const me = this
-      const width = element.offsetWidth
-      const height = element.offsetHeight
-
+      this.shareImageWidth = element.offsetWidth
+      this.shareImageHeight = element.offsetHeight
       return new Promise(
         (resolve, reject) => {
           html2canvas(element, {
-            height: height,
-            width: width
+            height: this.shareImageHeight,
+            width: this.shareImageWidth
           }).then(
-            function (originCanvas) {
-              originCanvas.style.height = height + 'px'
-              originCanvas.style.width = width + 'px'
+            (originCanvas) => {
+              originCanvas.style.height = this.shareImageHeight + 'px'
+              originCanvas.style.width = this.shareImageWidth + 'px'
               originCanvas.style.display = 'none'
 
-              let base64 = me.convertCanvasToBase64(originCanvas)
+              let base64 = this.convertCanvasToBase64(originCanvas)
               resolve(base64)
             }
           )
@@ -60,23 +77,30 @@ const mixin = {
     /**
      * 绘制分享的图片
      * @param base64
-     * @param height
-     * @param width
        * @returns {*}
        */
-    renderShareHtml (base64, width, height) {
-      const panelStyle = `width: ${window.document.body.offsetWidth}px;`
-      const imgStyle = `width: ${width}px;height: ${height}px`
-      return `<div class="in-app-image-share-panel" id="in-app-image-share-panel" style="${panelStyle}" v-el:image-share-panel>
-        <img src="${base64}" style="${imgStyle}">
-        <div class="qrcode-panel">
-          <img src="./assets/styles/image/download-app-qrcode.png" class="qr-code">
-          <div class="app-info">
-          <p class="title">长投学堂APP</p>
-          <p class="sub-title">长按识别二维码下载</p>
-          </div>
-        </div>
-      <div/>`
+    renderShareHtml (base64) {
+      const panelStyle = `width: ${this.shareImageWidth}px;`
+      const imgStyle = `width: ${this.shareImageWidth}px;height: ${this.shareImageHeight}px`
+      const eleHtml =
+        `<div class="in-app-image-share-panel" id="in-app-image-share-panel" style="${panelStyle}" v-el:image-share-panel>
+            <img src="${base64}" style="${imgStyle}">
+            <div class="qrcode-panel">
+              <div class="qr-code"></div>
+              <div class="app-info">
+                <p class="title">长投学堂APP</p>
+                <p class="sub-title">长按识别二维码下载</p>
+              </div>
+            </div>
+        <div/>`
+
+      const node = window.document.createElement('div')
+      node.style.position = 'absolute'
+      node.style.left = '100%'
+      node.style.top = 0
+      node.innerHTML = eleHtml
+      const element = window.document.body.appendChild(node)
+      return Promise.resolve(element)
     },
 
     /**
@@ -86,9 +110,9 @@ const mixin = {
        */
     convertCanvasToBase64 (originCanvas) {
       let canvas = window.document.body.appendChild(originCanvas)
-      console.log('canvas', canvas)
       const base64 = canvas.toDataURL()
-      return base64
+      window.document.body.removeChild(canvas)
+      return Promise.resolve(base64)
     },
 
     /**
@@ -97,28 +121,16 @@ const mixin = {
      * @returns {*}
        */
     convertBase64ToBlob (base64) {
-        let arr = base64.split(',')
-        let mime = arr[0].match(/:(.*?);/)[1]
-        let bstr = window.atob(arr[1])
-        let n = bstr.length
-        let u8arr = new Uint8Array(n)
-
-        while (n--) {
-          u8arr[n] = bstr.charCodeAt(n)
-        }
-      return new window.Blob([u8arr], {type: mime})
-    },
-
-    /**
-     * 上传图片
-     * @param image
-       */
-    uploadShareImage (image) {
-      this.uploadImage(image).then(
-        (url) => {
-          this.shareConfig.imgUrl = url
-        }
-      )
+      const arr = base64.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      let bstr = window.atob(arr[1])
+      let n = bstr.length
+      let u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      const blob = new window.Blob([u8arr], {type: mime})
+      return Promise.resolve(blob)
     },
 
     /**

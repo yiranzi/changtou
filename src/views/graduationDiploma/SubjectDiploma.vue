@@ -11,7 +11,7 @@
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
-          <div  v-el:diploma>
+          <div class="subject-diploma-panel" v-el:diploma>
             <div class="subject-diploma">
               <img src="../../../static/image/graduationDiploma/diploma.png">
               <p class="user-name">{{userName}}</p>
@@ -148,8 +148,7 @@
             () => {
               this.loadShareImageUrl()
             },
-          200)
-
+          500)
           this.setScrollerHeight()
         }
       )
@@ -164,7 +163,7 @@
      */
     loadShareImageUrl () {
       const element = this.$els.diploma
-      this.getShareImageUrl(element)
+      this.setShareImageUrl(element)
     },
     setScrollerHeight () {
       const me = this
@@ -234,6 +233,9 @@
       width: 1.3rem;
       height: 1rem;
       margin-top: 0.65rem;
+    }
+    .subject-diploma-panel{
+
     }
     .subject-diploma{
       position: relative;

@@ -125,22 +125,16 @@ const postFileWithinAuth = ({url, options = {}, data, user = userStore}) => {
       reject('请先登录')
       return null
     }
-
-    options.headers = {
-      'X-iChangTou-Json-Api-Token': API_TOKEN,
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-iChangTou-Json-Api-Session': user.sessionId,
-      'X-iChangTou-Json-Api-User': user.userId
-    }
-
-    Vue.http.post(url, data, options).then(
-      (response) => {
-        resolve(response.data)
-      },
-      (response) => {
-        reject(response.data)
-      }
-    )
+    var xhr = new window.XMLHttpRequest()
+    xhr.addEventListener('loadend', function (url) {
+      resolve(url)
+    })
+    xhr.open('POST', url, true)
+    xhr.setRequestHeader('X-iChangTou-Json-Api-User', user.userId)
+    xhr.setRequestHeader('X-iChangTou-Json-Api-Token', API_TOKEN)
+    xhr.setRequestHeader('X-iChangTou-Json-Api-Session', user.sessionId)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.send(data)
   })
 }
 

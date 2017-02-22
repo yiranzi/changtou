@@ -436,18 +436,36 @@
   .in-app-image-share-panel{
     background: #fff;
     text-align: center;
+    p{
+      margin: 0;
+    }
     .qrcode-panel{
       width: 100%;
       padding: 1rem 0;
       text-align: center;
+      font-size: 0;
+      background: #f4f4f4;
+      border-top: 1px solid #aaa;
+      border-bottom: 1px solid #aaa;
       .qr-code{
+        display: inline-block;
         width: 3rem;
         height: 3rem;
+        background: url("assets/styles/image/download-app-qrcode.png") no-repeat center center;
+        background-size: 100% 100%;
+        vertical-align: top;
       }
       .app-info{
+        font-size: 28/40rem;
+        color: #aaa;
         display: inline-block;
-        margin: 0.5rem 0 0.5rem 0.75rem;
+        margin: 0.2rem 0 0.5rem 0.75rem;
         width: 12rem;
+        vertical-align: top;
+        text-align: left;
+      }
+      .title{
+        font-size: 34/40rem;
       }
     }
   }
