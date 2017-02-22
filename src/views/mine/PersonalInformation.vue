@@ -2,7 +2,7 @@
     <div class="person-info">
       <ict-titlebar>我的信息</ict-titlebar>
       <div class="user">
-        <img class="ict-user-avatar" src="http://www.ichangtou.com/images/per-tx.png">
+        <img class="ict-user-avatar" :src="avatar">
         <div class="user-box">
           <p class="username">{{name}}</p>
           <p class="level">{{levelName}}</p>
@@ -128,6 +128,7 @@ export default {
     getters: {
       name: userGetters.userName,
       level: userGetters.level,
+      avatar: userGetters.avatar,
       userPhone: userGetters.phone
     },
     actions: {
