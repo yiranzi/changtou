@@ -13,6 +13,11 @@ let _isWantQuit = false
 let _isBackHandlerActive = true
 
 Vue.mixin({
+  data () {
+    return {
+      viewBackHandler: null
+    }
+  },
   methods: {
     /**
      * 禁止back键操作
@@ -55,11 +60,13 @@ const mixin = {
         }
       } else {
         // 如果不是首页
-        if (this.isMaskShow) {
-          // 模块窗口弹出, 隐藏
-          return
-        } else {
-          window.history.back()
+        if (!this.isMaskShow) {
+          //没有 模块窗口 弹出
+          if (this.viewBackHandler) {
+            this.viewBackHandler().bind(this)
+          } else {
+            window.history.back()
+          }
         }
       }
     }

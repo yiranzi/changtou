@@ -303,11 +303,18 @@ export function configRouter (router) {
     /*大咖读经典*/
     '/classic/reading/:classicId': {
       component: require('../views/classicReading/ClassicReading.vue')
+    },
+
+    /*
+    *开机引导页
+    */
+    '/start': {
+      component: require('../components/GuideView.vue')
     }
   })
 
   // redirect
   router.redirect({
-    '': '/main'
+    '': '/start'
   })
 }

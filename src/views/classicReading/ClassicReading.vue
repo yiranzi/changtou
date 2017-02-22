@@ -1,6 +1,16 @@
 <template>
     <div >
-     <ict-titlebar v-el:titlebar>大咖读经典</ict-titlebar>
+      <div v-el:titlebar>
+        <div style="height: 20px;background-color: #00b0f0" v-show="isIos"></div>
+        <div class="ict-titlebar" style="height: 44px">
+          <div class="ict-titlebar-left" v-touch:tap="onTitleBack">
+            <div class="left-arrow"></div>
+          </div>
+          <h1 class="ict-titlebar-title" ><span :transition="transition">大咖读经典</span></h1>
+        </div>
+      </div>
+
+
       <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <div class="classic-intro-area">
@@ -56,11 +66,11 @@
 </template>
 
 <script>
-  import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   import {userGetters, classicReadingGetters} from '../../vuex/getters'
   import {webAudio} from '../../util/audio/web'
   import {classicReadingActions} from '../../vuex/actions'
+  import { Device, platformMap } from '../../plugin/device'
 
   export default {
     data () {
@@ -69,7 +79,9 @@
         classicId: 0,
         status: 'pause',
         isInitListeners: false,
-        audioUrl: ''
+        audioUrl: '',
+        fromUrl: '',
+        isIos: Device.platform === platformMap.IOS
       }
     },
     vuex: {
@@ -168,8 +180,10 @@
       }
     },
     route: {
-      data ({to: {params}}) {
+      data ({to: {params}, from}) {
+        this.fromUrl = from.path
         this.classicId = params.classicId
+        this.setViewBackHandler()
         this.getClassicDetails(this.classicId).then(
           this.setScrollerHeight()
         )
@@ -179,6 +193,14 @@
       }
     },
     methods: {
+      /**
+       * 设置物理键back
+       */
+      setViewBackHandler () {
+        console.log('setViewBackHandler')
+        this.viewBackHandler = this.onTitleBack
+      },
+
       setScrollerHeight () {
         const me = this
         setTimeout(
@@ -250,10 +272,16 @@
       // 初始化音频状态
       initStatus () {
         this.status = webAudio.status
+      },
+      onTitleBack () {
+        if (/\/start/.test(this.fromUrl)) {
+          this.$route.router.replace('/main')
+        } else {
+          window.history.back()
+        }
       }
     },
     components: {
-      IctTitlebar,
       Scroller
     }
   }
