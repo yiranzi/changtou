@@ -1,12 +1,91 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=Content-Security-Policy content="default-src *; font-src *  data:;img-src data: *; style-src 'self' https://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"><meta name=format-detection content="telephone=no"><meta name=msapplication-tap-highlight content=no><meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width"><title>长投学堂</title><link href=./static/css/app.0ccfdca0d8a45dffa0228e1709fa8677.css rel=stylesheet></head><script>/**
- * 初始化，设置rem
- */
-function init (){
-  var IPHONE6_SCREEN_WIDTH = 375;
-  var DEFAULT_REM = 20;
-  var html = document.getElementsByTagName('html')[0];
+<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=Content-Security-Policy content="default-src * 'self' gap://ready file://* http://* https://* * ; font-src *  data:;img-src data: *; style-src 'self' http://* https://* 'unsafe-inline' blob: ; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'"><meta name=format-detection content="telephone=no"><meta name=msapplication-tap-highlight content=no><meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width"><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-touch-fullscreen content=yes><title>长投学堂</title><link href=./static/css/app.b521ae6459ae1a89b721e08d00692079.css rel=stylesheet></head><body><div id=appFontTester style="width: 18.75rem;height: 1px"></div><script>/**
+   * 初始化，设置rem
+   */
+  function init (){
+    var IPHONE6_SCREEN_WIDTH = 375;
+    var DEFAULT_REM = 20;
+    var html = document.getElementsByTagName('html')[0];
 
-  html.style.fontSize = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM + 'px';
-}
+    // 字体缩放比(1rem = fontScale px)
+    window.fontScale = html.offsetWidth / IPHONE6_SCREEN_WIDTH * DEFAULT_REM
+    html.style.fontSize = window.fontScale + 'px';
 
-init();</script><script src=cordova.js></script><body><app></app><script type=text/javascript src=./static/js/manifest.d47c06cb4ce6d67cdc84.js></script><script type=text/javascript src=./static/js/vendor.45d6f77e38a8dd7e7c46.js></script><script type=text/javascript src=./static/js/app.cc59a9c3630398620493.js></script></body></html>
+    /**
+     * 用户有可能设置了系统字体，此时等比例反缩放
+     */
+    var appFontTester = document.getElementById('appFontTester')
+    var scale = appFontTester.offsetWidth / html.offsetWidth;
+
+    document.body.removeChild(appFontTester)
+    if( scale !== 1 ){
+      html.style.fontSize = parseFloat(window.fontScale) / scale + 'px';
+    }
+
+    /**
+     * 阻止document页面滚动 (ios系统的webview的滚动)
+     */
+    document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
+
+    /**
+     * 缓存当前url上携带的参数
+     */
+    var params = window.location.href.split('?')[1] && window.location.href.split('?')[1].split('#')[0]
+    var paramsArr = params ? params.split('&') : []
+    if (paramsArr.length > 0) {
+      for(var i = 0, length = paramsArr.length; i < length; i++){
+        var key = paramsArr[i].split('=')[0]
+        var value = paramsArr[i].split('=')[1]
+        window.sessionStorage.setItem(key, value)
+      }
+      window.location.href = window.location.href.replace(/\?([^#])*#/, '#')
+    }
+  }
+
+
+  const ua = navigator.userAgent.toLowerCase();
+  const isWx = ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === "micromessenger";
+
+  if (isWx) {
+    /**
+     * 正式环境
+     */
+//    if (window.sessionStorage.getItem('wxOauth2') && window.sessionStorage.getItem('zhouLe')) {
+//      //完成授权
+//      var url = window.sessionStorage.getItem('preUrl')
+//      window.sessionStorage.removeItem('preUrl')
+//      if (url) {
+//        //有保存的地址 进入该地址
+//        window.location.href = url
+//      }
+//      init();
+//    } else {
+//      //未授权
+//      //保存当前地址
+//      window.sessionStorage.setItem('preUrl',window.location.href)
+//      //回老站授权
+//      window.location.href = window.location.origin + '/mapp/index.html'
+//    }
+
+    /**
+     * 测试环境
+     */
+    if (window.sessionStorage.getItem('wxOauth2')) {
+      //完成授权
+      var url = window.sessionStorage.getItem('preUrl')
+      window.sessionStorage.removeItem('preUrl')
+      if (url) {
+        //有保存的地址 进入该地址
+        window.location.href = url
+      }
+      init();
+    } else {
+      //未授权
+      //保存当前地址
+      window.sessionStorage.setItem('preUrl',window.location.href)
+      //回老站授权
+      window.location.href = window.location.origin + '/zl/index.html'
+    }
+
+  } else {
+    init();
+  }</script><script src=cordova.js></script><script src=./static/ebooks/lib/epub.min.js></script><app></app><script type=text/javascript src=./static/js/manifest.21a72fa4b1670147d70e.js></script><script type=text/javascript src=./static/js/vendor.9d5af6fed5133a482b09.js></script><script type=text/javascript src=./static/js/app.6671bb2d43e565a2adde.js></script></body></html>

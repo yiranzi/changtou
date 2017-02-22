@@ -23,13 +23,13 @@
   .guide-view-pic {
     width: 100%;
     height: 100%;
-    background: url("../../static/image/guideView.jpg");
-    background-size: contain
+    background: url("../../static/image/guideView.jpg") no-repeat;
+    background-size: 100% 100%;
   }
   .jump-btn{
     background: url("../assets/styles/image/jump.png") no-repeat;
     position: absolute;
-    background-size: contain;
+    background-size: 100% 100%;;
     right: .75rem;
     top: 1.05rem;
     width: 2.8rem;
