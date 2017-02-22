@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="jump-btn" v-touch:tap="goNavigator">跳过</div>
+    <div class="jump-btn" v-touch:tap="goNavigator"></div>
     <div class="guide-view-pic" v-touch:tap="goClassicReading"></div>
   </div>
 </template>
@@ -27,16 +27,12 @@
     background-size: contain
   }
   .jump-btn{
-    text-align: center;
+    background: url("../assets/styles/image/jump.png") no-repeat;
     position: absolute;
+    background-size: contain;
     right: .75rem;
     top: 1.05rem;
-    width: 2.7rem;
+    width: 2.8rem;
     height: 1.2rem;
-    line-height: 1.2rem;
-    font-size: .65rem;
-    color: #666;
-    background-color: #fff;
-    opacity: .5;
   }
 </style>
