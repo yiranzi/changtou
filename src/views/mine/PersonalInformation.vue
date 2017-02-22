@@ -2,7 +2,7 @@
     <div class="person-info">
       <ict-titlebar>我的信息</ict-titlebar>
       <div class="user">
-        <img class="ict-user-avatar" :src="avatar">
+        <img class="ict-user-avatar" v-bind:src="avatarUrl">
         <div class="user-box">
           <p class="username">{{name}}</p>
           <p class="level">{{levelName}}</p>
@@ -142,6 +142,9 @@ export default {
     //处理获得的手机号
     viewPhone () {
       return this.userPhone ? this.userPhone.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : '未绑定'
+    },
+    avatarUrl () {
+      return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
     }
   },
   components: {
