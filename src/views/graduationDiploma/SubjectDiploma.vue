@@ -11,15 +11,16 @@
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
-          <div class="subject-diploma-panel" v-el:diploma>
-            <div class="subject-diploma">
-              <img src="../../../static/image/graduationDiploma/diploma.png">
-              <p class="user-name">{{userName}}</p>
-              <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
-              <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
-            </div>
+          <div class="subject-diploma"  v-el:diploma>
+            <img src="../../../static/image/graduationDiploma/diploma.png">
+            <p class="user-name">{{userName}}</p>
+            <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
+            <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
           </div>
-          <div>
+          <div class="diploma-share-btn">
+            <img src="../../../static/image/graduationDiploma/diploma-share-btn.png" v-touch:tap="showActionSharePanel">
+          </div>
+            <div>
             <p class="draw-title">－长投毕业激励金抽奖－</p>
             <div class="draw-panel" v-if="diplomaDetails && diplomaDetails.drawStatus !== drawStatus.draw" :class="{'draw-disabled':diplomaDetails.drawStatus !== drawStatus.undraw}">
               <div class="animated-border animated-border-top"></div>
@@ -140,7 +141,7 @@
             title: '毕业奖状',
             desc: '',
             link: '',
-            imgUrl: 'http://h5.ichangtou.com/mapp_new/static/image/graduationDiploma/diploma.png'
+            imgUrl: ''
           }
           this.onViewChange()
 
@@ -222,7 +223,7 @@
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .graduation-diploma{
     width: 100%;
     height: 100%;
@@ -234,14 +235,11 @@
       height: 1rem;
       margin-top: 0.65rem;
     }
-    .subject-diploma-panel{
-
-    }
     .subject-diploma{
       position: relative;
       width: 674/40rem;
       height: 876/40rem;
-      margin: 30/40rem auto 100/40rem;
+      margin: 30/40rem auto 0;
       text-align: center;
       img{
         width: 674/40rem;
@@ -279,6 +277,14 @@
         left: 138/40rem;
         font-size: 22/40rem;
         color: #222;
+      }
+    }
+    .diploma-share-btn{
+      text-align: center;
+      margin: 0 auto 60/40rem;
+      img{
+        width: 348/40rem;
+        height: 156/40rem;
       }
     }
     .status-label{

@@ -441,31 +441,30 @@
     }
     .qrcode-panel{
       width: 100%;
-      padding: 1rem 0;
+      padding: 2rem 0;
       text-align: center;
       font-size: 0;
       background: #f4f4f4;
       border-top: 1px solid #aaa;
-      border-bottom: 1px solid #aaa;
-      .qr-code{
+      .download-qrcode{
         display: inline-block;
-        width: 3rem;
-        height: 3rem;
-        background: url("assets/styles/image/download-app-qrcode.png") no-repeat center center;
+        width: 8rem;
+        height: 8rem;
+        background: url("../static/image/download-app-qrcode.png") no-repeat center center;
         background-size: 100% 100%;
         vertical-align: top;
       }
       .app-info{
-        font-size: 28/40rem;
+        font-size: 28/20rem;
         color: #aaa;
         display: inline-block;
-        margin: 0.2rem 0 0.5rem 0.75rem;
-        width: 12rem;
+        margin: 0.4rem 0 1rem 1.5rem;
+        width: 20rem;
         vertical-align: top;
         text-align: left;
       }
       .title{
-        font-size: 34/40rem;
+        font-size: 34/20rem;
       }
     }
   }
