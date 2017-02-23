@@ -70,25 +70,9 @@
             <div class="item-title"></div>
             <div class="item-mid"></div>
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
-            <div class="share-article" v-if="isInApp">
-              <div><hr/><span>分享至</span><hr/></div>
-              <div class="share-item" v-touch:tap="shareToTimelineInApp">
-                <div class="timeline"></div>
-                <div class="share-name">朋友圈</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToFriendInApp">
-                <div class="wechat"></div>
-                <div class="share-name">微信好友</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToQQInApp">
-                <div class="qq"></div>
-                <div class="share-name">QQ</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShow">
-                <div class="weibo"></div>
-                <div class="share-name">微博</div>
-              </div>
-            </div>
+
+            <page-share-panel @onPanelTap="onActionTap"></page-share-panel>
+
           </div>
         </div>
         <div id="fullpage-user" :class='{unshow: !isUserLogin}' class="site_header">
@@ -173,31 +157,15 @@
             <div class="item-title"></div>
             <div class="item-mid"></div>
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
-            <div class="share-article" v-if="isInApp">
-              <div><hr/><span>分享至</span><hr/></div>
-              <div class="share-item" v-touch:tap="shareToTimelineInApp">
-                <div class="timeline"></div>
-                <div class="share-name">朋友圈</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToFriendInApp">
-                <div class="wechat"></div>
-                <div class="share-name">微信好友</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToQQInApp">
-                <div class="qq"></div>
-                <div class="share-name">QQ</div>
-              </div>
-              <div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShow">
-                <div class="weibo"></div>
-                <div class="share-name">微博</div>
-              </div>
-            </div>
+
+            <page-share-panel @onPanelTap="onActionTap"></page-share-panel>
+
           </div>
         </div>
       </div>
   </div>
 </template>
-<style lang="less">
+<style lang="less" scaped>
   #alloyTouchDemo{
     p{
       margin: 0;
@@ -480,155 +448,7 @@
             position: relative;
             left: 16%;
           }
-          /************        share     part  *********************/
-          .right_unable {
-            disabled: false;
-            color: #fff;
-          }
-          .share-pic {
-            width: 1.3rem;
-            height: 1rem;
-            margin-top: 0.65rem;
-          }
-          .content {
-            width: 15.25rem;
-            padding: 1.25rem 1.75rem 2rem 1.75rem;
-            background-color: #fff;
-            .title {
-              margin-bottom: 2.5rem;
-            }
-            .introduce {
-              border: 2px solid #00b0f0;
-              padding: 1.25rem;
-              font-size: 0.7rem;
-              line-height: 1.2rem;
-              color: #898989;
-              position: relative;
-              .xiao-tou {
-                position: absolute;
-                top: -0.6rem;
-                width: 3rem;
-                line-height: 1.2rem;
-                background-color: #fff;
-                font-size: 0.8rem;
-                font-weight: bold;
-                text-align: center;
-                color: #00b0f0;
-              }
-            }
-            .tip {
-              font-size: 0.7rem;
-              color: #00b0f0;
-              text-align: center;
-              margin: 1rem 0 2.5rem 0;
-            }
-            .paragraph-title {
-              margin-bottom: 1.25rem;
-              font-size: 0.8rem;
-              color: #222;
-              text-align: center;
-              span {
-                font-size: 1.2rem;
-              }
-            }
-            .paragraph-content {
-              padding: 0 1.25rem;
-              margin-bottom: 1.25rem;
-              font-size: 0.7rem;
-              color: #898989;
-              line-height: 1.2rem;
-              hl {
-                font-weight: bold;
-                color: #ff9800;
-              }
-            }
-            .pic {
-              padding: 0 1.25rem;
-              width: 12rem;
-              text-align: center;
-              margin-bottom: 2.5rem;
-            }
-          }
-          .load-fail {
-            width: 100%;
-            height: 623px;
-            background-color: #fff;
-            text-align: center;
-            padding-top: 40%;
-          }
-          .weui_actionsheet_cell {
-            height: 7rem;
-            background-color: #f0eff5;
-          }
-          .vux-actionsheet-gap {
-            height: 0;
-          }
-          .vux-actionsheet-cancel {
-            height: 1.2rem;
-            background-color: #ccc;
-          }
-          .share-item {
-            display: inline-block;
-            width: 3.5rem;
-            height: 4.3rem;
-            margin: 0 0.35rem;
-            text-align: center;
-          }
-          .wechat, .timeline, .qq, .weibo {
-            display: inline-block;
-            width: 2.5rem;
-            height: 2.5rem;
-          }
-          .wechat {
-            background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-          }
-          .timeline {
-            background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-          }
-          .qq {
-            background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
-          }
-          .weibo {
-            background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
-          }
-          .share-name {
-            width: 100%;
-            display: inline-block;
-            text-align: center;
-            margin-top: .5rem;
-          }
-          .share-box {
-            width: 100%;
-            padding: 1.2rem 0;
-            font-size: 0.6rem;
-            text-align: center;
-          }
-          .share-article {
-            padding-top: 1.5rem;
-            font-size: 26/40rem;
-            color: #00b0f0;
-            text-align: center;
-            hr {
-              margin: 0.32rem .5rem;
-              width: 4.5rem;
-              height: 1px;
-              background: #aaa;
-              border: 0;
-              display: inline-block;
-            }
-            p {
-              margin: 0;
-            }
-            .share-item {
-              width: 2.8rem;
-              margin-top: 1.5rem;
-            }
-          }
-          /************        share     part  *********************/
         }
-      }
-      .unshow {
-        display: none;
       }
     }
   }
@@ -637,14 +457,15 @@
   import AlloyTouch from 'alloyTouch'
   import FullPage from '../../util/alloyTouch/alloy_touch.full_page.js'
   import alloy_touch from '../../util/alloyTouch/alloy_touch.js'
-  import {eventMap} from '../../frame/eventConfig'
-  import {statisticsMap} from '../../statistics/statisticsMap'
   import {userGetters, annualReportGetters} from '../../vuex/getters'
   import {annualReportActions} from '../../vuex/actions'
   import {Device, platformMap} from '../../plugin/device'
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
   import {MSITE_URL} from '../../frame/serverConfig'
+  import mixinPageShare from '../../mixinPageShare'
+  import PageSharePanel from '../../components/share/PageSharePanel.vue'
   export default {
+    mixins: [mixinPageShare],
     vuex: {
       getters: {
         userName: userGetters.userName,
@@ -734,138 +555,10 @@
       onDownAppTap () {
          window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.changtou.ichangtou'
       },
-      //分享朋友
-      shareToFriendInApp () {
-        const me = this
-        if (window.Wechat) {
-          window.Wechat.share({
-              message: {
-                title: me.shareConfig.title, // 分享标题
-                description: me.shareConfig.desc,
-                thumb: me.shareConfig.imgUrl, // 分享图标
-                media: {
-                  type: window.Wechat.Type.WEBPAGE,
-                  webpageUrl: me.shareConfig.link
-                }
-              },
-              scene: window.Wechat.Scene.SESSION
-            },
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '访谈Id': me.interviewRecord.interviewId,
-                '分享渠道': '微信-会话'
-              })
-            },
-            function (reason) {
-              if (reason === '用户点击取消并返回') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: reason})
-              }
-            }
-          )
-        } else {
-          this.showAlert('请先安装微信客户端')
-        }
-      },
-
-      //分享到朋友圈
-      shareToTimelineInApp () {
-        const me = this
-        if (window.Wechat) {
-          window.Wechat.share({
-            message: {
-              title: me.shareConfig.title, // 分享标题
-              description: me.shareConfig.desc,
-              thumb: me.shareConfig.imgUrl, // 分享图标
-              media: {
-                type: window.Wechat.Type.WEBPAGE,
-                webpageUrl: me.shareConfig.link
-              }
-            },
-            scene: window.Wechat.Scene.TIMELINE // share to Timeline
-          },
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '访谈Id': me.interviewRecord.interviewId,
-                '分享渠道': '微信-朋友圈'
-              })
-            },
-            function (reason) {
-              if (reason === '用户点击取消并返回') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: reason})
-              }
-            }
-          )
-        } else {
-          this.showAlert('请先安装微信客户端')
-        }
-      },
-      /**
-       * 分享到QQ
-       */
-      shareToQQInApp () {
-        if (window.YCQQ) {
-          const me = this
-          var args = {}
-          args.url = me.shareConfig.link
-          args.title = me.shareConfig.title
-          args.description = me.shareConfig.desc
-          args.imageUrl = me.shareConfig.imgUrl
-          args.appName = '长投学堂'
-          window.YCQQ.shareToQQ(
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '访谈Id': me.interviewRecord.interviewId,
-                '分享渠道': 'QQ'
-              })
-            },
-            function (failReason) {
-              if (failReason === 'cancelled by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        } else {
-          this.showAlert('请先安装QQ客户端')
-        }
-      },
-      /**
-       * 分享到微博
-       */
-      shareToWeiboInApp () {
-        if (window.YCWeibo) {
-          const me = this
-          var args = {}
-          args.url = me.shareConfig.link
-          args.title = me.shareConfig.title
-          args.description = '长投学堂' + me.shareConfig.desc
-          args.imageUrl = me.shareConfig.imgUrl
-          args.defaultText = me.shareConfig.desc
-          window.YCWeibo.shareToWeibo(
-            function () {
-            },
-            function (failReason) {
-              if (failReason === 'cancel by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        } else {
-          this.showAlert('请先安装微博客户端')
-        }
-      }
    },
     components: {
-      IctCloseBtn
+      IctCloseBtn,
+      PageSharePanel
     }
   }
 </script>

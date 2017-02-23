@@ -26,7 +26,8 @@
   </div>
 </template>
 <script>
-export default {
+  import {Device, platformMap} from '../../plugin/device'
+  export default {
   computed: {
     //ios中 暂不才显示微博分享
     canWeiboShare () {
@@ -70,12 +71,6 @@ export default {
     display: inline-block;
     text-align: center;
     margin-top: .5rem;
-  }
-  .share-box {
-    width: 100%;
-    padding: 1.2rem 0;
-    font-size: 0.6rem;
-    text-align: center;
   }
   .share-article {
     padding-top: 1.5rem;

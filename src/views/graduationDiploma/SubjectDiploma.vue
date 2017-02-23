@@ -5,7 +5,7 @@
 <template>
     <div class="graduation-diploma">
       <ict-titlebar :right-options="rightOptions" v-el:titlebar>
-        <div slot="right" v-touch:tap="showActionSharePanel">
+        <div slot="right" v-touch:tap="showActionSharePanel" v-if="canShare">
           <img class="share-pic" src='../../assets/styles/image/share.png'>
         </div>
       </ict-titlebar>
@@ -77,6 +77,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {graduationDiplomaActions} from '../../vuex/actions'
   import {graduationDiplomaGetters, userGetters} from '../../vuex/getters'
+  import {Device, platformMap} from '../../plugin/device'
   import ShareFloat from '../../components/share/ImageShareFloat.vue'
   import mixinImageShare from '../../mixinImageShare'
   export default {
@@ -120,6 +121,11 @@
         expired: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.expired,
         failed: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.failed
       }
+    },
+
+    //只有app中才能调用插件分享
+    canShare () {
+      return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     },
 
     //积分券样式
