@@ -3,7 +3,7 @@
       <div v-el:titlebar>
         <div style="height: 20px;background-color: #00b0f0" v-show="isIos"></div>
         <div class="ict-titlebar" style="height: 44px">
-          <div class="ict-titlebar-left" v-touch:tap="onTitleBack">
+          <div class="ict-titlebar-left" v-touch:tap="onBack">
             <div class="left-arrow"></div>
           </div>
           <h1 class="ict-titlebar-title" ><span :transition="transition">大咖读经典</span></h1>
@@ -71,7 +71,6 @@
   import {webAudio} from '../../util/audio/web'
   import {classicReadingActions} from '../../vuex/actions'
   import { Device, platformMap } from '../../plugin/device'
-
   export default {
     data () {
       return {
@@ -181,14 +180,17 @@
     },
     route: {
       data ({to: {params}, from}) {
-        this.fromUrl = from.path
+        if (from.path === '/start') {
+          this.fromUrl = from.path
+        }
         this.classicId = params.classicId
         this.setViewBackHandler()
         this.getClassicDetails(this.classicId).then(
-          this.setScrollerHeight()
+          this.setScrollerHeight
         )
       },
       deactivate () {
+        this.resetViewBackHandler()
         this.pause()
       }
     },
@@ -197,10 +199,15 @@
        * 设置物理键back
        */
       setViewBackHandler () {
-        console.log('setViewBackHandler')
-        this.viewBackHandler = this.onTitleBack
+        this.$parent.viewBackHandler = this.onBack
       },
-
+      /*
+      * 退出页面时解除物理键back绑定关系
+      * */
+      resetViewBackHandler () {
+        this.fromUrl = ''
+        this.$parent.viewBackHandler = null
+      },
       setScrollerHeight () {
         const me = this
         setTimeout(
@@ -273,8 +280,10 @@
       initStatus () {
         this.status = webAudio.status
       },
-      onTitleBack () {
-        if (/\/start/.test(this.fromUrl)) {
+      onBack () {
+        console.log('this.fromUrl', this.fromUrl)
+        if (this.fromUrl === '/start') {
+          this.fromUrl = ''
           this.$route.router.replace('/main')
         } else {
           window.history.back()

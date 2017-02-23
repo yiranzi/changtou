@@ -309,7 +309,7 @@ export function configRouter (router) {
     *开机引导页
     */
     '/start': {
-      component: require('../components/GuideView.vue')
+      component: require('../views/startGuideView/GuideView.vue')
     }
   })
 
