@@ -1,7 +1,7 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
-    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png"v-touch:tap="getNewerGift"/>
+    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
@@ -215,9 +215,9 @@
           function () {
             // 设置滚动条高度
             me.setScrollerHeight()
-            setTimeout(() => {
-              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-          }, 200)
+//            setTimeout(() => {
+//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
+//          }, 200)
           }
         )
       },
@@ -230,6 +230,7 @@
         if (this.isLogin) {
           this.isQualifyGiftPackage().then(
             function (isQualify) {
+              console.log('isQualify', isQualify)
               if (!isQualify.qualification) {
                 me.showNewerGiftIcon = false
               } else if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
@@ -250,7 +251,7 @@
       */
       getNewerGift () {
         if (this.isLogin) {
-          this.$route.router.go('/newerGift/giftPackageDetails')
+          this.showPackage()
         } else {
           this.$route.router.go('/entry')
         }

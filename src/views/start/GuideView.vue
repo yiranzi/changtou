@@ -13,7 +13,7 @@
     *数据加载完成后，隐藏加载动图
     * */
     ready () {
-      this.$dispatch(eventMap.NAVIGATOR_LOADED)
+      this.$dispatch(eventMap.GUIDE_VIEW_LOADED)
     },
     methods: {
       /*
