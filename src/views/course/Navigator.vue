@@ -1,6 +1,7 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
+    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
@@ -151,7 +152,8 @@
       return {
         scrollerHeight: '0px',
         isShowNewTestPop: false,
-        giftMaskCount: 0  // 显示新手礼包的次数 超过1则不显示礼包
+        giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
+        showNewerGiftIcon: true  // 显示新手礼包领取图标
       }
     },
     ready () {
@@ -213,9 +215,9 @@
           function () {
             // 设置滚动条高度
             me.setScrollerHeight()
-            setTimeout(() => {
-              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-          }, 200)
+//            setTimeout(() => {
+//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
+//          }, 200)
           }
         )
       },
@@ -228,12 +230,30 @@
         if (this.isLogin) {
           this.isQualifyGiftPackage().then(
             function (isQualify) {
-              if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              console.log('isQualify', isQualify)
+              if (!isQualify.qualification) {
+                me.showNewerGiftIcon = false
+              } else if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
                 me.showPackage()
                 me.giftMaskCount += 1
+              } else if (isQualify.qualification) {
+                me.showNewerGiftIcon = true
               }
             }
           )
+        } else {
+          this.showNewerGiftIcon = true
+        }
+      },
+
+      /**
+      * 点击新手礼包领取图标，，未登录进入登录页面，已登录进入领取页面
+      */
+      getNewerGift () {
+        if (this.isLogin) {
+          this.showPackage()
+        } else {
+          this.$route.router.go('/entry')
         }
       },
 
@@ -406,7 +426,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .course-navigator{
     background: #fff;
     .popularSpe{
@@ -717,7 +737,15 @@
       }
 
     }
-
+    /*首页新手礼包小挂件样式*/
+    .newer-gift{
+      position: absolute;
+      z-index: 2;
+      width: 4rem;
+      height: 4.25rem;
+      bottom: 4rem;
+      right: .75rem
+    }
   }
 
 </style>

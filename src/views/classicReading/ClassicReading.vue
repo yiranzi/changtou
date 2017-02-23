@@ -1,6 +1,7 @@
 <template>
     <div >
-     <ict-titlebar v-el:titlebar>大咖读经典</ict-titlebar>
+      <ict-titlebar :left-options="barLeftOption" v-el:titlebar>大咖读经典</ict-titlebar>
+
       <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
         <div>
           <div class="classic-intro-area">
@@ -65,11 +66,16 @@
   export default {
     data () {
       return {
+        barLeftOption: {
+          showBack: true,
+          callback: this.onBack
+        },
         scrollerHeight: '580px',
         classicId: 0,
         status: 'pause',
         isInitListeners: false,
-        audioUrl: ''
+        audioUrl: '',          /*选中的音频地址*/
+        fromUrl: ''           /*前一个页面的url*/
       }
     },
     vuex: {
@@ -87,9 +93,11 @@
       }
     },
     computed: {
+      /*正在播放状态*/
       isPlayed () {
         return this.status === 'play'
       },
+      /*经典简介*/
       classicIntro () {
         if (this.classicIntroText !== '') {
           return this.classicIntroText.split('#')[0]
@@ -97,6 +105,7 @@
           return this.classicIntroText
         }
       },
+      /*专辑更新方式，每周的周几更新*/
       updateMethod () {
         if (this.classicIntroText !== '') {
           return this.classicIntroText.split('#')[1]
@@ -104,6 +113,7 @@
           return this.classicIntroText
         }
       },
+      /*粉丝数量*/
       fansNum () {
         if (this.isLogin) {
           return this.classicReadingDetails.fansNum + 1
@@ -111,6 +121,7 @@
           return this.classicReadingDetails.fansNum
         }
       },
+      /*粉丝头像*/
       fansImages () {
         const unorderedArray = this.fansImgs.sort(function (a, b) { return Math.random() > 0.5 ? -1 : 1 })
         if (this.isLogin) {
@@ -119,9 +130,11 @@
         return unorderedArray.slice(0, 5)
         }
       },
+      /*试听列表音频*/
       testAudioList () {
         return this.audio.slice(0, 2)
       },
+      /*最近更新列表音频*/
       latestAudioList () {
         if (this.audio.length > 2) {
           const lastAudio = this.audio.slice(2)
@@ -168,17 +181,35 @@
       }
     },
     route: {
-      data ({to: {params}}) {
+      data ({to: {params}, from}) {
+        if (from.path === '/start') {
+          this.fromUrl = from.path
+        }
         this.classicId = params.classicId
+        this.setViewBackHandler()
         this.getClassicDetails(this.classicId).then(
-          this.setScrollerHeight()
+          this.setScrollerHeight
         )
       },
       deactivate () {
+        this.resetViewBackHandler()
         this.pause()
       }
     },
     methods: {
+      /**
+       * 设置物理键back
+       */
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.onBack
+      },
+      /*
+      * 退出页面时解除物理键back绑定关系
+      * */
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
+      /*设置页面滑动高度*/
       setScrollerHeight () {
         const me = this
         setTimeout(
@@ -204,7 +235,9 @@
           this.toggle()
         }
       },
-
+      /*
+      * 根据点击事件判断播放状态
+      * */
       toggle () {
         if (this.status === 'play') {
           this.pause()
@@ -247,14 +280,27 @@
         webAudio.pause()
       },
 
-      // 初始化音频状态
+      /*
+      *初始化音频状态
+      */
       initStatus () {
         this.status = webAudio.status
+      },
+      /*
+      * 页面的回退按钮
+      * */
+      onBack () {
+        if (this.fromUrl === '/start') {
+          this.fromUrl = ''
+          this.$route.router.replace('/main')
+        } else {
+          window.history.back()
+        }
       }
     },
     components: {
-      IctTitlebar,
-      Scroller
+      Scroller,
+      IctTitlebar
     }
   }
 </script>
