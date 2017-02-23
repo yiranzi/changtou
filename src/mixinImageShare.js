@@ -7,13 +7,16 @@ import {statisticsMap} from './statistics/statisticsMap'
 import html2canvas from 'html2canvas'
 import {shareActions} from './vuex/actions'
 import {userGetters} from './vuex/getters'
+import {API_TOKEN, SEVER_URL} from './frame/serverConfig'
 const mixin = {
   vuex: {
     actions: {
       uploadImage: shareActions.uploadFile
     },
     getters: {
-      userId: userGetters.userId
+      isLogin: userGetters.isLogin,
+      userId: userGetters.userId,
+      sessionId: userGetters.sessionId
     }
   },
   data () {
@@ -25,6 +28,10 @@ const mixin = {
     }
   },
   methods: {
+    /**
+     * 设置分享图片的url
+     * @param element
+       */
     setShareImageUrl (element) {
       this.convertHtmlToBase64(element).then(this.renderShareHtml).then(this.convertHtmlToBase64).then(this.convertBase64ToBlob).then(this.uploadShareImage).then(
         (url) => {
@@ -33,19 +40,38 @@ const mixin = {
       )
     },
 
+    /**
+     * 上传分享图片
+     * @param blob
+     * @returns {Promise}
+       */
     uploadShareImage (blob) {
+      const me = this
       let formData = new window.FormData()
       let imageName = `app-diploma-${this.userId}.png`
       formData.append('image', blob, imageName)
-      return new Promise(
-        (resolve, reject) => {
-          this.uploadImage(formData).then(
-            url => { resolve(url) }
-          ).catch(
-            err => { reject(err) }
-          )
+
+      return new Promise((resolve, reject) => {
+        if (!me.isLogin && !me.userId) {
+          reject('请先登录')
+          return null
         }
-      )
+
+        var xhr = new window.XMLHttpRequest()
+        xhr.open('POST', `${SEVER_URL}/upload/file`, true)
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === window.XMLHttpRequest.DONE && xhr.status === 200) {
+            resolve(xhr.responseText)
+            console.log(xhr.responseText)
+          }
+        }
+
+        xhr.setRequestHeader('X-iChangTou-Json-Api-User', me.userId)
+        xhr.setRequestHeader('X-iChangTou-Json-Api-Token', API_TOKEN)
+        xhr.setRequestHeader('X-iChangTou-Json-Api-Session', me.sessionId)
+
+        xhr.send(formData)
+      })
     },
     /**
      * 将html转换成base64
@@ -98,6 +124,7 @@ const mixin = {
       node.style.position = 'absolute'
       node.style.left = '100%'
       node.style.top = 0
+      node.style.borderRadius = '10px'
       node.innerHTML = eleHtml
       const element = window.document.body.appendChild(node)
       return Promise.resolve(element)

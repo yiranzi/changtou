@@ -119,25 +119,6 @@ const postWithinAuth = ({url, options = {}, data, user = userStore}) => {
   })
 }
 
-const postFileWithinAuth = ({url, options = {}, data, user = userStore}) => {
-  return new Promise((resolve, reject) => {
-    if (!user.isLogin && !user.userId) {
-      reject('请先登录')
-      return null
-    }
-    var xhr = new window.XMLHttpRequest()
-    xhr.addEventListener('loadend', function (url) {
-      resolve(url)
-    })
-    xhr.open('POST', url, true)
-    xhr.setRequestHeader('X-iChangTou-Json-Api-User', user.userId)
-    xhr.setRequestHeader('X-iChangTou-Json-Api-Token', API_TOKEN)
-    xhr.setRequestHeader('X-iChangTou-Json-Api-Session', user.sessionId)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.send(data)
-  })
-}
-
 /**
  *
  * @type {Function}
@@ -223,7 +204,6 @@ const responseCodeMap = {
 }
 
 export {
-  postFileWithinAuth,
   postWithinAuth,
   postWithoutAuth,
   getWithinAuth,
