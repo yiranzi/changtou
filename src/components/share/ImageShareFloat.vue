@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/2/21.
- * 图片分享 浮层
+ * 分享浮层 用于分享图片
  */
 <template>
   <div class="interview-share-float">
@@ -37,7 +37,7 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .interview-share-float{
     background: #f0eff5;
     .ict_actionsheet_title {

@@ -19,7 +19,6 @@ const mixin = {
   },
   data () {
     return {
-      shareConfig: null,
       showShareFloat: false,
       shareImageWidth: 0,
       shareImageHeight: 0

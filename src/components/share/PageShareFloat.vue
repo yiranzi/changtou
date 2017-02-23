@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/2/21.
- * 链接分享 浮层
+ * 分享浮层 用于分享页面链接
  */
 <template>
   <div class="interview-share-float">
@@ -19,12 +19,11 @@
             <div class="qq"></div>
             <div class="share-name">QQ</div>
           </div>
-          <!--<div class="share-item" v-if="canWeiboShare">-->
-          <!--<div class="weibo"></div>-->
-          <!--<div class="share-name">微博</div>-->
-          <!--</div>-->
+          <div class="share-item" v-if="canWeiboShare">
+            <div class="weibo"></div>
+            <div class="share-name">微博</div>
+          </div>
         </div>
-
       </div>
     </ict-sheet>
   </div>
@@ -53,7 +52,7 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .interview-share-float{
     background: #f0eff5;
     .ict_actionsheet_title {
