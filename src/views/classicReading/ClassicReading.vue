@@ -205,7 +205,6 @@
       * 退出页面时解除物理键back绑定关系
       * */
       resetViewBackHandler () {
-        this.fromUrl = ''
         this.$parent.viewBackHandler = null
       },
       setScrollerHeight () {
