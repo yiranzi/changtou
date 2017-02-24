@@ -30,7 +30,7 @@
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="user-atavar">
+              <div class="user-avatar">
                 <img src="../../../static/image/alloyTouch/default-avatar.png" />
                 <p class="user-name">长投学员</p>
               </div>
@@ -43,7 +43,7 @@
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <div class="user-atavar">
+              <div class="user-avatar">
                 <img src="../../../static/image/alloyTouch/default-avatar.png" />
                 <p class="user-name">长投学员</p>
               </div>
@@ -102,8 +102,8 @@
           </div>
           <div>
             <div class="section-item-4 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft" >
-              <div class="user-atavar">
-                <span><img :src="atavar" /></span>
+              <div class="user-avatar">
+                <span><img :src="avatar" /></span>
                 <p class="user-name">{{userName}}</p>
               </div>
               <span class="section-init-date">{{isUserLogin ? report.registrationDate.split('-')[0] : ''}}
@@ -117,8 +117,8 @@
           </div>
           <div>
             <div class="section-item-5 animated" data-show="rotateInUpLeft"  data-hide="bounceOutLeft">
-              <div class="user-atavar">
-                <img :src="atavar" />
+              <div class="user-avatar">
+                <img :src="avatar" />
                 <p class="user-name">{{userName}}</p>
               </div>
               <span class="fast-subject">{{report.fastestSubject ? report.fastestSubject : '理财入门课'}}</span>
@@ -130,8 +130,8 @@
           </div>
           <div>
             <div class="section-item-6 animated" data-show="bounceInLeft"  data-hide="bounceOutLeft">
-              <div class="user-atavar">
-                <img :src="atavar" />
+              <div class="user-avatar">
+                <img :src="avatar" />
                 <p class="user-name">{{userName}}</p>
               </div>
               <span class="favo-subject">{{report.lastSubject ? report.lastSubject : '你还没有提交哟'}}</span>
@@ -165,12 +165,12 @@
       </div>
   </div>
 </template>
-<style lang="less" scaped>
+<style lang="less">
   #alloyTouchDemo{
     p{
       margin: 0;
     }
-    .user-atavar{
+    .user-avatar{
       text-align: center;
       font-size: .6rem;
       color: white;
@@ -309,7 +309,7 @@
             top: 23.2rem;
             width: 1rem;
           }
-          .user-atavar{
+          .user-avatar{
             text-align: center;
             font-size: .6rem;
             color: white;
@@ -347,7 +347,7 @@
           color: #ffa530;
           font-weight: bold;
           text-align: center;
-          .user-atavar{
+          .user-avatar{
             text-align: center;
             font-size: .6rem;
             color: white;
@@ -469,7 +469,7 @@
     vuex: {
       getters: {
         userName: userGetters.userName,
-        atavar: userGetters.avatar,
+        avatar: userGetters.avatar,
         isUserLogin: userGetters.isLogin,
         annualReport: annualReportGetters.annualReport
       },
@@ -551,7 +551,7 @@
       */
       onDownAppTap () {
          window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.changtou.ichangtou'
-      },
+      }
    },
     components: {
       IctCloseBtn,
