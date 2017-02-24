@@ -8,7 +8,7 @@
   export default {
     methods: {
       onCloseGetGiftFailedMask () {
-        this.$dispatch('hideMask')
+        this.$dispatch('hideGetGiftFailedMask')
       }
     }
   }

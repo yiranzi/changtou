@@ -414,7 +414,7 @@
         this.showMask({
           component: 'newerGift/GetGiftFailedMask.vue',
           hideOnMaskTap: true,
-          callbackName: 'hideMask',
+          callbackName: 'hideGetGiftFailedMask',
           callbackFn: this.hideMask.bind(this) //组件上的
         })
       },
