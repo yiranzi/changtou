@@ -459,6 +459,7 @@
       background: #f4f4f4;
       border-top: 1px solid #aaa;
       box-sizing: border-box;
+      border-radius: 0 0 10px 10px;
       .download-qrcode{
         display: inline-block;
         width: 110px;

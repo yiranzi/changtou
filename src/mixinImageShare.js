@@ -93,7 +93,7 @@ const mixin = {
         <div/>`
       const node = window.document.createElement('div')
       node.style.position = 'absolute'
-      node.style.left = '100%'
+      node.style.left = '200%'
       node.style.top = 0
       node.innerHTML = eleHtml
 
