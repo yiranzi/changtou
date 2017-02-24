@@ -229,7 +229,7 @@
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .graduation-diploma{
     width: 100%;
     height: 100%;

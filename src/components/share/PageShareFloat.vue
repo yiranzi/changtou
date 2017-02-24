@@ -3,13 +3,13 @@
  * 分享浮层 用于分享页面链接
  */
 <template>
-  <div class="interview-share-float">
+  <div class="in-app-page-share-float">
     <ict-sheet title="" :show.sync="show" btn-text="取消" @confirm="onConfirmTap">
       <div>
         <div class="share-box">
           <div class="share-item">
             <div class="wechat"></div>
-            <div class="share-name">微信好友</div>
+            <div class="share-name">好友</div>
           </div>
           <div class="share-item">
             <div class="timeline"></div>
@@ -53,7 +53,7 @@
   }
 </script>
 <style lang="less" scoped>
-  .interview-share-float{
+  .in-app-page-share-float{
     background: #f0eff5;
     .ict_actionsheet_title {
       height: 0;
