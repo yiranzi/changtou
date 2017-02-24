@@ -305,7 +305,7 @@
   }
 </script>
 
-<style lang="less" scoped> /*scoped属性，使得样式仅作用于此组件*/
+<style lang="less">
 
 .classic-intro-area {
   width:100%;
