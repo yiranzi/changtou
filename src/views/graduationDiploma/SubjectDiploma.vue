@@ -621,7 +621,7 @@
       width: 100%;
       position: absolute;
       z-index: 2;
-      top: 510/40rem;
+      top: 12.5rem;
       left: 0;
       text-align: center;
       font-size: 0.8rem;
