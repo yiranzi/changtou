@@ -497,9 +497,6 @@
     computed: {
       isInApp () {
         return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
-      },
-      canWeiboShow () {
-        return Device.platform !== platformMap.IOS
       }
     },
     route: {

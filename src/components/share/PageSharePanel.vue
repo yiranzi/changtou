@@ -29,6 +29,9 @@
   import {Device, platformMap} from '../../plugin/device'
   export default {
   computed: {
+    isInApp () {
+      return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+    },
     //ios中 暂不才显示微博分享
     canWeiboShare () {
       return !(Device.platform === platformMap.IOS)
