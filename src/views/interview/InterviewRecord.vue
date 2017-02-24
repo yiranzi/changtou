@@ -72,7 +72,7 @@
         this.shareConfig = {
           title: '院生故事',
           desc: newRecord.title,
-          link: `${MSITE_URL}index.html#!/interview/content/${this.interviewRecord.interviewId}`,
+          link: `${MSITE_URL}index.html#!/interview/interview-record/${this.interviewRecord.interviewId}`,
           imgUrl: newRecord.paragraph[0].image
         }
         this.onViewChange()
