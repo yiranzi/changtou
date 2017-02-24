@@ -24,7 +24,7 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
 
-        <page-share-panel @onPanelTap="onActionTap"></page-share-panel>
+        <page-share-panel @on-panel-tap="onActionTap"></page-share-panel>
 
       </div>
       <!--<div class="load-fail" v-show="!isLoadSuccess">-->

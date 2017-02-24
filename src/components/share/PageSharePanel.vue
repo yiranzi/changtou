@@ -30,7 +30,7 @@
   export default {
   computed: {
     isInApp () {
-      return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
+      return !(Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     },
     //ios中 暂不才显示微博分享
     canWeiboShare () {
@@ -39,7 +39,7 @@
   },
   methods: {
     onPanelTap (e) {
-      this.$emit('onPanelTap', e)
+      this.$emit('on-panel-tap', e)
     }
   }
 }

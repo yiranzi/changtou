@@ -71,7 +71,7 @@
             <div class="item-mid"></div>
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
 
-            <page-share-panel @onPanelTap="onActionTap"></page-share-panel>
+            <page-share-panel @on-panel-tap="onActionTap"></page-share-panel>
 
           </div>
         </div>
@@ -158,7 +158,7 @@
             <div class="item-mid"></div>
             <div class="item-down" v-if="!isInApp" v-touch:tap="onDownAppTap"></div>
 
-            <page-share-panel @onPanelTap="onActionTap"></page-share-panel>
+            <page-share-panel @on-panel-tap= "onActionTap"></page-share-panel>
 
           </div>
         </div>
