@@ -11,7 +11,7 @@
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
-          <div class="subject-diploma"  v-el:diploma>
+          <div class="image-share-subject-diploma"  v-el:diploma>
             <img src="../../../static/image/graduationDiploma/diploma.png">
             <p class="user-name">{{userName}}</p>
             <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
@@ -169,8 +169,11 @@
      *
      */
     loadShareImageUrl () {
-      const element = this.$els.diploma
-      this.setShareImageUrl(element)
+      const origin = this.$els.diploma
+      const element = origin.cloneNode(true)
+      const height = origin.offsetHeight
+      const width = origin.offsetWidth
+      this.setShareImageUrl({element, height, width})
     },
     setScrollerHeight () {
       const me = this
@@ -240,50 +243,6 @@
       width: 1.3rem;
       height: 1rem;
       margin-top: 0.65rem;
-    }
-    .subject-diploma{
-      position: relative;
-      width: 674/40rem;
-      height: 876/40rem;
-      margin: 30/40rem auto 0;
-      text-align: center;
-      img{
-        width: 674/40rem;
-        height: 876/40rem;
-      }
-      p{
-        margin: 0;
-      }
-      .user-name{
-        width: 100%;
-        position: absolute;
-        z-index: 2;
-        top: 392/40rem;
-        left: 0;
-        text-align: center;
-        font-size: 48/40rem;
-        font-weight: bolder;
-        color: #b8996e;
-      }
-      .subject-name{
-        width: 100%;
-        position: absolute;
-        z-index: 2;
-        top: 510/40rem;
-        left: 0;
-        text-align: center;
-        font-size: 0.8rem;
-        font-weight: bold;
-        color: #666;
-      }
-      .graduation-date{
-        position: absolute;
-        z-index: 2;
-        top: 690/40rem;
-        left: 138/40rem;
-        font-size: 22/40rem;
-        color: #222;
-      }
     }
     .diploma-share-btn{
       text-align: center;
@@ -632,6 +591,50 @@
       100% {
         background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
       }
+    }
+  }
+  .image-share-subject-diploma{
+    position: relative;
+    width: 674/40rem;
+    height: 876/40rem;
+    margin: 30/40rem auto 0;
+    text-align: center;
+    img{
+      width: 674/40rem;
+      height: 876/40rem;
+    }
+    p{
+      margin: 0;
+    }
+    .user-name{
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      top: 392/40rem;
+      left: 0;
+      text-align: center;
+      font-size: 48/40rem;
+      font-weight: bolder;
+      color: #b8996e;
+    }
+    .subject-name{
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      top: 510/40rem;
+      left: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #666;
+    }
+    .graduation-date{
+      position: absolute;
+      z-index: 2;
+      top: 690/40rem;
+      left: 138/40rem;
+      font-size: 22/40rem;
+      color: #222;
     }
   }
 </style>

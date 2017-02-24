@@ -29,54 +29,15 @@ const mixin = {
      * 设置分享图片的url
      * @param element
        */
-    setShareImageUrl (element) {
-      this.convertHtmlToBase64(element).then(this.renderShareHtml).then(this.convertHtmlToBase64).then(
+    setShareImageUrl ({element, height, width}) {
+      this.renderHtml({element, height, width}).then(this.convertHtmlToBase64).then(
         (base64) => {
-          //console.log(base64)
+          console.log(base64)
           this.shareConfig.imgUrl = base64
         }
       )
-      //this.convertHtmlToBase64(element).then(this.renderShareHtml).then(this.convertHidedHtmlToBase64).then(this.renderShareImage).then(this.convertHidedHtmlToBase64).then(this.convertBase64ToBlob).then(this.uploadShareImage).then(
-      //  (response) => {
-      //    if (response && response[0] && response[0].message) {
-      //      this.shareConfig.imgUrl = response[0].message
-      //    }
-      //  }
-      //)
     },
 
-    /**
-     * 上传分享图片
-     * @param blob
-     * @returns {Promise}
-       */
-    //uploadShareImage (blob) {
-    //  const me = this
-    //  let formData = new window.FormData()
-    //  let imageName = `app-diploma-${this.userId}.png`
-    //  formData.append('image', blob, imageName)
-    //
-    //  return new Promise((resolve, reject) => {
-    //    if (!me.isLogin && !me.userId) {
-    //      reject('请先登录')
-    //      return null
-    //    }
-    //
-    //    var xhr = new window.XMLHttpRequest()
-    //    xhr.open('POST', `${SEVER_URL}/upload/file`, true)
-    //    xhr.onreadystatechange = function () {
-    //      if (xhr.readyState === window.XMLHttpRequest.DONE && xhr.status === 200) {
-    //        resolve(JSON.parse(xhr.responseText))
-    //      }
-    //    }
-    //
-    //    xhr.setRequestHeader('X-iChangTou-Json-Api-User', me.userId)
-    //    xhr.setRequestHeader('X-iChangTou-Json-Api-Token', API_TOKEN)
-    //    xhr.setRequestHeader('X-iChangTou-Json-Api-Session', me.sessionId)
-    //
-    //    xhr.send(formData)
-    //  })
-    //},
     /**
      * 将html转换成base64
      * @param element
@@ -105,17 +66,23 @@ const mixin = {
       )
     },
 
-      /**
-       *
-       * @param base64
-       * @returns {Promise.<Node>}
-       */
-    renderShareHtml (base64) {
-      const panelStyle = `width: ${this.shareImageWidth * 2}px;border-radius: 10px;`
-      const imgStyle = `width: ${this.shareImageWidth * 2}px;height: ${this.shareImageHeight * 2}px`
+    /**
+     *
+     * @param origin
+     * @returns {Promise.<Node>}
+     */
+    renderHtml ({element, height, width}) {
+      this.shareImageWidth = width
+      this.shareImageHeight = height
+
+      const ratio = (650 / this.shareImageHeight).toFixed(2)
+      const ShareContentStyle = `width: ${width};height: ${height};transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
+
       const eleHtml =
-        `<div class="in-app-image-share-panel" style="${panelStyle}">
-            <img src="${base64}" style="${imgStyle}">
+        `<div class="in-app-image-share-panel">
+            <div class="in-app-image-share-content-box">
+              <div class="in-app-image-share-content" id="in-app-image-share-content" style="${ShareContentStyle}"></div>
+            </div>
             <div class="qrcode-panel">
               <div class="download-qrcode"></div>
               <div class="app-info">
@@ -124,14 +91,16 @@ const mixin = {
               </div>
             </div>
         <div/>`
-
       const node = window.document.createElement('div')
       node.style.position = 'absolute'
       node.style.left = '100%'
       node.style.top = 0
       node.innerHTML = eleHtml
-      const element = window.document.body.appendChild(node)
-      return Promise.resolve(element)
+
+      const result = window.document.body.appendChild(node)
+      const shareContent = window.document.getElementById('in-app-image-share-content')
+      shareContent.appendChild(element)
+      return Promise.resolve(result)
     },
 
     /**
@@ -147,35 +116,19 @@ const mixin = {
     },
 
     /**
-     * 将base64转成blob
-     * @param base64
-     * @returns {*}
-       */
-    //convertBase64ToBlob (base64) {
-    //  const arr = base64.split(',')
-    //  const mime = arr[0].match(/:(.*?);/)[1]
-    //  let bstr = window.atob(arr[1])
-    //  let n = bstr.length
-    //  let u8arr = new Uint8Array(n)
-    //  while (n--) {
-    //    u8arr[n] = bstr.charCodeAt(n)
-    //  }
-    //  const blob = new window.Blob([u8arr], {type: mime})
-    //  return Promise.resolve(blob)
-    //},
-
-    /**
      * 显示sharePanel
      */
     showActionSharePanel () {
       this.showShareFloat = true
     },
+
     /**
      * 隐藏sharePanel
      */
     cancelShare () {
       this.showShareFloat = false
     },
+
     /**
      * 点击sharePanel
      * @param event
