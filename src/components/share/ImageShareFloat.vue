@@ -37,7 +37,7 @@
     }
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .in-app-image-share-float{
     background: #f0eff5;
     .ict_actionsheet_title {

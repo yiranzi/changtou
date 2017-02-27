@@ -44,7 +44,7 @@
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .in-web-page-share-panel{
     padding-top: 1.5rem;
     font-size: 26/40rem;
