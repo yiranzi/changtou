@@ -1,6 +1,7 @@
 <template>
   <div class="course-navigator" style="height: 100%;">
     <ict-titlebar :left-options="{showBack: false}" v-el:titlebar>长投学堂</ict-titlebar>
+    <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <swiper :aspect-ratio="120/375" :list="banners"
@@ -21,7 +22,7 @@
             <span class="under-banner-title">院生故事</span>
           </div>
         </div>
-        <div class="popularlist-area popularSpe">
+        <div class="popular-list popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -135,11 +136,12 @@
     },
 
     route: {
-      data () {
+      data ({from}) {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
         this.loadNavigator()
+        this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
         //重置页面滚动位置
@@ -151,7 +153,9 @@
       return {
         scrollerHeight: '0px',
         isShowNewTestPop: false,
-        giftMaskCount: 0  // 显示新手礼包的次数 超过1则不显示礼包
+        giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
+        showNewerGiftIcon: false,  // 显示新手礼包领取图标
+        fromPath: '' // 前一个页面url
       }
     },
     ready () {
@@ -213,9 +217,9 @@
           function () {
             // 设置滚动条高度
             me.setScrollerHeight()
-            setTimeout(() => {
-              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-          }, 200)
+//            setTimeout(() => {
+//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
+//          }, 200)
           }
         )
       },
@@ -228,12 +232,31 @@
         if (this.isLogin) {
           this.isQualifyGiftPackage().then(
             function (isQualify) {
-              if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              if (isQualify.qualification && me.giftMaskCount === 0) {
                 me.showPackage()
                 me.giftMaskCount += 1
+                me.showNewerGiftIcon = true
+              } else if (!isQualify.qualification && (me.fromPath === '/entry' || (/\/register\/end\//g.test(me.fromPath)))) {
+                me.showNewerGiftIcon = false
+                me.showGetGiftFailed()
+              } else if (!isQualify.qualification) {
+                me.showNewerGiftIcon = false
               }
             }
           )
+        } else {
+          this.showNewerGiftIcon = true
+        }
+      },
+
+      /**
+      * 点击新手礼包领取图标，，未登录进入登录页面，已登录进入领取页面
+      */
+      getNewerGift () {
+        if (this.isLogin) {
+          this.showPackage()
+        } else {
+          this.$route.router.go('/entry')
         }
       },
 
@@ -384,6 +407,18 @@
         })
       },
 
+      /*
+      * 领取新手礼包失败显示浮框
+      * */
+      showGetGiftFailed () {
+        this.showMask({
+          component: 'newerGift/GetGiftFailedMask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'hideGetGiftFailedMask',
+          callbackFn: this.hideMask.bind(this) //组件上的
+        })
+      },
+
         /**
          * 跳转到新手礼包详情
          */
@@ -412,14 +447,14 @@
     .popularSpe{
       padding-bottom: .8rem;
     }
-    .popularlist-area{
+    .popular-list{
       .box-container{
         width: 37.5rem;
         margin-left: .3rem;
         .box-item {
           float: left;
+          position: relative;
           text-align: center;
-          line-height: 5rem;
           width: 6.8rem;
           height: 8.5rem;
           margin-right: .5rem;
@@ -431,18 +466,17 @@
           }
           .sub-title {
             position: absolute;
-            bottom: 1.2rem;
+            bottom: 1.5rem;
             padding: 0 0.5rem;
             font-size: 0.65rem;
             color: #fff;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            bottom: -9.2rem;
           }
           .sub-price {
             position: absolute;
-            bottom: -10.5rem;
+            bottom: 0;
             padding: 0 0.5rem 0.5rem 0.5rem;
             font-size: 0.6rem;
             color: #ff9800;
@@ -717,7 +751,15 @@
       }
 
     }
-
+    /*首页新手礼包小挂件样式*/
+    .newer-gift{
+      position: absolute;
+      z-index: 2;
+      width: 4rem;
+      height: 4.25rem;
+      bottom: 4rem;
+      right: .75rem
+    }
   }
 
 </style>

@@ -6,7 +6,7 @@
 
 import {getNativeVersion} from '../plugin/version'
 
-const appVersion = '2.6.0' //功能版本号
+const appVersion = '2.6.1' //功能版本号
 
 //const nativeVersion = '0' //原生版本号
 
