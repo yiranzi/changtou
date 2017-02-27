@@ -310,6 +310,12 @@ export function configRouter (router) {
     */
     '/start': {
       component: require('../views/start/GuideView.vue')
+    },
+
+    /*新手村*/
+
+    '/village/map': {
+      component: require('../views/freshVillage/ChapterMap.vue')
     }
   })
 
