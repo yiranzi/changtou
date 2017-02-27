@@ -24,6 +24,7 @@
 <script>
 //  import Swiper from 'vux/swiper'
 //  import SwiperItem from 'vux/swiper-item'
+  import chapterChoiceItem from './ChapterChoiceItem.vue'
 
   export default {
     vuex: {
@@ -59,6 +60,7 @@
     components: {
 //      Swiper,
 //      SwiperItem
+      chapterChoiceItem
     }
   }
 </script>

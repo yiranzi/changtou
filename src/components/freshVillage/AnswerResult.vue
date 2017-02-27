@@ -1,0 +1,140 @@
+/**
+ * Created by zhongyan on 2017/2/27.
+ *
+ */
+<template>
+    <div class="fresh-village-answer-result">
+      <div class="answer-result">
+        <span class="title">思考一下</span><span class="close-icon"></span>
+      </div>
+      <div class="result-middle">
+        <div class="result-explain">
+        作家要思考，要有的敏感的心灵和睿智的视野。作家是这个世界上的透明人，
+        他对一切都看在眼里，他也把一切都，它给你打开了一个崭新的，光彩夺目的，让人深思的写作世界。
+        </div>
+        <div class="result-title">
+          <span class="line"></span>选择结果<span class="line"></span>
+        </div>
+        <div class="life-score"><span class="round"></span>生命值<span class="score">+10</span></div>
+      </div>
+      <div class="confirm-btn">懂了</div>
+    </div>
+</template>
+<script>
+export default {
+  vuex: {
+    getters: {
+
+    },
+    actions: {
+
+    }
+  },
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+
+  },
+  watch: {
+
+  },
+  route: {
+
+  },
+  ready () {
+
+  },
+  methods: {
+
+  },
+  components: {
+
+  }
+}
+</script>
+<style lang="less">
+  .fresh-village-answer-result {
+    width: 14.5rem;
+    .answer-result {
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      height: 6.5rem;
+      background: url("../../assets/styles/image/freshVillage/chapter1-question.png") no-repeat;
+      background-size: 100% 100%;
+    }
+    .title {
+      display: inline-block;
+      font-size: .8rem;
+      font-weight: bold;
+      color: #444;
+      margin: 1rem 0 0 1rem;
+    }
+    .close-icon:after {
+      display: inline-block;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-family: 'myicon';
+      content: '\e90d';
+      color: #aaa;
+      font-size: .8rem;
+    }
+    .result-middle {
+      background-color: #fff;
+      width: 100%;
+      height: 13.5rem;
+    }
+    .result-explain{
+      padding: 1rem;
+      font-size: .65rem;
+      color: #666;
+    }
+    .result-title {
+      text-align: center;
+      margin: .75rem 0;
+      font-size: .6rem;
+      color: #aaa;
+    }
+    .line {
+      display: inline-block;
+      margin: 0 .75rem;
+      vertical-align: middle;
+      width: 3.25rem;
+      border-top: 1px solid #f0eff5;
+    }
+    .life-score {
+      margin: 0 1.5rem;
+      color: #888;
+      font-size: .65rem;
+    }
+    .round {
+      display: inline-block;
+      vertical-align: middle;
+      width: .75rem;
+      height: .75rem;
+      border-radius: 50%;
+      background-color: #8EAE05;
+      margin-right: .5rem;
+    }
+    .score {
+      display: inline-block;
+      vertical-align: middle;
+      float: right;
+      font-size: .65rem;
+      color: #f12938;
+    }
+    .confirm-btn {
+      text-align: center;
+      height: 2rem;
+      line-height: 2rem;
+      font-size: .8rem;
+      color: #fff;
+      background-color: #8EAE05;
+      border-radius: 0 0 20px 20px;
+    }
+
+  }
+</style>

@@ -35,13 +35,14 @@
   },
   route: {
     data () {
-      this.showChapterChoice()
-   //   this.showQuestion()
+     // this.showChapterChoice()
+     // this.showChapterStory()
+     // this.showQuestion()
+      this.showAnswerResult()
     }
 
   },
   ready () {
-
   },
   methods: {
     showChapterChoice () {
@@ -56,10 +57,26 @@
       console.log('aaaaa')
    //   this.activeChapterNo = activeChapterNo
     },
+    showChapterStory () {
+      this.showMask({
+        component: 'freshVillage/ChapterStory.vue',
+        hideOnMaskTap: false,
+        callbackName: 'getResult',
+        callbackFn: this.getResult.bind(this) //组件上的
+      })
+    },
     showQuestion () {
       this.showMask({
-        component: '../../components/freshVillage/QuestionPage.vue',
-        hideOnMaskTap: true,
+        component: 'freshVillage/Question.vue',
+        hideOnMaskTap: false,
+        callbackName: 'getResult',
+        callbackFn: this.getResult.bind(this) //组件上的
+      })
+    },
+    showAnswerResult () {
+      this.showMask({
+        component: 'freshVillage/AnswerResult.vue',
+        hideOnMaskTap: false,
         callbackName: 'getResult',
         callbackFn: this.getResult.bind(this) //组件上的
       })
@@ -79,7 +96,7 @@
     height: 100%;
   }
   .chapter1-bg{
-    background: url('../../../static/freshVillage/chapter1_bg.png') no-repeat;
+    background: url('../../../static/freshVillage/chapter1-bg.png') no-repeat;
     background-size: 100% 100%;
   }
 </style>
