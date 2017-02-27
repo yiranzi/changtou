@@ -11,7 +11,7 @@
             <div class="strategy-item strategy-item-3" >手把手教你选基金手册</div>
             <div class="strategy-book-container" v-touch:tap="goToReceiveBook">
               <div class="strategy-book"></div>
-              <div class="strategy-receive-btn">限时免费领</div>
+              <div class="strategy-receive-btn">{{receive}}</div>
             </div>
           </div>
           <div class="guide-audio-list">
@@ -55,7 +55,8 @@ import {webAudio} from '../../util/audio/web'
         audioList: [], //音频列表
         currAudioUrl: '', //当前播放的audio
         isInitListeners: false, //是否初始化过音频播放
-        status: 'pause' // {'play' | 'pause' | 'stop'} //当前audio的状态
+        status: 'pause', // {'play' | 'pause' | 'stop'} //当前audio的状态
+        receive: ''  //是否限时免费领
       }
     },
     computed: {
@@ -92,6 +93,11 @@ import {webAudio} from '../../util/audio/web'
               me.bookProgress = progress
             }
           )
+          if (this.getBookProgress) {
+            this.receive = '立即查看'
+          }
+        } else {
+          this.receive = '限时免费领'
         }
       },
       deactivate () {
@@ -138,9 +144,14 @@ import {webAudio} from '../../util/audio/web'
             // 无进度 跳转到介绍
             me.$route.router.go(`/ebook/detail/${bookId}`)
           }
+          if (this.bookProgress) {
+            //阅读过 显示立即查看
+            this.receive = '立即查看'
+          }
         } else {
           //未登录
           this.$route.router.go(`/ebook/detail/${bookId}`)
+          this.receive = '限时免费领'
         }
       },
 
