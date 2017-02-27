@@ -201,12 +201,15 @@ const mixin = {
         },
         methods: {
           onFloatMaskTap: function (e) {
-            e.preventDefault()
+            if (e.preventDefault) {
+              e.preventDefault()
+            }
+
+            if (e.stopPropagation) {
+              e.stopPropagation()
+            }
+
             if (hideOnMaskTap) {
-              let EmptyComponent = Vue.extend({
-                template: `<div></div>`
-              })
-              new EmptyComponent({el: '#mask'})
               me.hideMask()
             }
           }
@@ -221,11 +224,16 @@ const mixin = {
     },
 
     [eventMap.HIDE_MASK]: function () {
-      let MyComponent = Vue.extend({
-        template: `<div></div>`
-      })
-      new MyComponent({ el: '#mask' })
-      this.isMaskShow = false
+      setTimeout(
+        () => {
+          let MyComponent = Vue.extend({
+            template: `<div></div>`
+          })
+          new MyComponent({ el: '#mask' })
+          this.isMaskShow = false
+        },
+        100
+      )
     }
   }
 }

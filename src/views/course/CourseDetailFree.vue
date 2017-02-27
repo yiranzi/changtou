@@ -117,7 +117,7 @@
         this.shareConfig = {
           title: newSubject.title,
           desc: newSubject.subtitle,
-          link: `${MSITE_URL}index.html#!/subject/detail/F${this.subjectId}/0`,
+          link: `${MSITE_URL}index.html#!/subject/detail/F/${this.subjectId}/0`,
           imgUrl: newSubject.pic
         }
         this.onViewChange()

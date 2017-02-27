@@ -433,4 +433,55 @@
     width: 4rem;
     height: 4rem;
   }
+  .in-app-image-share-panel{
+    width: 630px;
+    height: 870px;
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    p{
+      margin: 0;
+    }
+    .in-app-image-share-content-box{
+      width: 100%;
+      height: 680px;
+      .in-app-image-share-content{
+        padding-top: 1px;
+        box-sizing: border-box;
+      }
+    }
+    .qrcode-panel{
+      width: 100%;
+      height: 190px;
+      padding: 40px 0;
+      text-align: center;
+      font-size: 0;
+      background: #f4f4f4;
+      border-top: 1px solid #aaa;
+      box-sizing: border-box;
+      border-radius: 0 0 10px 10px;
+      .download-qrcode{
+        display: inline-block;
+        width: 110px;
+        height: 110px;
+        background: url("../static/image/download-app-qrcode.png") no-repeat center center;
+        background-size: 100% 100%;
+        vertical-align: top;
+      }
+      .app-info{
+        font-size: 30px;
+        color: #aaa;
+        display: inline-block;
+        padding: 5px 0 5px 40px;
+        box-sizing: border-box;
+        width: 410px;
+        vertical-align: top;
+        text-align: left;
+      }
+      .title{
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+    }
+  }
 </style>

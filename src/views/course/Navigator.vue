@@ -22,7 +22,7 @@
             <span class="under-banner-title">院生故事</span>
           </div>
         </div>
-        <div class="popularlist-area popularSpe">
+        <div class="popular-list popularSpe">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
@@ -447,14 +447,14 @@
     .popularSpe{
       padding-bottom: .8rem;
     }
-    .popularlist-area{
+    .popular-list{
       .box-container{
         width: 37.5rem;
         margin-left: .3rem;
         .box-item {
           float: left;
+          position: relative;
           text-align: center;
-          line-height: 5rem;
           width: 6.8rem;
           height: 8.5rem;
           margin-right: .5rem;
@@ -466,18 +466,17 @@
           }
           .sub-title {
             position: absolute;
-            bottom: 1.2rem;
+            bottom: 1.5rem;
             padding: 0 0.5rem;
             font-size: 0.65rem;
             color: #fff;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            bottom: -9.2rem;
           }
           .sub-price {
             position: absolute;
-            bottom: -10.5rem;
+            bottom: 0;
             padding: 0 0.5rem 0.5rem 0.5rem;
             font-size: 0.6rem;
             color: #ff9800;

@@ -98,6 +98,10 @@ const mixin = {
         'channel': Device.platform === platformMap.WEB ? channel || 'defalut' : 'app'
       })
 
+      ictData.register({
+        '来源渠道': Device.platform === platformMap.WEB ? channel || 'defalut' : 'app'
+      })
+
       getNativeVersion().then(nativeNum => {
         ictData.register({
           'nativeVersion': nativeNum
