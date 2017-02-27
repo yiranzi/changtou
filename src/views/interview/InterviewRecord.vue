@@ -24,25 +24,7 @@
           <img class="pic" v-bind:src="paragraph.image">
         </div>
 
-        <div class="share-article" v-if="canShare">
-          <div><hr/><span>好文共赏</span><hr/></div>
-          <div class="share-item" v-touch:tap="shareToTimelineInApp">
-            <div class="timeline"></div>
-            <div class="share-name">朋友圈</div>
-          </div>
-          <div class="share-item" v-touch:tap="shareToFriendInApp">
-            <div class="wechat"></div>
-            <div class="share-name">微信好友</div>
-          </div>
-          <div class="share-item" v-touch:tap="shareToQQInApp">
-            <div class="qq"></div>
-            <div class="share-name">QQ</div>
-          </div>
-          <!--<div class="share-item" v-touch:tap="shareToWeiboInApp" v-if="canWeiboShare">-->
-            <!--<div class="weibo"></div>-->
-            <!--<div class="share-name">微博</div>-->
-          <!--</div>-->
-        </div>
+        <page-share-panel @on-panel-tap="onActionTap"></page-share-panel>
 
       </div>
       <!--<div class="load-fail" v-show="!isLoadSuccess">-->
@@ -56,16 +38,17 @@
 
 <script>
   import Scroller from 'vux/scroller'
-  import Actionsheet from 'vux/actionsheet'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import ShareFloat from './InterviewFloat.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
-  import {eventMap} from '../../frame/eventConfig'
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
-  import {statisticsMap} from '../../statistics/statisticsMap'
+  import mixinPageShare from '../../mixinPageShare'
+  import PageSharePanel from '../../components/share/PageSharePanel.vue'
+
   export default {
+    mixins: [mixinPageShare],
     vuex: {
       actions: {
         loadInterviewRecord: interviewActions.loadInterviewRecord
@@ -89,7 +72,7 @@
         this.shareConfig = {
           title: '院生故事',
           desc: newRecord.title,
-          link: `${MSITE_URL}index.html#!/interview/content/${this.interviewRecord.interviewId}`,
+          link: `${MSITE_URL}index.html#!/interview/interview-record/${this.interviewRecord.interviewId}`,
           imgUrl: newRecord.paragraph[0].image
         }
         this.onViewChange()
@@ -100,11 +83,6 @@
       //只有app中才能调用插件分享
       canShare () {
         return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
-      },
-
-      //ios中 暂不才显示微博分享
-      canWeiboShare () {
-        return !(Device.platform === platformMap.IOS)
       }
     },
     route: {
@@ -138,184 +116,19 @@
           })
         })
         }, 500)
-      },
-      showActionSharePanel () {
-        this.showShareFloat = true
-      },
-      onActionTap (event) {
-        this.showShareFloat = false
-        switch (event.target.className) {
-          case 'wechat':
-            this.shareToFriendInApp() // 分享朋友
-            break
-          case 'timeline':
-            this.shareToTimelineInApp() //分享到朋友圈
-            break
-          case 'qq':
-            this.shareToQQInApp() // 分享朋友
-            break
-          case 'weibo':
-            this.shareToWeiboInApp() //分享到朋友圈
-            break
-          default:
-                break
-        }
-      },
-      //分享朋友
-      shareToFriendInApp () {
-        const me = this
-        if (window.Wechat) {
-          window.Wechat.share({
-              message: {
-                title: me.shareConfig.title, // 分享标题
-                description: me.shareConfig.desc,
-                thumb: me.shareConfig.imgUrl, // 分享图标
-                media: {
-                  type: window.Wechat.Type.WEBPAGE,
-                  webpageUrl: me.shareConfig.link
-                }
-              },
-              scene: window.Wechat.Scene.SESSION
-            },
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '分享内容': me.shareConfig.title,
-                '分享渠道': '微信-会话'
-              })
-            },
-            function (reason) {
-              if (reason === '用户点击取消并返回') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: reason})
-              }
-            }
-          )
-        } else {
-          this.showAlert('请先安装微信客户端')
-        }
-      },
-
-      //分享到朋友圈
-      shareToTimelineInApp () {
-        const me = this
-        if (window.Wechat) {
-          window.Wechat.share({
-              message: {
-                title: me.shareConfig.title, // 分享标题
-                description: me.shareConfig.desc,
-                thumb: me.shareConfig.imgUrl, // 分享图标
-                media: {
-                  type: window.Wechat.Type.WEBPAGE,
-                  webpageUrl: me.shareConfig.link
-                }
-              },
-              scene: window.Wechat.Scene.TIMELINE // share to Timeline
-            },
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '分享内容': me.shareConfig.title,
-                '分享渠道': '微信-朋友圈'
-              })
-            },
-            function (reason) {
-              if (reason === '用户点击取消并返回') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: reason})
-              }
-            }
-          )
-        } else {
-          this.showAlert('请先安装微信客户端')
-        }
-      },
-      /**
-       * 分享到QQ
-       */
-      shareToQQInApp () {
-        if (window.YCQQ) {
-          const me = this
-          var args = {}
-          args.url = me.shareConfig.link
-          args.title = me.shareConfig.title
-          args.description = me.shareConfig.desc
-          args.imageUrl = me.shareConfig.imgUrl
-          args.appName = '长投学堂'
-          window.YCQQ.shareToQQ(
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '分享内容': me.shareConfig.title,
-                '分享渠道': 'QQ'
-              })
-            },
-            function (failReason) {
-              if (failReason === 'cancelled by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        } else {
-          this.showAlert('请先安装QQ客户端')
-        }
-      },
-      /**
-       * 分享到微博
-       */
-      shareToWeiboInApp () {
-        if (window.YCWeibo) {
-          const me = this
-          var args = {}
-          args.url = me.shareConfig.link
-          args.title = me.shareConfig.title
-          args.description = '长投学堂' + me.shareConfig.desc
-          args.imageUrl = me.shareConfig.imgUrl
-          args.defaultText = me.shareConfig.desc
-          window.YCWeibo.shareToWeibo(
-            function () {
-              me.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW_SHARE_TAP, {
-                '分享内容': me.shareConfig.title,
-                '分享渠道': '微博'
-              })
-            },
-            function (failReason) {
-              if (failReason === 'cancel by user') {
-
-              } else {
-                me.showAlert({title: '分享失败', message: failReason})
-              }
-            },
-            args
-          )
-        } else {
-          this.showAlert('请先安装微博客户端')
-        }
-      },
-      /**
-       * 取消分享
-       */
-      cancelShare () {
-        this.showShareFloat = false
       }
     },
 
     components: {
       IctTitlebar,
       Scroller,
-      Actionsheet,
-      ShareFloat
+      ShareFloat,
+      PageSharePanel
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scaped>
   .interview-record{
-    .right_unable{
-      disabled: false;
-      color: #fff;
-    }
     .share-pic{
       width: 1.3rem;
       height: 1rem;
@@ -387,63 +200,6 @@
       background-color: #fff;
       text-align: center;
       padding-top: 40%;
-    }
-
-    .share-item{
-      display: inline-block;
-      width: 3.5rem;
-      height: 4.3rem;
-      margin: 0 0.35rem;
-      text-align: center;
-    }
-    .wechat,.timeline,.qq,.weibo{
-      display: inline-block;
-      width: 2.5rem;
-      height: 2.5rem;
-    }
-    .wechat{
-      background: url("../../../static/image/interview/share-wechat.png") no-repeat center center / 100%;
-    }
-    .timeline{
-      background: url("../../../static/image/interview/share-timeline.png") no-repeat center center / 100%;
-    }
-    .qq{
-      background: url("../../../static/image/interview/share-qq.png") no-repeat center center / 100%;
-    }
-    .weibo{
-      background: url("../../../static/image/interview/share-weibo.png") no-repeat center center / 100%;
-    }
-    .share-name{
-      width: 100%;
-      display: inline-block;
-      text-align: center;
-      margin-top: .5rem;
-    }
-    .share-box{
-      width: 100%;
-      padding: 1.2rem 0;
-      font-size: 0.6rem;
-      text-align: center;
-    }
-    .share-article{
-      font-size: 26/40rem;
-      color: #aaa;
-      text-align: center;
-      hr{
-        margin: 0.32rem .5rem;
-        width: 4.5rem;
-        height: 1px;
-        background: #aaa;
-        border: 0;
-        display: inline-block;
-      }
-      p{
-        margin: 0;
-      }
-      .share-item{
-        width: 2.8rem;
-        margin-top: 1.5rem;
-      }
     }
   }
 </style>

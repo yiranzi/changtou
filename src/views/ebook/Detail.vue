@@ -38,13 +38,13 @@
   import ShareFloat from '../interview/InterviewFloat.vue'
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
-  import mixinShare from '../../mixinShare'
+  import mixinPageShare from '../../mixinPageShare'
   import {getLocalCache, setLocalCache} from '../../util/cache'
   import {ebookActions} from '../../vuex/actions'
   import {ebookGetters, userGetters} from '../../vuex/getters'
 
   export default {
-  mixins: [mixinShare],
+  mixins: [mixinPageShare],
   vuex: {
     actions: {
       bookArr: ebookActions.bookArr,

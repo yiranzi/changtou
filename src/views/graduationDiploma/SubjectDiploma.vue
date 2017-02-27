@@ -4,18 +4,23 @@
  */
 <template>
     <div class="graduation-diploma">
-      <ict-titlebar :right-options="titleRightOptions" :left-Options="titleLeftOptions" v-el:titlebar>
-        <a slot="right">{{titleText}}</a>
+      <ict-titlebar :right-options="rightOptions" v-el:titlebar>
+        <div slot="right" v-touch:tap="showActionSharePanel" v-if="canShare">
+          <img class="share-pic" src='../../assets/styles/image/share.png'>
+        </div>
       </ict-titlebar>
       <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
         <div>
-          <div class="subject-diploma">
+          <div class="image-share-subject-diploma"  v-el:diploma>
             <img src="../../../static/image/graduationDiploma/diploma.png">
             <p class="user-name">{{userName}}</p>
             <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
             <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
           </div>
-          <div>
+          <div class="diploma-share-btn">
+            <img src="../../../static/image/graduationDiploma/diploma-share-btn.png" v-touch:tap="showActionSharePanel">
+          </div>
+            <div>
             <p class="draw-title">－长投毕业激励金抽奖－</p>
             <div class="draw-panel" v-if="diplomaDetails && diplomaDetails.drawStatus !== drawStatus.draw" :class="{'draw-disabled':diplomaDetails.drawStatus !== drawStatus.undraw}">
               <div class="animated-border animated-border-top"></div>
@@ -64,6 +69,7 @@
           </div>
         </div>
       </scroller>
+      <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
     </div>
 </template>
 <script>
@@ -71,7 +77,11 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {graduationDiplomaActions} from '../../vuex/actions'
   import {graduationDiplomaGetters, userGetters} from '../../vuex/getters'
+  import {Device, platformMap} from '../../plugin/device'
+  import ShareFloat from '../../components/share/ImageShareFloat.vue'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+  mixins: [mixinImageShare],
   vuex: {
     getters: {
       userName: userGetters.userName,
@@ -105,27 +115,17 @@
     }
   },
   computed: {
-    // titlebar 右边按钮
-    titleRightOptions () {
-      return this.isFromList ? {callback: null, disabled: false} : this.rightOptions
-    },
-
-    // titlebar 左边按钮
-    titleLeftOptions () {
-      return this.isFromList ? {showBack: true} : {showBack: false}
-    },
-
-    // titlebar 右边按钮 文案
-    titleText () {
-      return this.isFromList ? '' : '完成'
-    },
-
     // 用来显示抽奖机会的状态
     drawStatusCls () {
       return {
         expired: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.expired,
         failed: this.diplomaDetails && this.diplomaDetails.drawStatus === this.drawStatus.failed
       }
+    },
+
+    //只有app中才能调用插件分享
+    canShare () {
+      return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     },
 
     //积分券样式
@@ -143,12 +143,38 @@
       this.subjectId = params.subjectId
       this.getDiplomaDetails(this.subjectId).then(
         details => {
+          this.shareConfig = {
+            title: '毕业奖状',
+            desc: '',
+            link: '',
+            imgUrl: ''
+          }
+          this.onViewChange()
+
+          setTimeout(
+            () => {
+              this.loadShareImageUrl()
+            },
+          500)
           this.setScrollerHeight()
         }
       )
     }
   },
+    ready () {
+
+    },
   methods: {
+    /**
+     *
+     */
+    loadShareImageUrl () {
+      const origin = this.$els.diploma
+      const element = origin.cloneNode(true)
+      const height = origin.offsetHeight
+      const width = origin.offsetWidth
+      this.setShareImageUrl({element, height, width})
+    },
     setScrollerHeight () {
       const me = this
       setTimeout(function () {
@@ -170,13 +196,6 @@
           this.setScrollerHeight()
         }
       )
-    },
-
-    /**
-     * 点击完成
-     */
-    onFinishTap () {
-      window.history.back()
     },
 
     /**
@@ -208,7 +227,8 @@
   },
   components: {
     IctTitlebar,
-    Scroller
+    Scroller,
+    ShareFloat
   }
 }
 </script>
@@ -219,48 +239,17 @@
     p{
       margin: 0;
     }
-    .subject-diploma{
-      position: relative;
-      width: 674/40rem;
-      height: 876/40rem;
-      margin: 30/40rem auto 100/40rem;
+    .share-pic{
+      width: 1.3rem;
+      height: 1rem;
+      margin-top: 0.65rem;
+    }
+    .diploma-share-btn{
       text-align: center;
+      margin: 0 auto 60/40rem;
       img{
-        width: 674/40rem;
-        height: 876/40rem;
-      }
-      p{
-        margin: 0;
-      }
-      .user-name{
-        width: 100%;
-        position: absolute;
-        z-index: 2;
-        top: 392/40rem;
-        left: 0;
-        text-align: center;
-        font-size: 48/40rem;
-        font-weight: bolder;
-        color: #b8996e;
-      }
-      .subject-name{
-        width: 100%;
-        position: absolute;
-        z-index: 2;
-        top: 510/40rem;
-        left: 0;
-        text-align: center;
-        font-size: 0.8rem;
-        font-weight: bold;
-        color: #666;
-      }
-      .graduation-date{
-        position: absolute;
-        z-index: 2;
-        top: 690/40rem;
-        left: 138/40rem;
-        font-size: 22/40rem;
-        color: #222;
+        width: 348/40rem;
+        height: 156/40rem;
       }
     }
     .status-label{
@@ -602,6 +591,50 @@
       100% {
         background: url('../../assets/styles/image/graduationDiploma/border-vertial.png') 0 100%;
       }
+    }
+  }
+  .image-share-subject-diploma{
+    position: relative;
+    width: 674/40rem;
+    height: 876/40rem;
+    margin: 30/40rem auto 0;
+    text-align: center;
+    img{
+      width: 674/40rem;
+      height: 876/40rem;
+    }
+    p{
+      margin: 0;
+    }
+    .user-name{
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      top: 392/40rem;
+      left: 0;
+      text-align: center;
+      font-size: 48/40rem;
+      font-weight: bolder;
+      color: #b8996e;
+    }
+    .subject-name{
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      top: 12.5rem;
+      left: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #666;
+    }
+    .graduation-date{
+      position: absolute;
+      z-index: 2;
+      top: 690/40rem;
+      left: 138/40rem;
+      font-size: 22/40rem;
+      color: #222;
     }
   }
 </style>

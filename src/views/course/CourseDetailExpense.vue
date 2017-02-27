@@ -228,7 +228,8 @@
         showChoice: false,
         isQuestionPlaced: false,  //是否放置提问按钮
 
-        currChapterRecord: null //当前课程chapter记录
+        currChapterRecord: null, //当前课程chapter记录
+        relatedMajorSubjectId: 0  //相关主线课的subjectId
       }
     },
 
@@ -343,6 +344,7 @@
        * 当前课程详情加载成功
        */
       'currSubject': function (newSubject) {
+        this.relatedMajorSubjectId = newSubject.relatedMajorSubjectId
         this.shareConfig = {
           title: newSubject.title,
           desc: newSubject.subtitle,
@@ -923,7 +925,7 @@
        */
       postpone () {
         //前去支付页面购买延期服务
-        const path = `/pay-P-${this.subjectId}`
+        const path = `/pay-P-${this.relatedMajorSubjectId || this.subjectId}`
         this.$route.router.on(path, {
           component: require('../pay/PostponeOrder.vue')
         })
