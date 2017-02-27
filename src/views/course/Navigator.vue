@@ -136,11 +136,12 @@
     },
 
     route: {
-      data () {
+      data ({from}) {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
         this.loadNavigator()
+        this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
         //重置页面滚动位置
@@ -153,7 +154,8 @@
         scrollerHeight: '0px',
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
-        showNewerGiftIcon: true  // 显示新手礼包领取图标
+        showNewerGiftIcon: false,  // 显示新手礼包领取图标
+        fromPath: '' // 前一个页面url
       }
     },
     ready () {
@@ -230,14 +232,15 @@
         if (this.isLogin) {
           this.isQualifyGiftPackage().then(
             function (isQualify) {
-              console.log('isQualify', isQualify)
-              if (!isQualify.qualification) {
-                me.showNewerGiftIcon = false
-              } else if (isQualify.qualification && parseInt(me.giftMaskCount) === 0) {
+              if (isQualify.qualification && me.giftMaskCount === 0) {
                 me.showPackage()
                 me.giftMaskCount += 1
-              } else if (isQualify.qualification) {
                 me.showNewerGiftIcon = true
+              } else if (!isQualify.qualification && (me.fromPath === '/entry' || (/\/register\/end\//g.test(me.fromPath)))) {
+                me.showNewerGiftIcon = false
+                me.showGetGiftFailed()
+              } else if (!isQualify.qualification) {
+                me.showNewerGiftIcon = false
               }
             }
           )
@@ -404,6 +407,18 @@
         })
       },
 
+      /*
+      * 领取新手礼包失败显示浮框
+      * */
+      showGetGiftFailed () {
+        this.showMask({
+          component: 'newerGift/GetGiftFailedMask.vue',
+          hideOnMaskTap: true,
+          callbackName: 'hideGetGiftFailedMask',
+          callbackFn: this.hideMask.bind(this) //组件上的
+        })
+      },
+
         /**
          * 跳转到新手礼包详情
          */
@@ -426,7 +441,7 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .course-navigator{
     background: #fff;
     .popularSpe{
