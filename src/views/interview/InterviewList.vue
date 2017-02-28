@@ -82,7 +82,7 @@
         const me = this
         return this.loadInterviewList().then(
           function () {
-            setLocalCache('interview-number', {'interview-number': me.interviewList.length})
+            setLocalCache('interview-count', {'interview-count': me.interviewList.length})
             return {
               isLoadSuccess: true
             }

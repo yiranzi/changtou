@@ -17,7 +17,7 @@
             <i class="under-banner-icon newer-guide"></i>
             <span class="under-banner-title">入门指南</span>
           </div>
-          <div v-touch:tap="goToInterviewList" class="under-banner-item interview-position">
+          <div v-touch:tap="goToInterviewList" class="under-banner-item">
             <i class="under-banner-icon interview"></i>
             <span class="under-banner-title">院生故事</span>
             <i class="new-interview-icon" v-show="hasNewInterview"></i>
@@ -150,7 +150,7 @@
         //重置页面滚动位置
         this.resetScroller()
         //显示院生故事有新消息
-        this.interviewShowNew()
+        this.showInterviewNew()
       }
     },
 
@@ -160,8 +160,7 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '', // 前一个页面url
-        interviewLength: 0 //院生故事列表
+        fromPath: '' // 前一个页面url
       }
     },
     ready () {
@@ -283,11 +282,12 @@
       /**
        * 显示院生故事的new图标
        */
-      interviewShowNew () {
-        if (getLocalCache('interview-number') && getLocalCache('interview-number')['interview-number']) {
-          this.interviewLength = getLocalCache('interview-number')['interview-number']
+      showInterviewNew () {
+        if (getLocalCache('interview-count') && getLocalCache('interview-count')['interview-count']) {
+          this.isInterviewChange(getLocalCache('interview-count')['interview-count'])
+        } else {
+          this.isInterviewChange(0)
         }
-        this.isInterviewChange(this.interviewLength)
       },
 
       /**
@@ -708,6 +708,7 @@
       color: #444;
 
       .under-banner-item{
+        position: relative;
         text-align: center;
         padding: 34/40rem 0 26/40rem;
         box-sizing: border-box;
@@ -720,9 +721,6 @@
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
-    }
-    .interview-position{
-      position: relative;
     }
     .new-interview-icon{
       width: 1.35rem;

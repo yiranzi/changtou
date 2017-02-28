@@ -40,11 +40,11 @@ export const loadNavigatorDataInWeb = ({ dispatch }) => {
   })
 }
 
-export const isInterviewChange = ({ dispatch }, interviewLength) => {
+export const isInterviewChange = ({ dispatch }, interviewCount) => {
   return new Promise(function (resolve, reject) {
     getWithoutAuth(
       {
-        url: getUrl('interview-valid-new').replace(':interviewLength', interviewLength)
+        url: getUrl('interview_valid_new').replace(':interviewCount', interviewCount)
       }
     ).then(
       data => {
