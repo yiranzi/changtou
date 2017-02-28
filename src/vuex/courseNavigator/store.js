@@ -7,7 +7,8 @@ const state = {
   expenseCourseList: [],
   freeCourseList: [],
   recommends: [],
-  readingClassics: {}
+  readingClassics: {},
+  hasNewInterview: false
 }
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
     state.freeCourseList = data.freeCourseList
     state.recommends = data.recommends
     state.readingClassics = data.readingClassics
+  },
+  UPDATE_NAIGATOR_DATA_INTERVIEW (state, data) {
+    state.hasNewInterview = data
   }
 }
 

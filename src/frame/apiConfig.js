@@ -96,6 +96,7 @@ const apiUrl = {
    */
   'load_interview_list': '/homepage/interview/interview-list', //获取访谈列表
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
+  'interview-valid-new': '/homepage/interview/interview-valid-new/:interviewLength', //院生故事新消息
 
   /**
    * 每日一题
