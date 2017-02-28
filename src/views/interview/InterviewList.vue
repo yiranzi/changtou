@@ -54,6 +54,7 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
+  import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
@@ -78,8 +79,10 @@
     },
     route: {
       data () {
+        const me = this
         return this.loadInterviewList().then(
           function () {
+            setLocalCache('interview-number', {'interview-number': me.interviewList.length})
             return {
               isLoadSuccess: true
             }

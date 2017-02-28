@@ -17,9 +17,10 @@
             <i class="under-banner-icon newer-guide"></i>
             <span class="under-banner-title">入门指南</span>
           </div>
-          <div v-touch:tap="goToInterviewList" class="under-banner-item">
+          <div v-touch:tap="goToInterviewList" class="under-banner-item interview-position">
             <i class="under-banner-icon interview"></i>
             <span class="under-banner-title">院生故事</span>
+            <i class="new-interview-icon" v-show="hasNewInterview"></i>
           </div>
         </div>
         <div class="popular-list popularSpe">
@@ -123,7 +124,8 @@
         expenseList: navigatorGetters.expenseCourseList,
         recommends: navigatorGetters.recommends,
         readingClassics: navigatorGetters.readingClassics,
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        hasNewInterview: navigatorGetters.hasNewInterview
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -131,7 +133,8 @@
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
         loadNewertestReport: newertestActions.loadNewertestReport,
         receiveGiftPackage: giftActions.receiveGiftPackage,
-        isQualifyGiftPackage: giftActions.isQualifyGiftPackage
+        isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
+        isInterviewChange: navigatorActions.isInterviewChange
       }
     },
 
@@ -146,6 +149,8 @@
         this.loadNewerGift()
         //重置页面滚动位置
         this.resetScroller()
+        //显示院生故事有新消息
+        this.interviewShowNew()
       }
     },
 
@@ -155,7 +160,8 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '' // 前一个页面url
+        fromPath: '', // 前一个页面url
+        interviewLength: 0 //院生故事列表
       }
     },
     ready () {
@@ -272,6 +278,16 @@
             left: 0
           })
         })
+      },
+
+      /**
+       * 显示院生故事的new图标
+       */
+      interviewShowNew () {
+        if (getLocalCache('interview-number') && getLocalCache('interview-number')['interview-number']) {
+          this.interviewLength = getLocalCache('interview-number')['interview-number']
+        }
+        this.isInterviewChange(this.interviewLength)
       },
 
       /**
@@ -704,6 +720,17 @@
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
+    }
+    .interview-position{
+      position: relative;
+    }
+    .new-interview-icon{
+      width: 1rem;
+      height: 1rem;
+      background: url("../../../static/image/strategy/newTip.png") no-repeat center center / contain;
+      position: absolute;
+      left: 57%;
+      top: 15%;
     }
 
     .under-banner-icon.newer-test{

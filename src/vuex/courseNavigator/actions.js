@@ -39,3 +39,22 @@ export const loadNavigatorDataInWeb = ({ dispatch }) => {
     )
   })
 }
+
+export const isInterviewChange = ({ dispatch }, interviewLength) => {
+  return new Promise(function (resolve, reject) {
+    getWithoutAuth(
+      {
+        url: getUrl('interview-valid-new').replace(':interviewLength', interviewLength)
+      }
+    ).then(
+      data => {
+        dispatch('UPDATE_NAIGATOR_DATA_INTERVIEW', data)
+        resolve()
+      },
+      err => {
+        reject(err)
+      }
+    )
+  })
+}
+
