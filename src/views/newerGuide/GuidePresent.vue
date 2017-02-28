@@ -11,7 +11,7 @@
             <div class="strategy-item strategy-item-3" >手把手教你选基金手册</div>
             <div class="strategy-book-container" v-touch:tap="goToReceiveBook">
               <div class="strategy-book"></div>
-              <div class="strategy-receive-btn">{{receive}}</div>
+              <div class="strategy-receive-btn">{{isReceive}}</div>
             </div>
           </div>
           <div class="guide-audio-list">
@@ -56,7 +56,7 @@ import {webAudio} from '../../util/audio/web'
         currAudioUrl: '', //当前播放的audio
         isInitListeners: false, //是否初始化过音频播放
         status: 'pause', // {'play' | 'pause' | 'stop'} //当前audio的状态
-        receive: ''  //是否限时免费领
+        isReceive: ''  //是否限时免费领
       }
     },
     computed: {
@@ -75,6 +75,13 @@ import {webAudio} from '../../util/audio/web'
         webAudio.create(url)
         //设置音频地址后, 200毫秒开始自动播放
         setTimeout(() => webAudio.play(), 200)
+      },
+      bookProgress (val) {
+        if (this.isLogin && val !== 0) {
+          this.isReceive = '立即查看'
+        } else {
+          this.isReceive = '限时免费领'
+        }
       }
     },
     route: {
@@ -93,12 +100,8 @@ import {webAudio} from '../../util/audio/web'
               me.bookProgress = progress
             }
           )
-          if (this.getBookProgress) {
-            this.receive = '立即查看'
-          }
-        } else {
-          this.receive = '限时免费领'
         }
+        this.isShowReceive()
       },
       deactivate () {
         this.pause()
@@ -144,14 +147,25 @@ import {webAudio} from '../../util/audio/web'
             // 无进度 跳转到介绍
             me.$route.router.go(`/ebook/detail/${bookId}`)
           }
-          if (this.bookProgress) {
-            //阅读过 显示立即查看
-            this.receive = '立即查看'
-          }
         } else {
           //未登录
           this.$route.router.go(`/ebook/detail/${bookId}`)
-          this.receive = '限时免费领'
+        }
+      },
+
+      /**
+       * 是否显示立即查看
+       */
+      isShowReceive () {
+        if (this.isLogin) {
+          let currIndex = this.bookProgress ? parseInt(this.bookProgress.sectionIndex) : 0
+          if (currIndex !== 0) {
+            this.isReceive = '立即查看'
+          } else {
+            this.isReceive = '限时免费领'
+          }
+        } else {
+          this.isReceive = '限时免费领'
         }
       },
 
