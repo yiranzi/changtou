@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/1/24.
- * app中可以分享的页面有: 院生访谈/电子书2/年报
+ * 链接 分享功能
  */
 import {eventMap} from './frame/eventConfig'
 import {statisticsMap} from './statistics/statisticsMap'
@@ -10,9 +10,6 @@ const mixin = {
     return {
       showShareFloat: false
     }
-  },
-  events: {
-
   },
   methods: {
     /**
@@ -50,7 +47,8 @@ const mixin = {
           break
       }
     },
-    //分享朋友
+
+    //分享 链接 到 微信好友
     shareToFriendInApp () {
       const me = this
       if (window.Wechat) {
@@ -85,7 +83,7 @@ const mixin = {
       }
     },
 
-    //分享到朋友圈
+    //分享 链接 到 微信朋友圈
     shareToTimelineInApp () {
       const me = this
       if (window.Wechat) {
@@ -119,6 +117,7 @@ const mixin = {
         this.showAlert('请先安装微信客户端')
       }
     },
+
     /**
      * 分享到QQ
      */

@@ -194,7 +194,11 @@ const apiUrl = {
    *  大咖读经典
    */
   'load_classic_reading_details': '/homepage/classicbook/classicbook-data/:cbId',  // 大咖读经典 详情页面
-  'update_classic_played_time': '/homepage/classicbook/classicbookaudio-play/:cbId/:cbaId',       // 大咖读经典 详情页面更新播放次数
+  'update_classic_played_time': '/homepage/classicbook/classicbookaudio-play/:cbId/:cbaId',      // 大咖读经典 详情页面更新播放次数
+  /**
+   * 分享
+   */
+  'upload_file': '/upload/file', //上传文件 必须使用postFileWithinAuth
     /**
      * 鼓励师
      */

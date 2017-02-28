@@ -20,8 +20,8 @@
         <div class="tap-area" v-touch:tap="goToPrePage"></div>
         <div class="tap-area" v-touch:tap="goToNextPage"></div>
       </div>
-      <div class="ebook" :style="ebookHeight">
-        <div class="ebook-content" v-if="book" v-el:ebook ></div>
+      <div :style="ebookHeight">
+        <div class="ebook-content" v-if="book" v-el:ebook :style="ebookHeight"></div>
       </div>
       <span class="pageNum">阅读进度 {{(percentage * 100).toFixed(1)}}%</span>
     </div>
@@ -120,7 +120,7 @@ export default {
       //找到书名
       const bookName = this.bookArr(this.bookId).docName
       const width = parseInt(window.document.body.offsetWidth * 0.8)
-      const height = parseInt((window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) * 0.8)
+      const height = parseInt((window.document.body.offsetHeight - this.$els.titleBar.offsetHeight) * 0.8)
 
       //注册epub
       this.book = window.ePub(`http://source.ichangtou.com/file/ebooks/${bookName}/`, {
@@ -337,13 +337,10 @@ export default {
         }
       }
     }
-    .ebook{
-      width: 100%;
-    }
     .ebook-content{
-      margin: 10%;
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      padding: 10%;
+      box-sizing: border-box;
     }
     .pageNum{
       position: absolute;
