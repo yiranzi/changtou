@@ -725,12 +725,12 @@
       position: relative;
     }
     .new-interview-icon{
-      width: 1rem;
-      height: 1rem;
-      background: url("../../../static/image/strategy/newTip.png") no-repeat center center / contain;
+      width: 1.35rem;
+      height: 0.55rem;
+      background: url("../../../static/image/strategy/newTip.png") no-repeat center center / 100% 100%;
       position: absolute;
-      left: 57%;
-      top: 15%;
+      left: 53%;
+      top: 20%;
     }
 
     .under-banner-icon.newer-test{
