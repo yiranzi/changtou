@@ -22,6 +22,7 @@
             <flexbox-item :span="1/10"></flexbox-item>
           </flexbox>
         </div>
+        <ict-item title="鼓励师首页" v-if="isSpire&&isLogin"></ict-item>
         <ict-item :title="(strategy && strategy.strategyLevel === 'A') ? '长投宝VIP版' : '长投宝专业版'"
                   :value="(!strategy || strategy.strategyLevel === 'C') ? '了解更多' : '有效期还剩'+strategy.strategyLeftDay+'天'"
                   v-touch:tap="onStrategyTap">
@@ -58,16 +59,18 @@
   import IctItem from '../../components/IctItemButton.vue'
   import {Flexbox, FlexboxItem} from 'vux/flexbox'
   import Scroller from 'vux/scroller'
-  import {messageGetters, userGetters, helpGetters} from '../../vuex/getters'
+  import {messageGetters, userGetters, helpGetters, mineGetters} from '../../vuex/getters'
   import {strategyLevel} from '../../frame/userLevelConfig'
   import {eventMap} from '../../frame/eventConfig'
-  import {giftActions} from '../../vuex/actions'
+  import {giftActions, mineActions} from '../../vuex/actions'
   export default {
     vuex: {
       actions: {
-        loadingCouponList: giftActions.loadingCouponList
+        loadingCouponList: giftActions.loadingCouponList,
+        loadIsSpire: mineActions.loadIsSpire
       },
       getters: {
+        isSpire: mineGetters.isSpire,
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
         userName: userGetters.userName,
@@ -98,10 +101,6 @@
         }
         return number
       },
-
-      isSpire () {
-        //todo 鼓励师逻辑
-      },
       name () {
         return this.userName ? this.userName : ''
       },
@@ -114,6 +113,7 @@
         this.$dispatch(eventMap.ACTIVE_TAB, 2)
         const me = this
         if (this.isLogin) {
+          this.loadIsSpire()
           this.loadingCouponList().then(
           function (couponList) {
             if (parseInt(couponList.length) > 0) {
@@ -123,6 +123,7 @@
           }
          )
         }
+
         transition.next()
       }
     },
