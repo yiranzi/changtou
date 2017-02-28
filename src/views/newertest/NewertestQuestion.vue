@@ -264,6 +264,7 @@
           } else if (currQuIndex === this.maxQuIndex) {
             this.computeLevelId()
             const me = this
+            console.log(this.comboId)
             this.postReport(this.comboId, this.level).then(
               function () {
                 me.$route.router.replace('/newertest/ending')
@@ -287,19 +288,36 @@
       },
       //计算等级，模板id
       computeLevelId () {
-        let secondSelected = this.answer[1]
+        console.log(this.answer)
+        /*let secondSelected = this.answer[1]
         const eighthSelected = this.answer[7]
         this.level = Number(secondSelected) + 1
         if (secondSelected < 2) {
           secondSelected = 0
         }
         const sum = Number(secondSelected) + Number(eighthSelected)
-        this.comboId = sum + 1
+        this.comboId = sum + 1*/
+        const fourthSelect = this.answer[3]   //第四题答案
+        const eighthSelect = this.answer[7]   //第八题答案
+        const levelArr = [1, 3, 2]
+        this.level = levelArr[fourthSelect]    //根据第四题判断等级
+        if (fourthSelect !== 1) {               //根据第四题第八题答案判断模板
+            if (eighthSelect === 0) {
+                this.comboId = 1
+            } else if (eighthSelect === 1 || eighthSelect === 2) {
+                this.comboId = 2
+            }
+        } else if (eighthSelect === 0) {
+            this.comboId = 3
+        } else {
+            this.comboId = 4
+        }
       },
       //刷新页面
       reset () {
         this.currQuIndex = 0
         this.currOpsIndex = -1
+        this.answer = []
       }
     },
     components: {
