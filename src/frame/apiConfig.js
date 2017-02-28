@@ -198,8 +198,11 @@ const apiUrl = {
   /**
    * 分享
    */
-  'upload_file': '/upload/file' //上传文件 必须使用postFileWithinAuth
-
+  'upload_file': '/upload/file', //上传文件 必须使用postFileWithinAuth
+    /**
+     * 鼓励师
+     */
+  'load_is_spire': '/pyramid/spire/verify'            //鼓励师资格接口
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]
