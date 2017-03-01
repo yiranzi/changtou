@@ -39,7 +39,6 @@
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinPageShare from '../../mixinPageShare'
-  import {getLocalCache, setLocalCache} from '../../util/cache'
   import {ebookActions} from '../../vuex/actions'
   import {ebookGetters, userGetters} from '../../vuex/getters'
 
@@ -49,8 +48,7 @@
     actions: {
       bookArr: ebookActions.bookArr,
       bookChapters: ebookActions.bookChapters,
-      getBookProgress: ebookActions.getBookProgress,
-      getBook: ebookActions.getBook //领取电子书
+      getBookProgress: ebookActions.getBookProgress
     },
     getters: {
       isLogin: userGetters.isLogin,
@@ -103,7 +101,6 @@
       }
       if (parseInt(this.bookId) === 2) {
         this.setViewWxShareConfig()
-        this.showBook2Mask()
       }
     },
     deactivate () {
@@ -123,33 +120,6 @@
         imgUrl: `${MSITE_URL}${this.intro.img}`
       }
       this.onViewChange()
-    },
-
-    /**
-     * 显示电子书2 的领取浮层
-     */
-    showBook2Mask () {
-      if (this.isLogin && !getLocalCache('ebook2-mask-show')) {
-        //未领取
-        this.showMask({
-          component: 'ebook/Book2Mask.vue',
-          hideOnMaskTap: true,
-          callbackName: 'closeMask',
-          callbackFn: this.onBook2MaskTap.bind(this)
-        })
-        setLocalCache('ebook2-mask-show', {
-          show: true
-        })
-      }
-    },
-
-    /**
-     * 电子书2的浮层 被点击
-     */
-    onBook2MaskTap () {
-      this.getBook(this.bookId).then(
-        this.hideMask.bind(this)
-      )
     },
 
     setScrollerHeight () {
