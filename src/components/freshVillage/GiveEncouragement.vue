@@ -1,26 +1,20 @@
 /**
 * Created by zyr on 2017/03/01.
-*
+* 新手村-给鼓励浮层
 */
 <template>
-  <div class="beg-give-encouragement">
+  <div class="village-encouragement">
     <span class="close-icon" v-touch:tap="onCloseTap"></span>
-    <ict-button class="beg-give-encouragement-btn" v-touch:tap="onBegGiveEncouragementTap" v-el:suggestion>跪求给点鼓励</ict-button>
+    <div class="village-encouragement-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
   </div>
 </template>
 <script>
-  import IctButton from '../IctButton.vue'
   export default {
-    data () {
-      return {
-
-      }
-    },
     methods: {
       /**
-       * 跪求给点鼓励
+       * 跪求鼓励吐槽
        */
-      onBegGiveEncouragementTap () {
+      onEncouragementTap () {
 
       },
       /**
@@ -29,20 +23,16 @@
       onCloseTap () {
         this.$dispatch('hideMask')
       }
-    },
-    components: {
-      IctButton
     }
   }
 </script>
 <style lang="less">
-  .beg-give-encouragement {
+  .village-encouragement {
     width: 12.5rem;
     height: 16rem;
     background: #e8f5f0 url("../../../static/image/give-encouragement.png") center 4.5rem no-repeat / 7.25rem 5.2rem;
     border-radius: .5rem;
     position: relative;
-    text-align: center;
     overflow: hidden;
     .close-icon{
       position: absolute;
@@ -58,14 +48,16 @@
        color: #aaa;
      }
     }
-    .beg-give-encouragement-btn {
+    .village-encouragement-btn {
       width: 8rem;
       height: 1.7rem;
+      line-height: 1.7rem;
       background: #49a385;
       border-radius: .85rem;
-      margin-top: 12.25rem;
+      margin: 12.25rem auto 0;
       text-align: center;
       font-size: .8rem;
+      color: #fff;
     }
   }
 </style>

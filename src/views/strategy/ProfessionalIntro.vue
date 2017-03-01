@@ -117,8 +117,8 @@
       buyNow () {
         if (!this.disabled) {
           this.showMask({
-            component: 'strategy/GiveEncouragement.vue',
-            hideOnMaskTap: false,
+            component: 'strategy/StrategyAgreement.vue',
+            hideOnMaskTap: true,
             callbackName: 'onAgreeTap',
             callbackFn: this.onAgreeTap.bind(this) //组件上的
           })
