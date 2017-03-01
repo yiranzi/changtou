@@ -300,7 +300,13 @@
           index: index,
           position: subject.type === 'F' ? '免费听课' : '畅销好课'
         })
-        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+        if (subject.type === 'P') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+        } else if (subject.type === 'S') {
+          this.$route.router.go(`/spec/topic/${subject.subjectId}`)
+        } else if (subject.type === 'C') {
+          this.$route.router.go(`/common/topic/${subject.subjectId}`)
+        }
       },
 
       /**
