@@ -42,7 +42,8 @@ import {webAudio} from '../../util/audio/web'
     vuex: {
       actions: {
         loadAudio: newerGuide.loadGuideAudio, //下载音频列表
-        getBookProgress: ebookActions.getBookProgress   // 阅读进度
+        getBookProgress: ebookActions.getBookProgress,  // 阅读进度
+        getBook: ebookActions.getBook  //领取电子书
       },
       getters: {
         isLogin: userGetters.isLogin //是否登录
@@ -147,6 +148,8 @@ import {webAudio} from '../../util/audio/web'
           } else {
             // 无进度 跳转到介绍
             me.$route.router.go(`/ebook/detail/${bookId}`)
+            // 并领取电子书
+            this.getBook(bookId)
           }
         } else {
           //未登录
