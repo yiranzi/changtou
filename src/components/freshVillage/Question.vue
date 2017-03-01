@@ -56,7 +56,7 @@ export default {
     .question-pic {
       width: 100%;
       height: 6.5rem;
-      background: url("../../assets/styles/image/freshVillage/chapter1-question.png") no-repeat;
+      background: url("../../../static/image/freshVillage/chapter1-question.png") no-repeat;
       background-size: 100% 100%;
     }
     .question-title {

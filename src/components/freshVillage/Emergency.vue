@@ -1,23 +1,23 @@
 /**
- * Created by zhongyan on 2017/2/27.
+ * Created by zhongyan on 2017/3/1.
  *
  */
 <template>
-    <div class="fresh-village-answer-result">
-      <div class="answer-result">
-        <span class="title">思考一下</span><span class="close-icon"></span>
+    <div class="fresh-village-emergency">
+      <div class="emergency-top">
+        <span class="emergency-title">突发状况</span><span class="close-icon"></span>
       </div>
-      <div class="result-middle">
-        <div class="result-explain">
-        作家要思考，要有的敏感的心灵和睿智的视野。作家是这个世界上的透明人，
-        他对一切都看在眼里，他也把一切都，它给你打开了一个崭新的，光彩夺目的，让人深思的写作世界。
+      <div class="emergency-middle">
+        <div class="emergency-content">
+          作家要思考，要有的敏感的心灵和睿智的视野。作家是这个世界上的透明人，
+          他对一切都看在眼里，他也把一切都，它给你打开了一个崭新的，光彩夺目的，让人深思的写作世界。
         </div>
-        <div class="result-title">
-          <span class="parting-line"></span>选择结果<span class="parting-line"></span>
+        <div class="bottom-title">
+          <span class="parting-line"></span>人生插曲<span class="parting-line"></span>
         </div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+10</span></div>
       </div>
-      <div class="confirm-btn">懂了</div>
+      <div class="confirm-btn">确定</div>
     </div>
 </template>
 <script>
@@ -56,20 +56,20 @@ export default {
 }
 </script>
 <style lang="less">
-  .fresh-village-answer-result {
+  .fresh-village-emergency {
     width: 14.5rem;
-    .answer-result {
+    .emergency-top {
       width: 100%;
       border-radius: 20px 20px 0 0;
       height: 6.5rem;
-      background: url("../../../static/image/freshVillage/chapter1-question.png") no-repeat;
+      background: url("../../../static/image/freshVillage/emergency.png") no-repeat;
       background-size: 100% 100%;
     }
-    .title {
+    .emergency-title {
       display: inline-block;
       font-size: .8rem;
       font-weight: bold;
-      color: #444;
+      color: #78793f;
       margin: 1rem 0 0 1rem;
     }
     .close-icon:after {
@@ -82,17 +82,17 @@ export default {
       color: #aaa;
       font-size: .8rem;
     }
-    .result-middle {
+    .emergency-middle {
       background-color: #fff;
       width: 100%;
       height: 13.5rem;
     }
-    .result-explain{
+    .emergency-content {
       padding: 1rem;
       font-size: .65rem;
       color: #666;
     }
-    .result-title {
+    .bottom-title {
       text-align: center;
       margin: .75rem 0;
       font-size: .6rem;
@@ -135,6 +135,5 @@ export default {
       background-color: #8EAE05;
       border-radius: 0 0 20px 20px;
     }
-
   }
 </style>
