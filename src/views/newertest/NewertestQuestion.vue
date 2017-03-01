@@ -264,7 +264,6 @@
           } else if (currQuIndex === this.maxQuIndex) {
             this.computeLevelId()
             const me = this
-            console.log(this.comboId)
             this.postReport(this.comboId, this.level).then(
               function () {
                 me.$route.router.replace('/newertest/ending')
@@ -288,29 +287,22 @@
       },
       //计算等级，模板id
       computeLevelId () {
-        console.log(this.answer)
-        /*let secondSelected = this.answer[1]
-        const eighthSelected = this.answer[7]
-        this.level = Number(secondSelected) + 1
-        if (secondSelected < 2) {
-          secondSelected = 0
-        }
-        const sum = Number(secondSelected) + Number(eighthSelected)
-        this.comboId = sum + 1*/
         const fourthSelect = this.answer[3]   //第四题答案
         const eighthSelect = this.answer[7]   //第八题答案
         const levelArr = [1, 3, 2]
         this.level = levelArr[fourthSelect]    //根据第四题判断等级
-        if (fourthSelect !== 1) {               //根据第四题和第八题答案判断模板
+        if (fourthSelect === 0 || fourthSelect === 2) {
             if (eighthSelect === 0) {
-                this.comboId = 1                //第四题A/C，第八题A为模板1
+                this.comboId = 1                          //第四题A/C第八题A为模板1
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 2                  //第四题A/C，第八题B为模板2
+                this.comboId = 2                          //第四题A/C第八题B/C为模板2
             }
-        } else if (eighthSelect === 0) {
-            this.comboId = 3                          //第四题B，第八题A为模板3
-        } else {
-            this.comboId = 4                      //第四题B，第八题C为模板4
+        } else if (fourthSelect === 1) {
+            if (eighthSelect === 0) {
+                this.comboId = 3                          //第四题B第八题A为模板3
+            } else if (eighthSelect === 1 || eighthSelect === 2) {
+                this.comboId = 4                            //第四题B第八题B/C为模板4
+            }
         }
       },
       //刷新页面
