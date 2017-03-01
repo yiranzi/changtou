@@ -301,16 +301,16 @@
         const eighthSelect = this.answer[7]   //第八题答案
         const levelArr = [1, 3, 2]
         this.level = levelArr[fourthSelect]    //根据第四题判断等级
-        if (fourthSelect !== 1) {               //根据第四题第八题答案判断模板
+        if (fourthSelect !== 1) {               //根据第四题和第八题答案判断模板
             if (eighthSelect === 0) {
-                this.comboId = 1
+                this.comboId = 1                //第四题A/C，第八题A为模板1
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 2
+                this.comboId = 2                  //第四题A/C，第八题B为模板2
             }
         } else if (eighthSelect === 0) {
-            this.comboId = 3
+            this.comboId = 3                          //第四题B，第八题A为模板3
         } else {
-            this.comboId = 4
+            this.comboId = 4                      //第四题B，第八题C为模板4
         }
       },
       //刷新页面
