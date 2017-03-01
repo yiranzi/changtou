@@ -30,7 +30,7 @@
     "babel-preset-stage-2": "^6.0.0",
     "babel-register": "^6.0.0",
     "chai": "^3.5.0",
-    "chromedriver": "^2.27.3",
+    "chromedriver": "^2.25.1",
     "connect-history-api-fallback": "^1.1.0",
     "cross-spawn": "^2.1.5",
     "css-loader": "^0.23.0",
