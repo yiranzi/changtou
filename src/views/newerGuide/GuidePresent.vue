@@ -11,7 +11,7 @@
             <div class="strategy-item strategy-item-3" >手把手教你选基金手册</div>
             <div class="strategy-book-container" v-touch:tap="goToReceiveBook">
               <div class="strategy-book"></div>
-              <div class="strategy-receive-btn">限时免费领</div>
+              <div class="strategy-receive-btn">{{isReceived}}</div>
             </div>
           </div>
           <div class="guide-audio-list">
@@ -55,12 +55,22 @@ import {webAudio} from '../../util/audio/web'
         audioList: [], //音频列表
         currAudioUrl: '', //当前播放的audio
         isInitListeners: false, //是否初始化过音频播放
-        status: 'pause' // {'play' | 'pause' | 'stop'} //当前audio的状态
+        status: 'pause', // {'play' | 'pause' | 'stop'} //当前audio的状态
+        isReceived: ''  //是否限时免费领
       }
     },
     computed: {
       isPlayed () {
         return this.status === 'play'
+      },
+      isReceived () {
+        let isReceivedText = ''
+        if (this.isLogin && this.bookProgress) {
+          isReceivedText = '立即查看'
+        } else {
+          isReceivedText = '限时免费领'
+        }
+        return isReceivedText
       }
     },
     watch: {
