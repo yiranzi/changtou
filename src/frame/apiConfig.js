@@ -203,7 +203,14 @@ const apiUrl = {
     /**
      * 鼓励师
      */
-  'load_is_spire': '/pyramid/spire/verify'            //鼓励师资格接口
+  'load_is_spire': '/pyramid/spire/verify',           //鼓励师资格接口
+  /**
+   * 新手村
+   */
+  'get_advise': '/eden/proposal-list/:index/:size',  //获取吐槽内容列表
+  'submit_advise': '/eden/proposal-submit', //提交吐槽
+  'get_village_progress': '/eden/answer-record', //获取新手村进度
+  'submit_village_progress': '/eden/answer-record/:chapterNo/:questionNo' //提交新手村进度
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]
