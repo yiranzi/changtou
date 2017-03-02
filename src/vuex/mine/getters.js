@@ -5,3 +5,7 @@
 export const notificationSwitch = (state) => {
   return state.mine.notificationSwitch
 }
+//获取是否鼓励师
+export const isSpire = (state) => {
+  return state.mine.isSpire
+}

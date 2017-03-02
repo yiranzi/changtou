@@ -20,6 +20,7 @@
           <div v-touch:tap="goToInterviewList" class="under-banner-item">
             <i class="under-banner-icon interview"></i>
             <span class="under-banner-title">院生故事</span>
+            <i class="new-interview-icon" v-show="hasNewInterview"></i>
           </div>
         </div>
         <div class="popular-list popularSpe">
@@ -123,7 +124,8 @@
         expenseList: navigatorGetters.expenseCourseList,
         recommends: navigatorGetters.recommends,
         readingClassics: navigatorGetters.readingClassics,
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        hasNewInterview: navigatorGetters.hasNewInterview
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -131,7 +133,8 @@
         loadDailyQuestion: dailyQuestionActions.loadDailyQuestion,
         loadNewertestReport: newertestActions.loadNewertestReport,
         receiveGiftPackage: giftActions.receiveGiftPackage,
-        isQualifyGiftPackage: giftActions.isQualifyGiftPackage
+        isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
+        isInterviewChange: navigatorActions.isInterviewChange
       }
     },
 
@@ -146,6 +149,8 @@
         this.loadNewerGift()
         //重置页面滚动位置
         this.resetScroller()
+        //显示院生故事有新消息
+        this.showInterviewNew()
       }
     },
 
@@ -275,6 +280,17 @@
       },
 
       /**
+       * 显示院生故事的new图标
+       */
+      showInterviewNew () {
+        if (getLocalCache('interview-count') && getLocalCache('interview-count')['interview-count']) {
+          this.isInterviewChange(getLocalCache('interview-count')['interview-count'])
+        } else {
+          this.isInterviewChange(0)
+        }
+      },
+
+      /**
        * 跳转到课程详情页
        */
       goToCourseDetail (subject, index) {
@@ -284,7 +300,14 @@
           index: index,
           position: subject.type === 'F' ? '免费听课' : '畅销好课'
         })
-        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+        //判断课程类型
+        if (subject.type === 'P') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
+        } else if (subject.type === 'S') {
+          this.$route.router.go(`/spec/topic/${subject.subjectId}`)   //跳转到打包课程
+        } else if (subject.type === 'C') {
+          this.$route.router.go(`/common/topic/${subject.subjectId}`)   //跳转到通用课程
+        }
       },
 
       /**
@@ -692,6 +715,7 @@
       color: #444;
 
       .under-banner-item{
+        position: relative;
         text-align: center;
         padding: 34/40rem 0 26/40rem;
         box-sizing: border-box;
@@ -704,6 +728,14 @@
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
+    }
+    .new-interview-icon{
+      width: 1.35rem;
+      height: 0.55rem;
+      background: url("../../../static/image/strategy/newTip.png") no-repeat center center / 100% 100%;
+      position: absolute;
+      left: 53%;
+      top: 20%;
     }
 
     .under-banner-icon.newer-test{

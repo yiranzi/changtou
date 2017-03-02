@@ -96,6 +96,7 @@ const apiUrl = {
    */
   'load_interview_list': '/homepage/interview/interview-list', //获取访谈列表
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
+  'interview_valid_new': '/homepage/interview/interview-valid-new/:interviewCount', //院生故事新消息
 
   /**
    * 每日一题
@@ -198,8 +199,11 @@ const apiUrl = {
   /**
    * 分享
    */
-  'upload_file': '/upload/file' //上传文件 必须使用postFileWithinAuth
-
+  'upload_file': '/upload/file', //上传文件 必须使用postFileWithinAuth
+    /**
+     * 鼓励师
+     */
+  'load_is_spire': '/pyramid/spire/verify'            //鼓励师资格接口
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

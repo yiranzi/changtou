@@ -69,4 +69,29 @@ export const uploadContent = ({ dispatch }, content) => {
     }
   )
 }
+/**
+ * 鼓励师
+ * @param dispatch
+ */
+
+export const loadIsSpire = ({dispatch}) => {
+    return new Promise(
+        (resolve, reject) => {
+            getWithinAuth(
+                {
+                    url: getUrl('load_is_spire')
+                }
+            ).then(
+                isSpire => {
+                    dispatch('CHECK_IS_SPIRE', isSpire)
+                    resolve(isSpire)
+                }
+            ).catch(
+                err => {
+                    reject(err)
+                }
+            )
+        }
+    )
+}
 
