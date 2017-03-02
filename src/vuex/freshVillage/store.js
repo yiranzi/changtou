@@ -4,7 +4,7 @@
  */
 const state = {
   adviseList: [],
-  answerProgress: {
+  villageProgress: {
     chapterNo: 0,
     questionNo: 0
   }
@@ -23,11 +23,11 @@ const mutations = {
   /**
    *
    * @param state
-   * @param answerProgress
+   * @param villageProgress
    * @constructor
    */
-  FRESH_VILLAGE_ANSWER_PROGRESS (state, answerProgress) {
-    state.answerProgress = answerProgress
+  FRESH_VILLAGE_PROGRESS (state, villageProgress) {
+    state.villageProgress = villageProgress
   }
 }
 

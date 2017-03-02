@@ -15,8 +15,8 @@ export const adviseList = (state) => {
 /**
  * 新手村答题的进度
  * @param state
- * @returns {state.answerProgress|{charterNo, questionNo}|*}
+ * @returns {state.villageProgress|{charterNo, questionNo}|*}
  */
-export const answerProgress = (state) => {
-  return state.freshVillage.answerProgress
+export const villageProgress = (state) => {
+  return state.freshVillage.villageProgress
 }

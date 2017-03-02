@@ -66,7 +66,7 @@ export const getVillageProgress = ({ dispatch }) => {
         url: getUrl('get_village_progress')
       }).then(
         function (message) {
-          dispatch('FRESH_VILLAGE_ANSWER_PROGRESS', message)
+          dispatch('FRESH_VILLAGE_PROGRESS', message)
           resolve(message)
         },
         function (err) {
