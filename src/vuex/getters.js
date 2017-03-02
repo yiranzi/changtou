@@ -30,7 +30,6 @@ import * as ebookGetters from './ebook/getters'
 import * as newerGuideGetters from './newerGuide/getters'
 import * as classicReadingGetters from './classicReading/getters'
 import * as villageGetters from './freshVillage/getters'
-
 export {
   userGetters,
   navigatorGetters, //课程导航

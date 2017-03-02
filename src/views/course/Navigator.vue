@@ -113,7 +113,7 @@
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, freshVillageActions} from '../../vuex/actions'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -137,7 +137,7 @@
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
-        getAnswerProgress: freshVillageActions.getAnswerProgress
+        getAnswerProgress: villageActions.getAnswerProgress
       }
     },
 

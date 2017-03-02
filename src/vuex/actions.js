@@ -29,8 +29,7 @@ import * as annualReportActions from './annualReport/actions'
 import * as ebookActions from './ebook/actions'
 import * as newerGuide from './newerGuide/actions'
 import * as classicReadingActions from './classicReading/actions'
-import * as freshVillageActions from './freshVillage/actions'
-
+import * as villageActions from './freshVillage/actions'
 export {
   userActions,
   navigatorActions,
@@ -60,5 +59,5 @@ export {
   ebookActions,      //电子书
   newerGuide,  //入门指南
   classicReadingActions,   //大咖读经典
-  freshVillageActions  //理财新手村
+  villageActions  //新手村
 }
