@@ -29,6 +29,7 @@ import * as annualReportGetters from './annualReport/getters'
 import * as ebookGetters from './ebook/getters'
 import * as newerGuideGetters from './newerGuide/getters'
 import * as classicReadingGetters from './classicReading/getters'
+import * as freshVillage from './freshVillage/getters'
 
 export {
   userGetters,
@@ -58,5 +59,6 @@ export {
   annualReportGetters,  //年度报告
   ebookGetters,    //电子书
   newerGuideGetters, //入门指南
-  classicReadingGetters  //大咖读经典
+  classicReadingGetters,  //大咖读经典
+  freshVillage // 新手村
 }

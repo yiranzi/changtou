@@ -6,7 +6,7 @@
     <div class="chapter-choice-item">
       <p class="chapter-number">第一章</p>
       <p class="chapter-title">一封陌生人的来信</p>
-      <img class="chapter-cover" src="../../../static/freshVillage/chapter1-cover.png"/>
+      <img class="chapter-cover" src="../../../static/image/freshVillage/chapter1-cover.png"/>
       <div class="chapter-btn">GO</div>
     </div>
 </template>
