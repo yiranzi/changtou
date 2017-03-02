@@ -300,7 +300,14 @@
           index: index,
           position: subject.type === 'F' ? '免费听课' : '畅销好课'
         })
-        this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)
+        //判断课程类型
+        if (subject.type === 'P') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
+        } else if (subject.type === 'S') {
+          this.$route.router.go(`/spec/topic/${subject.subjectId}`)   //跳转到打包课程
+        } else if (subject.type === 'C') {
+          this.$route.router.go(`/common/topic/${subject.subjectId}`)   //跳转到通用课程
+        }
       },
 
       /**
