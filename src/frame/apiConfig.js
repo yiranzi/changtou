@@ -210,7 +210,7 @@ const apiUrl = {
   'village_get_answer_record': '/eden/answer-record',  // 获得答题进度
   'village_update_answer_record': '/eden/answer-record/:chapterNo/:questionNo', //提交更新答题进度
   'village_get_proposal_list': '/eden/proposal-list/:pageIndex/:pageSize',  //获得新手村吐槽列表
-  'village_submit_proposal_list': ' /eden/proposal-submit' //提交新手村吐槽
+  'village_submit_proposal_list': '/eden/proposal-submit' //提交新手村吐槽
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]
