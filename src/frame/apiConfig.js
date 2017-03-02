@@ -209,7 +209,7 @@ const apiUrl = {
    */
   'get_advise': '/eden/proposal-list/:index/:size',  //获取吐槽内容列表
   'submit_advise': '/eden/proposal-submit', //提交吐槽
-  'submit_village_progress': '/eden/answer-record', //获取新手村进度
+  'get_village_progress': '/eden/answer-record', //获取新手村进度
   'submit_village_progress': '/eden/answer-record/:chapterNo/:questionNo' //提交新手村进度
 }
 
