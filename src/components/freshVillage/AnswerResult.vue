@@ -22,14 +22,6 @@ export default {
   props: {
     componentData: Object
   },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
   methods: {
     onCloseTap () {
       this.$dispatch('hideMask')

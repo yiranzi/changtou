@@ -12,7 +12,7 @@
         <div class="task-content">{{componentData.task}}</div>
       </div>
     </div>
-    <div class="next-btn" v-touch:tap="enterChapter">下一步</div>
+    <div class="next-btn" v-touch:tap="onEnterMainPageTap">下一步</div>
     </div>
 </template>
 <script>
@@ -20,38 +20,10 @@ export default {
   props: {
     componentData: Object
   },
-  vuex: {
-    getters: {
-
-    },
-    actions: {
-
-    }
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  route: {
-
-  },
-  ready () {
-
-  },
   methods: {
-    enterChapter () {
+    onEnterMainPageTap () {
       this.$dispatch('enterChapter')
     }
-  },
-  components: {
-
   }
 }
 </script>

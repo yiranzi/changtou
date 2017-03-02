@@ -22,29 +22,6 @@ export default {
   props: {
     componentData: Object
   },
-  vuex: {
-    getters: {
-
-    },
-    actions: {
-
-    }
-  },
-  ready () {
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-  },
-  watch: {
-
-  },
-  route: {
-
-  },
   methods: {
     onCloseTap () {
       this.$dispatch('hideMask')
@@ -52,9 +29,6 @@ export default {
     onConfirmTap () {
       this.$dispatch('hideMask')
     }
-  },
-  components: {
-
   }
 }
 </script>

@@ -24,29 +24,12 @@
     props: {
       componentData: Object
     },
-    data () {
-      return {
-      }
-    },
     computed: {
       avatarUrl () {
         return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'
       }
     },
-    watch: {
-
-    },
-    route: {
-
-    },
-    ready () {
-
-    },
     methods: {
-
-    },
-    components: {
-
     }
   }
 </script>

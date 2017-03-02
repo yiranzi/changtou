@@ -5,13 +5,13 @@
 <template>
     <div class="fresh-village-question-page">
       <div class="question-pic">
-        <span class="question-title">思考一下</span><span class="close-icon" v-touch:tap="close"></span>
+        <span class="question-title">思考一下</span><span class="close-icon" v-touch:tap="onCloseTap"></span>
       </div>
       <div class="question-content">
         <p>{{question[0]}}</p>
         <p>{{question[1]}}</p>
       </div>
-      <div class="choice-item" v-for="option in componentData.options" v-touch:tap="onTapOption($index +1)">{{$index + 1}}. {{option}}</div>
+      <div class="choice-item" v-for="option in componentData.options" v-touch:tap="onOptionTap($index +1)">{{$index + 1}}. {{option}}</div>
     </div>
 </template>
 <script>
@@ -25,10 +25,10 @@
       }
     },
     methods: {
-      close () {
+      onCloseTap () {
         this.$dispatch('hideMask')
       },
-      onTapOption (answer) {
+      onOptionTap (answer) {
         this.$dispatch('tapOption', answer === this.componentData.answer)
       }
     }

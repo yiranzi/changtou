@@ -4,7 +4,7 @@
  */
 <template>
     <div class="fresh-village-wisdom">
-      <span class="close-icon"v-touch:tap="close"></span>
+      <span class="close-icon"v-touch:tap="onCloseTap"></span>
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
@@ -20,21 +20,14 @@ export default {
   props: {
     wisdomData: Object
   },
-  data () {
-    return {
-
-    }
-  },
   computed: {
     /*小智的内容*/
     wisdomContent () {
       return this.wisdomData.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
     }
   },
-  ready () {
-  },
   methods: {
-    close () {
+    onCloseTap () {
       this.$dispatch('close-wisdom')
     }
   }

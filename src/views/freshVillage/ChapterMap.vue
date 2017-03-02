@@ -44,7 +44,7 @@
   data () {
     return {
       activeChapterNo: 1,
-      activeQuestionNo: 6,
+      activeQuestionNo: 1,
       questionContent: {},
       lifeScore: 0,
       showWisdom: false
@@ -144,7 +144,6 @@
     * */
     getActiveQuestion () {
       this.questionContent = this.getQuestion(this.chapterContent.questionArr, this.activeQuestionNo)
-      console.log('this.questionContent', this.questionContent)
     },
     /*
      * 显示答题浮层

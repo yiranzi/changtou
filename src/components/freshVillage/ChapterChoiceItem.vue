@@ -15,38 +15,10 @@ export default {
   props: {
     chapterCardInfo: Object
   },
-  vuex: {
-    getters: {
-
-    },
-    actions: {
-
-    }
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  route: {
-
-  },
-  ready () {
-
-  },
   methods: {
     enterChapter (chapterNo) {
       this.$dispatch('enter-chapter', chapterNo)
     }
-  },
-  components: {
-
   }
 }
 </script>
