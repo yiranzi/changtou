@@ -59,6 +59,6 @@ export {
   annualReportActions,          // 大数据活动
   ebookActions,      //电子书
   newerGuide,  //入门指南
-  classicReadingActions,//大咖读经典
+  classicReadingActions, //大咖读经典
   freshVillage // 新手村
 }
