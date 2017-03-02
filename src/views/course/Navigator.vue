@@ -408,7 +408,7 @@
         if (this.isLogin) {
           const me = this
           // 已登录
-          this.getAnswerProgress().then(
+          this.getVillageProgress().then(
             function (progress) {
               if (progress) {
                 // 有进度  进入新手村的首页
