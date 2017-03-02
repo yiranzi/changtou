@@ -31,6 +31,7 @@ import annualReport from './annualReport/store'
 import ebook from './ebook/store'
 import classicReading from './classicReading/store'
 import newerGuide from './newerGuide/store'
+import freshVillage from './freshVillage/store'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -62,6 +63,7 @@ export default new Vuex.Store({
     annualReport,
     ebook,   //电子书
     classicReading, // 大咖读经典
-    newerGuide //入门指南
+    newerGuide, //入门指南
+    freshVillage  //理财新手村
   }
 })

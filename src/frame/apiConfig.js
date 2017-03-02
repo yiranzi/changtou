@@ -105,6 +105,11 @@ const apiUrl = {
   'submit_answer': '/homepage/daily-question/submit-answer', //用户提交答案
 
   /**
+   * 理财新手村
+   */
+  'fresh_village_answer_record': '/eden/answer-record', //获取新手村答题进度
+
+  /**
    * 订单获取
    */
   //获取订单

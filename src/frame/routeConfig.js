@@ -184,6 +184,13 @@ export function configRouter (router) {
     '/daily/answer': {
       component: require('../views/daily/DailyQuestionAnswer.vue')
     },
+    /**
+     * 理财新手村
+     */
+    //理财新手村初始页面
+    '/freshVillage/initialPage': {
+      component: require('../views/freshVillage/FreshVillageInitialPage.vue')
+    },
 
       /**
        * 作业
