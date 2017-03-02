@@ -5,10 +5,9 @@
 <template>
   <div class="chapter-choice">
     <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=20.5rem;width:18.75rem">
-      <div class="scroll-content active-position"> <!--:style="activePosition"-->
-        <chapter-choice-item v-el:first-chapter class="question-pic">{{scrollPresentPosition}}</chapter-choice-item>
-        <chapter-choice-item class="question-pic"></chapter-choice-item>
-        <chapter-choice-item class="question-pic"></chapter-choice-item>
+      <div class="scroll-content active-position" >
+        <!--:style="activePosition"--><!--v-el:first-chapter -->
+        <chapter-choice-item  v-for="chapterCardInfo in componentData" :chapter-card-info="chapterCardInfo" v-on:enter-chapter="enterChapter"class="question-pic"></chapter-choice-item><!--scrollPresentPosition-->
       </div>
     </scroller>
   </div>
@@ -18,8 +17,12 @@
   import chapterChoiceItem from './ChapterChoiceItem.vue'
 
   export default {
+    props: {
+      componentData: Array
+    },
     vuex: {
       getters: {
+
       },
       actions: {
       }
@@ -48,6 +51,13 @@
       this.resetScroller()
     },
     methods: {
+      enterChapter (chapterNum) {
+        if (chapterNum === 3) {
+          return
+        } else {
+          this.$dispatch('showStory', chapterNum)
+        }
+      },
       resetScroller () {
        // const {firstChapter} = this.$els
       //  console.log('firstChapter.offsetWidth ', firstChapter.offsetWidth)

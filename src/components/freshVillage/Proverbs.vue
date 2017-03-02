@@ -4,52 +4,31 @@
  */
 <template>
     <div class="fresh-village-proverbs">
-      <span class="close-icon"></span>
+      <span class="close-icon" v-touch:tap="onCloseTap"></span>
       <div class="proberbs">
         <div class="proverbs-top">
           <div class="proverbs-title">投资箴言</div>
-          <div class="proverbs-text">积累点滴阅读经典</div>
+          <div class="proverbs-text">积累点滴悦读经典~</div>
         </div>
-        <div class="proverbs-content">
-          <p>阿斯顿发安格萨斯噶萨斯噶噶阿斯顿发突然遇见软件热体育热体育体育人员与人</p>
-          <div class="proverbs-auth">---查理·芒格</div>
-        </div>
+        <div class="proverbs-content">{{{proverbs}}}</div>
       </div>
       <div class="share-btn">分享至·朋友圈</div>
     </div>
 </template>
 <script>
 export default {
-  vuex: {
-    getters: {
-
-    },
-    actions: {
-
-    }
-  },
-  data () {
-    return {
-
-    }
+  props: {
+    componentData: String
   },
   computed: {
-
-  },
-  watch: {
-
-  },
-  route: {
-
-  },
-  ready () {
-
+    proverbs () {
+      return this.componentData.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>').replace(/@\+/g, '<span>').replace(/\+@/g, '</span>')
+    }
   },
   methods: {
-
-  },
-  components: {
-
+    onCloseTap () {
+      this.$dispatch('hideMask')
+    }
   }
 }
 </script>
@@ -89,14 +68,19 @@ export default {
         margin: 1.5rem 1rem;
         p {
           margin: 0;
-          padding-bottom: 1.5rem;
+          padding-bottom: .5rem;
           font-size: .65rem;
           color: #666;
         }
-        .proverbs-auth {
+        span {
+          display: inline-block;
           float:right;
+          margin-top: 1rem;
           font-size: .65rem;
           color: #666;
+        }
+        span:before {
+          content: '───'
         }
       }
     }

@@ -5,23 +5,23 @@
 <template>
     <div class="fresh-village-emergency">
       <div class="emergency-top">
-        <span class="emergency-title">突发状况</span><span class="close-icon"></span>
+        <span class="emergency-title">突发状况</span><span class="close-icon" v-touch:tap="onCloseTap"></span>
       </div>
       <div class="emergency-middle">
-        <div class="emergency-content">
-          作家要思考，要有的敏感的心灵和睿智的视野。作家是这个世界上的透明人，
-          他对一切都看在眼里，他也把一切都，它给你打开了一个崭新的，光彩夺目的，让人深思的写作世界。
-        </div>
+        <div class="emergency-content">{{componentData.emergencyStory}}</div>
         <div class="bottom-title">
           <span class="parting-line"></span>人生插曲<span class="parting-line"></span>
         </div>
-        <div class="life-score"><span class="round"></span>生命值<span class="score">+10</span></div>
+        <div class="life-score"><span class="round"></span>生命值<span class="score">{{componentData.lifeScore}}</span></div>
       </div>
-      <div class="confirm-btn">确定</div>
+      <div class="confirm-btn" v-touch:tap="onConfirmTap">确定</div>
     </div>
 </template>
 <script>
 export default {
+  props: {
+    componentData: Object
+  },
   vuex: {
     getters: {
 
@@ -30,13 +30,14 @@ export default {
 
     }
   },
+  ready () {
+  },
   data () {
     return {
 
     }
   },
   computed: {
-
   },
   watch: {
 
@@ -44,11 +45,13 @@ export default {
   route: {
 
   },
-  ready () {
-
-  },
   methods: {
-
+    onCloseTap () {
+      this.$dispatch('hideMask')
+    },
+    onConfirmTap () {
+      this.$dispatch('hideMask')
+    }
   },
   components: {
 

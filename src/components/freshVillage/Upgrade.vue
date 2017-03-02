@@ -9,9 +9,9 @@
       <div class="upgrade-part-title">- 理财新手村 - </div>
 
       <div class="upgrade-detail">
-        <img class="user-img" src="../../../static/image/defaultAvatar.png"/><!--:src="avatarUrl"-->
+        <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.1</div>
+        <div class="level">LV.{{componentData.level}}</div>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>
@@ -20,26 +20,18 @@
     </div>
 </template>
 <script>
- // import {userGetters} from '../../vuex/getters'
   export default {
-    vuex: {
-      getters: {
-     //   avatar: userGetters.avatar
-
-      },
-      actions: {
-
-      }
+    props: {
+      componentData: Object
     },
     data () {
       return {
-
       }
     },
     computed: {
-//      avatarUrl () {
-//        return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
-//      }
+      avatarUrl () {
+        return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'
+      }
     },
     watch: {
 

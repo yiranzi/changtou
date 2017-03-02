@@ -6,17 +6,20 @@
   <div class="chapter-story">
     <div class="chapter-top">
       <p class="story">小故事</p>
-      <p class="story-text">然后预览网页效果，的人挺好的合同的复合弓对方过后对方过后单刀赴会个内容切换效果就完成了，当然想要更多个性化设置，flexslider提供了丰富的选项配置以及回调函数绝对可以满足大多数开发者需求。</p>
+      <p class="story-text">{{componentData.story}}</p>
       <div class="task">
         <p class="task-title">任务</p>
-        <div class="task-content">帮助小明想想怎么安排这笔遗产</div>
+        <div class="task-content">{{componentData.task}}</div>
       </div>
     </div>
-    <div class="next-btn">下一步</div>
+    <div class="next-btn" v-touch:tap="enterChapter">下一步</div>
     </div>
 </template>
 <script>
 export default {
+  props: {
+    componentData: Object
+  },
   vuex: {
     getters: {
 
@@ -43,7 +46,9 @@ export default {
 
   },
   methods: {
-
+    enterChapter () {
+      this.$dispatch('enterChapter')
+    }
   },
   components: {
 
@@ -64,7 +69,7 @@ export default {
         font-size: .8rem;
         font-weight: bold;
         color: #444;
-        padding:1.5rem .9rem;
+        padding:1rem .9rem;
       }
       .story-text {
         font-size: .65rem;
@@ -75,7 +80,7 @@ export default {
       .task {
         background-color: #FFF9EB;
         color: #b07f50;
-        margin: 1.3rem .9rem 0 ;
+        margin: 1rem .9rem 0 ;
         padding: .5rem 0 .5rem .5rem;
         line-height: 1rem;
         &-title {

@@ -300,7 +300,9 @@ export function configRouter (router) {
     '/ebook/chapter/:bookId/:chapterId': {
       component: require('../views/ebook/Chapter.vue')
     },
-    /*大咖读经典*/
+    /*
+    *大咖读经典
+    */
     '/classic/reading/:classicId': {
       component: require('../views/classicReading/ClassicReading.vue')
     },
@@ -322,6 +324,7 @@ export function configRouter (router) {
     '/village/fill/content': {
       component: require('../views/freshVillage/FillContent.vue')
     },
+    // 新手村主界面
     '/village/map': {
       component: require('../views/freshVillage/ChapterMap.vue')
     }

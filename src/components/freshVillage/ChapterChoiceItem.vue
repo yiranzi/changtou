@@ -4,14 +4,17 @@
  */
 <template>
     <div class="chapter-choice-item">
-      <p class="chapter-number">第一章</p>
-      <p class="chapter-title">一封陌生人的来信</p>
-      <img class="chapter-cover" src="../../../static/image/freshVillage/chapter1-cover.png"/>
-      <div class="chapter-btn">GO</div>
+      <p class="chapter-number">第{{chapterCardInfo.chapterNo}}章</p>
+      <p class="chapter-title">{{chapterCardInfo.title}}</p>
+      <img class="chapter-cover" :src="chapterCardInfo.cover"/>
+      <div class="chapter-btn" v-touch:tap="enterChapter(chapterCardInfo.chapterNo)">GO</div>
     </div>
 </template>
 <script>
 export default {
+  props: {
+    chapterCardInfo: Object
+  },
   vuex: {
     getters: {
 
@@ -38,7 +41,9 @@ export default {
 
   },
   methods: {
-
+    enterChapter (chapterNo) {
+      this.$dispatch('enter-chapter', chapterNo)
+    }
   },
   components: {
 

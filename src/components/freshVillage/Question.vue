@@ -5,47 +5,34 @@
 <template>
     <div class="fresh-village-question-page">
       <div class="question-pic">
-        <span class="question-title">思考一下</span><span class="close-icon"></span>
+        <span class="question-title">思考一下</span><span class="close-icon" v-touch:tap="close"></span>
       </div>
-      <div class="question-content">天啦，有钱啦！有钱了！自天啦，有钱啦！有钱了！自己最想怎么花？</div>
-      <div class="choice-item">1.带着钱一起去环游世界</div>
-      <div class="choice-item">1.带着钱一起去环游世界</div>
+      <div class="question-content">
+        <p>{{question[0]}}</p>
+        <p>{{question[1]}}</p>
+      </div>
+      <div class="choice-item" v-for="option in componentData.options" v-touch:tap="onTapOption($index +1)">{{$index + 1}}. {{option}}</div>
     </div>
 </template>
 <script>
-export default {
-  vuex: {
-    getters: {
-
+  export default {
+    props: {
+      componentData: Object
     },
-    actions: {
-
+    computed: {
+      question () {
+        return this.componentData.questionText.split('#')
+      }
+    },
+    methods: {
+      close () {
+        this.$dispatch('hideMask')
+      },
+      onTapOption (answer) {
+        this.$dispatch('tapOption', answer === this.componentData.answer)
+      }
     }
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  route: {
-
-  },
-  ready () {
-
-  },
-  methods: {
-
-  },
-  components: {
-
   }
-}
 </script>
 <style lang="less">
   .fresh-village-question-page {
@@ -76,13 +63,14 @@ export default {
       color: #aaa;
       font-size: .8rem;
     }
-    .question {
-      &-content {
-        padding: 1rem;
-        font-size: .65rem;
-        color: #888;
-        line-height: 1rem;
-        border-bottom: 1px solid #f0eff5;
+    .question-content {
+      padding: 1rem;
+      font-size: .65rem;
+      color: #888;
+      line-height: 1rem;
+      border-bottom: 1px solid #f0eff5;
+      p {
+        margin: 0
       }
     }
     .choice-item {
