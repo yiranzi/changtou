@@ -415,13 +415,13 @@
 
               } else {
                 // 没进度
-                me.$route.router.go('/freshVillage/initialPage')
+                me.$route.router.go('/village/initialPage')
               }
             }
           )
         } else {
           // 未登录
-          this.$route.router.go('/freshVillage/initialPage')
+          this.$route.router.go('/village/initialPage')
         }
       },
 

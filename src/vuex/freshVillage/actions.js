@@ -63,7 +63,7 @@ export const getAnswerProgress = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('fresh_village_answer_record')
+        url: getUrl('get_village_progress')
       }).then(
         function (message) {
           dispatch('FRESH_VILLAGE_ANSWER_PROGRESS', message)
