@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/1/24
- * 新增的理财新手村
+ * 新手村
  */
 const state = {
   adviseList: [],

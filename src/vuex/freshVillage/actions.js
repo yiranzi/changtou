@@ -1,6 +1,6 @@
 /**
  * Created by jun on 2017/3/1
- * 新增的理财新手村
+ * 新手村
  */
 import {getWithoutAuth, getWithinAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
@@ -59,7 +59,7 @@ export const submitAdvise = ({ dispatch }, advise) => {
  * @param dispatch
  * @returns {Promise}
  */
-export const getAnswerProgress = ({ dispatch }) => {
+export const getVillageProgress = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({

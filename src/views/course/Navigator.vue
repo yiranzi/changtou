@@ -44,8 +44,8 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
-        <!--理财新手村-首页入口-->
-        <div class="goToFreshVillage" v-touch:tap="goToFreshVillageTap"></div>
+        <!--理财新手村-入口-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -137,7 +137,7 @@
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
-        getAnswerProgress: villageActions.getAnswerProgress
+        getVillageProgress: villageActions.getVillageProgress
       }
     },
 
@@ -411,8 +411,8 @@
           this.getAnswerProgress().then(
             function (progress) {
               if (progress) {
-                // 有进度  这里进入新手村的首页
-
+                // 有进度  进入新手村的首页
+                me.$route.router.go('/village/map')
               } else {
                 // 没进度
                 me.$route.router.go('/village/initialPage')
@@ -428,7 +428,6 @@
       /**
        * 跳转到大咖读经典
        * */
-
       goToClassicReading (classicId) {   /*统计数据*/
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
@@ -780,21 +779,21 @@
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
     }
-  /*新增理财新手村-首页入口*/
-    .goToFreshVillage{
+  /*理财新手村-首页入口*/
+    .fresh-village{
       width: 100%;
       height: 6rem;
-      background: url("../../../static/image/navigator/goToFreshVillage.png") no-repeat center center / contain;
+      background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
       margin: 1rem 0 0;
     }
-  /*新增大咖读经典*/
+  /*大咖读经典*/
     .classic-info >p {
       text-align: left;
     }
     .classic {
       &-content {
         margin: 0 .7rem;
-        background: url("../../assets/styles/image/classicReading/classic_background.png") no-repeat;
+        background: url("../../../static/image/classicReading/classic-background.png") no-repeat;
         background-size: contain;
         text-align: left;
         padding: .5rem 0 0;
