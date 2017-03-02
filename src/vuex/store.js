@@ -32,7 +32,6 @@ import ebook from './ebook/store'
 import classicReading from './classicReading/store'
 import newerGuide from './newerGuide/store'
 import freshVillage from './freshVillage/store'
-
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {

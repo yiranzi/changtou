@@ -311,9 +311,17 @@ export function configRouter (router) {
     '/start': {
       component: require('../views/start/GuideView.vue')
     },
-
-    /*新手村*/
-
+    /**
+     * 新手村
+     */
+    //我要吐槽
+    '/village/advise': {
+      component: require('../views/freshVillage/Advise.vue')
+    },
+    //内容填写
+    '/village/fill/content': {
+      component: require('../views/freshVillage/FillContent.vue')
+    },
     '/village/map': {
       component: require('../views/freshVillage/ChapterMap.vue')
     }
