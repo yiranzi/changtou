@@ -36,15 +36,15 @@
       show: Boolean
     },
     computed: {
-      //ios中 暂不才显示微博分享
+      //android > 2.6.1 才能显示 微博分享
       canWeiboShare () {
-        return !(Device.platform === platformMap.IOS)
+        return (Device.platform === platformMap.ANDROID) && (nativeVersion >= 20601)
       }
     },
     methods: {
-      onConfirmTap () {
+      onConfirmTap (e) {
         this.show = false
-        this.$emit('confirm')
+        this.$emit('confirm', e)
       }
     },
     components: {
