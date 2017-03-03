@@ -321,6 +321,10 @@ export function configRouter (router) {
     //内容填写
     '/village/fill/content': {
       component: require('../views/freshVillage/FillContent.vue')
+    },
+    //新手村初始页面
+    '/village/initialPage': {
+      component: require('../views/freshVillage/InitialPage.vue')
     }
   })
 
