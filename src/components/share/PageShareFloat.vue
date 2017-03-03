@@ -31,6 +31,7 @@
 <script>
   import {Device, platformMap} from '../../plugin/device'
   import IctSheet from '../../components/IctActionSheet.vue'
+  import {nativeVersion} from '../../plugin/version'
   export default {
     props: {
       show: Boolean
