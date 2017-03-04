@@ -11,7 +11,7 @@
       <div class="upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.{{componentData.level}}</div>
+        <div class="level">LV.{{componentData.chapterNo}}</div>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>

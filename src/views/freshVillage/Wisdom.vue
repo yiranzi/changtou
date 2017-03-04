@@ -3,6 +3,7 @@
  *
  */
 <template>
+  <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="fresh-village-wisdom">
       <span class="close-icon"v-touch:tap="onCloseTap"></span>
       <div>
@@ -14,11 +15,21 @@
       </div>
       <!--<div class=><span class="parting-line"></span>好文共赏<span class="parting-line"></span></div>-->
     </div>
+  </Scroller>
 </template>
 <script>
+import Scroller from 'vux/scroller'
 export default {
   props: {
     wisdomData: Object
+  },
+  ready () {
+    this.setScrollerHeight()
+  },
+  data () {
+    return {
+      scrollerHeight: '580px'
+    }
   },
   computed: {
     /*小智的内容*/
@@ -27,9 +38,29 @@ export default {
     }
   },
   methods: {
+    /*
+    * 点击关闭页面
+    * */
     onCloseTap () {
       this.$dispatch('close-wisdom')
+    },
+    /*设置页面滑动高度*/
+    setScrollerHeight () {
+      const me = this
+      setTimeout(
+        function () {
+          me.scrollerHeight = window.document.body.offsetHeight + 'px'
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+            top: 0
+          })
+        })
+        }, 500
+      )
     }
+  },
+  components: {
+    Scroller
   }
 }
 </script>
@@ -37,7 +68,6 @@ export default {
   .fresh-village-wisdom {
     position: relative;
     width: 100%;
-    height: 100%;
     background-color: #fff;
     .close-icon:after{
       position: absolute;
@@ -69,9 +99,10 @@ export default {
       color: #666;
     }
     .wisdom-content {
+      min-height: 26rem;
       font-size: .7rem;
       color: #888;
-      padding: 1.5rem 1.75rem;
+      padding: .5rem 1.75rem;
       div {
         margin: 1rem 0;
         text-indent: 2em;
