@@ -63,6 +63,7 @@
     },
     /*某一章节的全部信息*/
     chapterContent () {
+      console.log('2')
       return this.getChapterContent(this.activeChapterNo)
     },
     /*今日小智内容*/
@@ -85,222 +86,229 @@
     }
   },
   ready () {
+    console.log('1')
     this.getActiveQuestion()
   //  this.showProverbs()
 //    if (!this.isLogin) {
-      this.showChapterChoice()
+    //  this.showChapterChoice()
 //    } else {
 //      this.JudgeProgress()
 //    }
   },
-  methods: {
-    /*
-    * 退出新手村
-    * */
-    exitVillage () {
-      window.history.back()
-    },
-    /*
-    返回到章节选择页
-    * */
-    backToChapter () {
-      this.showChapterChoice()
-    },
-    /*
-    * 判断进度
-    * */
-    JudgeProgress () {
-//      if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
-//        this.showChapterChoice()
-//      } else {
-//        if () {
-//
-//        }
+    methods: {
+      /*
+      * 退出新手村
+      * */
+      exitVillage () {
+        window.history.back()
+      },
+      /*
+      返回到章节选择页
+      * */
+      backToChapter () {
+        this.showChapterChoice()
+      },
+      /*
+      * 判断进度
+      * */
+      JudgeProgress () {
+  //      if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
+  //        this.showChapterChoice()
+  //      } else {
+  //        if () {
+  //
+  //        }
 
-      }
-    },
-    /*
-    * 点击进入下一关
-    * */
-    goNextLevel () {
-      if (this.activeQuestionNo < 6) {
-        this.activeQuestionNo += 1
-        this.showQuestion()
-      } else {
-        return
-      }
-    },
-    /*
-    * 显示章节选择浮层
-    * */
-    showChapterChoice () {
-      this.showMask({
-        component: 'freshVillage/ChapterChoice.vue',
-        hideOnMaskTap: false,
-        callbackName: 'showStory',
-        componentData: this.chapterCardInfo,
-        callbackFn: this.showTheStory.bind(this)
-      })
-    },
-    /*
-    * 显示章节故事
-    * */
-    showTheStory (chapterNum) {
-      this.activeChapterNo = chapterNum
-      setTimeout(() => {
-        this.showChapterStory()
-      }, 300)
-    },
-    /*
-    * 显示章节故事浮层
-    * */
-    showChapterStory () {
-      this.showMask({
-        component: 'freshVillage/ChapterStory.vue',
-        hideOnMaskTap: false,
-        callbackName: 'enterChapter',
-        componentData: this.getChapterStory(this.chapterContent),
-        callbackFn: this.enterChapter.bind(this) //组件上的
-      })
-    },
-    /*
-    * 从小故事下一步按钮进入答题
-    * */
-    enterChapter () {
-      setTimeout(() => {
-        this.showQuestion()
-      }, 300)
-    },
-    /*
-    * 获取当前问题内容
-    * */
-    getActiveQuestion () {
-      this.questionContent = this.getQuestion(this.chapterContent.questionArr, this.activeQuestionNo)
-    },
-    /*
-     * 显示答题浮层
-     * */
-    showQuestion () {
-      this.getActiveQuestion()
-      this.showMask({
-        component: 'freshVillage/Question.vue',
-        hideOnMaskTap: true,
-        callbackName: 'tapOption',
-        componentData: this.questionContent,
-        callbackFn: this.tapTheOption.bind(this)
-      })
-    },
-    /*
-     * 选择关卡
-     * */
-    onLevelTap (level) {
-      this.activeQuestionNo = level
-      this.showQuestion()
-    },
-    /*
-    * 记录选择的项上传记录
-    * */
-    tapTheOption (result) {
-      if (!this.isLogin) {
-        this.$route.router.go('/entry')
-      } else {
-        if (result) {
-          this.lifeScore = 10
+      },
+      /*
+      * 点击进入下一关
+      * */
+      goNextLevel () {
+        if (this.activeQuestionNo < 6) {
+          this.activeQuestionNo += 1
+          this.showQuestion()
         } else {
-          this.lifeScore = 2
+          return
         }
-        this.updateAnswerRecord(this.activeChapterNo, this.activeQuestionNo)
+      },
+      /*
+      * 显示章节选择浮层
+      * */
+      showChapterChoice () {
+        this.showMask({
+          component: 'freshVillage/ChapterChoice.vue',
+          hideOnMaskTap: false,
+          callbackName: 'showStory',
+          componentData: this.chapterCardInfo,
+          callbackFn: this.showTheStory.bind(this)
+        })
+      },
+      /*
+      * 显示章节故事
+      * */
+      showTheStory (chapterNum) {
+        this.activeChapterNo = chapterNum
         setTimeout(() => {
-          this.showAnswerResult()
-        }, 300)
-      }
-    },
-    /*
-    * 显示答题结果浮层
-    * */
-    showAnswerResult () {
-      let answerResultData = {
-        feedback: this.questionContent.feedback,
-        lifeScore: this.lifeScore
-      }
-      this.showMask({
-        component: 'freshVillage/AnswerResult.vue',
-        hideOnMaskTap: true,
-        callbackName: 'showExpandsData',
-        componentData: answerResultData,
-        callbackFn: this.showTheExpandsData.bind(this) //组件上的
-      })
-    },
-    /*
-    * 显示拓展材料，根据类型显示箴言，小智或突发事件
-    * */
-    showTheExpandsData () {
-      console.log('this.questionContent.expandsMaterialType', this.questionContent, this.questionContent.expandsMaterialType)
-      if (this.questionContent.expandsMaterialType === 1) {
-        console.log(1)
-        this.showWisdom = true
-      } else if (this.questionContent.expandsMaterialType === 2) {
-        console.log(2)
+          this.showChapterStory()
+        },
+        300)
+      },
+      /*
+      * 显示章节故事浮层
+      * */
+      showChapterStory () {
+        this.showMask({
+          component: 'freshVillage/ChapterStory.vue',
+          hideOnMaskTap: false,
+          callbackName: 'enterChapter',
+          componentData: this.getChapterStory(this.chapterContent),
+          callbackFn: this.enterChapter.bind(this) //组件上的
+        })
+      },
+      /*
+      * 从小故事下一步按钮进入答题
+      * */
+      enterChapter () {
         setTimeout(() => {
-          this.showProverbs()
-        }, 300)
-      } else {
-        console.log(3)
-        setTimeout(() => {
-          this.showEmergency()
-        }, 300)
+          this.showQuestion()
+        },
+        300)
+      },
+      /*
+      * 获取当前问题内容
+      * */
+      getActiveQuestion () {
+        this.questionContent = this.getQuestion(this.chapterContent.questionArr, this.activeQuestionNo)
+      },
+      /*
+       * 显示答题浮层
+       * */
+      showQuestion () {
+        this.getActiveQuestion()
+        this.showMask({
+          component: 'freshVillage/Question.vue',
+          hideOnMaskTap: true,
+          callbackName: 'tapOption',
+          componentData: this.questionContent,
+          callbackFn: this.tapTheOption.bind(this)
+        })
+      },
+      /*
+       * 选择关卡
+       * */
+      onLevelTap (level) {
+        this.activeQuestionNo = level
+        this.showQuestion()
+      },
+      /*
+      * 记录选择的项上传记录
+      * */
+      tapTheOption (result) {
+        if (!this.isLogin) {
+          this.$route.router.go('/entry')
+        } else {
+          if (result) {
+            this.lifeScore = 10
+          } else {
+            this.lifeScore = 2
+          }
+          this.updateAnswerRecord(this.activeChapterNo, this.activeQuestionNo)
+          setTimeout(() => {
+            this.showAnswerResult()
+          },
+          300)
+        }
+      },
+      /*
+      * 显示答题结果浮层
+      * */
+      showAnswerResult () {
+        let answerResultData = {
+          feedback: this.questionContent.feedback,
+          lifeScore: this.lifeScore
+        }
+        this.showMask({
+          component: 'freshVillage/AnswerResult.vue',
+          hideOnMaskTap: true,
+          callbackName: 'showExpandsData',
+          componentData: answerResultData,
+          callbackFn: this.showTheExpandsData.bind(this) //组件上的
+        })
+      },
+      /*
+      * 显示拓展材料，根据类型显示箴言，小智或突发事件
+      * */
+      showTheExpandsData () {
+        console.log('this.questionContent.expandsMaterialType', this.questionContent, this.questionContent.expandsMaterialType)
+        if (this.questionContent.expandsMaterialType === 1) {
+          console.log(1)
+          this.showWisdom = true
+        } else if (this.questionContent.expandsMaterialType === 2) {
+          console.log(2)
+          setTimeout(() => {
+            this.showProverbs()
+          }
+        ,
+          300)
+        } else {
+          console.log(3)
+          setTimeout(() => {
+            this.showEmergency()
+          }
+        ,
+          300)
+        }
+      },
+      /*
+      * 隐藏今日小智
+      * */
+      closeWisdom () {
+        this.showWisdom = false
+      },
+      /*
+      * 显示箴言
+      * */
+      showProverbs () {
+        this.showMask({
+          component: 'freshVillage/Proverbs.vue',
+          hideOnMaskTap: true,
+          componentData: this.questionContent.proverbs
+        })
+      },
+      /*
+      * 显示突发事件
+      * */
+      showEmergency () {
+        this.showMask({
+          component: 'freshVillage/Emergency.vue',
+          hideOnMaskTap: true,
+          componentData: this.questionContent.emergency
+        })
+      },
+      /*
+      * 显示章节结束晋级页面
+      * */
+      showUpgrade () {
+        let upgradePageData = {
+          avatar: this.avatar,
+          chapterNo: this.activeChapterNo
+        }
+        this.showMask({
+          component: 'freshVillage/Upgrade.vue',
+          hideOnMaskTap: true,
+          callbackName: 'getResult',
+          componentData: upgradePageData,
+          callbackFn: this.getResult.bind(this) //组件上的
+        })
+      },
+      getResult () {
+        console.log('getResult')
       }
-    },
-    /*
-    * 隐藏今日小智
-    * */
-    closeWisdom () {
-      this.showWisdom = false
-    },
-    /*
-    * 显示箴言
-    * */
-    showProverbs () {
-      this.showMask({
-        component: 'freshVillage/Proverbs.vue',
-        hideOnMaskTap: true,
-        componentData: this.questionContent.proverbs
-      })
-    },
-    /*
-    * 显示突发事件
-    * */
-    showEmergency () {
-      this.showMask({
-        component: 'freshVillage/Emergency.vue',
-        hideOnMaskTap: true,
-        componentData: this.questionContent.emergency
-      })
-    },
-    /*
-    * 显示章节结束晋级页面
-    * */
-    showUpgrade () {
-      let upgradePageData = {
-        avatar: this.avatar,
-        chapterNo: this.activeChapterNo
-      }
-      this.showMask({
-        component: 'freshVillage/Upgrade.vue',
-        hideOnMaskTap: true,
-        callbackName: 'getResult',
-        componentData: upgradePageData,
-        callbackFn: this.getResult.bind(this) //组件上的
-      })
-    },
-    getResult () {
-      console.log('getResult')
     },
     components: {
       //  chapterChoice,
       wisdom
     }
-
   }
 
 </script>
