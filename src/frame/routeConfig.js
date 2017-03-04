@@ -327,6 +327,10 @@ export function configRouter (router) {
     // 新手村主界面
     '/village/map': {
       component: require('../views/freshVillage/ChapterMap.vue')
+    },
+    //新手村初始页面
+    '/village/initialPage': {
+      component: require('../views/freshVillage/InitialPage.vue')
     }
   })
 

@@ -59,5 +59,5 @@ export {
   ebookGetters,    //电子书
   newerGuideGetters, //入门指南
   classicReadingGetters,  //大咖读经典
-  villageGetters   // 新手村
+  villageGetters  //理财新手村
 }
