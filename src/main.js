@@ -23,7 +23,7 @@ if (debug) {
     appRouter.app.$emit(eventMap.APP_START)
   }, 50)
 } else {
-  // 手机 add手机
+  // 手机 add手机 add手机again
   const onDeviceReady = function () {
     appRouter.start(App, 'app')
     setTimeout(function () {
