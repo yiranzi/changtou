@@ -30,7 +30,7 @@
     },
     computed: {
       presentChapter () {
-        return this.componentData.villageProgress.chapterNo + 1
+        return this.componentData.villageProgress/* .chapterNo + 1*/
       }
     },
     watch: {
@@ -48,8 +48,13 @@
     },
     methods: {
       villageEnterChapter (chapterNum) {
-        if (chapterNum > this.presentChapter + 1 || chapterNum === 3) { //章节开放到第二章
+        if (chapterNum === 3) {
           return
+        } else if (chapterNum === 2) {
+          if (this.presentChapter.chapterNo === 1 &&
+            (this.presentChapter.questionNo === 6 || this.presentChapter.questionNo === 7)) {
+            this.$dispatch('onChapterSelected', chapterNum)
+          }
         } else {
           this.$dispatch('onChapterSelected', chapterNum)
         }
@@ -67,12 +72,24 @@
       * 当前章节显示在最前方
       * */
       setPresentChapterPosition () {
-        let presentChapter = this.presentChapter
+        let presentChapter
         let scrollerLeftWidth = 0
+        if (this.presentChapter.chapterNo === 1) {
+          if ((this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6)) {
+            presentChapter = 2
+          } else {
+            presentChapter = 1
+          }
+        } else if (this.presentChapter.chapterNo === 2) {
+          if (this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6) {
+            presentChapter = 3
+          } else {
+            presentChapter = 2
+          }
+        } else {
+          presentChapter = 1
+        }
         switch (presentChapter) {
-          case 0:
-            scrollerLeftWidth = 0
-            break
           case 1:
             scrollerLeftWidth = 0
             break

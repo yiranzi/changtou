@@ -8,8 +8,8 @@
         <span class="question-title">思考一下</span><span class="close-icon" v-touch:tap="onCloseTap"></span>
       </div>
       <div class="question-content">
-        <p>{{question[0]}}</p>
-        <p>{{question[1]}}</p>
+        <span>{{question[0]}}</span>
+        <span>{{question[1]}}</span>
       </div>
       <div class="choice-item" v-for="option in componentData.options" v-touch:tap="onOptionTap($index +1)">{{$index + 1}}. {{option}}</div>
     </div>
@@ -37,7 +37,7 @@
 <style lang="less">
   .fresh-village-question-page {
     width: 14.5rem;
-    height: 22rem;
+    min-height: 22rem;
     border-radius: 20px;
     background-color: #fff;
     .question-pic {
@@ -69,8 +69,9 @@
       color: #888;
       line-height: 1rem;
       border-bottom: 1px solid #f0eff5;
-      p {
-        margin: 0
+      span {
+        display: block;
+        vertical-align:middle;
       }
     }
     .choice-item {

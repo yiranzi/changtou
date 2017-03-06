@@ -65,7 +65,6 @@ export const getVillageProgress = ({ dispatch }) => {
         url: getUrl('village_get_answer_record')
       }).then(
         function (message) {
-          console.log('getVillageProgress success message', message)
           dispatch('FRESH_VILLAGE_PROGRESS', message)
           resolve(message)
         },
@@ -83,7 +82,6 @@ export const getVillageProgress = ({ dispatch }) => {
  * @returns {Promise}
 */
 export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
-  console.log('updateRecord chapterNo, questionNo', chapterNo, questionNo)
   let message = {chapterNo, questionNo}
   dispatch('FRESH_VILLAGE_PROGRESS', message)
   return new Promise(

@@ -7,7 +7,7 @@
     <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
       <div class="other-element">
         <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
-        <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap=""/>
+        <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
         <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
       </div>
@@ -46,7 +46,8 @@
         showWisdom: false,
         bgStyle: 'chapter1-bg',
         showNextChapterBtn: false,
-        getOverLevel: 'user-img-1'
+        getOverLevel: 'user-img-1',
+        hasShownEncouragement: false
       }
     },
     computed: {
@@ -88,6 +89,8 @@
     route: {
       data () {
         if (!this.isLogin) {
+          this.activeChapterNo = 0
+          this.activeQuestionNo = 0
           this.showChapterChoice()
         } else {
           this.JudgeProgress()
@@ -95,11 +98,15 @@
       },
       deactivate () {
         this.hideMask()
-        this.activeChapterNo = 0
-        this.activeQuestionNo = 0
       }
     },
     methods: {
+      /*
+      * 点击吐槽
+      * */
+      onAdviceTap () {
+        this.$route.router.go('/village/advise')
+      },
       /*
       * 更换头像位置
       * */
@@ -154,6 +161,17 @@
         } else {
           if (this.villageProgress.questionNo < 6) {
             this.activeQuestionNo = this.villageProgress.questionNo + 1
+            if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && this.activeQuestionNo === 3 && !this.hasShownEncouragement) {
+              this.showEncourage()
+              this.hasShownEncouragement = true
+              return
+            }
+            if (this.villageProgress.chapterNo === 2 && this.activeQuestionNo === 5 && !this.hasShownEncouragement) {
+              this.showEncourage()
+              this.hasShownEncouragement = true
+              return
+            }
+          //  this.specialLevelJudge(this.activeQuestionNo)
             this.showQuestion()
           }
         }
@@ -162,6 +180,7 @@
       * 显示章节选择浮层
       * */
       showChapterChoice () {
+        this.hasShownEncouragement = false
         let choiceComponentData = {
           chapterIntro: this.chapterIntro,
           villageProgress: this.villageProgress
@@ -200,8 +219,12 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
+        if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
+          this.activeQuestionNo = this.villageProgress.questionNo + 1
+        } else {
+          this.activeQuestionNo = 1
+        }
         this.changeUserImagePosition()
-        this.activeQuestionNo = 1
         setTimeout(() => {
           this.showQuestion()
         },
@@ -235,9 +258,53 @@
           this.getActiveQuestion()
           this.showTheExpands()
         } else if (level === this.villageProgress.questionNo + 1) {
+        //  this.specialLevelJudge(level)
+          if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
+            this.showEncourage()
+            this.hasShownEncouragement = true
+            return
+          }
+          if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
+            this.showEncourage()
+            this.hasShownEncouragement = true
+            return
+          }
           this.activeQuestionNo = level      // activeQuestionNo改变的契机
           this.showQuestion()
         }
+      },
+      /*判断是否为特殊关卡*/
+//      specialLevelJudge (level) {
+//        console.log('specialLevelJudge', this.hasShownEncouragement)
+//        if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
+//          this.showEncourage()
+//          this.hasShownEncouragement = true
+//          return
+//        }
+//        if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
+//          this.showEncourage()
+//          this.hasShownEncouragement = true
+//          return
+//        }
+//      },
+
+      /*
+      * 显示鼓励
+      * */
+      showEncourage () {
+        this.showMask({
+          component: 'freshVillage/GiveEncouragement.vue',
+          hideOnMaskTap: false,
+          callbackName: 'showAdviceEditor',
+          componentData: 1,
+          callbackFn: this.showAdviceEditor.bind(this)
+        })
+      },
+      /*
+      *跳转到吐槽编辑页
+      * */
+      showAdviceEditor () {
+        this.$route.router.go('/village/fill/content')
       },
       /*
       * 记录选择的项上传记录
