@@ -542,7 +542,7 @@
         const me = this
         const lessonId = this.selectedLesson.lessonId
 
-        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId) {
+        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId)) {
           const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
           const lessonTitle = lastSubmitLesson.title
           me.showConfirm({
