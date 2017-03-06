@@ -63,6 +63,6 @@ export default new Vuex.Store({
     ebook,   //电子书
     classicReading, // 大咖读经典
     newerGuide, //入门指南
-    freshVillage
+    freshVillage  //理财新手村
   }
 })
