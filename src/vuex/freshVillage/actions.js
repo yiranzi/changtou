@@ -82,6 +82,7 @@ export const getVillageProgress = ({ dispatch }) => {
  * @returns {Promise}
 */
 export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
+  console.log('updateRecord chapterNo, questionNo', chapterNo, questionNo)
   let message = {chapterNo, questionNo}
   dispatch('FRESH_VILLAGE_PROGRESS', message)
   //return new Promise(

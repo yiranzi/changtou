@@ -62,7 +62,6 @@ Vue.mixin({
        * @param callbackFn
        */
     showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
-      console.log('00')
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
 

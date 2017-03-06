@@ -43,7 +43,8 @@
         question: {},
         lifeScore: 0,
         showWisdom: false,
-        bgStyle: 'chapter1-bg'
+        bgStyle: 'chapter1-bg',
+        showNextChapterBtn: false
       }
     },
     computed: {
@@ -63,21 +64,24 @@
       /*今日小智内容*/
       wisdomData () {
         return this.question.wisdom
-      },
-      showNextChapterBtn () {
-        console.log('this.activeQuestionNo', this.activeQuestionNo)
-        if (this.activeQuestionNo === 7) {
-          return true
-        } else {
-          return false
-        }
       }
+//      showNextChapterBtn () {
+//        console.log('this.activeQuestionNo', this.activeQuestionNo)
+//        if (this.activeQuestionNo === 7) {
+//          return true
+//        } else {
+//          return false
+//        }
+//      }
       /*关卡背景*/
     },
     watch: {
       villageProgress () {
+        console.log('watch 1', this.villageProgress.questionNo)
         if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
           this.showNextChapterBtn = true
+        } else {
+          this.showNextChapterBtn = false
         }
       },
       activeChapterNo () {  //switch
@@ -140,7 +144,10 @@
         if (this.showNextChapterBtn) {
           this.showChapterChoice()
         } else {
-          this.showQuestion()
+          if (this.villageProgress.questionNo < 6) {
+            this.activeQuestionNo = this.villageProgress.questionNo + 1
+            this.showQuestion()
+          }
         }
       },
       /*
@@ -321,13 +328,14 @@
         }
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
-          hideOnMaskTap: true,
+          hideOnMaskTap: false,
           callbackName: 'villageUpdateRecord',
           componentData: upgradePageData,
           callbackFn: this.updateTheRecord.bind(this)
         })
       },
       updateTheRecord () {
+        console.log('updateTheRecord')
         this.updateRecord(this.activeChapterNo, 7)
       }
     },
