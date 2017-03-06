@@ -210,6 +210,7 @@
         currUseabLessonArr: [], //当前可用lessonId集合
         currStatus: 'L', //当前课程状态 {N：在读 | E：过期 | Y：毕业 | P：暂停 | I ：未激活 | W : 没有进度} 默认L: 加载中
         lastSubmitlessonId: 0, //最后一次提交作业的lesson
+        listenOnlyLessonId: 0, //只能听课,但不能做作业的lesson
         isAssignmentSubmitted: false,
         postponeCount: 0,
         isSuspendUsed: false,
@@ -540,22 +541,37 @@
       onChoiceTap () {
         const me = this
         const lessonId = this.selectedLesson.lessonId
-        const choiceQuestionArr = this.selectedLesson.choiceQuestion
-        me.setChoiceQuestion(choiceQuestionArr)
-        me.getReport(lessonId).then(
-          report => {
-            if (report.kpScore) {
-              // 做过选择题
-              me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
-            } else {
-              // 没做过
-              me.showChoice = true
+
+        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId) {
+          const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
+          const lessonTitle = lastSubmitLesson.title
+          me.showConfirm({
+              title: '',
+              message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
+              okText: '去测试',
+              cancelText: '继续听课',
+              okCallback: () => {
+                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
+              }
+          })
+        } else {
+          const choiceQuestionArr = this.selectedLesson.choiceQuestion
+          me.setChoiceQuestion(choiceQuestionArr)
+          me.getReport(lessonId).then(
+            report => {
+              if (report.kpScore) {
+                // 做过选择题
+                me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
+              } else {
+                // 没做过
+                me.showChoice = true
+              }
+            }).catch(
+            err => {
+              console.log(err.message)
             }
-          }).catch(
-          err => {
-            console.log(err.message)
-          }
-        )
+          )
+        }
       },
 
       /**
@@ -564,40 +580,56 @@
       onEssayTap (limitedLessonId, limitedEssayQuestion) {
         const me = this
         const lessonId = limitedLessonId || this.selectedLesson.lessonId
-        const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
-        me.setEssayQuestion(essayQuestion)
-        me.getArticle(lessonId).then(
-          evaluation => {
-            if (evaluation && evaluation.status !== null) {
-              switch (evaluation.status) {
-                case 0:
-//                   console.log('作业已提交')
-                  me.goEssayMark(lessonId)
-                  break
-                case 1:
-//                   console.log('草稿已提交 写作业')
-                  me.goEssayAnswer(lessonId)
-                  break
-                case 2:
-//                   console.log('已批改 未通过 查看作业')
-                  me.goEssayMark(lessonId)
-                  break
-                case 3:
-//                   console.log('已批改 通过 查看作业')
-                  me.goEssayMark(lessonId)
-                  break
-                default:
-                  me.showEssayFloat()
-                  break
+
+        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId)) {
+          const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
+          const lessonTitle = lastSubmitLesson.title
+          me.showConfirm({
+              title: '',
+              message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
+              okText: '去测试',
+              cancelText: '继续听课',
+              okCallback: () => {
+                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
               }
-            } else {
-              me.showEssayFloat()
+          })
+        } else {
+          const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
+          me.setEssayQuestion(essayQuestion)
+          me.getArticle(lessonId).then(
+            evaluation => {
+              if (evaluation && evaluation.status !== null) {
+                switch (evaluation.status) {
+                  case 0:
+    //                   console.log('作业已提交')
+                    me.goEssayMark(lessonId)
+                    break
+                  case 1:
+    //                   console.log('草稿已提交 写作业')
+                    me.goEssayAnswer(lessonId)
+                    break
+                  case 2:
+    //                   console.log('已批改 未通过 查看作业')
+                    me.goEssayMark(lessonId)
+                    break
+                  case 3:
+    //                   console.log('已批改 通过 查看作业')
+                    me.goEssayMark(lessonId)
+                    break
+                  default:
+                    me.showEssayFloat()
+                    break
+                }
+              } else {
+               me.showEssayFloat()
+              }
             }
-        }).catch(
-          err => {
-            console.log(err.message)
-          }
-        )
+          ).catch(
+            err => {
+              console.log(err.message)
+            }
+          )
+        }
       },
       /**
        * 跳转到问答题 编辑页
@@ -702,7 +734,8 @@
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
           const currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === this.subjectId)
           if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length) {
-            this.currUseabLessonArr.push(currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
+            this.listenOnlyLessonId = currSubject.lessonList[this.currUseabLessonArr.length].lessonId
+            this.currUseabLessonArr.push(this.listenOnlyLessonId)
           }
         }
 
@@ -755,6 +788,8 @@
         if (this.currUseabLessonArr.length > 0) {
           this.lastSubmitlessonId = this.currUseabLessonArr[this.currUseabLessonArr.length - 1]
         }
+
+        this.listenOnlyLessonId = 0
 
         // 设置当前选中(进度改变后), 课程可不可以听
         if (this.selectedLesson) {
