@@ -7,7 +7,7 @@
     <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=20.5rem;width:18.75rem">
       <div class="scroll-content active-position" >
         <!--:style="activePosition"--><!--v-el:first-chapter -->
-        <chapter-choice-item  v-for="chapterCardInfo in componentData"
+        <chapter-choice-item  v-for="chapterCardInfo in componentData.chapterIntro"
                               :chapter-card-info="chapterCardInfo"
                               v-on:village-enter-chapter="villageEnterChapter"
                               class="question-pic">
@@ -22,60 +22,72 @@
 
   export default {
     props: {
-      componentData: Array
-    },
-    vuex: {
-      getters: {
-
-      },
-      actions: {
-      }
+      componentData: Object
     },
     data () {
       return {
       }
     },
     computed: {
-//      scrollPresentPosition () {
-//        const {firstChapter} = this.$els
-//        console.log('firstChapter.offsetWidth ', firstChapter.offsetWidth)
-//        return firstChapter.offsetWidth
-//      }
+      presentChapter () {
+        return this.componentData.villageProgress.chapterNo + 1
+      }
     },
     watch: {
-//      scrollPresentPosition () {
-//      }
+      presentChapter () {
+        this.setPresentChapterPosition()
+      }
     },
     route: {
       data () {
-        //重置页面滚动位置
+        this.setPresentChapterPosition()
       }
     },
     ready () {
-//      this.resetScroller()
+      this.setPresentChapterPosition()
     },
     methods: {
       villageEnterChapter (chapterNum) {
-        if (chapterNum === 3) {             //章节开放到第二章
+        if (chapterNum > this.presentChapter + 1 || chapterNum === 3) { //章节开放到第二章
           return
         } else {
-          this.$dispatch('villageShowStory', chapterNum)
+          this.$dispatch('onChapterSelected', chapterNum)
         }
       },
-      resetScroller () {
-       // const {firstChapter} = this.$els
-      //  console.log('firstChapter.offsetWidth ', firstChapter.offsetWidth)
+      resetScroller (scrollerLeftWidth) {
         setTimeout(() => {
           this.$nextTick(() => {
             this.$refs.vscroller.reset({
-              left: 0
+              left: scrollerLeftWidth
             })
           })
         }, 300)
+      },
+      /*
+      * 当前章节显示在最前方
+      * */
+      setPresentChapterPosition () {
+        let presentChapter = this.presentChapter
+        let scrollerLeftWidth = 0
+        switch (presentChapter) {
+          case 0:
+            scrollerLeftWidth = 0
+            break
+          case 1:
+            scrollerLeftWidth = 0
+            break
+          case 2:
+            scrollerLeftWidth = window.document.body.offsetWidth * 0.83
+            break
+          case 3:
+            scrollerLeftWidth = window.document.body.offsetWidth * 1.65
+            break
+          default :
+            scrollerLeftWidth = 0
+        }
+        this.resetScroller(scrollerLeftWidth)
+        //重置页面滚动位置
       }
-//      setPosition () {
-//        activePosition = 'chapter1-active-position'
-//      }
     },
     components: {
       Scroller,

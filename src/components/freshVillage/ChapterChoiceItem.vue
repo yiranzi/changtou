@@ -4,7 +4,7 @@
  */
 <template>
     <div class="chapter-choice-item">
-      <p class="chapter-number">第{{chapterCardInfo.chapterNo}}章</p>
+      <p class="chapter-number">第{{chapterCharacterNum}}章</p>
       <p class="chapter-title">{{chapterCardInfo.title}}</p>
       <img class="chapter-cover" :src="chapterCardInfo.cover"/>
       <div class="chapter-btn" v-touch:tap="enterChapter(chapterCardInfo.chapterNo)">GO</div>
@@ -14,6 +14,12 @@
 export default {
   props: {
     chapterCardInfo: Object
+  },
+  computed: {
+    chapterCharacterNum () {
+      const characterArray = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+      return characterArray[this.chapterCardInfo.chapterNo - 1]
+    }
   },
   methods: {
     enterChapter (chapterNo) {

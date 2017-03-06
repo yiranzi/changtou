@@ -12,6 +12,7 @@
         <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
       </div>
       <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
+      <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
     </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
 </div>
@@ -44,7 +45,8 @@
         lifeScore: 0,
         showWisdom: false,
         bgStyle: 'chapter1-bg',
-        showNextChapterBtn: false
+        showNextChapterBtn: false,
+        getOverLevel: 'user-img-1'
       }
     },
     computed: {
@@ -53,31 +55,22 @@
         const characterArray = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
         return characterArray[this.activeChapterNo - 1]
       },
+      /*用户头像*/
+      userImgUrl () {
+        return this.avatar ? this.avatar : '../../../static/image/defaultAvatar.png'
+      },
       /*章节卡片信息*/
       chapterIntro () {
         return this.getChapterIntro()
       },
-      /*某一章节的全部信息*/
-//      chapter () {
-//        return this.getChapter(this.activeChapterNo)
-//      },
       /*今日小智内容*/
       wisdomData () {
         return this.question.wisdom
       }
-//      showNextChapterBtn () {
-//        console.log('this.activeQuestionNo', this.activeQuestionNo)
-//        if (this.activeQuestionNo === 7) {
-//          return true
-//        } else {
-//          return false
-//        }
-//      }
       /*关卡背景*/
     },
     watch: {
       villageProgress () {
-        console.log('watch 1', this.villageProgress.questionNo)
         if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
           this.showNextChapterBtn = true
         } else {
@@ -94,18 +87,32 @@
     },
     route: {
       data () {
-      }
-    },
-    ready () {
-      console.log('this.isLogin', this.isLogin)
-      if (!this.isLogin) {
-        console.log('this.isLogin', this.isLogin)
-        this.showChapterChoice()
-      } else {
-        this.JudgeProgress()
+        if (!this.isLogin) {
+          this.showChapterChoice()
+        } else {
+          this.JudgeProgress()
+        }
+      },
+      deactivate () {
+        this.hideMask()
+        this.activeChapterNo = 0
+        this.activeQuestionNo = 0
       }
     },
     methods: {
+      /*
+      * 更换头像位置
+      * */
+      changeUserImagePosition () {
+        if (this.villageProgress.questionNo !== 7) {
+          this.getOverLevel = `user-img-${this.villageProgress.questionNo + 1}`
+        } else {
+          this.getOverLevel = 'user-img-1'
+        }
+      },
+      /*
+      * 各关卡位置样式类名
+      * */
       getLevelCls (i) {
         return `level-${i + 1}`
       },
@@ -125,6 +132,7 @@
       * 判断进度
       * */
       JudgeProgress () {
+        this.changeUserImagePosition()
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
@@ -154,11 +162,15 @@
       * 显示章节选择浮层
       * */
       showChapterChoice () {
+        let choiceComponentData = {
+          chapterIntro: this.chapterIntro,
+          villageProgress: this.villageProgress
+        }
         this.showMask({
           component: 'freshVillage/ChapterChoice.vue',
           hideOnMaskTap: false,
-          callbackName: 'villageShowStory', //onChapterSelected
-          componentData: this.chapterIntro,
+          callbackName: 'onChapterSelected', //onChapterSelected
+          componentData: choiceComponentData,
           callbackFn: this.villageShowTheStory.bind(this)
         })
       },
@@ -166,10 +178,9 @@
       * 显示章节故事
       * */
       villageShowTheStory (chapterNum) {
-        this.activeChapterNo = chapterNum
-        this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
-        if (chapterNum <= this.villageProgress.chapterNo + 1) {
+        if ((!this.isLogin && chapterNum === 1) || ((this.isLogin) && (chapterNum <= this.villageProgress.chapterNo + 1))) {
           this.activeChapterNo = chapterNum
+          this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
           setTimeout(this.showChapterStory, 300)
         }
       },
@@ -189,6 +200,7 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
+        this.changeUserImagePosition()
         this.activeQuestionNo = 1
         setTimeout(() => {
           this.showQuestion()
@@ -226,7 +238,6 @@
           this.activeQuestionNo = level      // activeQuestionNo改变的契机
           this.showQuestion()
         }
-        console.log('onLevelTap', this.activeQuestionNo)
       },
       /*
       * 记录选择的项上传记录
@@ -287,6 +298,9 @@
        *
        * */
       showUpgradeJudgement () {
+        if (this.activeQuestionNo !== 6 && this.activeQuestionNo !== 7) {
+          this.changeUserImagePosition()
+        }
         if (this.activeQuestionNo === 6) {
          setTimeout(() => {
            this.showUpgrade(this.activeChapterNo)
@@ -334,9 +348,12 @@
           callbackFn: this.updateTheRecord.bind(this)
         })
       },
+      /*
+      * 提交答题记录
+      * */
       updateTheRecord () {
-        console.log('updateTheRecord')
         this.updateRecord(this.activeChapterNo, 7)
+        this.getOverLevel = 'user-img-1'
       }
     },
     components: {
@@ -353,7 +370,6 @@
     height: 100%;
     .level {
       position: absolute;
-      background-color: #00b7ee;
       width: 2.1rem;
       height: 2.1rem;
       &-6 {
@@ -379,6 +395,41 @@
       &-1 {
         left: 6.8rem;
         bottom: .2rem;
+      }
+    }
+    .user-img {
+      position: relative;
+      width: 2.4rem;
+      height: 2.4rem;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      &-7 {
+        left: 7.4rem;
+        top: -30.1rem;
+      }
+      &-6 {
+        left: 7.4rem;
+        top: -30.1rem;
+      }
+      &-5 {
+        left: 8.6rem;
+        top: -24.8rem;
+      }
+      &-4 {
+        left: 6.4rem;
+        top: -19.6rem;
+      }
+      &-3 {
+        left: 9.2rem;
+        bottom: 14.7rem;
+      }
+      &-2 {
+        left: 8.5rem;
+        bottom: 9.8rem;
+      }
+      &-1 {
+        left: 6.6rem;
+        bottom: 5rem;
       }
     }
   }
