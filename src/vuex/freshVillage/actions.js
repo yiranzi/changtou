@@ -78,17 +78,19 @@ export const getVillageProgress = ({ dispatch }) => {
 /**
  * 提交答题记录
  * @param dispatch
- * @param activeChapterNo ,activeQuestionNo
+ * @param chapterNo ,questionNo
  * @returns {Promise}
 */
-export const updateAnswerRecord = ({ dispatch }, chapterNo, questionNo) => {
-  console.log('chapterNo questionNo', chapterNo, questionNo)
+export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
+  let message = {chapterNo, questionNo}
+  dispatch('FRESH_VILLAGE_PROGRESS', message)
   //return new Promise(
   //  (resolve, reject) => {
   //    postWithinAuth({
   //      url: getUrl('village_update_answer_record').replace(':chapterNo', chapterNo).replace(':questionNo', questionNo)
   //    }).then(
   //      function () {
+  //        dispatch('FRESH_VILLAGE_PROGRESS', message)
   //        resolve()
   //      },
   //      function (err) {
@@ -101,7 +103,7 @@ export const updateAnswerRecord = ({ dispatch }, chapterNo, questionNo) => {
 /*
 * 获取章节卡片内容
 * */
-export const getChapterCardInfo = ({dispatch}) => {
+export const getChapterIntro = ({dispatch}) => {
   let chapterCardInfo = []
   for (let i = 0; i < material.length; i++) {
     chapterCardInfo.push({chapterNo: material[i].chapterNo, title: material[i].title, cover: material[i].cover})
@@ -111,7 +113,7 @@ export const getChapterCardInfo = ({dispatch}) => {
 /*
 * 获取某一章节
 * */
-export const getChapterContent = ({dispatch}, chapterNo) => {
+export const getChapter = ({dispatch}, chapterNo) => {
   return material.find((chapter) => {
      return chapter.chapterNo === chapterNo
   })
@@ -119,7 +121,7 @@ export const getChapterContent = ({dispatch}, chapterNo) => {
 /*
  * 获取对应章节故事，任务
  * */
-export const getChapterStory = ({dispatch}, chapter) => {
+export const getStory = ({dispatch}, chapter) => {
   return {story: chapter.story, task: chapter.task}
 }
 /*
@@ -137,7 +139,7 @@ export const getQuestion = ({dispatch}, questionArr, questionNo) => {
  * proverbs和wisdom的content  大段开始添加$#表示，结束用#$表示(后期处理时替换为<div></div>)，
  *                           小段开始用&*表示，结束*&用表示,段间无换行空格(后期处理时用<p></p>替换)
  * proverbs中的作者用@+  +@扩起来(后期处理时使用<span></span>替换)
- * expandsMaterialType 类型1:今日小智2:投资箴言,3:突发事件
+ * materialType 类型1:今日小智2:投资箴言,3:突发事件
  * answer A为1，B为2, C为3, D为4
  * */
 /*
@@ -157,7 +159,7 @@ const material = [
         options: ['带着钱一起去环游世界', '激情去股市来一发', '赶快去抢房啦', '弄去银行吃一辈子利息 '],     // 题目选项
         answer: 4,     // 题目最佳答案
         feedback: '爽，啥都不用干就有这么多钱，有钱了想怎么花就怎么花。今天花，明天花…直到花完最后一分钱，然后难道又有个某某亲戚巨额遗产等着你继承。天若果真这样，此刻起我要紧紧抱住你大腿！',   // 答题反馈
-        expandsMaterialType: 1, // 其他扩展资料类型1:今日小智2:投资箴言,3:突发事件
+        materialType: 1, // 其他扩展资料类型1:今日小智2:投资箴言,3:突发事件
         wisdom: {
           title: '积谷防饥',    //今日小智标题
           content: '$#&*在很久很久以前,有一个妇人,她每天煮饭的时候,总是从锅里抓一把米出来,放到一个特备的米缸中。有人讥笑过她这种行为,但她不以为意,依然故我。*&&*过了不久,发生了灾害,地里粮食严重歉收,很多人家都揭不开锅了。但这位妇人家由于有一个特备的米缸,得以熬过了饥荒。*&#$$#点评:生活中很多人头脑中没有理财的概念,认为只有富贵人家或炒股发达等赚大钱的人才谈得上理财。但真正的理财专家认为,理财是管理财产的学问,并不是富人才需要,生活中的每个人都要懂得如何分配每月的收入与支出,这样才能做到“积谷防饥”,从温饱逐渐走向小康。#$$#人们常有的一种通病,就是有钱时随意乱花,不懂得储蓄,到了急用时才发现钱到用时方恨少。' +
@@ -175,7 +177,7 @@ const material = [
         options: ['甩门而出让工作见鬼去', '班吗可以上但得挪个窝', '什么事也没发生该干嘛干嘛', '哎呦不知道嘞先躲起来再说'],
         answer: 3,
         feedback: '我上班就是为了钱，不要跟我谈理想，我的理想就是不上班。”这是朋友圈里近来刷爆了一条信息。上班一定就是为了挣钱吗？真的不是。如果是，可能是你选择了一条安逸的路。',
-        expandsMaterialType: 2,
+        materialType: 2,
         wisdom: {
           title: '',
           content: ''
@@ -194,7 +196,7 @@ const material = [
         answer: 4,
         feedback: '人在江湖飘，哪能不挨刀？其中一刀，就是各种借钱。通常来说，对方要借钱，必然早就想好了借钱理由，你要做的，' +
         '是根据对对方的了解，判断这个理由是否成立，并评估风险。',
-        expandsMaterialType: 1,
+        materialType: 1,
         wisdom: {
           title: '月光先生',
           content: '$#&*有这么一位“月光先生”,他拥有某名牌高校的博士学位,就职于一家外企的中国分部,任部门经理,不算奖金,年薪30万元。他穿着名牌西装,开着奔驰车,出入高档消费场所,真可谓是风光无限,羡煞无数人。可是这位仁兄,每月的薪水都花光了' +
@@ -216,7 +218,7 @@ const material = [
         options: ['买啊这是必须的', '哪个贵就买哪个好了', '手里的还能用买多了占地方', '我有钱买两台送你一台'],
         answer: 3,
         feedback: '哈哈哈，这下终于体会了一把身为有钱银的乐趣。有钱，任性！闭着眼睛把新款都搬回家！但是自己真的有那么多手拿吗？',
-        expandsMaterialType: 2,
+        materialType: 2,
         wisdom: {
           title: '',
           content: ''
@@ -235,7 +237,7 @@ const material = [
         options: ['我有的是钱给你拿去用', '我又不会看病看病找医生啊', '钱可以借但这利息怎么个算', '我去给叔找个好大夫钱不担心'],
         answer: 4,
         feedback: '借钱那些事:借是情分,不借是本分!我们在出借钱的时候先要想清楚，这笔钱借出去对我们自己的生活有没有直接影响，有朝一日没有能力偿还这个钱，我们能不能承受得起由此带来的后果。',
-        expandsMaterialType: 3,
+        materialType: 3,
         wisdom: {
           title: '',
           content: ''
@@ -252,7 +254,7 @@ const material = [
         options: ['买套豪华别墅', '买几个位置好的商铺出租', '买一艘豪华游艇', '去香港法国意大利买买买'],
         answer: 2,
         feedback: '有了钱不仅应该考虑消费，还应该考虑投资，富人的特征是会不断给自己积累资产，只知道消费的人再多的钱也会花光的！',
-        expandsMaterialType: 1,
+        materialType: 1,
         wisdom: {
           title: '摆脱月光这个鬼',
           content: '$#月光不可怕，可怕的是一直让自己陷入这种无法自拔的状态。#$$#&*1.心态问题冲动是魔鬼！*&&*比如老王买了大金链，你一看虚荣心唰唰上头刷爆信用卡也买买买，结果人家老王依然是土豪，你买了却变成穷逼——因为你把顺序搞反了！' +
@@ -283,7 +285,7 @@ const material = [
         options: ['会理财的人一定都会投资', '投资就是理财没区别', '投资只是理财的一个方面理财是一个系统规划', '投资就是买卖股票 理财就买银行理财产品'],
         answer: 3,
         feedback: '从概念上说理财包含投资；投资一般都只是短期行为，它关注只是眼前的利益，因此特别重视回报，而理财则是长期行为，它看重的是稳健及长期。',
-        expandsMaterialType: 2,
+        materialType: 2,
         wisdom: {
           title: '',
           content: ''
@@ -312,7 +314,7 @@ const material = [
         options: ['高利贷', '典当行', '银行及金融机构', '淘宝'],
         answer: 3,
         feedback: '只有银行及金融机构可以发行理财产品哦！虽然你在淘宝买得到，但那只是承销哦！',
-        expandsMaterialType: 1,
+        materialType: 1,
         wisdom: {
           title: '一只火鸡和一头牛',
           content: '$#一只火鸡和一头牛闲聊，火鸡说：我希望能飞到树顶，可我没有勇气。牛说：为什么不吃一点我的牛粪呢，他们很有营养。火鸡吃了一点牛粪，发现它确实给了它足够的力量飞到第一根树枝，第二天，火鸡又吃了更多的牛粪，' +

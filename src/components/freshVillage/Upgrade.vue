@@ -11,7 +11,7 @@
       <div class="upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.{{componentData.chapterNo}}</div>
+        <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>
@@ -30,6 +30,9 @@
       }
     },
     methods: {
+      updateRecord () {
+        this.$dispatch('villageUpdateRecord')
+      }
     }
   }
 </script>
@@ -57,6 +60,17 @@
       height: 15rem;
       border-radius: 20px;
       background-color: #ca414b;
+    }
+    .close-icon:after {
+      display: inline-block;
+      position: absolute;
+      z-index: 1;
+      right: 1rem;
+      top: 1rem;
+      font-family: 'myicon';
+      content: '\e90d';
+      color: #aaa;
+      font-size: .8rem;
     }
     .user-img {
       display: block;

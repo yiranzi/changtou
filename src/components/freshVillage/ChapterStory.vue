@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     onEnterMainPageTap () {
-      this.$dispatch('enterChapter')
+      this.$dispatch('villageStartChapter')
     }
   }
 }

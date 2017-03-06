@@ -29,7 +29,7 @@
         this.$dispatch('hideMask')
       },
       onOptionTap (answer) {
-        this.$dispatch('tapOption', answer === this.componentData.answer)
+        this.$dispatch('villageAnswerQuestion', answer === this.componentData.answer)
       }
     }
   }

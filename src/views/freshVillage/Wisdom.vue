@@ -5,11 +5,11 @@
 <template>
   <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="fresh-village-wisdom">
-      <span class="close-icon"v-touch:tap="onCloseTap"></span>
+      <span class="close-icon" v-touch:tap="onCloseTap"></span>
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
-          <div class="content-title">{{wisdomData.title}}</div>
+          <div class="content-title">{{wisdomData && wisdomData.title}}</div>
         </div>
         <div class="wisdom-content">{{{wisdomContent}}}</div>
       </div>
@@ -34,7 +34,7 @@ export default {
   computed: {
     /*小智的内容*/
     wisdomContent () {
-      return this.wisdomData.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
+      return this.wisdomData && this.wisdomData.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
     }
   },
   methods: {

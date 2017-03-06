@@ -24,10 +24,10 @@ export default {
   },
   methods: {
     onCloseTap () {
-      this.$dispatch('hideMask')
+      this.$dispatch('closeEmergency')
     },
     onConfirmTap () {
-      this.$dispatch('hideMask')
+      this.$dispatch('closeEmergency')
     }
   }
 }

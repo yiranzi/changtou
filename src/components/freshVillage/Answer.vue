@@ -27,7 +27,7 @@ export default {
       this.$dispatch('hideMask')
     },
     next () {
-      this.$dispatch('showExpandsData')
+      this.$dispatch('showExpands')
     }
   }
 }

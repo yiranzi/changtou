@@ -62,6 +62,7 @@ Vue.mixin({
        * @param callbackFn
        */
     showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
+      console.log('00')
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
 
@@ -180,7 +181,6 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, componentData, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
-
       // 执行完毕后, 重置标识
       const realCallBack = (params) => {
         callbackFn(params)

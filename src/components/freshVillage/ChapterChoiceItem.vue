@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     enterChapter (chapterNo) {
-      this.$dispatch('enter-chapter', chapterNo)
+      this.$dispatch('village-enter-chapter', chapterNo)
     }
   }
 }

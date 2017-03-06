@@ -6,96 +6,105 @@
   <div>
     <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
       <div class="other-element">
-        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapterContent.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
+        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
         <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap=""/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
-        <div class="go-btn" v-touch:tap="goNextLevel" :class="{'next-btn' : activeQuestionNo !== 0}"></div>
+        <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
       </div>
-      <div class="level level-sixth" v-touch:tap="onLevelTap(6)"></div>
-      <div class="level level-fifth" v-touch:tap="onLevelTap(5)"></div>
-      <div class="level level-fouth" v-touch:tap="onLevelTap(4)"></div>
-      <div class="level level-third" v-touch:tap="onLevelTap(3)"></div>
-      <div class="level level-second" v-touch:tap="onLevelTap(2)"></div>
-      <div class="level level-first" v-touch:tap="onLevelTap(1)"></div>
+      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
     </div>
-    <wisdom v-if="showWisdom" :wisdom-Data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
+    <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
 </div>
 </template>
 <script>
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
   import {villageActions} from '../../vuex/actions'
- // import chapterChoice from '../../components/freshVillage/ChapterChoice.vue'
-
   export default {
-  vuex: {
-    getters: {
-      isLogin: userGetters.isLogin,
-      avatar: userGetters.avatar,
-      villageProgress: villageGetters.villageProgress
-    },
-    actions: {
-      getChapterCardInfo: villageActions.getChapterCardInfo,
-      getChapterContent: villageActions.getChapterContent,
-      getChapterStory: villageActions.getChapterStory,
-      getQuestion: villageActions.getQuestion,
-      updateAnswerRecord: villageActions.updateAnswerRecord
-    }
-  },
-  data () {
-    return {
-      activeChapterNo: 1,
-      activeQuestionNo: 1,
-      questionContent: {},
-      lifeScore: 0,
-      showWisdom: false
-    }
-  },
-  computed: {
-    /*章节号对应汉字*/
-    chapterCharacterNo () {
-      const characterArray = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
-      return characterArray[this.activeChapterNo - 1]
-    },
-    /*章节卡片信息*/
-    chapterCardInfo () {
-      return this.getChapterCardInfo()
-    },
-    /*某一章节的全部信息*/
-    chapterContent () {
-      console.log('2')
-      return this.getChapterContent(this.activeChapterNo)
-    },
-    /*今日小智内容*/
-    wisdomData () {
-      return this.questionContent.wisdom
-    },
-    /*关卡背景*/
-    bgStyle () {
-      if (this.activeChapterNo === 1) {
-        return 'chapter1-bg'
-      } else if (this.activeChapterNo === 2) {
-        return 'chapter2-bg'
+    vuex: {
+      getters: {
+        isLogin: userGetters.isLogin,
+        avatar: userGetters.avatar,
+        villageProgress: villageGetters.villageProgress
+      },
+      actions: {
+        getChapterIntro: villageActions.getChapterIntro,
+        getChapter: villageActions.getChapter,
+        getStory: villageActions.getStory,
+        getQuestion: villageActions.getQuestion,
+        updateRecord: villageActions.updateRecord
       }
-    }
-  },
-  watch: {
-  },
-  route: {
+    },
     data () {
-    }
-  },
-  ready () {
-    console.log('1')
-    this.getActiveQuestion()
-  //  this.showProverbs()
-//    if (!this.isLogin) {
-    //  this.showChapterChoice()
-//    } else {
-//      this.JudgeProgress()
-//    }
-  },
+      return {
+        activeChapterNo: 0,
+        activeQuestionNo: 0,
+        chapter: {},
+        question: {},
+        lifeScore: 0,
+        showWisdom: false,
+        bgStyle: 'chapter1-bg'
+      }
+    },
+    computed: {
+      /*章节号对应汉字*/
+      chapterCharacterNo () {
+        const characterArray = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+        return characterArray[this.activeChapterNo - 1]
+      },
+      /*章节卡片信息*/
+      chapterIntro () {
+        return this.getChapterIntro()
+      },
+      /*某一章节的全部信息*/
+//      chapter () {
+//        return this.getChapter(this.activeChapterNo)
+//      },
+      /*今日小智内容*/
+      wisdomData () {
+        return this.question.wisdom
+      },
+      showNextChapterBtn () {
+        console.log('this.activeQuestionNo', this.activeQuestionNo)
+        if (this.activeQuestionNo === 7) {
+          return true
+        } else {
+          return false
+        }
+      }
+      /*关卡背景*/
+    },
+    watch: {
+      villageProgress () {
+        if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
+          this.showNextChapterBtn = true
+        }
+      },
+      activeChapterNo () {  //switch
+        if (this.activeChapterNo === 1) {
+          this.bgStyle = 'chapter1-bg'
+        } else if (this.activeChapterNo === 2) {
+          this.bgStyle = 'chapter2-bg'
+        }
+      }
+    },
+    route: {
+      data () {
+      }
+    },
+    ready () {
+      console.log('this.isLogin', this.isLogin)
+      if (!this.isLogin) {
+        console.log('this.isLogin', this.isLogin)
+        this.showChapterChoice()
+      } else {
+        this.JudgeProgress()
+      }
+    },
     methods: {
+      getLevelCls (i) {
+        return `level-${i + 1}`
+      },
       /*
       * 退出新手村
       * */
@@ -112,23 +121,26 @@
       * 判断进度
       * */
       JudgeProgress () {
-  //      if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
-  //        this.showChapterChoice()
-  //      } else {
-  //        if () {
-  //
-  //        }
-
+        if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
+          this.activeChapterNo = this.villageProgress.chapterNo + 1
+          this.showChapterChoice()
+        } else {
+          if (this.villageProgress.questionNo === 6) {
+            this.showUpgrade(this.villageProgress.chapterNo)
+          }
+          this.activeChapterNo = this.villageProgress.chapterNo
+          this.activeQuestionNo = this.villageProgress.questionNo + 1
+        }
+        this.chapter = this.getChapter(this.activeChapterNo)
       },
       /*
-      * 点击进入下一关
+      * 点击进入下一关,或是下一章
       * */
-      goNextLevel () {
-        if (this.activeQuestionNo < 6) {
-          this.activeQuestionNo += 1
-          this.showQuestion()
+      goNextStep () {
+        if (this.showNextChapterBtn) {
+          this.showChapterChoice()
         } else {
-          return
+          this.showQuestion()
         }
       },
       /*
@@ -138,20 +150,21 @@
         this.showMask({
           component: 'freshVillage/ChapterChoice.vue',
           hideOnMaskTap: false,
-          callbackName: 'showStory',
-          componentData: this.chapterCardInfo,
-          callbackFn: this.showTheStory.bind(this)
+          callbackName: 'villageShowStory', //onChapterSelected
+          componentData: this.chapterIntro,
+          callbackFn: this.villageShowTheStory.bind(this)
         })
       },
       /*
       * 显示章节故事
       * */
-      showTheStory (chapterNum) {
+      villageShowTheStory (chapterNum) {
         this.activeChapterNo = chapterNum
-        setTimeout(() => {
-          this.showChapterStory()
-        },
-        300)
+        this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
+        if (chapterNum <= this.villageProgress.chapterNo + 1) {
+          this.activeChapterNo = chapterNum
+          setTimeout(this.showChapterStory, 300)
+        }
       },
       /*
       * 显示章节故事浮层
@@ -160,15 +173,16 @@
         this.showMask({
           component: 'freshVillage/ChapterStory.vue',
           hideOnMaskTap: false,
-          callbackName: 'enterChapter',
-          componentData: this.getChapterStory(this.chapterContent),
-          callbackFn: this.enterChapter.bind(this) //组件上的
+          callbackName: 'villageStartChapter',
+          componentData: this.getStory(this.chapter),
+          callbackFn: this.startChapter.bind(this) //组件上的
         })
       },
       /*
       * 从小故事下一步按钮进入答题
       * */
-      enterChapter () {
+      startChapter () {
+        this.activeQuestionNo = 1
         setTimeout(() => {
           this.showQuestion()
         },
@@ -178,7 +192,7 @@
       * 获取当前问题内容
       * */
       getActiveQuestion () {
-        this.questionContent = this.getQuestion(this.chapterContent.questionArr, this.activeQuestionNo)
+        this.question = this.getQuestion(this.chapter.questionArr, this.activeQuestionNo)
       },
       /*
        * 显示答题浮层
@@ -187,34 +201,37 @@
         this.getActiveQuestion()
         this.showMask({
           component: 'freshVillage/Question.vue',
-          hideOnMaskTap: true,
-          callbackName: 'tapOption',
-          componentData: this.questionContent,
-          callbackFn: this.tapTheOption.bind(this)
+          hideOnMaskTap: false,
+          callbackName: 'villageAnswerQuestion',
+          componentData: this.question,
+          callbackFn: this.answerQuestion.bind(this)
         })
       },
       /*
        * 选择关卡
        * */
       onLevelTap (level) {
-        this.activeQuestionNo = level
-        this.showQuestion()
+        if (level <= this.villageProgress.questionNo) {
+          this.activeQuestionNo = level
+          this.getActiveQuestion()
+          this.showTheExpands()
+        } else if (level === this.villageProgress.questionNo + 1) {
+          this.activeQuestionNo = level      // activeQuestionNo改变的契机
+          this.showQuestion()
+        }
+        console.log('onLevelTap', this.activeQuestionNo)
       },
       /*
       * 记录选择的项上传记录
       * */
-      tapTheOption (result) {
+      answerQuestion (result) {
         if (!this.isLogin) {
           this.$route.router.go('/entry')
         } else {
-          if (result) {
-            this.lifeScore = 10
-          } else {
-            this.lifeScore = 2
-          }
-          this.updateAnswerRecord(this.activeChapterNo, this.activeQuestionNo)
+          this.lifeScore = result ? 10 : 2
+          this.updateRecord(this.activeChapterNo, this.activeQuestionNo)
           setTimeout(() => {
-            this.showAnswerResult()
+            this.showResult()
           },
           300)
         }
@@ -222,41 +239,33 @@
       /*
       * 显示答题结果浮层
       * */
-      showAnswerResult () {
+      showResult () {
         let answerResultData = {
-          feedback: this.questionContent.feedback,
+          feedback: this.question.feedback,
           lifeScore: this.lifeScore
         }
         this.showMask({
-          component: 'freshVillage/AnswerResult.vue',
-          hideOnMaskTap: true,
-          callbackName: 'showExpandsData',
+          component: 'freshVillage/Answer.vue',
+          hideOnMaskTap: false,
+          callbackName: 'showExpands',
           componentData: answerResultData,
-          callbackFn: this.showTheExpandsData.bind(this) //组件上的
+          callbackFn: this.showTheExpands.bind(this)
         })
       },
       /*
       * 显示拓展材料，根据类型显示箴言，小智或突发事件
       * */
-      showTheExpandsData () {
-        console.log('this.questionContent.expandsMaterialType', this.questionContent, this.questionContent.expandsMaterialType)
-        if (this.questionContent.expandsMaterialType === 1) {
-          console.log(1)
-          this.showWisdom = true
-        } else if (this.questionContent.expandsMaterialType === 2) {
-          console.log(2)
-          setTimeout(() => {
-            this.showProverbs()
-          }
-        ,
-          300)
-        } else {
-          console.log(3)
-          setTimeout(() => {
-            this.showEmergency()
-          }
-        ,
-          300)
+      showTheExpands () {
+        let type = this.question.materialType
+        switch (type) {
+          case 1:
+            this.showWisdom = true
+            break
+          case 2:
+            setTimeout(this.showProverbs, 300)
+            break
+          default :
+            setTimeout(this.showEmergency, 300)
         }
       },
       /*
@@ -264,6 +273,18 @@
       * */
       closeWisdom () {
         this.showWisdom = false
+        this.showUpgradeJudgement()
+      },
+      /*
+       * 判断是否显示升级页面
+       *
+       * */
+      showUpgradeJudgement () {
+        if (this.activeQuestionNo === 6) {
+         setTimeout(() => {
+           this.showUpgrade(this.activeChapterNo)
+         }, 300)
+        }
       },
       /*
       * 显示箴言
@@ -271,38 +292,43 @@
       showProverbs () {
         this.showMask({
           component: 'freshVillage/Proverbs.vue',
-          hideOnMaskTap: true,
-          componentData: this.questionContent.proverbs
+          hideOnMaskTap: false,
+          callbackName: 'closeProverb',
+          componentData: this.question.proverbs,
+          callbackFn: this.showUpgradeJudgement.bind(this)
         })
       },
+
       /*
       * 显示突发事件
       * */
       showEmergency () {
         this.showMask({
           component: 'freshVillage/Emergency.vue',
-          hideOnMaskTap: true,
-          componentData: this.questionContent.emergency
+          hideOnMaskTap: false,
+          callbackName: 'closeEmergency',
+          componentData: this.question.emergency,
+          callbackFn: this.showUpgradeJudgement.bind(this)
         })
       },
       /*
       * 显示章节结束晋级页面
       * */
-      showUpgrade () {
+      showUpgrade (chapterNo) {
         let upgradePageData = {
           avatar: this.avatar,
-          chapterNo: this.activeChapterNo
+          chapterNo: chapterNo
         }
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
           hideOnMaskTap: true,
-          callbackName: 'getResult',
+          callbackName: 'villageUpdateRecord',
           componentData: upgradePageData,
-          callbackFn: this.getResult.bind(this) //组件上的
+          callbackFn: this.updateTheRecord.bind(this)
         })
       },
-      getResult () {
-        console.log('getResult')
+      updateTheRecord () {
+        this.updateRecord(this.activeChapterNo, 7)
       }
     },
     components: {
@@ -322,27 +348,27 @@
       background-color: #00b7ee;
       width: 2.1rem;
       height: 2.1rem;
-      &-sixth {
+      &-6 {
         left: 7.7rem;
         top: 6.1rem;
       }
-      &-fifth {
+      &-5 {
         left: 8.96rem;
         top: 11.4rem;
       }
-      &-fouth {
+      &-4 {
         left: 6.7rem;
         top: 16.6rem;
       }
-      &-third {
+      &-3 {
         left: 9.4rem;
         bottom: 9.7rem;
       }
-      &-second {
+      &-2 {
         left: 8.9rem;
         bottom: 4.8rem;
       }
-      &-first {
+      &-1 {
         left: 6.8rem;
         bottom: .2rem;
       }

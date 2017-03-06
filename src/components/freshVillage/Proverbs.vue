@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     onCloseTap () {
-      this.$dispatch('hideMask')
+      this.$dispatch('closeProverb')
     }
   }
 }
