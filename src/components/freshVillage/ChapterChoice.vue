@@ -30,7 +30,7 @@
     },
     computed: {
       presentChapter () {
-        return this.componentData.villageProgress/* .chapterNo + 1*/
+        return this.componentData.villageProgress
       }
     },
     watch: {
@@ -51,10 +51,10 @@
         if (chapterNum === 3) {
           return
         } else if (chapterNum === 2) {
-          if (this.presentChapter.chapterNo === 1 &&
-            (this.presentChapter.questionNo === 6 || this.presentChapter.questionNo === 7)) {
-            this.$dispatch('onChapterSelected', chapterNum)
+          if (this.presentChapter.chapterNo !== 2 && (this.presentChapter.questionNo !== 6 && this.presentChapter.questionNo !== 7 )) {
+            return
           }
+          this.$dispatch('onChapterSelected', chapterNum)
         } else {
           this.$dispatch('onChapterSelected', chapterNum)
         }
