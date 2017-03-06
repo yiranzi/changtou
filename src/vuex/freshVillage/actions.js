@@ -268,8 +268,8 @@ const material = [
         },
         proverbs: '',
         emergency: {
-          story: '',
-          score: ''
+          emergencyStory: '',
+          lifeScore: ''
         }
       }
     ]
@@ -305,7 +305,7 @@ const material = [
         options: ['投资理财就是把手中所有的钱一股脑都丢到理财产品中', '投资理财需要对投资品有一定的认识和判断力', '每个投资品都涉及到一点，那就会赚得更多', '老人家都说“股市猛于虎”，万万不能碰'],
         answer: 2,
         feedback: '理财投资不是指投资某个产品，而是财务资源的整合。它是指在金融市场上挑选不同的投资品买入，期待其帮我们赚钱的过程。在具备一定的理财基础之后才能去触碰理财产品哦',
-        extendsMaterialType: 1,
+        materialType: 1,
         wisdom: {
           title: '夺取先机',
           content: '$#商人带两袋大蒜到某地，当地人没见过大蒜，极为喜爱，于是赠商人两袋金子。另一商人听说，便带两袋大葱去，当地人觉得大葱更美味，金子不足表达感情，于是把两袋大蒜给了他。#$' +
@@ -313,8 +313,8 @@ const material = [
         },
         proverbs: '',
         emergency: {
-          story: '',
-          score: ''
+          emergencyStory: '',
+          lifeScore: ''
         }
       },
       {
@@ -323,15 +323,15 @@ const material = [
         options: ['父母建议', '理财网站推荐', '自己量化分析', '基友指点迷津'],
         answer: 3,
         feedback: '靠谁都不如靠自己，学好量化分析才是王道，不管是银行理财产品还是基金股票，分析起来都没有问题！',
-        extendsMaterialType: 2,
+        materialType: 2,
         wisdom: {
           title: '',
           content: ''
         },
         proverbs: '&*最终决定投资者命运的既不是股票市场也不是那些上市公司，而是投资者自己决定了自己的命运。只要用心对股票作一点点研究，普通投资者也能成为股票投资专家，并且在选股方面的成绩能像华尔街专家一样出色。*&@+彼得·林奇+@',
         emergency: {
-          story: '',
-          score: ''
+          emergencyStory: '',
+          lifeScore: ''
         }
       },
       {
@@ -340,15 +340,15 @@ const material = [
         options: ['买个5万块钱的彩票祈祷中500万', '学习基金知识去买基金', '把10万块拿来都投资P2P产品', '主动要求加班坐等老板给自己加薪'],
         answer: 2,
         feedback: '财富自由，就是被动收入超过你的花销，你不需要工作就有的收入即被动收入，如出租房屋，股票红利，银行利息。也有一种说法是拥有100万美元的可投资资产就实现财富自由了哦。',
-        extendsMaterialType: 3,
+        materialType: 3,
         wisdom: {
           title: '',
           content: ''
         },
         proverbs: '',
         emergency: {
-          story: '今天提交的方案比预期的顺利，下周就开始执行新方案。真是太开心了，去街角彩票店为自己买一注彩票以示庆祝。',
-          score: '+5'
+          emergencyStory: '今天提交的方案比预期的顺利，下周就开始执行新方案。真是太开心了，去街角彩票店为自己买一注彩票以示庆祝。',
+          lifeScore: '+5'
         }
       },
       {
@@ -357,7 +357,7 @@ const material = [
         options: ['MMM金融社区', '民间借贷', 'P2P平台', '以上全部'],
         answer: 4,
         feedback: '这几个投资品都是高收益的产品，风险要么极高要么未知，而有些甚至让你本金都亏得一点不剩。投资需谨慎。',
-        extendsMaterialType: 1,
+        materialType: 1,
         wisdom: {
           title: '换位思维',
           content: '$#一富豪到华尔街银行借5000元贷款，借期两周，银行贷款须有抵押，富豪用停在门口的劳斯莱斯做抵押。银行职员将他的劳斯莱斯停在地下车库里，然后借给富豪5000元，' +
@@ -365,8 +365,8 @@ const material = [
         },
         proverbs: '',
         emergency: {
-          story: '',
-          score: ''
+          emergencyStory: '',
+          lifeScore: ''
         }
       },
       {
@@ -375,15 +375,15 @@ const material = [
         options: ['银行倒闭可能性较低，所以比一般产品安全性相对较高', '定期存款的流动性比基金还差不能随时取款', '有银行在背后定存的收益率远高于股票投资', '资产稳定持续增长收益率在10%左右'],
         answer: 1,
         feedback: '定期存款的收益率只有3%左右，但是风险相对其他投资品来说更小，安全性非常高，本金一般情况下不会亏损。',
-        extendsMaterialType: 2,
+        materialType: 2,
         wisdom: {
           title: '',
           content: ''
         },
         proverbs: '&*“你可以整天做各种投资，但除非基本面是对的，否则你不会有什么收获。如果基本面大体判断正确，好消息接连不断，你觉得这是运气吗？如果你希望成为幸运者，请做足功课。” *&@+罗杰斯+@',
         emergency: {
-          story: '',
-          score: ''
+          emergencyStory: '',
+          lifeScore: ''
         }
       }
     ]
