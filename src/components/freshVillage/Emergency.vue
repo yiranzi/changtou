@@ -62,7 +62,7 @@ export default {
     .emergency-middle {
       background-color: #fff;
       width: 100%;
-      height: 13.5rem;
+      min-height: 13.5rem;
     }
     .emergency-content {
       padding: 1rem;
@@ -86,6 +86,7 @@ export default {
       margin: 0 1.5rem;
       color: #888;
       font-size: .65rem;
+      padding-bottom: 1rem;
     }
     .round {
       display: inline-block;

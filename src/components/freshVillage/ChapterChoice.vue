@@ -51,7 +51,7 @@
         if (chapterNum === 3) {
           return
         } else if (chapterNum === 2) {
-          if (this.presentChapter.chapterNo !== 2 && (this.presentChapter.questionNo !== 6 && this.presentChapter.questionNo !== 7 )) {
+          if (this.presentChapter.chapterNo !== 2 && (this.presentChapter.questionNo !== 6 && this.presentChapter.questionNo !== 7)) {
             return
           }
           this.$dispatch('onChapterSelected', chapterNum)

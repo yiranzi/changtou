@@ -62,7 +62,7 @@ export default {
     .result-middle {
       background-color: #fff;
       width: 100%;
-      height: 13.5rem;
+      min-height: 13.5rem;
     }
     .result-explain{
       padding: 1rem;
@@ -83,7 +83,7 @@ export default {
       border-top: 1px solid #f0eff5;
     }
     .life-score {
-      margin: 0 1.5rem;
+      padding: 0 1.5rem 1rem;
       color: #888;
       font-size: .65rem;
     }

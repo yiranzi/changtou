@@ -34,7 +34,7 @@ export default {
 </script>
 <style lang="less">
   .fresh-village-proverbs {
-    height: 22rem;
+    min-height: 22rem;
     background-color: #fff;
     border-radius: 20px;
     .close-icon:after{
@@ -65,7 +65,7 @@ export default {
         padding-left: 1rem;
       }
       &-content {
-        margin: 1.5rem 1rem;
+        padding: 1.5rem 1rem;
         p {
           margin: 0;
           padding-bottom: .5rem;
@@ -74,7 +74,8 @@ export default {
         }
         span {
           display: inline-block;
-          float:right;
+          position: absolute;
+          right: 1rem;
           margin-top: 1rem;
           font-size: .65rem;
           color: #666;
