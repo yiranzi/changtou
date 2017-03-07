@@ -10,3 +10,9 @@ export const professionalProduct = (state) => {
 export const vipProduct = (state) => {
   return state.strategyProduct.vipProduct
 }
+
+// 获取qq数据
+export const groupNumber = (state) => {
+  console.log('try get')
+  return state.strategyProduct.sGroupNumber
+}

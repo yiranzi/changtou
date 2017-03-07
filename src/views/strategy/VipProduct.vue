@@ -8,6 +8,7 @@
     <scroll-text :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
+        <group-number :group-number="groupNumber"></group-number>
         <duo-yinzi :duoyizi="vipProduct.duoYinZi"></duo-yinzi>
         <zhi-shubao :zhishubao="vipProduct.zhiShuBao"></zhi-shubao>
         <ding-toubao :dingtoubao="vipProduct.dingTouBao"></ding-toubao>
@@ -26,15 +27,18 @@
   import ScrollText from '../../components/strategy/StrategyScroll.vue'
   import {strategyProductGetters, strategyNoticeGetters} from '../../vuex/getters'
   import {strategyProductActions, strategyNoticeActions} from '../../vuex/actions'
+  import GroupNumber from '../../components/strategy/StrategyQQGroup.vue'
 export default {
   vuex: {
     getters: {
       vipProduct: strategyProductGetters.vipProduct,
-      notice: strategyNoticeGetters.strategyNotice
+      notice: strategyNoticeGetters.strategyNotice,
+      groupNumber: strategyProductGetters.groupNumber
     },
     actions: {
       getVipProduct: strategyProductActions.getVipProduct,
-      getVipNotice: strategyNoticeActions.getVipNotice
+      getVipNotice: strategyNoticeActions.getVipNotice,
+      DownLoadGroupData: strategyProductActions.getGroupNumber
     }
   },
   data () {
@@ -45,7 +49,7 @@ export default {
   route: {
       data () {
         // 每一次进入页面都能获取实时的通知文本
-        return Promise.all([this.getVipProduct(), this.getVipNotice()]).then(
+        return Promise.all([this.getVipProduct(), this.getVipNotice()], this.DownLoadGroupData()).then(
           this.setScrollerHeight()
         )
       }
@@ -73,7 +77,8 @@ export default {
     ZhiShubao,
     DingToubao,
     FenJibao,
-    ScrollText
+    ScrollText,
+    GroupNumber
   }
 }
 </script>

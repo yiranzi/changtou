@@ -5,7 +5,8 @@
 
 const state = {
   professionalProduct: {},
-  vipProduct: {}
+  vipProduct: {},
+  sGroupNumber: ''
 }
 
 const mutations = {
@@ -27,6 +28,17 @@ const mutations = {
      */
   STRATEGY_UPDATE_VIP_PRODUCT (state, vipProduct) {
     state.vipProduct = vipProduct
+  },
+
+  /**
+   * 更新 QQ群信息
+   * @param state
+   * @param professionalProduct
+   * @constructor
+   */
+  UPDATE_GROUP_INFO (state, sGroupNumber) {
+    console.log('try change')
+    state.sGroupNumber = sGroupNumber
   }
 }
 

@@ -127,3 +127,33 @@ export const getProfessionalProduct = ({dispatch}) => {
       )
     })
 }
+
+/**
+ * 下载QQ群 信息
+ * @param dispatch
+ * @returns {Promise}
+ */
+export const getGroupNumber = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('strategy_qq_number')
+        }
+      ).then(
+        groupNumber => {
+          const number = makeData(groupNumber)
+          dispatch('UPDATE_GROUP_INFO', number)
+          resolve(groupNumber)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+
+const makeData = (groupNumber) => {
+  const sQQNumber = '123123123'
+  return sQQNumber
+}
