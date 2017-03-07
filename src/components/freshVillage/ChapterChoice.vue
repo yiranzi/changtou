@@ -6,12 +6,11 @@
   <div class="chapter-choice">
     <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=20.5rem;width:18.75rem">
       <div class="scroll-content active-position" >
-        <!--:style="activePosition"--><!--v-el:first-chapter -->
         <chapter-choice-item  v-for="chapterCardInfo in componentData.chapterIntro"
                               :chapter-card-info="chapterCardInfo"
                               v-on:village-enter-chapter="villageEnterChapter"
                               class="question-pic">
-        </chapter-choice-item><!--scrollPresentPosition-->
+        </chapter-choice-item>
       </div>
     </scroller>
   </div>

@@ -58,7 +58,7 @@
       },
       /*用户头像*/
       userImgUrl () {
-        return this.avatar ? this.avatar : '../../../static/image/defaultAvatar.png'
+        return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       },
       /*章节卡片信息*/
       chapterIntro () {

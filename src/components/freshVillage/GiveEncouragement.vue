@@ -5,11 +5,17 @@
 <template>
   <div class="village-encouragement">
     <span class="close-icon" v-touch:tap="onCloseTap"></span>
-    <div class="village-encouragement-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
+      <img class="encourage-img" :src="imgSrc"/>
+      <div class="encourage-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
   </div>
 </template>
 <script>
   export default {
+    data () {
+      return {
+        imgSrc: './static/image/give-encouragement.png'
+      }
+    },
     methods: {
       /**
        * 跪求鼓励吐槽
@@ -30,10 +36,28 @@
   .village-encouragement {
     width: 12.5rem;
     height: 16rem;
-    background: #e8f5f0 url("../../../static/image/give-encouragement.png") center 4.5rem no-repeat / 7.25rem 5.2rem;
-    border-radius: .5rem;
-    position: relative;
-    overflow: hidden;
+    background-color: #e8f5f0;
+    border-radius: 20px;
+    .encourage-img {
+      position: relative;
+      margin: 0 auto;
+      display: block;
+      top: 3.5rem;
+      width: 9rem;
+    }
+    .encourage-btn{
+      position: relative;
+      width: 8rem;
+      height: 1.7rem;
+      line-height: 1.7rem;
+      background: #49a385;
+      border-radius: .85rem;
+      text-align: center;
+      font-size: .8rem;
+      color: #fff;
+      margin: 0 auto;
+      top: 6rem;
+    }
     .close-icon{
       position: absolute;
       display: inline-block;
@@ -47,17 +71,6 @@
        font-size: .75rem !important;
        color: #aaa;
      }
-    }
-    .village-encouragement-btn {
-      width: 8rem;
-      height: 1.7rem;
-      line-height: 1.7rem;
-      background: #49a385;
-      border-radius: .85rem;
-      margin: 12.25rem auto 0;
-      text-align: center;
-      font-size: .8rem;
-      color: #fff;
     }
   }
 </style>
