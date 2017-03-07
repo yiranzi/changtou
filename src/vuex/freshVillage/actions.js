@@ -160,7 +160,7 @@ const material = [
     title: '一封陌生人的来信', //章节标题
     story: '某天小明收到一封神秘的信件，据说是从一位远方亲戚那里邮寄过来的信。先不管谁寄来的，重要的是小明马上会变成豪，一位继承了一大笔遗产的富豪。小明天天想着能有一大笔钱就好了，这下真有了一大笔钱，这该如何是好。', // 章节故事
     task: '帮助小明想想怎么安排这笔遗产',  //章节任务
-    cover: '../../../static/image/freshVillage/chapter1-cover.png',  //章节图片
+    cover: './static/image/freshVillage/chapter1-cover.png',  //章节图片
     questionArr: [
       {
         questionNo: 1, // 题目序号
@@ -286,7 +286,7 @@ const material = [
     title: '10万块让我如何待你',
     story: '话说距上次收到信的时间已过去两星期。按照具体继承日期再过两星期，就可以从那个远方的表舅的表叔的表的不知道什么亲戚的亲戚那里继承大笔遗产，但就在这时又来了一封信明确的告诉小明，想继承遗产必须先拿着给他的10万块钱进行投资或理财，不然不能继承这笔遗产。噢天，这下可怎么办？',
     task: '协助小明进行10万块投资理财计划',
-    cover: '../../../static/image/freshVillage/chapter2-cover.png',
+    cover: './static/image/freshVillage/chapter2-cover.png',
     questionArr: [
       {
         questionNo: 1,
@@ -402,7 +402,7 @@ const material = [
     '早上九点整对方律师如约而至，先问过小明10万元的执行情况，才正式宣布遗产的事宜----为使小明有能力更好的管理遗产，先继承90万（需达到年化15%以上），剩余部分待下一年才可完全继承，或者现在就放弃继承权。' +
     '第一次10万加第二次90万再减去各种税费共计到手90万。天啦！ 这是陷阱吗？不付出怎会有收获，小明打算接受条件。',
     task: '协助小明将到手的90万达到年化15%以上吧！',
-    cover: '../../../static/image/freshVillage/chapter3-cover.png',
+    cover: './static/image/freshVillage/chapter3-cover.png',
     questionArr: [
       {
         questionNo: 1,
