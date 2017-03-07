@@ -8,9 +8,10 @@
             若要开启，请在iPhone系统的“设置”-“通知”中，找到“长投学堂”并开启通知</p>
           <p class="tip" v-touch:tap="onTapTip">不再提示</p>
         </div>
-        <div class="msg" v-for="msg in msgArr" v-show="msgArr">
+        <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="isDetailTap && goDetailTap(msg)">
           <p class="msg-content">{{{msg.content }}}</p>
           <p class="msg-date">{{{msg.createTime}}}</p>
+          <span class="msg-see-detail" v-if="hasSeeDetail">查看详情</span>
         </div>
         <div class="no-msg" v-show="!msgArr">
           <img src="/static/image/mine/noMessages.png">
@@ -43,6 +44,7 @@
       width: 100%;
       border-bottom: 1px solid #f0eff5;
       background-color: #fff;
+      position: relative;
       .msg-content{
         padding: 0.7rem 0.5rem;
         margin: 0;
@@ -53,6 +55,13 @@
         margin: 0;
         font-size: 0.65rem;
         color: #aaa;
+      }
+      .msg-see-detail{
+        font-size: .65rem;
+        color: #0000f6;
+        position: absolute;
+        right: .75rem;
+        bottom: .75rem;
       }
     }
     .no-msg{
@@ -86,7 +95,8 @@
 
     route: {
       data () {
-        this.loadMsgArr()
+        const me = this
+        this.loadMsgArr().then(me.isShowDetail(me))
       }
     },
 
@@ -99,10 +109,14 @@
       if (Device.platform === platformMap.IOS && !getLocalCache('IS_IOS_MSG_TIP_SHOW')) {
         isTipShow = true
       }
+      let hasSeeDetail = true
+      let isDetailTap = true
 
       return {
         isTipShow,
-        scrollerHeight: '590px'
+        scrollerHeight: '590px',
+        hasSeeDetail,  //是否有查看详情
+        isDetailTap   //是否能点击进入详情页
       }
     },
 
@@ -125,6 +139,28 @@
       onTapTip () {
         this.isTipShow = false
         setLocalCache('IS_IOS_MSG_TIP_SHOW', {isShow: false})
+      },
+
+      /**
+       * 有查看详情的消息可以点击跳转
+       *
+       **/
+      goDetailTap (msg) {
+        this.$route.router.go(msg.mbUrl)
+      },
+
+      /**
+       * 刚进入消息页的时候是否显示查看详情
+       *
+       **/
+      isShowDetail (me) {
+        if (0) {
+          me.hasSeeDetail = true
+          me.isDetailTap = true
+        } else {
+          me.hasSeeDetail = false
+          me.isDetailTap = false
+        }
       }
     },
 
