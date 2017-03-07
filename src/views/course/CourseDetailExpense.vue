@@ -44,7 +44,7 @@
         <!--<ict-button class="right">加载中..</ict-button>-->
       <!--</div>-->
 
-      <div v-if="currStatus === 'W'" class="btn-box">
+      <!--<div v-if="currStatus === 'W'" class="btn-box">
         <ict-button class="left" v-touch:tap="audition">试听</ict-button>
         <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
       </div>
@@ -64,11 +64,74 @@
 
       <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject && currSubject.type == 'M'" class="btn-box">
         <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
+      </div>-->
+      <!--听课提醒-->
+      <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
+        <div class="action-btn">
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
+            <div class="action-detail-btn-text">延期</div>
+          </div>
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
+            <div class="action-detail-btn-text">停课</div>
+          </div>
+        </div>
+        <div class="study-btn">
+          <!--<div>听课提醒</div>-->
+          <div>DAY1<span class="study-btn-changeText">修改提醒</span></div>
+        </div>
       </div>
+      <!--立即购买-->
+      <div class="btn-box-buy" v-if="currStatus === 'W'">
+        <div class="action-btn">
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
+            <div class="action-detail-btn-text">试听</div>
+          </div>
+        </div>
+        <div class="study-btn">
+          <div>立即购买</div>
+        </div>
+      </div>
+      <!--激活课程-->
+      <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
+        <div class="action-btn">
+          <div class="action-detail-btn">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="study-btn">激活课程</div>
+      </div>
+
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
+    <div class="remind">
+      <div class="remind-closeBtn"></div>
+      <div class="remind-title">设置上课提醒</div>
+      <div class="remind-tip">最近一周</div>
+      <div class="remind-img"><img src="../../assets/styles/image/courseDetail/setRemind.png"></div>
+      <div class="remind-date">提醒时间<span class="remind-date-text">27</span>日~<span class="remind-date-text">5</span>日</div>
+      <div class="remind-btn">确定</div>
+    </div>
+    <div class="remind remind-cancel">
+      <div class="remind-closeBtn"></div>
+      <div class="remind-title">取消上课提醒</div>
+      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">27</span>日~<span class="remind-date-text">5</span>日<span class="remind-date-text">21:00</div>
+      <div class="remind-cancelImg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
+      <div class="remind-btn">确定</div>
+    </div>
   </div>
 </template>
 <style lang="less">
@@ -109,41 +172,169 @@
       position: fixed;
       /*background: red;*/
       width: 100%;
-      height: 2.1rem;
+      height: 98/40rem;
       bottom: 0;
       /*font-size: 0;*/
       z-index: 101;
-
-        .btn-box {
-          display: flex;
-
-        .ict-btn {
-          border-radius: 0 !important;
+        .btn-box,.btn-box-buy,.btn-box-active{
+          text-align: center;
+          height:100%;
+          display:flex;
+          flex-direction:row;
+          .action-btn{
+            display: flex;
+            flex-direction:row;
+            .action-detail-btn{
+              width: 2.5rem;
+              padding:10/40rem 0 8/40rem;
+              .action-detail-btn-icon{
+                display:block;
+                img{
+                  width: 40/40rem;
+                  height: 1rem;
+                }
+                .shareIcon{
+                  width: 36/40rem;
+                }
+              }
+              .action-detail-btn-text{
+                text-align: center;
+                font-size: 22/40rem;
+                display: block;
+              }
+            }
         }
-
-        .left {
-          background: #f0eff5;
-          color: #00b0f0;
-          font-size: 34/40rem;
-          flex: 24;
-          /*flex-grow: 1;*/
-        }
-
-        .right {
-          /*border-left: 1px solid #898989;*/
+        .study-btn{
+          height:100%;
+          flex: 1;
           font-size: 34/40rem;
           color: #fff;
+          background-color: #c9b280;
+          line-height: 98/40rem;
+          &-changeText{
+            margin-left: 3/4rem;
+            line-height: 0.9rem;
+            color: #eee;
+            border: 1px solid #eee;
+            font-size: 22/40rem;
+            border-radius: 0.9rem;
+            padding: 0 6/40rem;
+           }
+        }
+      }
+      .btn-box-buy{
+        .study-btn{
           background-color: #00b0f0;
-          flex: 51;
-
-          &:active,&:visited{
-            color: #898989;
-          }
+        }
+      }
+      .btn-box-active{
+        .study-btn{
+          background-color: #ff9800;
         }
       }
     }
+    .remind{
+      display: block;
+      position: fixed;
+      width: 100%;
+      height: 10rem;
+      bottom:0;
+      background:#fff;
+      z-index:200;
+      border-top:1px solid #f0eff5;
+      &-closeBtn{
+        position: absolute;
+        right: 3/4rem;
+        top:3/4rem;
+        width: 3/4rem;
+        height: 3/4rem;
+       }
+      &-closeBtn:before{
+         position: absolute;
+         font-family: 'myicon';
+         content: '\e90d';
+         font-size: 3/4rem !important;
+         line-height: 3/4rem;
+         color: #999;
+       }
+      &-title{
+        height: 2.5rem;
+        line-height: 2.5rem;
+        font-size: 0.8rem;
+        color:#444;
+        text-align: center;
+        border-bottom: 1px solid #f0eff5;
+        font-weight: bold;
+       }
+      &-tip{
+        position: absolute;
+        font-size: 0.7rem;
+        color: #fff;
+        background: #0099ff;
+        width: 4.5rem;
+        line-height: 1.5rem;
+        height: 1.5rem;
+        border-top-right-radius: 3/4rem;
+        border-bottom-right-radius: 3/4rem;
+        left: 0;
+        top:2.5rem;
+        text-align: center;
+       }
+      &-date,&-cancelDate{
+        padding: 3rem 3/4rem 1rem;
+        font-size: 3/4rem;
+        color: #aaa;
+        &-text{
+          font-weight: bold;
+          color:#0099ff;
+         }
+        &-cancelText{
+          color: #ff0000;
+         }
+       }
+      &-cancelDate{
+        padding-top: 1.5rem;
+       }
+      &-btn{
+        position: absolute;
+        height: 98/40rem;
+        line-height: 98/40rem;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        font-size: 34/40rem;
+        text-align: center;
+        color:#fff;
+        background-color: #00b0f0;
+       }
+      &-cancelImg{
+        height: 266/40rem;
+        width: 154/40rem;
+        padding-top: 0.5rem;
+        margin: 0 auto;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+       }
+      &-img{
+        height: 3rem;
+        width: 4rem;
+        position: absolute;
+        top:13/4rem;
+        right: 11/4rem;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+       }
+    }
+    .remind-cancel{
+      height: 698/40rem;
+      display: block;
+      bottom: -698/40rem;
+    }
   }
-
 </style>
 <script>
   import IctBackBtn from '../../components/IctCourseBackBtn.vue'
@@ -163,6 +354,15 @@
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {MSITE_URL} from '../../frame/serverConfig'
+
+  let hours = []
+  let mins = []
+  for (let i = 1; i < 25; i++) {
+      hours.push(i + '')
+  }
+  for (let i = 1; i < 61; i++) {
+    mins.push(i + '')
+  }
   export default {
     vuex: {
       getters: {
@@ -197,6 +397,9 @@
      */
     data () {
       return {
+        timeSelectList: [hours, mins],    //日期选择数组
+        timeSelected: [],
+
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
 
@@ -1105,7 +1308,6 @@
         this.$route.router.go(`/questionNaire/${naireId}`)
       }
     },
-
     components: {
       WebAudio,
       Tab,

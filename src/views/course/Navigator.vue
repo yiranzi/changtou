@@ -103,7 +103,6 @@
     </scroller>
   </div>
 </template>
-
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
@@ -134,7 +133,6 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage
       }
     },
-
     route: {
       data ({from}) {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
@@ -148,7 +146,6 @@
         this.resetScroller()
       }
     },
-
     data () {
       return {
         scrollerHeight: '0px',
@@ -159,9 +156,7 @@
       }
     },
     ready () {
-
     },
-
     computed: {
       banners () {
         let banners = this.originBanners
@@ -176,7 +171,6 @@
         return newBanners
       }
     },
-
     methods: {
       /**
        * 设置滚动条高度

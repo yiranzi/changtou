@@ -49,6 +49,7 @@ const onReceiveNotification = (event) => {
   //if (event.extras['msgType'] === 'IN_APP') {
   //  _router.router.go(event.extras['desUrl'])
   //}
+  console.log(event)
 }
 
 /**
@@ -81,12 +82,10 @@ const onOpenNotification = (event) => {
 const addOpenHandler = () => {
   document.addEventListener('jpush.openNotification', onOpenNotification, false)
 }
-
 const Jpush = {
   get init () {
     return init
   },
-
   get setAlias () {
     return setAlias
   },
