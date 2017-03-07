@@ -277,40 +277,60 @@
        * 选择关卡
        * */
       onLevelTap (level) {
-        if (level <= this.villageProgress.questionNo) {
+        if (this.activeChapterNo < this.villageProgress.chapterNo) {
+          this.onRecordedQuestionTap(level)
+          return
+        }
+        if (this.villageProgress.chapterNo === this.activeChapterNo) {
+          if (this.villageProgress.questionNo === 7 || level < this.villageProgress.questionNo) {
+            this.onRecordedQuestionTap(level)
+            return
+          }
+          if (level > this.villageProgress.questionNo + 1) {
+            return
+          }
+          if (level === this.villageProgress.questionNo + 1) {
+            if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
+              this.showEncourage()
+              this.hasShownEncouragement = true
+              return
+            }
+            if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
+              this.showEncourage()
+              this.hasShownEncouragement = true
+              return
+            }
+            this.activeQuestionNo = level
+            this.showQuestion()
+          }
+          return
+        }
+        if (this.activeChapterNo > this.villageProgress.chapterNo && level < this.activeQuestionNo + 1) {
           this.activeQuestionNo = level
-          this.getActiveQuestion()
-          this.showTheExpands()
-        } else if (level === this.villageProgress.questionNo + 1) {
-        //  this.specialLevelJudge(level)
-          if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
-            this.showEncourage()
-            this.hasShownEncouragement = true
-            return
-          }
-          if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
-            this.showEncourage()
-            this.hasShownEncouragement = true
-            return
-          }
-          this.activeQuestionNo = level      // activeQuestionNo改变的契机
           this.showQuestion()
         }
       },
-      /*判断是否为特殊关卡*/
-//      specialLevelJudge (level) {
-//        console.log('specialLevelJudge', this.hasShownEncouragement)
-//        if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
-//          this.showEncourage()
-//          this.hasShownEncouragement = true
-//          return
-//        }
-//        if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
-//          this.showEncourage()
-//          this.hasShownEncouragement = true
-//          return
-//        }
-//      },
+
+      /*
+      * 进入答过的题目时的操作
+      * */
+      onRecordedQuestionTap (level) {
+        this.activeQuestionNo = level
+        this.getActiveQuestion()
+        this.showTheExpands()
+      },
+      /*
+      * 判断是否为特殊关卡
+      * */
+      specialLevelJudge (level) {
+        if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3) {
+          return true
+        } else if (this.villageProgress.chapterNo === 2 && level === 5) {
+          return true
+        } else {
+          return false
+        }
+      },
       /*
       * 显示鼓励
       * */
