@@ -49,7 +49,6 @@ const onReceiveNotification = (event) => {
   //if (event.extras['msgType'] === 'IN_APP') {
   //  _router.router.go(event.extras['desUrl'])
   //}
-  console.log(event)
 }
 
 /**
