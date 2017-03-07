@@ -13,6 +13,5 @@ export const vipProduct = (state) => {
 
 // 获取qq数据
 export const groupNumber = (state) => {
-  console.log('try get')
   return state.strategyProduct.sGroupNumber
 }

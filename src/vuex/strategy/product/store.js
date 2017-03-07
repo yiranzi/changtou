@@ -37,7 +37,6 @@ const mutations = {
    * @constructor
    */
   UPDATE_GROUP_INFO (state, sGroupNumber) {
-    console.log('try change')
     state.sGroupNumber = sGroupNumber
   }
 }

@@ -142,7 +142,7 @@ export const getGroupNumber = ({dispatch}) => {
         }
       ).then(
         groupNumber => {
-          const number = makeData(groupNumber)
+          const number = '123123123'
           dispatch('UPDATE_GROUP_INFO', number)
           resolve(groupNumber)
         },
@@ -151,9 +151,4 @@ export const getGroupNumber = ({dispatch}) => {
         }
       )
     })
-}
-
-const makeData = (groupNumber) => {
-  const sQQNumber = '123123123'
-  return sQQNumber
 }
