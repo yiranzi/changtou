@@ -282,7 +282,7 @@
           return
         }
         if (this.villageProgress.chapterNo === this.activeChapterNo) {
-          if (this.villageProgress.questionNo === 7 || level < this.villageProgress.questionNo) {
+          if (this.villageProgress.questionNo === 7 || level <= this.villageProgress.questionNo) {
             this.onRecordedQuestionTap(level)
             return
           }
