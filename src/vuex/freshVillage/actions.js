@@ -107,7 +107,6 @@ export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
 * */
 
 export const resetRecord = ({dispatch}) => {
-  console.log('resetRecord')
   dispatch('RESET_VILLAGE_RECORD')
 }
 /*
