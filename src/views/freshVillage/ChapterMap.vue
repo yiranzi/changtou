@@ -33,7 +33,9 @@
         getChapter: villageActions.getChapter,
         getStory: villageActions.getStory,
         getQuestion: villageActions.getQuestion,
-        updateRecord: villageActions.updateRecord
+        updateRecord: villageActions.updateRecord,
+        resetRecord: villageActions.resetRecord,
+        getVillageProgress: villageActions.getVillageProgress
       }
     },
     data () {
@@ -71,7 +73,9 @@
       /*关卡背景*/
     },
     watch: {
-      villageProgress () {
+      villageProgress (newValue) {
+        console.log('villageProgress', newValue)
+        this.setUserImagePosition()
         if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
           this.showNextChapterBtn = true
         } else {
@@ -84,11 +88,20 @@
         } else if (this.activeChapterNo === 2) {
           this.bgStyle = 'chapter2-bg'
         }
+      },
+      isLogin (newValue) {
+        if (newValue) {
+          this.getVillageProgress()
+        }
       }
     },
     route: {
-      data () {
+      data ({from}) {
+        if (from.path === '/entry' || from.path === '/village/advise') {
+          return
+        }
         if (!this.isLogin) {
+          this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 0
           this.activeQuestionNo = 0
           this.showChapterChoice()
@@ -111,10 +124,18 @@
       * 更换头像位置
       * */
       setUserImagePosition () {
-        if (this.villageProgress.questionNo !== 7) {
+        if ((this.villageProgress.chapterNo > this.activeChapterNo) || (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7)) {
+          this.getOverLevel = 'user-img-6'
+          return
+        }
+        if (this.villageProgress.chapterNo < this.activeChapterNo && this.villageProgress.questionNo === 7) {
+          this.getOverLevel = 'user-img-1'
+          return
+        }
+        if (this.villageProgress.questionNo !== 6 || this.villageProgress.questionNo !== 7) {
           this.getOverLevel = `user-img-${this.villageProgress.questionNo + 1}`
         } else {
-          this.getOverLevel = 'user-img-1'
+          this.getOverLevel = 'user-img-6'
         }
       },
       /*
@@ -139,6 +160,7 @@
       * 判断进度
       * */
       JudgeProgress () {
+        console.log('JudgeProgress')
         this.setUserImagePosition()
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
@@ -219,6 +241,8 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
+        console.log('startChapter')
+        this.setUserImagePosition()
         if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
           this.activeQuestionNo = this.villageProgress.questionNo + 1
         } else {
