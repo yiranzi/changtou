@@ -38,8 +38,8 @@
     },
     data () {
       return {
-        activeChapterNo: 0,
-        activeQuestionNo: 0,
+        activeChapterNo: 1,
+        activeQuestionNo: 1,
         chapter: {},
         question: {},
         lifeScore: 0,
@@ -110,7 +110,7 @@
       /*
       * 更换头像位置
       * */
-      changeUserImagePosition () {
+      setUserImagePosition () {
         if (this.villageProgress.questionNo !== 7) {
           this.getOverLevel = `user-img-${this.villageProgress.questionNo + 1}`
         } else {
@@ -139,7 +139,7 @@
       * 判断进度
       * */
       JudgeProgress () {
-        this.changeUserImagePosition()
+        this.setUserImagePosition()
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
@@ -224,7 +224,7 @@
         } else {
           this.activeQuestionNo = 1
         }
-        this.changeUserImagePosition()
+        this.setUserImagePosition()
         setTimeout(() => {
           this.showQuestion()
         },
@@ -287,7 +287,6 @@
 //          return
 //        }
 //      },
-
       /*
       * 显示鼓励
       * */
@@ -366,7 +365,7 @@
        * */
       showUpgradeJudgement () {
         if (this.activeQuestionNo !== 6 && this.activeQuestionNo !== 7) {
-          this.changeUserImagePosition()
+          this.setUserImagePosition()
         }
         if (this.activeQuestionNo === 6) {
          setTimeout(() => {

@@ -29,6 +29,11 @@ const mutations = {
    */
   FRESH_VILLAGE_PROGRESS (state, villageProgress) {
     state.villageProgress = villageProgress
+  },
+
+  RESET_VILLAGE_RECORD (state) {
+    state.villageProgress.chapterNo = 0
+    state.villageProgress.questionNo = 0
   }
 }
 

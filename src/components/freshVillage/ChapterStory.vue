@@ -31,7 +31,7 @@ export default {
   .chapter-story {
     .chapter-top {
       width: 14.5rem;
-      height: 20rem;
+      min-height: 20rem;
       border-radius: 20px 20px 0 0;
       background-color: #fff;
       p {
