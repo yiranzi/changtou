@@ -88,6 +88,7 @@
         } else if (this.activeChapterNo === 2) {
           this.bgStyle = 'chapter2-bg'
         }
+        this.setUserImagePosition()
       },
       isLogin (newValue) {
         if (newValue) {
@@ -161,7 +162,6 @@
       * */
       JudgeProgress () {
         console.log('JudgeProgress')
-        this.setUserImagePosition()
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
@@ -183,17 +183,11 @@
         } else {
           if (this.villageProgress.questionNo < 6) {
             this.activeQuestionNo = this.villageProgress.questionNo + 1
-            if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && this.activeQuestionNo === 3 && !this.hasShownEncouragement) {
+            if (this.specialLevelJudge(this.activeQuestionNo) && !this.hasShownEncouragement) {
               this.showEncourage()
               this.hasShownEncouragement = true
               return
             }
-            if (this.villageProgress.chapterNo === 2 && this.activeQuestionNo === 5 && !this.hasShownEncouragement) {
-              this.showEncourage()
-              this.hasShownEncouragement = true
-              return
-            }
-          //  this.specialLevelJudge(this.activeQuestionNo)
             this.showQuestion()
           }
         }
@@ -241,18 +235,33 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        console.log('startChapter')
-        this.setUserImagePosition()
-        if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
-          this.activeQuestionNo = this.villageProgress.questionNo + 1
+        console.log('startChapter', this.villageProgress, this.activeChapterNo, this.activeQuestionNo)
+        if (this.isLogin) {
+          if (this.activeChapterNo < this.villageProgress.chapterNo) {
+            this.activeQuestionNo = 1
+            this.getActiveQuestion()
+            this.showTheExpands()
+          } else if (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7) {
+            this.activeQuestionNo = this.villageProgress.questionNo + 1
+            setTimeout(this.showQuestion(), 300)
+          }
         } else {
           this.activeQuestionNo = 1
+          setTimeout(this.showQuestion(), 300)
         }
-        this.setUserImagePosition()
-        setTimeout(() => {
-          this.showQuestion()
-        },
-        300)
+//        console.log('startChapter')
+        //
+//
+//        if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
+//          this.activeQuestionNo = this.villageProgress.questionNo + 1
+//        } else {
+//          this.activeQuestionNo = 1
+//        }
+
+//        setTimeout(() => {
+//          this.showQuestion()
+//        },
+//        300)
       },
       /*
       * 获取当前问题内容
@@ -290,11 +299,6 @@
             return
           }
           if (level === this.villageProgress.questionNo + 1) {
-            if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
-              this.showEncourage()
-              this.hasShownEncouragement = true
-              return
-            }
             if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
               this.showEncourage()
               this.hasShownEncouragement = true
@@ -409,7 +413,7 @@
        * */
       showUpgradeJudgement () {
         if (this.activeQuestionNo !== 6 && this.activeQuestionNo !== 7) {
-          this.setUserImagePosition()
+      //    this.setUserImagePosition()
         }
         if (this.activeQuestionNo === 6) {
          setTimeout(() => {
