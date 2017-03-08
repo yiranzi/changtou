@@ -32,8 +32,8 @@ const mutations = {
   },
 
   RESET_VILLAGE_RECORD (state) {
-    state.villageProgress.chapterNo = 0
-    state.villageProgress.questionNo = 0
+    state.villageProgress.chapterNo = 1
+    state.villageProgress.questionNo = 5
   }
 }
 

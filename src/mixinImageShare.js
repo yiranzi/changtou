@@ -21,7 +21,12 @@ const mixin = {
     return {
       showShareFloat: false,
       shareImageWidth: 0,
-      shareImageHeight: 0
+      shareImageHeight: 0,
+      shareConfig: {
+        imgUrl: '',
+        title: '',
+        desc: ''
+      }
     }
   },
   methods: {
@@ -33,6 +38,7 @@ const mixin = {
       this.renderHtml({element, height, width}).then(this.convertHtmlToBase64).then(
         (base64) => {
           console.log(base64)
+          console.log('this.shareConfig', this, this.shareConfig)
           this.shareConfig.imgUrl = base64
         }
       )
@@ -134,6 +140,7 @@ const mixin = {
      * @param event
        */
     onActionTap (event) {
+      console.log('onActionTap', event)
       this.showShareFloat = false
       switch (event.target.className) {
         case 'wechat':
@@ -184,8 +191,10 @@ const mixin = {
 
     //分享 链接 到 微信朋友圈
     shareToTimelineInApp () {
+      console.log('shareToTimelineInApp', window)
       const me = this
       if (window.Wechat) {
+        console.log('Wechat')
         window.Wechat.share({
             message: {
               title: me.shareConfig.title, // 分享标题
@@ -213,6 +222,7 @@ const mixin = {
           }
         )
       } else {
+        console.log('请先安装')
         this.showAlert('请先安装微信客户端')
       }
     }

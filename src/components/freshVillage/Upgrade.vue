@@ -1,37 +1,55 @@
 /**
- * Created by zhongyan on 2017/3/1.
- *
- */
+* Created by zhongyan on 2017/3/1.
+*
+*/
 <template>
   <div>
-  <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
+    <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
 
-      <div class="upgrade-detail">
+      <div class="village-upgrade-detail" v-el:share-pic>
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
         <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>
-      <div class="share-btn">去炫耀</div>
+      <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
+  import store from '../../vuex/store'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+    mixins: [mixinImageShare],
     props: {
       componentData: Object
     },
+    store,
     computed: {
       avatarUrl () {
         return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'
       }
     },
+    ready () {
+      this.loadShareImageUrl()
+    },
     methods: {
       updateRecord () {
-        this.$dispatch('villageUpdateRecord')
+        this.$dispatch('onVillageUpgradeTap', 1)
+      },
+      toShare () {
+        this.$dispatch('onVillageUpgradeTap', 2)
+      },
+      loadShareImageUrl () {
+        const origin = this.$els.sharePic
+        const element = origin.cloneNode(true)
+        const height = origin.offsetHeight
+        const width = origin.offsetWidth
+        this.setShareImageUrl({element, height, width})
+        console.log('zzz', element, height, width)
       }
     }
   }
@@ -54,13 +72,6 @@
       font-weight: bold;
       color: #fff;
     }
-    .upgrade-detail {
-      position: relative;
-      width: 12rem;
-      height: 15rem;
-      border-radius: 20px;
-      background-color: #ca414b;
-    }
     .close-icon:after {
       display: inline-block;
       position: absolute;
@@ -72,6 +83,26 @@
       color: #aaa;
       font-size: .8rem;
     }
+    .share-btn {
+      margin: 1.5rem auto 0;
+      width: 8.5rem;
+      height: 1.95rem;
+      line-height: 1.95rem;
+      text-align: center;
+      border: 2px solid #fff;
+      font-size: .8rem;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 39px;
+    }
+  }
+  .village-upgrade-detail {
+    position: relative;
+    width: 12rem;
+    height: 15rem;
+    border-radius: 20px;
+    background-color: #ca414b;
+
     .user-img {
       display: block;
       position: relative;
@@ -139,18 +170,6 @@
       float: right;
       font-size: .65rem;
       color: #ccc;
-    }
-    .share-btn {
-      margin: 1.5rem auto 0;
-      width: 8.5rem;
-      height: 1.95rem;
-      line-height: 1.95rem;
-      text-align: center;
-      border: 2px solid #fff;
-      font-size: .8rem;
-      font-weight: bold;
-      color: #fff;
-      border-radius: 39px;
     }
   }
 </style>

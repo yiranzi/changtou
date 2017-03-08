@@ -15,13 +15,17 @@
       <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
     </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
 </div>
 </template>
 <script>
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
+  import ShareFloat from '../../components/share/ImageShareFloat.vue'
   import {villageActions} from '../../vuex/actions'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+    mixins: [mixinImageShare],
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
@@ -49,7 +53,8 @@
         bgStyle: 'chapter1-bg',
         showNextChapterBtn: false,
         getOverLevel: 'user-img-1',
-        hasShownEncouragement: false
+        hasShownEncouragement: false,
+        showShareFloat: false
       }
     },
     computed: {
@@ -454,20 +459,25 @@
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
           hideOnMaskTap: false,
-          callbackName: 'villageUpdateRecord',
+          callbackName: 'onVillageUpgradeTap',
           componentData: upgradePageData,
-          callbackFn: this.updateTheRecord.bind(this)
+          callbackFn: this.onVillageUpgradeTap.bind(this)
         })
       },
       /*
-      * 提交答题记录
+      * 提交答题记录,分享
       * */
-      updateTheRecord () {
+      onVillageUpgradeTap (type) {
+        console.log('onVillageUpgradeTap')
         this.updateRecord(this.activeChapterNo, 7)
         this.getOverLevel = 'user-img-1'
+        if (type === 2) {
+          this.showShareFloat = true
+        }
       }
     },
     components: {
+      ShareFloat,
       wisdom
     }
   }
