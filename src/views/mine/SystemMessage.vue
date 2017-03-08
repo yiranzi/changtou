@@ -8,10 +8,10 @@
             若要开启，请在iPhone系统的“设置”-“通知”中，找到“长投学堂”并开启通知</p>
           <p class="tip" v-touch:tap="onTapTip">不再提示</p>
         </div>
-        <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="isDetailTap && goDetailTap(msg)">
+        <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="msg.mbUrl && msg.type==='L' && goDetailTap(msg)">
           <p class="msg-content">{{{msg.content}}}</p>
           <p class="msg-date">{{{msg.createTime}}}</p>
-          <span class="msg-see-detail" v-if="hasSeeDetail">查看详情</span>
+          <span class="msg-see-detail" v-if="msg.mbUrl && msg.type==='L'">查看详情</span>
         </div>
         <div class="no-msg" v-show="!msgArr">
           <img src="/static/image/mine/noMessages.png">
@@ -95,8 +95,9 @@
 
     route: {
       data () {
-        const me = this
-        this.loadMsgArr().then(me.isShowDetail(me))
+        this.loadMsgArr().then(() => {
+          console.log(this.msgArr)
+        })
       }
     },
 
@@ -109,14 +110,10 @@
       if (Device.platform === platformMap.IOS && !getLocalCache('IS_IOS_MSG_TIP_SHOW')) {
         isTipShow = true
       }
-      let hasSeeDetail = true
-      let isDetailTap = true
 
       return {
         isTipShow,
-        scrollerHeight: '590px',
-        hasSeeDetail,  //是否有查看详情
-        isDetailTap   //是否能点击进入详情页
+        scrollerHeight: '590px'
       }
     },
 
@@ -141,26 +138,12 @@
         setLocalCache('IS_IOS_MSG_TIP_SHOW', {isShow: false})
       },
 
-      /**
-       * 有查看详情的消息可以点击跳转
-       *
-       **/
+     /**
+      * 有查看详情的消息可以点击跳转
+      *
+      **/
       goDetailTap (msg) {
         this.$route.router.go(msg.mbUrl)
-      },
-
-      /**
-       * 刚进入消息页的时候是否显示查看详情
-       *
-       **/
-      isShowDetail (me) {
-        if (1) {
-          me.hasSeeDetail = true
-          me.isDetailTap = true
-        } else {
-          me.hasSeeDetail = false
-          me.isDetailTap = false
-        }
       }
     },
 
