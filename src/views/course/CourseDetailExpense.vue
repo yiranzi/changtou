@@ -70,7 +70,7 @@
         <div class="action-btn">
           <div class="action-detail-btn">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
-            <div class="action-detail-btn-text">分享</div>
+            <div class="action-detail-btn-text" v-touch:tap="showActionSharePanel">分享</div>
           </div>
           <div class="action-detail-btn">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
@@ -83,7 +83,7 @@
         </div>
         <div class="study-btn">
           <!--<div>听课提醒</div>-->
-          <div>DAY1<span class="study-btn-changeText">修改提醒</span></div>
+          <div>DAY1<span class="study-btn-changeText" v-touch:tap="showRemind">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
@@ -93,12 +93,12 @@
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="audition">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
             <div class="action-detail-btn-text">试听</div>
           </div>
         </div>
-        <div class="study-btn">
+        <div class="study-btn" v-touch:tap="buy">
           <div>立即购买</div>
         </div>
       </div>
@@ -110,19 +110,22 @@
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="study-btn">激活课程</div>
+        <div class="study-btn" v-touch:tap="active">激活课程</div>
       </div>
-
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
+        <div class="study-btn" v-touch:tap="resume">开启课程</div>
+      </div>
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
-    <div class="remind">
-      <div class="remind-closeBtn"></div>
+    <div class="remind" :id="isRemindShow?'show':''">
+      <div class="remind-closeBtn" v-touch:tap="hideRemind"></div>
       <div class="remind-title">设置上课提醒</div>
       <div class="remind-tip">最近一周</div>
       <div class="remind-img"><img src="../../assets/styles/image/courseDetail/setRemind.png"></div>
       <div class="remind-date">提醒时间<span class="remind-date-text">27</span>日~<span class="remind-date-text">5</span>日</div>
+      <picker :data="timeSelectList" ></picker>
       <div class="remind-btn">确定</div>
     </div>
     <div class="remind remind-cancel">
@@ -132,6 +135,7 @@
       <div class="remind-cancelImg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
       <div class="remind-btn">确定</div>
     </div>
+    <page-share-panel v-if="showShareFloat" v-touch:tap="onActionTap"></page-share-panel>
   </div>
 </template>
 <style lang="less">
@@ -233,12 +237,13 @@
         }
       }
     }
-    .remind{
+    .remind,.remind-cancel{
+      transition:all 0.5s;
       display: block;
       position: fixed;
       width: 100%;
       height: 10rem;
-      bottom:0;
+      bottom:-10rem;
       background:#fff;
       z-index:200;
       border-top:1px solid #f0eff5;
@@ -334,6 +339,9 @@
       display: block;
       bottom: -698/40rem;
     }
+    #show{
+      bottom:0;
+    }
   }
 </style>
 <script>
@@ -354,7 +362,9 @@
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {MSITE_URL} from '../../frame/serverConfig'
-
+  import PageSharePanel from '../../components/share/PageSharePanel.vue'
+  import mixinPageShare from '../../mixinPageShare'
+  import Picker from 'vux/picker'
   let hours = []
   let mins = []
   for (let i = 1; i < 25; i++) {
@@ -364,6 +374,7 @@
     mins.push(i + '')
   }
   export default {
+    mixin: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
@@ -397,7 +408,9 @@
      */
     data () {
       return {
-        timeSelectList: [hours, mins],    //日期选择数组
+        isRemindShow: false,   //定时弹框状态
+
+        timeSelectList: [hours],    //日期选择数组
         timeSelected: [],
 
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
@@ -737,6 +750,18 @@
     },
 
     methods: {
+      /**
+       * 定时提醒设置显示
+       **/
+      showRemind () {
+        this.isRemindShow = true
+      },
+      /**
+       * 定时提醒隐藏
+       **/
+      hideRemind () {
+        this.isRemindShow = false
+      },
       /**
        * 选择题被点击
        **/
@@ -1320,7 +1345,9 @@
       choiceFloat,
       essayFloat,
       PptPanel,
-      IctBackBtn
+      IctBackBtn,
+      PageSharePanel,
+      Picker
     }
   }
 </script>
