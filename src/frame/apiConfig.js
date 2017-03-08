@@ -148,7 +148,7 @@ const apiUrl = {
   'strategy_professional_intro': '/strategy/promotion/professional',
   'strategy_vip_intro': '/strategy/promotion/vip',
   'strategy_notice': '/strategy/data/message/:authority', // 通知
-  'strategy_qq_number': '/strategy/data/vip', // qq群号
+  'strategy_qq_number': '/strategy/qqGroup/:authority', // qq群号
 
   /**
    * 毕业礼

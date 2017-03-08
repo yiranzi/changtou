@@ -129,22 +129,59 @@ export const getProfessionalProduct = ({dispatch}) => {
 }
 
 /**
- * 下载QQ群 信息
- * @param dispatch
+ * 获取QQ群 Vip版
+ */
+export const getVipGroupNumber = ({dispatch}) => {
+  getGroup('V').then(
+    function (res) {
+      dispatch('NEWER_SCROLL_TEXT', res.qqNumber)
+    }
+  ).catch(
+    function (err) {
+      console.dir(err)
+    }
+  )
+}
+
+/**
+ *  获取QQ群 专业版
+ */
+export const getProfessionalGroupNumber = ({dispatch}) => {
+  console.log('enter1')
+  getGroup('P').then(
+      function (res) {
+        console.log('enter2')
+        console.log('res is ' + res + res.qqNumber)
+        dispatch('NEWER_SCROLL_TEXT', res.qqNumber)
+      }
+    ).catch(
+      function (err) {
+        console.log('enter3')
+        console.dir(err)
+      }
+    )
+  console.log('enter4')
+}
+
+/**
+ *  获取QQ群
+ * @param type
  * @returns {Promise}
  */
-export const getGroupNumber = ({dispatch}) => {
+const getGroup = (type) => {
+  const authority = type === 'V' ? 'V' : 'P'
+  console.log('result is' + authority)
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(
         {
-          url: getUrl('strategy_qq_number')
+          url: getUrl('strategy_qq_number').replace(':authority', authority)
         }
       ).then(
-        groupNumber => {
-          const number = '123123123'
-          dispatch('UPDATE_GROUP_INFO', number)
-          resolve(groupNumber)
+        res => {
+          console.log('res is ' + res + res.qqNumber)
+          console.log('receive ajax')
+          resolve(res)
         },
         err => {
           reject(err)
@@ -152,3 +189,4 @@ export const getGroupNumber = ({dispatch}) => {
       )
     })
 }
+

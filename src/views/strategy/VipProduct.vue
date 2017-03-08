@@ -38,7 +38,7 @@ export default {
     actions: {
       getVipProduct: strategyProductActions.getVipProduct,
       getVipNotice: strategyNoticeActions.getVipNotice,
-      DownLoadGroupData: strategyProductActions.getGroupNumber
+      DownLoadGroupData: strategyProductActions.getVipGroupNumber
     }
   },
   data () {
