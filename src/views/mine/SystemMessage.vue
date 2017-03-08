@@ -9,7 +9,7 @@
           <p class="tip" v-touch:tap="onTapTip">不再提示</p>
         </div>
         <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="isDetailTap && goDetailTap(msg)">
-          <p class="msg-content">{{{msg.content }}}</p>
+          <p class="msg-content">{{{msg.content}}}</p>
           <p class="msg-date">{{{msg.createTime}}}</p>
           <span class="msg-see-detail" v-if="hasSeeDetail">查看详情</span>
         </div>
@@ -154,7 +154,7 @@
        *
        **/
       isShowDetail (me) {
-        if (0) {
+        if (1) {
           me.hasSeeDetail = true
           me.isDetailTap = true
         } else {

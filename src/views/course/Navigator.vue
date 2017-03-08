@@ -118,6 +118,7 @@
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
+  import {appVersion} from '../../frame/versionConfig'
   export default {
     vuex: {
       getters: {
@@ -143,6 +144,8 @@
 
     route: {
       data ({from}) {
+        //是否显示更新提示
+        this.isAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -163,7 +166,8 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '' // 前一个页面url
+        fromPath: '', // 前一个页面url
+        appVersion
       }
     },
     ready () {
@@ -186,6 +190,45 @@
     },
 
     methods: {
+      /**
+       * 判断应用是否更新
+       */
+       isAppUpdate () {
+         if (getLocalCache('app-update')) {
+           // 获取到旧版本号
+            if (getLocalCache('app-update')['appVersionNumber'] === this.appVersion) {
+              // 版本号一致就不显示更新
+            } else {
+              //版本号不一致就显示更新
+              this.showAppUpdate()
+            }
+         } else {
+           // 获取不到旧版本号 显示更新
+           this.showAppUpdate()
+           console.log('a')
+         }
+       },
+
+      /**
+       * 显示更新提示,并存储最新版本号
+       */
+       showAppUpdate () {
+         setLocalCache('app-update', {appVersionNumber: this.appVersion})
+         this.showMask({
+           component: 'AppUpdate.vue',
+           hideOnMaskTap: true,
+           callbackName: 'onUpdateTap',
+           callbackFn: this.onUpdateTap.bind(this)
+         })
+       },
+
+      /**
+       * 点击更新后跳转
+       */
+       onUpdateTap () {
+         this.hideMask()
+       },
+
       /**
        * 设置滚动条高度
        */
