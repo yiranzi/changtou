@@ -38,7 +38,6 @@ const mixin = {
       this.renderHtml({element, height, width}).then(this.convertHtmlToBase64).then(
         (base64) => {
           console.log(base64)
-          console.log('this.shareConfig', this, this.shareConfig)
           this.shareConfig.imgUrl = base64
         }
       )
@@ -82,7 +81,7 @@ const mixin = {
       this.shareImageHeight = height
 
       const ratio = (650 / this.shareImageHeight).toFixed(2)
-      const ShareContentStyle = `width: ${width};height: ${height};transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
+      const ShareContentStyle = `width: ${width}px;height: ${height}px;transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
 
       const eleHtml =
         `<div class="in-app-image-share-panel">
@@ -140,7 +139,6 @@ const mixin = {
      * @param event
        */
     onActionTap (event) {
-      console.log('onActionTap', event)
       this.showShareFloat = false
       switch (event.target.className) {
         case 'wechat':
@@ -191,10 +189,8 @@ const mixin = {
 
     //分享 链接 到 微信朋友圈
     shareToTimelineInApp () {
-      console.log('shareToTimelineInApp', window)
       const me = this
       if (window.Wechat) {
-        console.log('Wechat')
         window.Wechat.share({
             message: {
               title: me.shareConfig.title, // 分享标题
@@ -222,7 +218,6 @@ const mixin = {
           }
         )
       } else {
-        console.log('请先安装')
         this.showAlert('请先安装微信客户端')
       }
     }

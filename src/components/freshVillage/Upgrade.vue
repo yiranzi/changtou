@@ -8,7 +8,7 @@
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
 
-      <div class="village-upgrade-detail" v-el:share-pic>
+      <div class="village-upgrade-detail" v-el:share-pic id="village-upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
         <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
@@ -34,7 +34,6 @@
       }
     },
     ready () {
-      this.loadShareImageUrl()
     },
     methods: {
       updateRecord () {
@@ -42,14 +41,6 @@
       },
       toShare () {
         this.$dispatch('onVillageUpgradeTap', 2)
-      },
-      loadShareImageUrl () {
-        const origin = this.$els.sharePic
-        const element = origin.cloneNode(true)
-        const height = origin.offsetHeight
-        const width = origin.offsetWidth
-        this.setShareImageUrl({element, height, width})
-        console.log('zzz', element, height, width)
       }
     }
   }

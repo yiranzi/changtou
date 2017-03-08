@@ -463,12 +463,21 @@
           componentData: upgradePageData,
           callbackFn: this.onVillageUpgradeTap.bind(this)
         })
+        setTimeout(this.loadShareImageUrl, 500)
       },
+
+      loadShareImageUrl () {
+        const origin = window.document.getElementById('village-upgrade-detail')
+        const element = origin.cloneNode(true)
+        const height = origin.offsetHeight
+        const width = origin.offsetWidth
+        this.setShareImageUrl({element, height, width})
+      },
+
       /*
       * 提交答题记录,分享
       * */
       onVillageUpgradeTap (type) {
-        console.log('onVillageUpgradeTap')
         this.updateRecord(this.activeChapterNo, 7)
         this.getOverLevel = 'user-img-1'
         if (type === 2) {
