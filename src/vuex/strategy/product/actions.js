@@ -134,7 +134,7 @@ export const getProfessionalProduct = ({dispatch}) => {
 export const getVipGroupNumber = ({dispatch}) => {
   getGroup('V').then(
     function (res) {
-      dispatch('NEWER_SCROLL_TEXT', res.qqNumber)
+      dispatch('UPDATE_GROUP_INFO', res.message)
     }
   ).catch(
     function (err) {
@@ -152,7 +152,7 @@ export const getProfessionalGroupNumber = ({dispatch}) => {
       function (res) {
         console.log('enter2')
         console.log('res is ' + res + res.qqNumber)
-        dispatch('NEWER_SCROLL_TEXT', res.qqNumber)
+        dispatch('UPDATE_GROUP_INFO', res.message)
       }
     ).catch(
       function (err) {
