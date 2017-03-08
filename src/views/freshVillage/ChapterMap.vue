@@ -76,11 +76,7 @@
       villageProgress (newValue) {
         console.log('villageProgress', newValue)
         this.setUserImagePosition()
-        if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
-          this.showNextChapterBtn = true
-        } else {
-          this.showNextChapterBtn = false
-        }
+        this.judgeNextChapterBtnStatus()
       },
       activeChapterNo () {  //switch
         if (this.activeChapterNo === 1) {
@@ -89,6 +85,7 @@
           this.bgStyle = 'chapter2-bg'
         }
         this.setUserImagePosition()
+        this.judgeNextChapterBtnStatus()
       },
       isLogin (newValue) {
         if (newValue) {
@@ -101,6 +98,8 @@
         if (from.path === '/entry' || from.path === '/village/advise') {
           return
         }
+        this.setUserImagePosition()
+        this.judgeNextChapterBtnStatus()
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 0
@@ -120,6 +119,20 @@
       * */
       onAdviceTap () {
         this.$route.router.go('/village/advise')
+      },
+      /*
+       * 改变下一章btn状态
+       * */
+      judgeNextChapterBtnStatus () {
+        if (this.villageProgress.chapterNo > this.activeChapterNo) {
+          this.showNextChapterBtn = true
+          return
+        }
+        if (this.villageProgress.chapterNo === this.activeChapterNo && (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7)) {
+          this.showNextChapterBtn = true
+        } else {
+          this.showNextChapterBtn = false
+        }
       },
       /*
       * 更换头像位置
@@ -412,8 +425,8 @@
        *
        * */
       showUpgradeJudgement () {
-        if (this.activeQuestionNo !== 6 && this.activeQuestionNo !== 7) {
-      //    this.setUserImagePosition()
+        if (this.activeChapterNo < this.villageProgress.chapterNo || (this.activeChapterNo === this.villageProgress.chapterNo && this.activeQuestionNo === 7)) {
+          return
         }
         if (this.activeQuestionNo === 6) {
          setTimeout(() => {
