@@ -94,7 +94,7 @@
     },
     route: {
       data ({from}) {
-        if (from.path === '/entry' || from.path === '/village/advise') {
+        if (from.path === '/entry' || from.path === '/village/advise' || from.path === '/village/fill/content') {
           return
         }
         this.setUserImagePosition()
@@ -246,7 +246,7 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo && this.villageProgress.questionNo === 0)) {
+        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo && (this.villageProgress.questionNo === 0 || this.villageProgress.questionNo === 7))) {
           this.activeQuestionNo = 1
           setTimeout(() => {
             this.showQuestion()
