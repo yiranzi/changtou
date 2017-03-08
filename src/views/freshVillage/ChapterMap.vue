@@ -101,7 +101,7 @@
         this.setUserImagePosition()
         this.judgeNextChapterBtnStatus()
         if (!this.isLogin) {
-          this.resetRecord() // 将之前的记录清空
+//          this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 0
           this.activeQuestionNo = 0
           this.showChapterChoice()
@@ -249,32 +249,26 @@
       * */
       startChapter () {
         console.log('startChapter', this.villageProgress, this.activeChapterNo, this.activeQuestionNo)
-        if (this.isLogin) {
-          if (this.activeChapterNo < this.villageProgress.chapterNo) {
-            this.activeQuestionNo = 1
-            this.getActiveQuestion()
-            this.showTheExpands()
-          } else if (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7) {
-            this.activeQuestionNo = this.villageProgress.questionNo + 1
-            setTimeout(this.showQuestion(), 300)
-          }
-        } else {
-          this.activeQuestionNo = 1
-          setTimeout(this.showQuestion(), 300)
-        }
-//        console.log('startChapter')
-        //
-//
-//        if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
-//          this.activeQuestionNo = this.villageProgress.questionNo + 1
+//        if (this.isLogin) {
+//          if (this.villageProgress.questionNo === 0) {
+//            console.log(1)
+//            this.activeQuestionNo = this.villageProgress.questionNo + 1
+//            setTimeout(this.showQuestion(), 300)
+//          }
+//          if (this.activeChapterNo < this.villageProgress.chapterNo) {
+//            console.log(2)
+//            this.activeQuestionNo = 1
+//            return
+//          } else if (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7) {
+//            console.log(3)
+//            this.activeQuestionNo = this.villageProgress.questionNo + 1
+//            setTimeout(this.showQuestion(), 300)
+//          }
 //        } else {
-//          this.activeQuestionNo = 1
-//        }
-
-//        setTimeout(() => {
-//          this.showQuestion()
-//        },
-//        300)
+          console.log(4)
+          this.activeQuestionNo = 1
+          setTimeout(this.showQuestion(), 500)
+       // }
       },
       /*
       * 获取当前问题内容
@@ -286,6 +280,7 @@
        * 显示答题浮层
        * */
       showQuestion () {
+        console.log('showQuestion')
         this.getActiveQuestion()
         this.showMask({
           component: 'freshVillage/Question.vue',
