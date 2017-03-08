@@ -62,6 +62,7 @@ Vue.mixin({
        * @param callbackFn
        */
     showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
+      console.log('showMask')
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
 
@@ -69,6 +70,7 @@ Vue.mixin({
      * 隐藏 mask
      */
     hideMask: function () {
+      console.log('hideMask')
       this.$dispatch(eventMap.HIDE_MASK)
     },
 
@@ -180,10 +182,9 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, componentData, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
-
       // 执行完毕后, 重置标识
-      const realCallBack = () => {
-        callbackFn()
+      const realCallBack = (params) => {
+        callbackFn(params)
         me.hideMask()
       }
 
