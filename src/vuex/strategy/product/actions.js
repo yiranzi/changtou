@@ -147,20 +147,15 @@ export const getVipGroupNumber = ({dispatch}) => {
  *  获取QQ群 专业版
  */
 export const getProfessionalGroupNumber = ({dispatch}) => {
-  console.log('enter1')
   getGroup('P').then(
       function (res) {
-        console.log('enter2')
-        console.log('res is ' + res + res.qqNumber)
         dispatch('UPDATE_GROUP_INFO', res.message)
       }
     ).catch(
       function (err) {
-        console.log('enter3')
         console.dir(err)
       }
     )
-  console.log('enter4')
 }
 
 /**
@@ -170,7 +165,6 @@ export const getProfessionalGroupNumber = ({dispatch}) => {
  */
 const getGroup = (type) => {
   const authority = type === 'V' ? 'V' : 'P'
-  console.log('result is' + authority)
   return new Promise(
     (resolve, reject) => {
       getWithinAuth(
@@ -179,8 +173,6 @@ const getGroup = (type) => {
         }
       ).then(
         res => {
-          console.log('res is ' + res + res.qqNumber)
-          console.log('receive ajax')
           resolve(res)
         },
         err => {

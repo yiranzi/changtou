@@ -47,7 +47,7 @@
     },
     route: {
         data () {
-            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice()]).then(
+            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice(), this.DownLoadGroupData()]).then(
               this.setScrollerHeight()
             )
         }
