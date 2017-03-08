@@ -19,14 +19,12 @@
   </div>
 </template>
 <script>
-  import store from '../../vuex/store'
   import mixinImageShare from '../../mixinImageShare'
   export default {
     mixins: [mixinImageShare],
     props: {
       componentData: Object
     },
-    store,
     computed: {
       avatarUrl () {
         return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'

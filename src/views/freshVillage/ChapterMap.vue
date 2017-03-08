@@ -19,6 +19,7 @@
 </div>
 </template>
 <script>
+  import store from '../../vuex/store'
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
   import ShareFloat from '../../components/share/ImageShareFloat.vue'
@@ -26,6 +27,7 @@
   import mixinImageShare from '../../mixinImageShare'
   export default {
     mixins: [mixinImageShare],
+    store,
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
@@ -346,14 +348,8 @@
       /*
       *判断是否可以跳转到吐槽编辑页
       * */
-      onEncouragementPageTap (type) {
-       // if (type === 1) {
-          this.$route.router.go('/village/fill/content')
-      //  } else {
-      //    setTimeout(() => {
-      //      this.showQuestion()
-       //   }, 300)
-     //   }
+      onEncouragementPageTap () {
+        this.$route.router.go('/village/fill/content')
       },
       /*
       * 记录选择的项上传记录
