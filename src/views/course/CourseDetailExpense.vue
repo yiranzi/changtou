@@ -255,6 +255,13 @@
         } else {
           return false
         }
+      },
+
+      /**
+       * 有选择题
+       */
+      hasChoice () {
+        return this.currSubject && this.currSubject.lessonList && (this.currSubject.lessonList.findIndex(lesson => (lesson.choiceQuestion && lesson.choiceQuestion.length > 0)) > -1)
       }
     },
 
@@ -541,37 +548,22 @@
       onChoiceTap () {
         const me = this
         const lessonId = this.selectedLesson.lessonId
-
-        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId)) {
-          const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
-          const lessonTitle = lastSubmitLesson.title
-          me.showConfirm({
-              title: '',
-              message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
-              okText: '去测试',
-              cancelText: '继续听课',
-              okCallback: () => {
-                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
-              }
-          })
-        } else {
-          const choiceQuestionArr = this.selectedLesson.choiceQuestion
-          me.setChoiceQuestion(choiceQuestionArr)
-          me.getReport(lessonId).then(
-            report => {
-              if (report.kpScore) {
-                // 做过选择题
-                me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
-              } else {
-                // 没做过
-                me.showChoice = true
-              }
-            }).catch(
-            err => {
-              console.log(err.message)
+        const choiceQuestionArr = this.selectedLesson.choiceQuestion
+        me.setChoiceQuestion(choiceQuestionArr)
+        me.getReport(lessonId).then(
+          report => {
+            if (report.kpScore) {
+              // 做过选择题
+              me.$route.router.go(`/homework/choice/mark/${me.subjectId}/${lessonId}`)
+            } else {
+              // 没做过
+              me.showChoice = true
             }
-          )
-        }
+          }).catch(
+          err => {
+            console.log(err.message)
+          }
+        )
       },
 
       /**
@@ -584,14 +576,17 @@
         if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId)) {
           const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
           const lessonTitle = lastSubmitLesson.title
+          const essayQuestion = lastSubmitLesson.essayQuestion
+
           me.showConfirm({
-              title: '',
-              message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
-              okText: '去测试',
-              cancelText: '继续听课',
-              okCallback: () => {
-                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
-              }
+            title: '',
+            message: `需要先通过"${lessonTitle}"的作业才能学习本课内容`,
+            okText: '查看作业',
+            cancelText: '继续听课',
+            okCallback: function () {
+              me.setEssayQuestion(essayQuestion)
+              me.goEssayMark(me.lastSubmitlessonId)
+            }
           })
         } else {
           const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
@@ -733,7 +728,7 @@
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
           const currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === this.subjectId)
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length) {
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length && !this.hasChoice) {
             this.listenOnlyLessonId = currSubject.lessonList[this.currUseabLessonArr.length].lessonId
             this.currUseabLessonArr.push(this.listenOnlyLessonId)
           }
@@ -806,59 +801,55 @@
       /**
        * 课程在读并且受限时,显示tip
        */
-      showTipWhenLessonLimitedAndOnLine () {
+      showTipWhenLessonLimitedAndOnLine (type) {
         const me = this
-        let msg = ''
-        let confirmText = '确认'
-        let confirmHandler = null
         const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
         const lessonTitle = lastSubmitLesson.title
         const essayQuestion = lastSubmitLesson.essayQuestion
 
-        if (essayQuestion.assignmentType === 'S') {
-          // 简单作业
-          if (this.isAssignmentSubmitted) {
-            // 如果提交作业
-            confirmText = '查看作业'
-            confirmHandler = function () {
-              me.setEssayQuestion(essayQuestion)
-              me.goEssayMark(me.lastSubmitlessonId)
-            }
-            msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
-          } else {
-            // 如果没有提交作业
-            if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
-              // 有选择题
-              confirmText = '去测试'
-              confirmHandler = function () {
-                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
-              }
-              msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
+        if (!this.hasChoice) {
+          if (essayQuestion.assignmentType === 'S') {
+            if (this.isAssignmentSubmitted) {
+              me.showConfirm({
+                title: '',
+                message: `需要先通过"${lessonTitle}"的作业才能学习本课内容`,
+                okText: '查看作业',
+                cancelText: '继续听课',
+                okCallback: function () {
+                  me.setEssayQuestion(essayQuestion)
+                  me.goEssayMark(me.lastSubmitlessonId)
+                }
+              })
             } else {
-              // 无选择题
-              confirmText = '去写作业'
-              confirmHandler = function () {
+              me.showConfirm({
+                title: '',
+                message: `需要先提交"${lessonTitle}"的作业才能学习本课内容`,
+                okText: '去写作业',
+                cancelText: '继续听课',
+                okCallback: function () {
                   me.setEssayQuestion(essayQuestion)
                   me.goEssayAnswer(me.lastSubmitlessonId)
-              }
-              msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
+                }
+              })
             }
+          } else if (essayQuestion.assignmentType === 'H') {
+            me.showAlert(
+              {
+                message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
+                btnText: '知道了'
+              }
+            )
           }
-            // 加入延迟,防止出现msg被点透的情况
+        } else {
           me.showConfirm({
             title: '',
-            message: msg,
-            okText: confirmText,
+            message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
+            okText: '去测试',
             cancelText: '继续听课',
-            okCallback: confirmHandler
-          })
-        } else if (essayQuestion.assignmentType === 'H') {
-          me.showAlert(
-            {
-              message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
-              btnText: '知道了'
+            okCallback: function () {
+              me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
             }
-          )
+          })
         }
       },
 
