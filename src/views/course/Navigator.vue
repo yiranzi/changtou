@@ -112,8 +112,8 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
+  import {navigatorGetters, userGetters, appUpdateGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions, appUpdateActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -128,7 +128,8 @@
         recommends: navigatorGetters.recommends,
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
-        hasNewInterview: navigatorGetters.hasNewInterview
+        hasNewInterview: navigatorGetters.hasNewInterview,
+        appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -138,7 +139,8 @@
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
-        getVillageProgress: villageActions.getVillageProgress
+        getVillageProgress: villageActions.getVillageProgress,
+        getAppUpdate: appUpdateActions.getAppUpdate
       }
     },
 
@@ -167,7 +169,7 @@
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
         fromPath: '', // 前一个页面url
-        appVersion
+        appVersion  //最新的版本号
       }
     },
     ready () {
@@ -194,39 +196,20 @@
        * 判断应用是否更新
        */
        isAppUpdate () {
-         if (getLocalCache('app-update')) {
-           // 获取到旧版本号
-            if (getLocalCache('app-update')['appVersionNumber'] === this.appVersion) {
-              // 版本号一致就不显示更新
-            } else {
-              //版本号不一致就显示更新
-              this.showAppUpdate()
-            }
-         } else {
-           // 获取不到旧版本号 显示更新
-           this.showAppUpdate()
-           console.log('a')
+         //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === this.appVersion))) {
+           // 应用更新内容
+           //this.getAppUpdate()
+           let appUpdateConentObj = {}
+           appUpdateConentObj.appUpdateVersion = '2.6.1'
+           appUpdateConentObj.appUpdateExplain = ['1 更新了 更新了 更新了 更新了', '2 更新了 更新了', '3 更新了']
+           // 显示更新提示,就存储最新版本号
+           setLocalCache('app-update', {appVersionNumber: this.appVersion})
+           this.showMask({
+             component: 'AppUpdate.vue',
+             componentData: appUpdateConentObj
+           })
          }
-       },
-
-      /**
-       * 显示更新提示,并存储最新版本号
-       */
-       showAppUpdate () {
-         setLocalCache('app-update', {appVersionNumber: this.appVersion})
-         this.showMask({
-           component: 'AppUpdate.vue',
-           hideOnMaskTap: true,
-           callbackName: 'onUpdateTap',
-           callbackFn: this.onUpdateTap.bind(this)
-         })
-       },
-
-      /**
-       * 点击更新后跳转
-       */
-       onUpdateTap () {
-         this.hideMask()
        },
 
       /**

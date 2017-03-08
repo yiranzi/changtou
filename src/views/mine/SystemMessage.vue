@@ -95,9 +95,7 @@
 
     route: {
       data () {
-        this.loadMsgArr().then(() => {
-          console.log(this.msgArr)
-        })
+        this.loadMsgArr()
       }
     },
 

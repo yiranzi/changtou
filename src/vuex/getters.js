@@ -30,6 +30,7 @@ import * as ebookGetters from './ebook/getters'
 import * as newerGuideGetters from './newerGuide/getters'
 import * as classicReadingGetters from './classicReading/getters'
 import * as villageGetters from './freshVillage/getters'
+import * as appUpdateGetters from './appUpdate/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -59,5 +60,6 @@ export {
   ebookGetters,    //电子书
   newerGuideGetters, //入门指南
   classicReadingGetters,  //大咖读经典
-  villageGetters  //理财新手村
+  villageGetters,  //理财新手村
+  appUpdateGetters  //应用更新
 }
