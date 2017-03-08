@@ -44,6 +44,8 @@
           <p class="daily-subtext">财富自由之路第一步</p>
           <span class="daily-anpic-container"></span>
         </div>
+        <!--理财新手村-入口-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -111,7 +113,7 @@
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
   import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions} from '../../vuex/actions'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -134,7 +136,8 @@
         loadNewertestReport: newertestActions.loadNewertestReport,
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
-        isInterviewChange: navigatorActions.isInterviewChange
+        isInterviewChange: navigatorActions.isInterviewChange,
+        getVillageProgress: villageActions.getVillageProgress
       }
     },
 
@@ -395,9 +398,36 @@
       },
 
       /**
+       * 理财新手村入口
+       * */
+      goToFreshVillageTap () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '理财新手村'
+        })
+        // 是否登录
+        if (this.isLogin) {
+          const me = this
+          // 已登录
+          this.getVillageProgress().then(
+            function (progress) {
+              if (progress) {
+                // 有进度  进入新手村的首页
+                me.$route.router.go('/village/map')
+              } else {
+                // 没进度
+                me.$route.router.go('/village/initialPage')
+              }
+            }
+          )
+        } else {
+          // 未登录
+          this.$route.router.go('/village/initialPage')
+        }
+      },
+
+      /**
        * 跳转到大咖读经典
        * */
-
       goToClassicReading (classicId) {   /*统计数据*/
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
@@ -749,14 +779,21 @@
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
     }
-  /*新增大咖读经典*/
+  /*理财新手村-首页入口*/
+    .fresh-village{
+      width: 100%;
+      height: 6rem;
+      background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
+      margin: 1rem 0 0;
+    }
+  /*大咖读经典*/
     .classic-info >p {
       text-align: left;
     }
     .classic {
       &-content {
         margin: 0 .7rem;
-        background: url("../../assets/styles/image/classicReading/classic_background.png") no-repeat;
+        background: url("../../../static/image/classicReading/classic-background.png") no-repeat;
         background-size: contain;
         text-align: left;
         padding: .5rem 0 0;
@@ -773,13 +810,13 @@
         line-height: 1.3rem;
       }
       &-name {
-        color: #444;
+        color: #fff;
         padding-top: .3rem;
         font-size: .7rem;
       }
       &-detail {
         font-size: .65rem;
-        color: #aaa;
+        color: #fff;
       }
 
     }
