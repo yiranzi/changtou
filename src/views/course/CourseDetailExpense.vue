@@ -68,26 +68,26 @@
       <!--听课提醒-->
       <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
-            <div class="action-detail-btn-text" v-touch:tap="showActionSharePanel">分享</div>
+            <div class="action-detail-btn-text">分享</div>
           </div>
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="postpone">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="suspend">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">停课</div>
           </div>
         </div>
         <div class="study-btn">
-          <!--<div>听课提醒</div>-->
-          <div>DAY1<span class="study-btn-changeText" v-touch:tap="showRemind">修改提醒</span></div>
+          <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind">DAY1<span class="study-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
-      <div class="btn-box-buy" v-if="currStatus === 'W'">
+      <div class="btn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
         <div class="action-btn">
           <div class="action-detail-btn">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
@@ -124,18 +124,18 @@
       <div class="remind-title">设置上课提醒</div>
       <div class="remind-tip">最近一周</div>
       <div class="remind-img"><img src="../../assets/styles/image/courseDetail/setRemind.png"></div>
-      <div class="remind-date">提醒时间<span class="remind-date-text">27</span>日~<span class="remind-date-text">5</span>日</div>
-      <picker :data="timeSelectList" ></picker>
-      <div class="remind-btn">确定</div>
+      <div class="remind-date">提醒时间<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日</div>
+      <div class="remind-timePicker"><picker :data='remindTimeList' :value.sync='remindTimeValue' @on-change='onSetTimeChange'></picker></div>
+      <div class="remind-btn" v-touch:tap="setRemind">确定</div>
     </div>
-    <div class="remind remind-cancel">
-      <div class="remind-closeBtn"></div>
+    <div class="remind remind-cancel" :id="isRemoveRemindShow?'show':''">
+      <div class="remind-closeBtn" v-touch:tap="hideRemoveRemind"></div>
       <div class="remind-title">取消上课提醒</div>
-      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">27</span>日~<span class="remind-date-text">5</span>日<span class="remind-date-text">21:00</div>
+      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0]) + (remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
       <div class="remind-cancelImg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
-      <div class="remind-btn">确定</div>
+      <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
     </div>
-    <page-share-panel v-if="showShareFloat" v-touch:tap="onActionTap"></page-share-panel>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
   </div>
 </template>
 <style lang="less">
@@ -242,11 +242,13 @@
       display: block;
       position: fixed;
       width: 100%;
-      height: 10rem;
-      bottom:-10rem;
+      bottom: -22rem;
       background:#fff;
       z-index:200;
       border-top:1px solid #f0eff5;
+      &-timePicker{
+        padding-bottom: 98/40rem;
+       }
       &-closeBtn{
         position: absolute;
         right: 3/4rem;
@@ -358,23 +360,24 @@
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
-  import {setSessionCache} from '../../util/cache'
+  import {setSessionCache, setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {MSITE_URL} from '../../frame/serverConfig'
-  import PageSharePanel from '../../components/share/PageSharePanel.vue'
   import mixinPageShare from '../../mixinPageShare'
+  import mixinModal from '../../mixinModal'
   import Picker from 'vux/picker'
+  import PageShareFloat from '../../components/share/PageShareFloat.vue'
   let hours = []
   let mins = []
-  for (let i = 1; i < 25; i++) {
-      hours.push(i + '')
+  for (let i = 0; i < 24; i++) {
+      hours.push(i + ' 时')
   }
-  for (let i = 1; i < 61; i++) {
-    mins.push(i + '')
+  for (let i = 0; i < 60; i++) {
+    mins.push((i < 10 ? ('0' + i) : i) + ' 分')
   }
   export default {
-    mixin: [mixinPageShare],
+    mixin: [mixinPageShare, mixinModal],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
@@ -408,10 +411,18 @@
      */
     data () {
       return {
+        isShareShow: false,
         isRemindShow: false,   //定时弹框状态
+        isRemoveRemindShow: false,  //取消弹框显示
+        isRemindSet: false,
 
-        timeSelectList: [hours],    //日期选择数组
-        timeSelected: [],
+        remindTimeList: [hours, mins],   //  提醒时间选择的列表
+        remindTimeValue: [hours[0], mins[0]],    //提醒时间的默认值
+        remindTimeData: ['0', '0'],    //选择的提醒时间
+
+        remindTimeStart: {},   //提醒开始时间
+        remindTimeEnd: {},   //提醒结束时间
+        remindList: {},  //提醒时间毫秒数列表
 
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
@@ -485,6 +496,17 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
+        if (items) {
+          this.remindTimeStart = items.start
+          this.remindTimeEnd = items.end
+          this.remindList = items.remindList
+          this.isRemindSet = true
+          this.remindTimeData = items.time[0]
+        } else {
+          this.isRemindSet = false
+        }
+
         this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
@@ -552,6 +574,13 @@
           this.$broadcast('expense-detail-deactive')
           next()
         }
+        this.isRemindShow = false
+        this.isRemoveRemindShow = false
+        this.isRemindSet = false
+        this.remindTimeValue = ['0', '0']
+        this.remindTimeStart = {}
+        this.remindTimeEnd = {}
+        this.remindList = {}
       }
     },
 
@@ -751,16 +780,99 @@
 
     methods: {
       /**
+       * 显示分享浮层
+       **/
+      showShare () {
+        this.isShareShow = true
+      },
+      /**
+       * 获取日期
+       **/
+      getSetTime () {
+        let currDate = new Date()
+        currDate.setDate(currDate.getDate() + 1)
+        let startTime = {
+          year: currDate.getFullYear(),
+          month: currDate.getMonth() + 1,
+          day: currDate.getDate()
+        }
+        this.remindTimeStart = startTime
+        currDate.setDate(currDate.getDate() + 6)
+        let endTime = {
+          year: currDate.getFullYear(),
+          month: currDate.getMonth() + 1,
+          day: currDate.getDate()
+        }
+        this.remindTimeEnd = endTime
+      },
+      /**
+       * 获取每天提醒的时间
+       **/
+      getRemindList () {
+        let date = new Date()
+        date.setDate(date.getDate() + 1)
+        date.setHours(parseInt(this.remindTimeData[0]))
+        date.setMinutes(parseInt(this.remindTimeData[1]))
+        let remindList = []
+        for (let i = 0; i < 7; i++) {
+          remindList.push(date.getTime())
+          date.setDate(date.getDate() + 1)
+        }
+        this.remindList[this.subjectId] = remindList
+        let items = {
+          remindList,
+          'start': this.remindTimeStart,
+          'end': this.remindTimeEnd,
+          'time': [this.remindTimeData]
+        }
+        setLocalCache(('REMIND_TIME_DATA_SUBID_' + this.subjectId), items)
+      },
+      /**
+       * 定时器选择函数
+       **/
+       onSetTimeChange (value) {
+        this.remindTimeData = [value[0], value[1]]
+      },
+      /**
        * 定时提醒设置显示
        **/
       showRemind () {
         this.isRemindShow = true
+        this.getSetTime()
       },
       /**
        * 定时提醒隐藏
        **/
       hideRemind () {
         this.isRemindShow = false
+      },
+      /**
+       * 取消提醒设置显示
+       **/
+      showRemoveRemind () {
+        this.isRemoveRemindShow = true
+      },
+      /**
+       * 取消提醒隐藏
+       **/
+      hideRemoveRemind () {
+        this.isRemoveRemindShow = false
+      },
+      /**
+       *  设置定时提醒
+       */
+      setRemind () {
+        this.isRemindShow = false
+        this.getRemindList()
+        this.isRemindSet = true
+      },
+      /**
+       * 取消定时提醒
+       **/
+      removeRemind () {
+        this.isRemoveRemindShow = false
+        clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
+        this.isRemindSet = false
       },
       /**
        * 选择题被点击
@@ -1346,8 +1458,8 @@
       essayFloat,
       PptPanel,
       IctBackBtn,
-      PageSharePanel,
-      Picker
+      Picker,
+      PageShareFloat
     }
   }
 </script>

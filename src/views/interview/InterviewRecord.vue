@@ -32,7 +32,7 @@
         <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
       <!--</div>-->
     </scroller>
-    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
+    <share-float :show.sync="showShareFloat" @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
   </div>
 </template>
 
