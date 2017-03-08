@@ -19,9 +19,7 @@
   </div>
 </template>
 <script>
-  import mixinImageShare from '../../mixinImageShare'
   export default {
-    mixins: [mixinImageShare],
     props: {
       componentData: Object
     },
