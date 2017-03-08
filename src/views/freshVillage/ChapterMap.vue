@@ -430,12 +430,23 @@
         this.showMask({
           component: 'freshVillage/Proverbs.vue',
           hideOnMaskTap: false,
-          callbackName: 'closeProverb',
+          callbackName: 'onVillageProverbTap',
           componentData: this.question.proverbs,
-          callbackFn: this.showUpgradeJudgement.bind(this)
+          callbackFn: this.onVillageProverbTap.bind(this)
         })
+        const shareImgId = 'village-proverb'
+        setTimeout(this.loadShareImageUrl(shareImgId), 500)
       },
-
+      /*
+      * 点击箴言页面的操作
+      * */
+      onVillageProverbTap (type) {
+        if (type === 1) {
+          this.showShareFloat = true
+        } else {
+          this.showUpgradeJudgement()
+        }
+      },
       /*
       * 显示突发事件
       * */
@@ -463,11 +474,12 @@
           componentData: upgradePageData,
           callbackFn: this.onVillageUpgradeTap.bind(this)
         })
-        setTimeout(this.loadShareImageUrl, 500)
+        const shareImgId = 'village-upgrade-detail'
+        setTimeout(this.loadShareImageUrl(shareImgId), 500)
       },
 
-      loadShareImageUrl () {
-        const origin = window.document.getElementById('village-upgrade-detail')
+      loadShareImageUrl (shareImgId) {
+        const origin = window.document.getElementById(shareImgId)
         const element = origin.cloneNode(true)
         const height = origin.offsetHeight
         const width = origin.offsetWidth

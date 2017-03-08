@@ -7,8 +7,7 @@
     <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
-
-      <div class="village-upgrade-detail" v-el:share-pic id="village-upgrade-detail">
+      <div class="village-upgrade-detail" id="village-upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
         <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
