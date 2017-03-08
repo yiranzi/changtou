@@ -74,7 +74,6 @@
     },
     watch: {
       villageProgress (newValue) {
-        console.log('villageProgress', newValue)
         this.setUserImagePosition()
         this.judgeNextChapterBtnStatus()
       },
@@ -101,7 +100,7 @@
         this.setUserImagePosition()
         this.judgeNextChapterBtnStatus()
         if (!this.isLogin) {
-//          this.resetRecord() // 将之前的记录清空
+          this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 0
           this.activeQuestionNo = 0
           this.showChapterChoice()
@@ -174,7 +173,6 @@
       * 判断进度
       * */
       JudgeProgress () {
-        console.log('JudgeProgress')
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
@@ -248,27 +246,13 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        console.log('startChapter', this.villageProgress, this.activeChapterNo, this.activeQuestionNo)
-//        if (this.isLogin) {
-//          if (this.villageProgress.questionNo === 0) {
-//            console.log(1)
-//            this.activeQuestionNo = this.villageProgress.questionNo + 1
-//            setTimeout(this.showQuestion(), 300)
-//          }
-//          if (this.activeChapterNo < this.villageProgress.chapterNo) {
-//            console.log(2)
-//            this.activeQuestionNo = 1
-//            return
-//          } else if (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7) {
-//            console.log(3)
-//            this.activeQuestionNo = this.villageProgress.questionNo + 1
-//            setTimeout(this.showQuestion(), 300)
-//          }
-//        } else {
-          console.log(4)
+        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo && this.villageProgress.questionNo === 0)) {
           this.activeQuestionNo = 1
-          setTimeout(this.showQuestion(), 500)
-       // }
+          setTimeout(() => {
+            this.showQuestion()
+          },
+          300)
+        }
       },
       /*
       * 获取当前问题内容
@@ -280,7 +264,6 @@
        * 显示答题浮层
        * */
       showQuestion () {
-        console.log('showQuestion')
         this.getActiveQuestion()
         this.showMask({
           component: 'freshVillage/Question.vue',
@@ -350,16 +333,22 @@
         this.showMask({
           component: 'freshVillage/GiveEncouragement.vue',
           hideOnMaskTap: false,
-          callbackName: 'showAdviceEditor',
+          callbackName: 'onEncouragementPageTap',
           componentData: 1,
-          callbackFn: this.showAdviceEditor.bind(this)
+          callbackFn: this.onEncouragementPageTap.bind(this)
         })
       },
       /*
-      *跳转到吐槽编辑页
+      *判断是否可以跳转到吐槽编辑页
       * */
-      showAdviceEditor () {
-        this.$route.router.go('/village/fill/content')
+      onEncouragementPageTap (type) {
+       // if (type === 1) {
+          this.$route.router.go('/village/fill/content')
+      //  } else {
+      //    setTimeout(() => {
+      //      this.showQuestion()
+       //   }, 300)
+     //   }
       },
       /*
       * 记录选择的项上传记录
@@ -420,7 +409,7 @@
        *
        * */
       showUpgradeJudgement () {
-        if (this.activeChapterNo < this.villageProgress.chapterNo || (this.activeChapterNo === this.villageProgress.chapterNo && this.activeQuestionNo === 7)) {
+        if (this.activeChapterNo < this.villageProgress.chapterNo || (this.activeChapterNo === this.villageProgress.chapterNo && (this.activeQuestionNo === 7 || this.villageProgress.questionNo === 7))) {
           return
         }
         if (this.activeQuestionNo === 6) {
@@ -479,7 +468,6 @@
       }
     },
     components: {
-      //  chapterChoice,
       wisdom
     }
   }

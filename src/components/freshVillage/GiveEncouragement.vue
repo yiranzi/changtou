@@ -21,7 +21,7 @@
        * 跪求鼓励吐槽
        */
       onEncouragementTap () {
-        this.$dispatch('showAdviceEditor')
+        this.$dispatch('onEncouragementPageTap')
       },
       /**
        * 右上角关闭窗口
