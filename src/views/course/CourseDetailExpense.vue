@@ -89,7 +89,7 @@
       <!--立即购买-->
       <div class="btn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
         <div class="action-btn">
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
@@ -105,7 +105,7 @@
       <!--激活课程-->
       <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
-          <div class="action-detail-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
@@ -136,10 +136,24 @@
       <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
     </div>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+    <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'"></div>
   </div>
 </template>
 <style lang="less">
   .subject-detail {
+    .modalCover,.modalCover-show{
+      height:0;
+      background-color: black;
+      opacity: 0.7;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      width: 100%;
+    }
+    .modalCover-show{
+      height:100%;
+    }
     .question-naire-btn{
       width:2.025rem;
       height: 2.075rem;
@@ -325,11 +339,11 @@
         }
        }
       &-img{
-        height: 3rem;
-        width: 4rem;
+        height: 78/40rem;
+        width: 112/40rem;
         position: absolute;
-        top:13/4rem;
-        right: 11/4rem;
+        top:116/40rem;
+        right: 0.4rem;
         img{
           width: 100%;
           height: 100%;
