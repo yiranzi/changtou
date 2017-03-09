@@ -210,6 +210,7 @@
         currUseabLessonArr: [], //当前可用lessonId集合
         currStatus: 'L', //当前课程状态 {N：在读 | E：过期 | Y：毕业 | P：暂停 | I ：未激活 | W : 没有进度} 默认L: 加载中
         lastSubmitlessonId: 0, //最后一次提交作业的lesson
+        listenOnlyLessonId: 0, //只能听课,但不能做作业的lesson
         isAssignmentSubmitted: false,
         postponeCount: 0,
         isSuspendUsed: false,
@@ -254,6 +255,13 @@
         } else {
           return false
         }
+      },
+
+      /**
+       * 有选择题
+       */
+      hasChoice () {
+        return this.currSubject && this.currSubject.lessonList && (this.currSubject.lessonList.findIndex(lesson => (lesson.choiceQuestion && lesson.choiceQuestion.length > 0)) > -1)
       }
     },
 
@@ -564,40 +572,59 @@
       onEssayTap (limitedLessonId, limitedEssayQuestion) {
         const me = this
         const lessonId = limitedLessonId || this.selectedLesson.lessonId
-        const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
-        me.setEssayQuestion(essayQuestion)
-        me.getArticle(lessonId).then(
-          evaluation => {
-            if (evaluation && evaluation.status !== null) {
-              switch (evaluation.status) {
-                case 0:
-//                   console.log('作业已提交')
-                  me.goEssayMark(lessonId)
-                  break
-                case 1:
-//                   console.log('草稿已提交 写作业')
-                  me.goEssayAnswer(lessonId)
-                  break
-                case 2:
-//                   console.log('已批改 未通过 查看作业')
-                  me.goEssayMark(lessonId)
-                  break
-                case 3:
-//                   console.log('已批改 通过 查看作业')
-                  me.goEssayMark(lessonId)
-                  break
-                default:
-                  me.showEssayFloat()
-                  break
-              }
-            } else {
-              me.showEssayFloat()
+
+        if (parseInt(lessonId) === parseInt(this.listenOnlyLessonId)) {
+          const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
+          const lessonTitle = lastSubmitLesson.title
+          const essayQuestion = lastSubmitLesson.essayQuestion
+
+          me.showConfirm({
+            title: '',
+            message: `需要先通过"${lessonTitle}"的作业才能学习本课内容`,
+            okText: '查看作业',
+            cancelText: '继续听课',
+            okCallback: function () {
+              me.setEssayQuestion(essayQuestion)
+              me.goEssayMark(me.lastSubmitlessonId)
             }
-        }).catch(
-          err => {
-            console.log(err.message)
-          }
-        )
+          })
+        } else {
+          const essayQuestion = limitedEssayQuestion || this.selectedLesson.essayQuestion
+          me.setEssayQuestion(essayQuestion)
+          me.getArticle(lessonId).then(
+            evaluation => {
+              if (evaluation && evaluation.status !== null) {
+                switch (evaluation.status) {
+                  case 0:
+    //                   console.log('作业已提交')
+                    me.goEssayMark(lessonId)
+                    break
+                  case 1:
+    //                   console.log('草稿已提交 写作业')
+                    me.goEssayAnswer(lessonId)
+                    break
+                  case 2:
+    //                   console.log('已批改 未通过 查看作业')
+                    me.goEssayMark(lessonId)
+                    break
+                  case 3:
+    //                   console.log('已批改 通过 查看作业')
+                    me.goEssayMark(lessonId)
+                    break
+                  default:
+                    me.showEssayFloat()
+                    break
+                }
+              } else {
+               me.showEssayFloat()
+              }
+            }
+          ).catch(
+            err => {
+              console.log(err.message)
+            }
+          )
+        }
       },
       /**
        * 跳转到问答题 编辑页
@@ -701,8 +728,9 @@
         // 当课程为在读状态 N 时, 若已经提交了作业, 自动给他添加听下一课的权限
         if (this.currStatus === 'N' && this.isAssignmentSubmitted) {
           const currSubject = this.expenseSubjectArr.find(subject => subject.subjectId === this.subjectId)
-          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length) {
-            this.currUseabLessonArr.push(currSubject.lessonList[this.currUseabLessonArr.length].lessonId)
+          if (this.currUseabLessonArr.length > 0 && this.currUseabLessonArr.length < currSubject.lessonList.length && !this.hasChoice) {
+            this.listenOnlyLessonId = currSubject.lessonList[this.currUseabLessonArr.length].lessonId
+            this.currUseabLessonArr.push(this.listenOnlyLessonId)
           }
         }
 
@@ -756,6 +784,8 @@
           this.lastSubmitlessonId = this.currUseabLessonArr[this.currUseabLessonArr.length - 1]
         }
 
+        this.listenOnlyLessonId = 0
+
         // 设置当前选中(进度改变后), 课程可不可以听
         if (this.selectedLesson) {
           // 如果是公开课,永远不受限
@@ -771,59 +801,55 @@
       /**
        * 课程在读并且受限时,显示tip
        */
-      showTipWhenLessonLimitedAndOnLine () {
+      showTipWhenLessonLimitedAndOnLine (type) {
         const me = this
-        let msg = ''
-        let confirmText = '确认'
-        let confirmHandler = null
         const lastSubmitLesson = this.currSubject.lessonList.find(lesson => lesson.lessonId === me.lastSubmitlessonId)
         const lessonTitle = lastSubmitLesson.title
         const essayQuestion = lastSubmitLesson.essayQuestion
 
-        if (essayQuestion.assignmentType === 'S') {
-          // 简单作业
-          if (this.isAssignmentSubmitted) {
-            // 如果提交作业
-            confirmText = '查看作业'
-            confirmHandler = function () {
-              me.setEssayQuestion(essayQuestion)
-              me.goEssayMark(me.lastSubmitlessonId)
-            }
-            msg = `需要先通过"${lessonTitle}"的作业才能学习本课内容`
-          } else {
-            // 如果没有提交作业
-            if (lastSubmitLesson.choiceQuestion && lastSubmitLesson.choiceQuestion.length > 0) {
-              // 有选择题
-              confirmText = '去测试'
-              confirmHandler = function () {
-                me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
-              }
-              msg = `需要先通过"${lessonTitle}"的测试才能学习本课内容`
+        if (!this.hasChoice) {
+          if (essayQuestion.assignmentType === 'S') {
+            if (this.isAssignmentSubmitted) {
+              me.showConfirm({
+                title: '',
+                message: `需要先通过"${lessonTitle}"的作业才能学习本课内容`,
+                okText: '查看作业',
+                cancelText: '继续听课',
+                okCallback: function () {
+                  me.setEssayQuestion(essayQuestion)
+                  me.goEssayMark(me.lastSubmitlessonId)
+                }
+              })
             } else {
-              // 无选择题
-              confirmText = '去写作业'
-              confirmHandler = function () {
+              me.showConfirm({
+                title: '',
+                message: `需要先提交"${lessonTitle}"的作业才能学习本课内容`,
+                okText: '去写作业',
+                cancelText: '继续听课',
+                okCallback: function () {
                   me.setEssayQuestion(essayQuestion)
                   me.goEssayAnswer(me.lastSubmitlessonId)
-              }
-              msg = `需要先提交"${lessonTitle}"的作业才能学习本课内容`
+                }
+              })
             }
+          } else if (essayQuestion.assignmentType === 'H') {
+            me.showAlert(
+              {
+                message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
+                btnText: '知道了'
+              }
+            )
           }
-            // 加入延迟,防止出现msg被点透的情况
+        } else {
           me.showConfirm({
             title: '',
-            message: msg,
-            okText: confirmText,
+            message: `需要先通过"${lessonTitle}"的测试才能学习本课内容`,
+            okText: '去测试',
             cancelText: '继续听课',
-            okCallback: confirmHandler
-          })
-        } else if (essayQuestion.assignmentType === 'H') {
-          me.showAlert(
-            {
-              message: `需要前往长投网www.ichangtou.com，提交"${lessonTitle}"的作业才能学习本课内容`,
-              btnText: '知道了'
+            okCallback: function () {
+              me.$route.router.go(`/homework/choice/answer/${me.subjectId}/${me.lastSubmitlessonId}`)
             }
-          )
+          })
         }
       },
 
