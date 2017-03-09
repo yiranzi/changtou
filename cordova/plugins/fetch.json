@@ -86,7 +86,7 @@
         },
         "is_top_level": true,
         "variables": {
-            "API_KEY": "7cc90eaad71ac3582d375f57"
+            "APP_KEY": "7cc90eaad71ac3582d375f57"
         }
     },
     "cordova-plugin-qqsdk": {
@@ -154,6 +154,14 @@
             "id": "cordova-plugin-whitelist@1"
         },
         "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-jcore": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-jcore"
+        },
+        "is_top_level": false,
         "variables": {}
     }
 }

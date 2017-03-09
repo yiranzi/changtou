@@ -83,7 +83,7 @@
         </div>
         <div class="study-btn">
           <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
-          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind">DAY{{remindCurrDate}}<span class="study-btn-changeText">修改提醒</span></div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="study-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
@@ -273,13 +273,18 @@
       transition: all 0.5s;
     }
     .remind,.remind-cancel{
-      transition:all 0.5s;
       display: block;
       position: fixed;
       width: 100%;
-      bottom: -22rem;
+      bottom: 0;
       background:#fff;
       z-index:200;
+      transition:all 0.5s;
+      -webkit-transform: translateY(100%);
+      transform: translateY(100%);
+      &-count-down{
+         vertical-align: middle;
+       }
       &-timePicker{
         padding-bottom: 98/40rem;
        }
@@ -373,10 +378,9 @@
     .remind-cancel{
       height: 698/40rem;
       display: block;
-      bottom: -698/40rem;
     }
     #show{
-      bottom:0;
+      transform: translate(0,0);
     }
   }
 </style>
@@ -947,20 +951,18 @@
           }
         }
         if (Device.platform === platformMap.ANDROID) {
-          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
-            Jpush.setLocalNotificationANDROID(
-              1,
-              '到时间上课啦',
-              '到时间上课啦',
-              'remind-' + this.subjectId,
-              this.remindList[this.subjectId][i],
-              {'name': 1}
-            )
-          }
+          Jpush.setLocalNotificationANDROID(
+            1,
+            '到时间上课啦',
+            '到时间上课啦',
+            'remind-' + this.subjectId,
+            1000,
+            {'name': 1}
+          )
+          this.isRemindShow = false
+          this.isRemindSet = true
+          this.showCheckTip('设置成功')
         }
-        this.isRemindShow = false
-        this.isRemindSet = true
-        this.showCheckTip('设置成功')
       },
       /**
        * 取消定时提醒
