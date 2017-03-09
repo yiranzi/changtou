@@ -285,6 +285,7 @@
       &-count-down{
          vertical-align: middle;
        }
+       
       &-timePicker{
         padding-bottom: 98/40rem;
        }
