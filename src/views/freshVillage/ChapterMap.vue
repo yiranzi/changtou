@@ -6,7 +6,8 @@
   <div>
     <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
       <div class="other-element">
-        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
+        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
+        <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
         <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
         <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
@@ -97,6 +98,13 @@
         if (newValue) {
           this.getVillageProgress()
         }
+      },
+      showWisdom (newValue) {
+        if (newValue) {
+          this.setViewBackHandler()
+        } else {
+          this.resetViewBackHandler()
+        }
       }
     },
     route: {
@@ -104,12 +112,14 @@
         if (from.path === '/entry' || from.path === '/village/advise' || from.path === '/village/fill/content') {
           return
         }
+       // this.updateRecord(0, 0)
         this.setUserImagePosition()
         this.judgeNextChapterBtnStatus()
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
-          this.activeChapterNo = 0
-          this.activeQuestionNo = 0
+          this.activeChapterNo = 1
+          this.activeQuestionNo = 1
+          this.chapter = this.getChapter(this.activeChapterNo)
           this.showChapterChoice()
         } else {
           this.JudgeProgress()
@@ -117,9 +127,22 @@
       },
       deactivate () {
         this.hideMask()
+        this.resetViewBackHandler()
       }
     },
     methods: {
+      /**
+       * 设置物理键back
+       */
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.closeWisdom
+      },
+      /*
+      * 解绑物理back键
+      * */
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
       /*
       * 点击吐槽
       * */
@@ -196,6 +219,7 @@
       * 点击进入下一关,或是下一章
       * */
       goNextStep () {
+        console.log('goNextStep', this.villageProgress, this.activeQuestionNo)
         if (this.showNextChapterBtn) {
           this.showChapterChoice()
         } else {
@@ -206,6 +230,8 @@
               this.hasShownEncouragement = true
               return
             }
+            this.showQuestion()
+          } else if (this.villageProgress.chapterNo < this.activeChapterNo) {
             this.showQuestion()
           }
         }
@@ -221,8 +247,8 @@
         }
         this.showMask({
           component: 'freshVillage/ChapterChoice.vue',
-          hideOnMaskTap: false,
-          callbackName: 'onChapterSelected', //onChapterSelected
+          hideOnMaskTap: true,
+          callbackName: 'onChapterSelected',
           componentData: choiceComponentData,
           callbackFn: this.villageShowTheStory.bind(this)
         })
@@ -253,8 +279,11 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo && (this.villageProgress.questionNo === 0 || this.villageProgress.questionNo === 7))) {
+        console.log('startChapter')
+        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo &&
+          (this.villageProgress.questionNo === 0 || this.villageProgress.questionNo === 7))) {
           this.activeQuestionNo = 1
+          console.log(1)
           setTimeout(() => {
             this.showQuestion()
           },
@@ -284,19 +313,24 @@
        * 选择关卡
        * */
       onLevelTap (level) {
+        console.log('onLevelTap', this.activeChapterNo, this.villageProgress)
         if (this.activeChapterNo < this.villageProgress.chapterNo) {
           this.onRecordedQuestionTap(level)
+          console.log(1)
           return
         }
         if (this.villageProgress.chapterNo === this.activeChapterNo) {
           if (this.villageProgress.questionNo === 7 || level <= this.villageProgress.questionNo) {
             this.onRecordedQuestionTap(level)
+            console.log(2)
             return
           }
           if (level > this.villageProgress.questionNo + 1) {
+            console.log(3)
             return
           }
           if (level === this.villageProgress.questionNo + 1) {
+            console.log(4)
             if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
               this.showEncourage()
               this.hasShownEncouragement = true
@@ -308,9 +342,11 @@
           return
         }
         if (this.activeChapterNo > this.villageProgress.chapterNo && level < this.activeQuestionNo + 1) {
+          console.log(6)
           this.activeQuestionNo = level
           this.showQuestion()
         }
+        console.log(5)
       },
 
       /*
@@ -507,31 +543,31 @@
     height: 100%;
     .level {
       position: absolute;
-      width: 2.1rem;
-      height: 2.1rem;
+      width: 3rem;
+      height: 3rem;
       &-6 {
-        left: 7.7rem;
-        top: 6.1rem;
+        left: 7.2rem;
+        top: 4.7rem;
       }
       &-5 {
-        left: 8.96rem;
-        top: 11.4rem;
+        left: 8.5rem;
+        top: 9.8rem;
       }
       &-4 {
-        left: 6.7rem;
-        top: 16.6rem;
+        left: 6.3rem;
+        top: 15.5rem;
       }
       &-3 {
-        left: 9.4rem;
-        bottom: 9.7rem;
+        left: 9rem;
+        bottom: 9.6rem;
       }
       &-2 {
-        left: 8.9rem;
-        bottom: 4.8rem;
+        left: 8.5rem;
+        bottom: 4.7rem;
       }
       &-1 {
-        left: 6.8rem;
-        bottom: .2rem;
+        left: 6.6rem;
+        bottom: 0;
       }
     }
     .user-img {
@@ -540,24 +576,20 @@
       height: 2.4rem;
       border: 4px solid #fff;
       border-radius: 50%;
-      &-7 {
-        left: 7.4rem;
-        top: -30.1rem;
-      }
-      &-6 {
-        left: 7.4rem;
-        top: -30.1rem;
+      &-7, &-6{
+        left: 7.2rem;
+        bottom: 29.5rem;
       }
       &-5 {
-        left: 8.6rem;
-        top: -24.8rem;
+        left: 8.5rem;
+        bottom: 24.5rem
       }
       &-4 {
-        left: 6.4rem;
-        top: -19.6rem;
+        left: 6.3rem;
+        bottom: 19.3rem;
       }
       &-3 {
-        left: 9.2rem;
+        left: 9rem;
         bottom: 14.7rem;
       }
       &-2 {
@@ -596,10 +628,18 @@
       opacity: .7;
       color: #888;
     }
+    .close-icon-container {
+      display:inline-block;
+      position: absolute;
+      top: 1rem;
+      right: .75rem;
+      width: 2rem;
+      height: 2rem;
+    }
     .close-icon:after{
       position: absolute;
-      top: 1.3rem;
-      right: .75rem;
+      top: .6rem;
+      right: .6rem;
       font-family: 'myicon';
       content: '\e90d';
       font-size: .9rem;

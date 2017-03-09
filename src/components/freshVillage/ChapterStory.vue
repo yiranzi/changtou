@@ -12,7 +12,7 @@
         <div class="task-content">{{componentData.task}}</div>
       </div>
     </div>
-    <div class="next-btn" v-touch:tap="onEnterMainPageTap">下一步</div>
+    <div class="next-btn" v-touch:tap="onEnterMainPageTap">明白了</div>
     </div>
 </template>
 <script>

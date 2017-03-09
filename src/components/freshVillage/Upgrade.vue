@@ -7,10 +7,11 @@
     <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
+      <div class="village-upgrade-close-container" v-touch:tap="updateRecord"><span class="close-icon"></span></div>
       <div class="village-upgrade-detail" id="village-upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
+        <div class="level">LV.{{componentData.chapterNo}}</div>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>
@@ -48,6 +49,25 @@
     z-index: 1;
     width: 157%;
   }
+  .village-upgrade-close-container {
+    display: inline-block;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    z-index: 1;
+    right: .2rem;
+    top: 1.2rem;
+    .close-icon:after {
+      display: inline-block;
+      position: absolute;
+      right: .5rem;
+      top: .5rem;
+      font-family: 'myicon';
+      content: '\e90d';
+      color: #aaa;
+      font-size: .9rem;
+    }
+  }
   .fresh-village-upgrade {
     position: relative;
     .upgrade-part-title {
@@ -57,17 +77,6 @@
       font-size: .9rem;
       font-weight: bold;
       color: #fff;
-    }
-    .close-icon:after {
-      display: inline-block;
-      position: absolute;
-      z-index: 1;
-      right: 1rem;
-      top: 1rem;
-      font-family: 'myicon';
-      content: '\e90d';
-      color: #aaa;
-      font-size: .8rem;
     }
     .share-btn {
       margin: 1.5rem auto 0;

@@ -96,8 +96,11 @@ export default {
     .ict-titlebar-title{
       background: #fefe47;
       color: #000;
-      .ict-titlebar .left-arrow:before{
-        border-color: #000;
+      .ict-titlebar {
+        .left-arrow:before{
+          border-top: 1px solid #000 !important;
+          border-left: 1px solid #000 !important;
+        }
       }
     }
     .advise-title-img{

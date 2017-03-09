@@ -4,7 +4,7 @@
  */
 <template>
     <div class="fresh-village-proverbs">
-      <span class="close-icon" v-touch:tap="onCloseTap"></span>
+      <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       <div class="village-proverbs" id="village-proverb">
         <div class="proverbs-top">
           <div class="proverbs-title">投资箴言</div>
@@ -40,16 +40,6 @@ export default {
     min-height: 22rem;
     background-color: #fff;
     border-radius: 20px;
-    .close-icon:after{
-      display: inline-block;
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-family: 'myicon';
-      content: '\e90d';
-      color: #aaa;
-      font-size: .8rem;
-    }
     .share-btn {
       position: absolute;
       left: 4rem;
