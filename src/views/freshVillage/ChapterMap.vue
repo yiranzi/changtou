@@ -12,8 +12,8 @@
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
         <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
       </div>
-      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
       <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
+      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
     </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
     <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
@@ -81,7 +81,7 @@
       /*关卡背景*/
     },
     watch: {
-      villageProgress (newValue) {
+      villageProgress () {
         this.setUserImagePosition()
         this.judgeNextChapterBtnStatus()
       },
@@ -109,12 +109,13 @@
     },
     route: {
       data ({from}) {
-        if (from.path === '/entry' || from.path === '/village/advise' || from.path === '/village/fill/content') {
+        if (from.path === '/village/advise' || from.path === '/village/fill/content') {
           return
         }
-       // this.updateRecord(0, 0)
-        this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
+        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0 || !this.isLogin)) {
+          this.showQuestion()
+          return
+        }
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 1
@@ -124,6 +125,8 @@
         } else {
           this.JudgeProgress()
         }
+        this.judgeNextChapterBtnStatus()
+        this.setUserImagePosition()
       },
       deactivate () {
         this.hideMask()
@@ -157,7 +160,7 @@
           this.showNextChapterBtn = true
           return
         }
-        if (this.villageProgress.chapterNo === this.activeChapterNo && (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7)) {
+        if (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7) {
           this.showNextChapterBtn = true
         } else {
           this.showNextChapterBtn = false
@@ -219,7 +222,6 @@
       * 点击进入下一关,或是下一章
       * */
       goNextStep () {
-        console.log('goNextStep', this.villageProgress, this.activeQuestionNo)
         if (this.showNextChapterBtn) {
           this.showChapterChoice()
         } else {
@@ -231,6 +233,8 @@
               return
             }
             this.showQuestion()
+          } else if (this.villageProgress.questionNo === 6) {
+            this.onRecordedQuestionTap(this.activeQuestionNo)
           } else if (this.villageProgress.chapterNo < this.activeChapterNo) {
             this.showQuestion()
           }
@@ -258,7 +262,7 @@
       * */
       villageShowTheStory (chapterNum) {
         if ((!this.isLogin && chapterNum === 1) || ((this.isLogin) && (chapterNum <= this.villageProgress.chapterNo + 1))) {
-          this.activeChapterNo = chapterNum
+          this.activeChapterNo = chapterNum                       /*当前章节确定*/
           this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
           setTimeout(this.showChapterStory, 300)
         }
@@ -279,11 +283,12 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        console.log('startChapter')
-        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo &&
-          (this.villageProgress.questionNo === 0 || this.villageProgress.questionNo === 7))) {
+        if (this.isLogin && this.activeChapterNo <= this.villageProgress.chapterNo) {
+          return
+        }
+        if (!this.isLogin || this.isLogin && (this.activeChapterNo > this.villageProgress.chapterNo &&
+          (this.villageProgress.questionNo === 7 || this.villageProgress.chapterNo === 0))) {
           this.activeQuestionNo = 1
-          console.log(1)
           setTimeout(() => {
             this.showQuestion()
           },
@@ -313,24 +318,19 @@
        * 选择关卡
        * */
       onLevelTap (level) {
-        console.log('onLevelTap', this.activeChapterNo, this.villageProgress)
         if (this.activeChapterNo < this.villageProgress.chapterNo) {
           this.onRecordedQuestionTap(level)
-          console.log(1)
           return
         }
         if (this.villageProgress.chapterNo === this.activeChapterNo) {
           if (this.villageProgress.questionNo === 7 || level <= this.villageProgress.questionNo) {
             this.onRecordedQuestionTap(level)
-            console.log(2)
             return
           }
           if (level > this.villageProgress.questionNo + 1) {
-            console.log(3)
             return
           }
           if (level === this.villageProgress.questionNo + 1) {
-            console.log(4)
             if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
               this.showEncourage()
               this.hasShownEncouragement = true
@@ -342,11 +342,9 @@
           return
         }
         if (this.activeChapterNo > this.villageProgress.chapterNo && level < this.activeQuestionNo + 1) {
-          console.log(6)
           this.activeQuestionNo = level
           this.showQuestion()
         }
-        console.log(5)
       },
 
       /*

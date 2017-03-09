@@ -6,7 +6,6 @@
     <div class="fresh-village-answer-result">
       <div class="answer-result">
         <span class="title">思考一下</span>
-        <!--<span class="close-icon" v-touch:tap="onCloseTap"></span>-->
         <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       </div>
       <div class="result-middle">

@@ -82,13 +82,13 @@
         let presentChapter
         let scrollerLeftWidth = 0
         if (this.presentChapter.chapterNo === 1) {
-          if ((this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6)) {
+          if (this.presentChapter.questionNo === 7) {
             presentChapter = 2
           } else {
             presentChapter = 1
           }
         } else if (this.presentChapter.chapterNo === 2) {
-          if (this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6) {
+          if (this.presentChapter.questionNo === 7) {
             presentChapter = 3
           } else {
             presentChapter = 2

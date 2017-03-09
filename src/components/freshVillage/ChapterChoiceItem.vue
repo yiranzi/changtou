@@ -5,7 +5,7 @@
 <template>
     <div class="chapter-choice-item">
       <p class="chapter-number">第{{chapterCharacterNum}}章</p>
-      <p class="chapter-title">{{chapterCardInfo.title}}</p>{{index}}
+      <p class="chapter-title">{{chapterCardInfo.title}}</p>
       <img class="chapter-cover" :src="chapterCardInfo.cover"/>
       <div class="chapter-btn" :style="startBtnStyle" v-touch:tap="enterChapter(chapterCardInfo.chapterNo)">START</div>
     </div>
@@ -33,8 +33,7 @@ export default {
         } else {
           if (this.presentChapter.chapterNo === 0 && this.chapterCardInfo.chapterNo === 1) {
             startBtnStyle = 'background-color: #ff9800;'
-            console.log(3)
-          } else if ((this.presentChapter.questionNo === 6 || this.presentChapter.questionNo === 7) && (this.presentChapter.chapterNo + 1 === this.chapterCardInfo.chapterNo)) {
+          } else if (this.presentChapter.questionNo === 7 && (this.presentChapter.chapterNo + 1 === this.chapterCardInfo.chapterNo)) {
             startBtnStyle = 'background-color: #ff9800;'
           } else {
             startBtnStyle = 'background-color: #c0c0c0;' // 灰色未激活背景
@@ -42,11 +41,6 @@ export default {
         }
       }
       return startBtnStyle
-    }
-  },
-  watch: {
-    presentChapter (newValue, oldValue) {
-      console.log('watch', newValue, oldValue)
     }
   },
   methods: {

@@ -21,12 +21,7 @@ const mixin = {
     return {
       showShareFloat: false,
       shareImageWidth: 0,
-      shareImageHeight: 0,
-      shareConfig: {
-        imgUrl: '',
-        title: '',
-        desc: ''
-      }
+      shareImageHeight: 0
     }
   },
   methods: {

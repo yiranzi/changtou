@@ -93,15 +93,15 @@ export default {
     p{
       margin: 0;
     }
+    .ict-titlebar-left {
+      .left-arrow:before{
+        border-top: 1px solid #000 !important;
+        border-left: 1px solid #000 !important;
+      }
+    }
     .ict-titlebar-title{
       background: #fefe47;
       color: #000;
-      .ict-titlebar {
-        .left-arrow:before{
-          border-top: 1px solid #000 !important;
-          border-left: 1px solid #000 !important;
-        }
-      }
     }
     .advise-title-img{
       width: 100%;
