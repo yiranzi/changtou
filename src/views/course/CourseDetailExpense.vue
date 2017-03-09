@@ -977,20 +977,20 @@
           const isOrignSubjectVaildBought = !!(originSubject && originSubject.status === 'N')
           if (isOrignSubjectVaildBought) {
             // 若主线课程已经购买并且是在读, 先弹出浮层，再转去购买页面
-            this.isShowMask()
+            this.isShowUserAgreement()
           } else {
             this.showConfirm({message: `仅支持在"${this.currSubject.relatedMajorSubjectTitle}"有效学习时间内购买该选修课`})
           }
         } else {
           // 不是选修课, 先弹出浮层，再转去订单页面
-          this.isShowMask()
+          this.isShowUserAgreement()
         }
       },
 
       /**
        * 点击立即购买后，判断是否弹出浮层
        */
-      isShowMask () {
+      isShowUserAgreement () {
         if (this.subjectId === '21') {
           this.showMask({
             component: 'strategy/UserAgreement.vue',

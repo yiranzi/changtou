@@ -1,5 +1,5 @@
 /**
- * Created by jun on 2017.3.8
+ * Created by yuan on 2017.3.8
  * 应用更新
  */
 const state = {

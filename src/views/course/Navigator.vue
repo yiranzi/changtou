@@ -147,7 +147,7 @@
     route: {
       data ({from}) {
         //是否显示更新提示
-        this.isAppUpdate()
+        this.showAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -195,7 +195,7 @@
       /**
        * 判断应用是否更新
        */
-       isAppUpdate () {
+       showAppUpdate () {
          //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
          if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === this.appVersion))) {
            // 应用更新内容
