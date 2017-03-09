@@ -83,7 +83,7 @@
         </div>
         <div class="study-btn">
           <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
-          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind">DAY1<span class="study-btn-changeText">修改提醒</span></div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind">DAY{{remindCurrDate}}<span class="study-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
@@ -102,6 +102,7 @@
           <div>立即购买</div>
         </div>
       </div>
+      <!--毕业-->
       <!--激活课程-->
       <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
@@ -136,7 +137,8 @@
       <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
     </div>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
-    <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'"></div>
+    <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'" v-touch:tap='closeModal'></div>
+    <div class="remind-checkTip" v-show="isCheckTipShow">{{remindCheckTip}}</div>
   </div>
 </template>
 <style lang="less">
@@ -251,6 +253,25 @@
         }
       }
     }
+    .remind-checkTip{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      border-radius: 5/40rem;
+      width: 6rem;
+      height: 1.2rem;
+      line-height: 1.2rem;
+      font-size: 1rem;
+      background-color: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 1rem 0;
+      text-align: center;
+      z-index: 60;
+      transition: all 0.5s;
+    }
     .remind,.remind-cancel{
       transition:all 0.5s;
       display: block;
@@ -259,7 +280,6 @@
       bottom: -22rem;
       background:#fff;
       z-index:200;
-      border-top:1px solid #f0eff5;
       &-timePicker{
         padding-bottom: 98/40rem;
        }
@@ -379,7 +399,8 @@
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinPageShare from '../../mixinPageShare'
-  import mixinModal from '../../mixinModal'
+  import {Device, platformMap} from '../../plugin/device'
+  import {Jpush} from '../../plugin/jpush'
   import Picker from 'vux/picker'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
   let hours = []
@@ -391,7 +412,7 @@
     mins.push((i < 10 ? ('0' + i) : i) + ' 分')
   }
   export default {
-    mixin: [mixinPageShare, mixinModal],
+    mixin: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
@@ -425,11 +446,13 @@
      */
     data () {
       return {
+        isCheckTipShow: false,
         isShareShow: false,
         isRemindShow: false,   //定时弹框状态
         isRemoveRemindShow: false,  //取消弹框显示
         isRemindSet: false,
 
+        remindCheckTip: '',
         remindTimeList: [hours, mins],   //  提醒时间选择的列表
         remindTimeValue: [hours[0], mins[0]],    //提醒时间的默认值
         remindTimeData: ['0', '0'],    //选择的提醒时间
@@ -437,6 +460,7 @@
         remindTimeStart: {},   //提醒开始时间
         remindTimeEnd: {},   //提醒结束时间
         remindList: {},  //提醒时间毫秒数列表
+        remindCurrDate: 0,  //当前是第几天
 
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
@@ -511,14 +535,17 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
-        if (items) {
+        let currDate = new Date().getTime()
+        if (items && ((parseInt(items.remindList[6]) + parseInt(items.oldTime)) - currDate >= 0)) {
           this.remindTimeStart = items.start
           this.remindTimeEnd = items.end
-          this.remindList = items.remindList
+          this.remindList[subjectId] = items.remindList
           this.isRemindSet = true
           this.remindTimeData = items.time[0]
+          this.getCurrDateNum()
         } else {
           this.isRemindSet = false
+          clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
         }
 
         this.isQuestionPlaced = false
@@ -794,6 +821,34 @@
 
     methods: {
       /**
+       * 显示toast
+       **/
+      showCheckTip (txt) {
+        this.isCheckTipShow = true
+        this.remindCheckTip = txt
+        let me = this
+        setTimeout(() => {
+          me.isCheckTipShow = false
+        }, 1000)
+      },
+      /**
+       * 点击空白消失模态层
+       **/
+      closeModal () {
+        this.hideRemind()
+        this.hideRemoveRemind()
+      },
+      /**
+       * 获取当前课程提醒第几天
+       **/
+      getCurrDateNum () {
+        let currDate = new Date().getTime()
+        let endDate = new Date(this.remindTimeEnd.year + '-' + this.remindTimeEnd.month + '-' + this.remindTimeEnd.day + ' 0:00:00')
+        let leftTime = endDate.getTime() - currDate
+        let currDateNumList = [7, 6, 5, 4, 3, 2, 1, 0]
+        this.remindCurrDate = currDateNumList[Math.ceil(leftTime / 86400000)]
+      },
+      /**
        * 显示分享浮层
        **/
       showShare () {
@@ -823,23 +878,26 @@
        * 获取每天提醒的时间
        **/
       getRemindList () {
+        let currTime = new Date().getTime()
         let date = new Date()
         date.setDate(date.getDate() + 1)
         date.setHours(parseInt(this.remindTimeData[0]))
         date.setMinutes(parseInt(this.remindTimeData[1]))
         let remindList = []
         for (let i = 0; i < 7; i++) {
-          remindList.push(date.getTime())
+          remindList.push(date.getTime() - currTime)
           date.setDate(date.getDate() + 1)
         }
         this.remindList[this.subjectId] = remindList
         let items = {
+          oldTime: currTime,
           remindList,
           'start': this.remindTimeStart,
           'end': this.remindTimeEnd,
           'time': [this.remindTimeData]
         }
         setLocalCache(('REMIND_TIME_DATA_SUBID_' + this.subjectId), items)
+        this.getCurrDateNum()
       },
       /**
        * 定时器选择函数
@@ -852,7 +910,7 @@
        **/
       showRemind () {
         this.isRemindShow = true
-        this.getSetTime()
+        getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
       },
       /**
        * 定时提醒隐藏
@@ -876,17 +934,48 @@
        *  设置定时提醒
        */
       setRemind () {
-        this.isRemindShow = false
         this.getRemindList()
+        if (Device.platform === platformMap.IOS) {
+          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
+            Jpush.setLocalNotificationIOS(
+              this.remindList[this.subjectId][i],
+              '到时间上课啦',
+              1,
+              'remind-' + this.subjectId,
+              {'name': '1'}
+            )
+          }
+        }
+        if (Device.platform === platformMap.ANDROID) {
+          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
+            Jpush.setLocalNotificationANDROID(
+              1,
+              '到时间上课啦',
+              '到时间上课啦',
+              'remind-' + this.subjectId,
+              this.remindList[this.subjectId][i],
+              {'name': 1}
+            )
+          }
+        }
+        this.isRemindShow = false
         this.isRemindSet = true
+        this.showCheckTip('设置成功')
       },
       /**
        * 取消定时提醒
        **/
       removeRemind () {
-        this.isRemoveRemindShow = false
+        if (Device.platform === platformMap.ANDROID) {
+          Jpush.removeLocalNotificationANDROID('remind-' + this.subjectId)
+        }
+        if (Device.platform === platformMap.IOS) {
+          Jpush.deleteLocalNotificationIOS('remind-' + this.subjectId)
+        }
         clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
+        this.isRemoveRemindShow = false
         this.isRemindSet = false
+        this.showCheckTip('取消成功')
       },
       /**
        * 选择题被点击
