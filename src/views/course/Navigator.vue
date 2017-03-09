@@ -33,7 +33,7 @@
               <span class="under-banner-title">院生故事</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
-            <div v-touch:tap="goToInterviewList" class="under-banner-item">
+            <div v-touch:tap="goToCourseListType" class="under-banner-item">
               <i class="under-banner-icon interview"></i>
               <span class="under-banner-title">课程分类</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
@@ -409,6 +409,16 @@
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
+      },
+
+      /**
+       * 跳转到全部课程列表-分类排列
+       */
+      goToCourseListType () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '院生访谈'
+        })
+        this.$route.router.go('/totalListType')
       },
 
       /**
