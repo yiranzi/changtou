@@ -203,8 +203,7 @@
            let appUpdateConentObj = {}
            this.getAppUpdate().then(() => {
             appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
-            appUpdateConentObj.appUpdateExplain = []
-            appUpdateConentObj.appUpdateExplain.push(this.appUpdateContent['note'])
+            appUpdateConentObj.appUpdateExplain = this.appUpdateContent['note'].split(',')
              this.showMask({
                component: 'AppUpdate.vue',
                componentData: appUpdateConentObj
