@@ -8,10 +8,10 @@
             若要开启，请在iPhone系统的“设置”-“通知”中，找到“长投学堂”并开启通知</p>
           <p class="tip" v-touch:tap="onTapTip">不再提示</p>
         </div>
-        <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="msg.mbUrl && msg.type==='L' && goDetailTap(msg)">
+        <div class="msg" v-for="msg in msgArr" v-show="msgArr" v-touch:tap="msg.mbUrl && msg.type==='LN' && goDetailTap(msg)">
           <p class="msg-content">{{{msg.content}}}</p>
           <p class="msg-date">{{{msg.createTime}}}</p>
-          <span class="msg-see-detail" v-if="msg.mbUrl && msg.type==='L'">查看详情</span>
+          <span class="msg-see-detail" v-if="msg.mbUrl && msg.type==='LN'">查看详情</span>
         </div>
         <div class="no-msg" v-show="!msgArr">
           <img src="/static/image/mine/noMessages.png">
@@ -95,7 +95,9 @@
 
     route: {
       data () {
-        this.loadMsgArr()
+        this.loadMsgArr().then(() => {
+          console.log(this.msgArr)
+        })
       }
     },
 
