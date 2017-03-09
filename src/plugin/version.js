@@ -3,6 +3,19 @@
  */
 import { platformMap, Device } from './device'
 
+let nativeVersion = 0
+
+const convertVersionToNum = (version) => {
+  const arr = version.split('.')
+  let numStr = arr[0]
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i].length < 2) {
+      numStr = numStr + '0' + arr[i]
+    }
+  }
+  return numStr
+}
+
 /**
  * 获取院生版本号 (web 为 0 | 出错误为 -1)
  * @returns {Promise}
@@ -13,12 +26,16 @@ const getNativeVersion = () => {
       resolve('0')
     } else {
       window.cordova.getAppVersion.getVersionNumber()
-        .then(number => { resolve(number) })
+        .then(number => {
+          nativeVersion = convertVersionToNum(number)
+          resolve(number)
+        })
         .catch(() => { resolve('-1') })
     }
   })
 }
 
 export {
+  nativeVersion,
   getNativeVersion
 }
