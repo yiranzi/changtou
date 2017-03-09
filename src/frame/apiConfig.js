@@ -212,9 +212,9 @@ const apiUrl = {
   'village_get_proposal_list': '/eden/proposal-list/:pageIndex/:pageSize',  //获得新手村吐槽列表
   'village_submit_proposal_list': '/eden/proposal-submit',  //提交新手村吐槽
     /**
-     * 应用更新
+     * 版本信息
      */
-  'app_update': '/system/app/version'            //应用更新版本号和内容
+  'app_update': '/system/app/version'            // 获得更新后版本号和更新的功能
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

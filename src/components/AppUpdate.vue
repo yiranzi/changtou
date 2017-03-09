@@ -1,5 +1,5 @@
 <template>
-  <div class="app-update" v-touch:tap="appUpdateClose">
+  <div class="app-update-information" v-touch:tap="appUpdateClose">
     <div class="app-update-up">
       <span class="app-update-version">V{{componentData.appUpdateVersion}}</span>
     </div>
@@ -11,7 +11,7 @@
   </div>
 </template>
 <style lang="less">
-  .app-update{
+  .app-update-information{
     width: 375/20rem;
     height: 667/20rem;
     background: url("../../static/image/app-update.png") no-repeat center center / 610/40rem 810/40rem;
