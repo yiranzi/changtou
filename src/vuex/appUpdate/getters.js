@@ -1,6 +1,6 @@
 /**
  * Created by yuan on 2017.3.8
- * 应用更新
+ * 版本信息
  */
 export const appUpdateContent = (state) => {
   return state.appUpdate.appUpdateContent

@@ -168,8 +168,7 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '', // 前一个页面url
-        appVersion  //最新的版本号
+        fromPath: '' // 前一个页面url
       }
     },
     ready () {
@@ -197,17 +196,19 @@
        */
        showAppUpdate () {
          //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
-         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === this.appVersion))) {
-           // 应用更新内容
-           //this.getAppUpdate()
-           let appUpdateConentObj = {}
-           appUpdateConentObj.appUpdateVersion = '2.6.1'
-           appUpdateConentObj.appUpdateExplain = ['1 更新了 更新了 更新了 更新了', '2 更新了 更新了', '3 更新了']
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === appVersion))) {
            // 显示更新提示,就存储最新版本号
-           setLocalCache('app-update', {appVersionNumber: this.appVersion})
-           this.showMask({
-             component: 'AppUpdate.vue',
-             componentData: appUpdateConentObj
+           setLocalCache('app-update', {appVersionNumber: appVersion})
+           // 应用更新内容
+           let appUpdateConentObj = {}
+           this.getAppUpdate().then(() => {
+            console.log(this.appUpdateContent)
+            appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
+            appUpdateConentObj.appUpdateExplain = ['1 更新了 更新了 更新了 更新了', '2 更新了 更新了', '3 更新了']
+             this.showMask({
+               component: 'AppUpdate.vue',
+               componentData: appUpdateConentObj
+             })
            })
          }
        },
