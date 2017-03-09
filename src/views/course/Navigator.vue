@@ -4,48 +4,77 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
+        <!--滚动条-->
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class"></swiper>
-        <div class="under-banner">
-          <div v-touch:tap="goToNewertestStart" class="under-banner-item">
-            <i class="under-banner-icon newer-test "></i>
-            <span class="under-banner-title">理财揭秘</span>
-          </div>
-          <div v-touch:tap="goToNewerGuide" class="under-banner-item">
-            <i class="under-banner-icon newer-guide"></i>
-            <span class="under-banner-title">入门指南</span>
-          </div>
-          <div v-touch:tap="goToInterviewList" class="under-banner-item">
-            <i class="under-banner-icon interview"></i>
-            <span class="under-banner-title">院生故事</span>
-            <i class="new-interview-icon" v-show="hasNewInterview"></i>
-          </div>
-        </div>
-        <div class="popular-list popularSpe">
+                :show-desc-mask="false" dots-class="dots-class">
+        </swiper>
+        <!--理财新手村-入口-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
+        <!--banner-->
+        <div class="must-hava">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
           </p>
-          <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">
-            <div class="box-container" >
-                <div class="box-item" v-for="item in recommends"
-                     v-touch:tap="goToRecommendDetail(item,$index)">
-                  <img :src="item.imgUrl">
-                  <p class="sub-title">{{item.title}}</p>
-                  <p class="sub-price">￥{{item.price}}</p>
-                </div>
+          <div class="under-banner">
+            <div v-touch:tap="goToNewertestStart" class="under-banner-item">
+              <i class="under-banner-icon newer-test "></i>
+              <span class="under-banner-title">理财揭秘</span>
             </div>
-          </scroller>
+            <div v-touch:tap="goToNewerGuide" class="under-banner-item">
+              <i class="under-banner-icon newer-guide"></i>
+              <span class="under-banner-title">入门指南</span>
+            </div>
+            <div v-touch:tap="goToInterviewList" class="under-banner-item">
+              <i class="under-banner-icon interview"></i>
+              <span class="under-banner-title">院生故事</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+            <div v-touch:tap="goToInterviewList" class="under-banner-item">
+              <i class="under-banner-icon interview"></i>
+              <span class="under-banner-title">课程分类</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+          </div>
         </div>
-        <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          <p>每日一题 积攒你的财商</p>
-          <p class="daily-subtext">财富自由之路第一步</p>
-          <span class="daily-anpic-container"></span>
+
+        <!--头条精选-->
+        <div class="first-choose">
+          <div class="icon">
+            <i class="picture"></i>
+          </div>
+          <span class="line"></span>
+          <span class="topic-txt">你的投资有目标吗？</span>
+          <div class="gift">
+            <i class="picture"></i>
+          </div>
         </div>
-        <!--理财新手村-入口-->
-        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
+        <!--<div class="popular-list popularSpe">-->
+          <!--<p class="area-label">-->
+            <!--<span class="color-span"> </span>-->
+            <!--<span class="title">人气必备</span>-->
+          <!--</p>-->
+          <!--<scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">-->
+            <!--<div class="box-container" >-->
+                <!--<div class="box-item" v-for="item in recommends"-->
+                     <!--v-touch:tap="goToRecommendDetail(item,$index)">-->
+                  <!--<img :src="item.imgUrl">-->
+                  <!--<p class="sub-title">{{item.title}}</p>-->
+                  <!--<p class="sub-price">￥{{item.price}}</p>-->
+                <!--</div>-->
+            <!--</div>-->
+          <!--</scroller>-->
+        <!--</div>-->
+        <!--<div class="daily-question" v-touch:tap="goToDailyQuestion">-->
+          <!--<p>每日一题 积攒你的财商</p>-->
+          <!--<p class="daily-subtext">财富自由之路第一步</p>-->
+          <!--<span class="daily-anpic-container"></span>-->
+        <!--</div>-->
+
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -741,13 +770,13 @@
       align-items: center;
       background-color: #fff;
       border-bottom: 0.5rem #f0eff5 solid;
-      font-size: 0.75rem;
+      font-size: 0.55rem;
       color: #444;
 
       .under-banner-item{
         position: relative;
         text-align: center;
-        padding: 34/40rem 0 26/40rem;
+        /*padding: 34/40rem 0 26/40rem;*/
         box-sizing: border-box;
         flex: 1;
       }
@@ -782,9 +811,8 @@
   /*理财新手村-首页入口*/
     .fresh-village{
       width: 100%;
-      height: 6rem;
+      height: 4.5rem;
       background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
-      margin: 1rem 0 0;
     }
   /*大咖读经典*/
     .classic-info >p {
@@ -829,6 +857,69 @@
       bottom: 4rem;
       right: .75rem
     }
-  }
 
+    /*人气必备*/
+    .must-hava{
+      height:5.5rem;
+    }
+
+    /*头条精选*/
+    .first-choose {
+      font-size: 0;
+      position: relative;
+      margin: 0.25rem auto 0.5rem;
+      height: 3rem;
+      background-color: #fff;
+      .icon {
+        vertical-align: middle;
+        display: inline-block;
+        width: 3.75rem;
+        height: 3rem;
+        .picture{
+          font-size: 0px;
+          display:inline-block;
+          width: 1.6rem;
+          height: 1.5rem;
+          margin: 0.75rem 1.35rem 0.75rem;
+          background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
+        }
+      }
+
+      .line{
+        vertical-align: middle;
+        display:inline-block;
+        width: 0.25rem;
+        height: 1.75rem;
+        background-color: #f0f0f0;
+        margin: auto auto;
+        line-height: 100%;
+      }
+
+      .topic-txt{
+        vertical-align: middle;
+        margin: auto 3.5rem auto 0.75rem;
+        font-size: 0.7rem;
+        height:0.7rem;
+        line-height: 0.7rem;
+        color: #aaa;
+        overflow: hidden;
+      }
+
+      .gift{
+        vertical-align: middle;
+        display:inline-block;
+        position: absolute;
+        top: 0.5rem;
+        right: 0;
+        .picture{
+          vertical-align: middle;
+          font-size: 0px;
+          display:inline-block;
+          width: 2.85rem;
+          height: 0.775rem;
+          background: url("../../../static/image/firstNewsChoose/gift.png") no-repeat center center / contain;
+        }
+      }
+    }
+  }
 </style>
