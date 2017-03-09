@@ -32,12 +32,18 @@
           loadList: courselistActions.loadCourseList
         }
       },
-      route: {
-        data () {
-            console.log('进入界面，刷新数据')
-            this.loadList()
-        }
+
+      ready () {
+        this.loadList().then(this.setScrollerHeight)
       },
+
+//      route: {
+//
+//        data () {
+//            console.log('进入界面，刷新数据')
+//            this.loadList()
+//        }
+//      },
         data () {
             return {
               currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
