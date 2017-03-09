@@ -202,9 +202,9 @@
            // 应用更新内容
            let appUpdateConentObj = {}
            this.getAppUpdate().then(() => {
-            console.log(this.appUpdateContent)
             appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
-            appUpdateConentObj.appUpdateExplain = ['1 更新了 更新了 更新了 更新了', '2 更新了 更新了', '3 更新了']
+            appUpdateConentObj.appUpdateExplain = []
+            appUpdateConentObj.appUpdateExplain.push(this.appUpdateContent['note'])
              this.showMask({
                component: 'AppUpdate.vue',
                componentData: appUpdateConentObj

@@ -1,7 +1,7 @@
 <template>
   <div class="app-update-information" v-touch:tap="appUpdateClose">
     <div class="app-update-up">
-      <span class="app-update-version">V{{componentData.appUpdateVersion}}</span>
+      <span class="app-update-version">{{componentData.appUpdateVersion}}</span>
     </div>
     <div class="app-update-down">
       <ul class="app-update-explain">
