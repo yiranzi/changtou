@@ -8,7 +8,8 @@ const state = {
   freeCourseList: [],
   recommends: [],
   readingClassics: {},
-  hasNewInterview: false
+  hasNewInterview: false,
+  firstChooseTxt: ''
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   UPDATE_NAIGATOR_DATA_INTERVIEW (state, data) {
     state.hasNewInterview = data
+  },
+  UPDATE_NAIGATOR_FIRST_CHOOSE_TXT (state, firstChooseTxt) {
+    state.firstChooseTxt = firstChooseTxt
   }
 }
 

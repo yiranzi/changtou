@@ -47,7 +47,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">你的投资有目标吗？</span>
+          <span class="topic-txt">你的投资有目标吗？+ {{firstChooseTxt}}</span>
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -156,7 +156,8 @@
         recommends: navigatorGetters.recommends,
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
-        hasNewInterview: navigatorGetters.hasNewInterview
+        hasNewInterview: navigatorGetters.hasNewInterview,
+        firstChooseTxt: navigatorGetters.firstChooseTxt
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -166,7 +167,8 @@
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
-        getVillageProgress: villageActions.getVillageProgress
+        getVillageProgress: villageActions.getVillageProgress,
+        getFirstChooseTxt: navigatorActions.getFirstChooseTxt
       }
     },
 
@@ -183,6 +185,8 @@
         this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
+        //显示头条精选的数据
+        this.showFirstChooseTxt()
       }
     },
 
@@ -452,6 +456,14 @@
           // 未登录
           this.$route.router.go('/village/initialPage')
         }
+      },
+
+      /**
+       * 显示头条精选数据
+       */
+      showFirstChooseTxt () {
+        console.log('call func')
+        this.getFirstChooseTxt()
       },
 
       /**

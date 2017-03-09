@@ -58,3 +58,28 @@ export const isInterviewChange = ({ dispatch }, interviewCount) => {
   })
 }
 
+/**
+ * 获取头条精选 数据
+ * @param dispatch
+ * @returns {Promise}
+ */
+export const getFirstChooseTxt = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithoutAuth(
+        {
+          // url: getUrl('first_choose_txt')
+          url: getUrl('interview_valid_new').replace(':interviewCount', 0)
+        }
+      ).then(
+        res => {
+          dispatch('UPDATE_NAIGATOR_FIRST_CHOOSE_TXT', res)
+          resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+

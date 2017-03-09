@@ -30,3 +30,8 @@ export const readingClassics = (state) => {
 export const hasNewInterview = (state) => {
   return state.navigator.hasNewInterview
 }
+
+//获得
+export const firstChooseTxt = (state) => {
+  return state.navigator.firstChooseTxt
+}
