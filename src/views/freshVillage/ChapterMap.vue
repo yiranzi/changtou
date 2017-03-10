@@ -57,7 +57,7 @@
         getOverLevel: 'user-img-1',
         hasShownEncouragement: false,
         showShareFloat: false,
-        unLoginOptionRecord: {
+        villageUnLoginRecord: {
           questionNo: 0,
           option: false
         }
@@ -118,32 +118,33 @@
     },
     route: {
       data ({from}) {
-        //this.updateRecord(0, 0)
-        if (from.path === '/village/advise' || from.path === '/village/fill/content') {
+        if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
-        if (from.path === '/entry' && !this.isLogin) {
-          this.showQuestion()
-          return
-        }
-        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0)) {
-          if (this.villageUnLoginRecord.questionNo !== 0) {
-            this.answerQuestion(this.villageUnLoginRecord.option)
-            this.recordUnLoginOption(0, false)
-            return
+        if (from.path !== '/entry' || (/\/register\/end\//g.test(from.path))) { // 不是从登陆注册页面进入
+          if (!this.isLogin) {
+            this.resetRecord() // 将之前的记录清空
+            this.activeChapterNo = 1
+            this.activeQuestionNo = 1
+            this.chapter = this.getChapter(this.activeChapterNo)
+            this.showChapterChoice()
           } else {
+            this.JudgeProgress()
+          }
+        } else {                                     // 从登陆注册页面进入
+          if (!this.isLogin) {
             this.showQuestion()
             return
+          } else {
+            if (this.villageProgress.chapterNo !== 0) {
+              this.JudgeProgress()
+            } else if (this.villageUnLoginRecord.questionNo === 0) {
+              this.showQuestion()
+            } else {
+              this.answerQuestion(this.villageUnLoginRecord.option)
+              this.recordUnLoginOption(0, false)
+            }
           }
-        }
-        if (!this.isLogin) {
-          this.resetRecord() // 将之前的记录清空
-          this.activeChapterNo = 1
-          this.activeQuestionNo = 1
-          this.chapter = this.getChapter(this.activeChapterNo)
-          this.showChapterChoice()
-        } else {
-          this.JudgeProgress()
         }
         this.setUserImagePosition()
       },
@@ -153,7 +154,6 @@
       }
     },
     methods: {
-
       /**
        * 设置物理键back
        */
