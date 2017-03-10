@@ -118,7 +118,6 @@
     },
     route: {
       data ({from}) {
-       //this.updateRecord(0, 0)
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
@@ -224,7 +223,7 @@
       * 判断进度
       * */
       JudgeProgress () {
-        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7) {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7) { //根据开放到的关卡章节要动态修改！
           this.activeChapterNo = 2
           this.showChapterChoice()
           return
