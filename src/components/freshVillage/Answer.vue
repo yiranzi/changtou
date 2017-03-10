@@ -13,7 +13,7 @@
         <div class="result-title">
           <span class="parting-line"></span>选择结果<span class="parting-line"></span>
         </div>
-        <div class="life-score"><span class="round"></span>生命值<span class="score">+{{componentData.lifeScore}}</span></div>
+        <div class="life-score"><span class="round"></span><span class="socre-name">生命值</span><span class="score">+{{componentData.lifeScore}}</span></div>
       </div>
       <div class="confirm-btn" v-touch:tap="next">懂了</div>
     </div>
@@ -87,10 +87,13 @@ export default {
       background-color: #8EAE05;
       margin-right: .5rem;
     }
+    .score-name{
+      vertical-align:middle;
+    }
     .score {
       display: inline-block;
       vertical-align: middle;
-      float: right;
+      margin-left: 6.5rem;
       font-size: .65rem;
       color: #f12938;
     }

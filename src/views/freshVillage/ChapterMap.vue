@@ -54,10 +54,13 @@
         lifeScore: 0,
         showWisdom: false,
         bgStyle: 'chapter1-bg',
-        showNextChapterBtn: false,
         getOverLevel: 'user-img-1',
         hasShownEncouragement: false,
-        showShareFloat: false
+        showShareFloat: false,
+        villageUnLoginRecord: {
+          questionNo: 0,
+          option: false
+        }
       }
     },
     computed: {
@@ -77,13 +80,20 @@
       /*今日小智内容*/
       wisdomData () {
         return this.question.wisdom
+      },
+      /* 改变下一章btn状态显示*/
+      showNextChapterBtn () {
+        if (this.villageProgress.chapterNo > this.activeChapterNo ||
+          (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7)) {
+          return true
+        } else {
+          return false
+        }
       }
-      /*关卡背景*/
     },
     watch: {
       villageProgress () {
         this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
       },
       activeChapterNo () {  //switch
         if (this.activeChapterNo === 1) {
@@ -92,7 +102,6 @@
           this.bgStyle = 'chapter2-bg'
         }
         this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
       },
       isLogin (newValue) {
         if (newValue) {
@@ -109,13 +118,26 @@
     },
     route: {
       data ({from}) {
-        if (from.path === '/village/advise' || from.path === '/village/fill/content') {
+        if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
-        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0 || !this.isLogin)) {
-          this.showQuestion()
-          return
+        if (from.path !== '/entry' && !(/\/register\/end\//g.test(from.path))) { // 从主页面进入
+          this.fromMainPageEnterProcess()
+        } else {
+          this.fromLoginRegisterEnterProcess()   // 从登陆注册页面进入
         }
+        this.setUserImagePosition()
+      },
+      deactivate () {
+        this.hideMask()
+        this.resetViewBackHandler()
+      }
+    },
+    methods: {
+      /*
+      * 从主页进入后的判断
+      * */
+      fromMainPageEnterProcess () {
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 1
@@ -125,15 +147,24 @@
         } else {
           this.JudgeProgress()
         }
-        this.judgeNextChapterBtnStatus()
-        this.setUserImagePosition()
       },
-      deactivate () {
-        this.hideMask()
-        this.resetViewBackHandler()
-      }
-    },
-    methods: {
+      /*
+      * 从登陆注册页进入的判断处理
+      * */
+      fromLoginRegisterEnterProcess () {
+        if (!this.isLogin) {
+          this.showQuestion()
+        } else {
+          if (this.villageProgress.chapterNo !== 0) {
+            this.JudgeProgress()
+          } else if (this.villageUnLoginRecord.questionNo === 0) {
+            this.showQuestion()
+          } else {
+            this.answerQuestion(this.villageUnLoginRecord.option)
+            this.recordUnLoginOption(0, false)
+          }
+        }
+      },
       /**
        * 设置物理键back
        */
@@ -151,20 +182,6 @@
       * */
       onAdviceTap () {
         this.$route.router.go('/village/advise')
-      },
-      /*
-       * 改变下一章btn状态
-       * */
-      judgeNextChapterBtnStatus () {
-        if (this.villageProgress.chapterNo > this.activeChapterNo) {
-          this.showNextChapterBtn = true
-          return
-        }
-        if (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7) {
-          this.showNextChapterBtn = true
-        } else {
-          this.showNextChapterBtn = false
-        }
       },
       /*
       * 更换头像位置
@@ -315,6 +332,15 @@
         })
       },
       /*
+       * 设置记录未登录前选项
+       * */
+      recordUnLoginOption (questionNo, option) {
+        this.villageUnLoginRecord = {
+          questionNo: questionNo,
+          option: option
+        }
+      },
+      /*
        * 选择关卡
        * */
       onLevelTap (level) {
@@ -390,6 +416,7 @@
       * */
       answerQuestion (result) {
         if (!this.isLogin) {
+          this.recordUnLoginOption(1, result)
           this.$route.router.go('/entry')
         } else {
           this.lifeScore = result ? 10 : 2
@@ -569,34 +596,34 @@
       }
     }
     .user-img {
-      position: relative;
+      position: absolute;
       width: 2.4rem;
       height: 2.4rem;
       border: 4px solid #fff;
       border-radius: 50%;
       &-7, &-6{
         left: 7.2rem;
-        bottom: 29.5rem;
+        top: 3rem;
       }
       &-5 {
         left: 8.5rem;
-        bottom: 24.5rem
+        top: 7.7rem;
       }
       &-4 {
         left: 6.3rem;
-        bottom: 19.3rem;
+        top: 13rem;
       }
       &-3 {
         left: 9rem;
-        bottom: 14.7rem;
+        bottom: 11.4rem;
       }
       &-2 {
         left: 8.5rem;
-        bottom: 9.8rem;
+        bottom: 6.6rem;
       }
       &-1 {
         left: 6.6rem;
-        bottom: 5rem;
+        bottom: 2rem;
       }
     }
   }

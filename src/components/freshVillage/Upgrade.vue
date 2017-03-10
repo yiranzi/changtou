@@ -13,7 +13,7 @@
         <div class="upgrade-title">- 理财能力升级 -</div>
         <div class="level">LV.{{componentData.chapterNo}}</div>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
-        <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
+        <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+15</span></div>
       </div>
       <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
     </div>
@@ -97,7 +97,7 @@
     height: 15rem;
     border-radius: 20px;
     background-color: #ca414b;
-
+    vertical-align: middle;
     .user-img {
       display: block;
       position: relative;
@@ -129,6 +129,10 @@
       color: #ffe52a;
       font-family: '窄体';
     }
+    .score-name {
+      display:inline-block;
+      vertical-align:middle;
+    }
     .bottom-title {
       position: relative;
       top: 3rem;
@@ -145,6 +149,8 @@
     }
     .life-score {
       position: relative;
+      display: inline-block;
+      vertical-align: middle;
       bottom: -3.4rem;
       margin: 0 2.25rem;
       color: #ccc;
@@ -162,7 +168,7 @@
     .score {
       display: inline-block;
       vertical-align: middle;
-      float: right;
+      margin: 0 0 0 3rem;
       font-size: .65rem;
       color: #ccc;
     }
