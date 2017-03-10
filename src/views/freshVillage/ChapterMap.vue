@@ -118,6 +118,7 @@
     },
     route: {
       data ({from}) {
+       //this.updateRecord(0, 0)
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
@@ -223,7 +224,12 @@
       * 判断进度
       * */
       JudgeProgress () {
-        if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7) {
+          this.activeChapterNo = 2
+          this.showChapterChoice()
+          return
+        }
+        if (this.villageProgress.chapterNo === 0 || (this.villageProgress.questionNo === 7 && this.villageProgress.chapterNo !== 2)) { //只到第三关
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
         } else {
@@ -285,6 +291,7 @@
         }
       },
       /*
+
       * 显示章节故事浮层
       * */
       showChapterStory () {
