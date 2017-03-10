@@ -1,29 +1,56 @@
 <template>
+  <div>
+    <!--标题-->
+    <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
+    <!--图片展示-->
+    <div class= "course-type-top">
+      <div class = "top-img"  :style="topPic[currTabIndex]"></div>
+      <p class="type-intro-txt">{{introTxt1[currTabIndex]}}</p>
+      <p class="type-intro-txt">{{introTxt2[currTabIndex]}}</p>
+    </div>
     <div>
-      <!--简介和目录-->
+      <!--按钮栏-->
       <div v-show="1" style="height: 100%; background-color: #fff">
-        <div>
-          <tab :line-width=2 active-color='#00b0f0' :index.sync="currTabIndex">
-            <tab-item class="vux-center" :selected="currTabItem === 's'">生活</tab-item>
-            <tab-item class="vux-center" :selected="currTabItem === 'c'">理财</tab-item>
-          </tab>
+        <tab :line-width=1 active-color='#00b0f0' :index.sync="currTabIndex" >
+          <tab-item class="vux-center" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">{{item}}</tab-item>
+
+        </tab>
+        <div class ="class-class-buttons">
+          <span  class = "icon" :class="iconsPic[currTabIndex]" :style="iconsPicClick[currTabIndex]" v-for="(index,classTypeName) in iconsPic"></span>
         </div>
 
         <!--&lt;!&ndash;简介&ndash;&gt;-->
-        <course-list v-show='currTabIndex === 0' :lessonType="loadList[currTabIndex]" :type="currTabIndex"></course-list>
-        <course-list v-show='currTabIndex === 1' :lessonType="loadList[currTabIndex]" :type="currTabIndex"></course-list>
+        <course-list v-show='currTabIndex === 0' :class-type="courseList[currTabIndex]" :mytest="currTabIndex"></course-list>
+        <course-list v-show='currTabIndex === 1' :class-type="courseList[currTabIndex]" :mytest="currTabIndex"></course-list>
+        <course-list v-show='currTabIndex === 2' :class-type="courseList[currTabIndex]" :mytest="currTabIndex"></course-list>
+        <course-list v-show='currTabIndex === 3' :class-type="courseList[currTabIndex]" :mytest="currTabIndex"></course-list>
       </div>
     </div>
+  </div>
 </template>
-<style>
+<style lang = "less">
+  .top-img{
+    height: 5.5rem;
+    background: no-repeat center center;
+  }
+
+  .class-class-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .icon{
+    }
+  }
+
 </style>
 <script>
   import {Tab, TabItem} from 'vux/tab'
   import courseList from '../../components/ictCourseList.vue'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
+  import IctTitlebar from '../../components/IctTitleBar.vue'
     export default {
-
       vuex: {
         getters: {
           courseList: courselistGetters.courseList
@@ -37,38 +64,41 @@
         this.loadList().then(this.setScrollerHeight)
       },
 
-//      route: {
-//
-//        data () {
-//            console.log('进入界面，刷新数据')
-//            this.loadList()
-//        }
-//      },
         data () {
             return {
               currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
-              currTabIndex: 0
+              currTabIndex: 0,
+              topPic: [
+                  {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'},
+                  {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'}
+                ],
+              introTxt1: [
+                '111',
+                '222',
+                '333'
+              ],
+              introTxt2: [
+                '44444444',
+                '5555555',
+                '66666666666'
+              ],
+              buttonsTxt: ['精选', '美食', '电影', '酒店', '外卖'],
+              iconsPic: [
+                {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'},
+                {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'}
+              ],
+              iconsPicClick: [
+                {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'},
+                {background: 'url(../../assets/styles/image/newertest/tip/tipImg.png)'}
+              ]
             }
         },
 
       components: {
         Tab,
         TabItem,
-        courseList
-      },
-      watch: {
-        currTabItem: function () {
-            if (this.currTabItem === 's') {
-              this.currTabIndex = 0
-              console.log(courseList)
-              console.log(courseList[this.currTabIndex])
-            } else {
-              this.currTabIndex = 1
-              console.log(courseList)
-              console.log(courseList[this.currTabIndex])
-            }
-        }
+        courseList,
+        IctTitlebar
       }
-
     }
 </script>
