@@ -121,30 +121,10 @@
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
-        if (from.path !== '/entry' || (/\/register\/end\//g.test(from.path))) { // 不是从登陆注册页面进入
-          if (!this.isLogin) {
-            this.resetRecord() // 将之前的记录清空
-            this.activeChapterNo = 1
-            this.activeQuestionNo = 1
-            this.chapter = this.getChapter(this.activeChapterNo)
-            this.showChapterChoice()
-          } else {
-            this.JudgeProgress()
-          }
-        } else {                                     // 从登陆注册页面进入
-          if (!this.isLogin) {
-            this.showQuestion()
-            return
-          } else {
-            if (this.villageProgress.chapterNo !== 0) {
-              this.JudgeProgress()
-            } else if (this.villageUnLoginRecord.questionNo === 0) {
-              this.showQuestion()
-            } else {
-              this.answerQuestion(this.villageUnLoginRecord.option)
-              this.recordUnLoginOption(0, false)
-            }
-          }
+        if (from.path !== '/entry' || (/\/register\/end\//g.test(from.path))) { // 从主页面进入
+          this.fromMainPageProcess()
+        } else {
+          this.fromLoginRegisterProcess()   // 从登陆注册页面进入
         }
         this.setUserImagePosition()
       },
@@ -154,6 +134,37 @@
       }
     },
     methods: {
+      /*
+      * 从主页进入后的判断
+      * */
+      fromMainPageProcess () {
+        if (!this.isLogin) {
+          this.resetRecord() // 将之前的记录清空
+          this.activeChapterNo = 1
+          this.activeQuestionNo = 1
+          this.chapter = this.getChapter(this.activeChapterNo)
+          this.showChapterChoice()
+        } else {
+          this.JudgeProgress()
+        }
+      },
+      /*
+      * 从登陆注册页进入的判断处理
+      * */
+      fromLoginRegisterProcess () {
+        if (!this.isLogin) {
+          this.showQuestion()
+        } else {
+          if (this.villageProgress.chapterNo !== 0) {
+            this.JudgeProgress()
+          } else if (this.villageUnLoginRecord.questionNo === 0) {
+            this.showQuestion()
+          } else {
+            this.answerQuestion(this.villageUnLoginRecord.option)
+            this.recordUnLoginOption(0, false)
+          }
+        }
+      },
       /**
        * 设置物理键back
        */
