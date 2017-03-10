@@ -401,7 +401,8 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '院生访谈'
         })
-        this.$route.router.go('/interview/interview-list')
+        //this.$route.router.go('/interview/interview-list')
+        this.$route.router.go('/headline')
       },
 
       /**

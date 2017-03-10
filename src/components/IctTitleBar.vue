@@ -14,7 +14,8 @@ titlebar
 <template>
   <div>
     <div style="height: 20px;background-color: #00b0f0" v-show="isIos"></div>
-    <div class="ict-titlebar" style="height: 44px">
+    <!--<div class="ict-titlebar" style="height: 44px">-->
+    <div class="ict-titlebar">
       <div class="ict-titlebar-left" v-touch:tap="leftTapCallback">
         <div class="left-arrow" v-show="isBackShow"></div>
         <slot name="left" ></slot>
