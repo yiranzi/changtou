@@ -32,20 +32,20 @@
         <!--&lt;!&ndash;<button v-touch:tap="loadInterviewRecord">请重新加载</button>&ndash;&gt;-->
       <!--</div>-->
     </scroller>
-    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
+    <page-share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></page-share-float>
   </div>
 </template>
 
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import ShareFloat from './InterviewFloat.vue'
   import {interviewActions} from '../../vuex/actions'
   import {interviewGetters} from '../../vuex/getters'
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinPageShare from '../../mixinPageShare'
   import PageSharePanel from '../../components/share/PageSharePanel.vue'
+  import PageShareFloat from '../../components/share/PageShareFloat.vue'
 
   export default {
     mixins: [mixinPageShare],
@@ -122,12 +122,12 @@
     components: {
       IctTitlebar,
       Scroller,
-      ShareFloat,
+      PageShareFloat,
       PageSharePanel
     }
   }
 </script>
-<style lang="less" scaped>
+<style lang="less">
   .interview-record{
     .share-pic{
       width: 1.3rem;
