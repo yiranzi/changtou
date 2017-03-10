@@ -110,12 +110,6 @@ export const resetRecord = ({dispatch}) => {
   dispatch('RESET_VILLAGE_RECORD')
 }
 /*
-* 记录未登录前选项
-* */
-export const recordUnLoginOption = ({dispatch}, option) => {
-  dispatch('RECORD_UNLOGIN_RECORD', option)
-}
-/*
 * 获取章节卡片内容
 * */
 export const getChapterIntro = ({dispatch}) => {
