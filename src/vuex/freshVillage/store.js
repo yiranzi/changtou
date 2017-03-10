@@ -7,6 +7,10 @@ const state = {
   villageProgress: {
     chapterNo: 0,
     questionNo: 0
+  },
+  unLoginOptionRecord: {
+    questionNo: 0,
+    option: false
   }
 }
 
@@ -34,6 +38,11 @@ const mutations = {
   RESET_VILLAGE_RECORD (state) {
     state.villageProgress.chapterNo = 0
     state.villageProgress.questionNo = 0
+  },
+
+  RECORD_UNLOGIN_RECORD (state, option) {
+    state.unLoginOptionRecord.questionNo = 1
+    state.unLoginOptionRecord.option = option
   }
 }
 

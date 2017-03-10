@@ -33,7 +33,8 @@
       getters: {
         isLogin: userGetters.isLogin,
         avatar: userGetters.avatar,
-        villageProgress: villageGetters.villageProgress
+        villageProgress: villageGetters.villageProgress,
+        villageUnLoginRecord: villageGetters.villageUnLoginRecord
       },
       actions: {
         getChapterIntro: villageActions.getChapterIntro,
@@ -42,7 +43,8 @@
         getQuestion: villageActions.getQuestion,
         updateRecord: villageActions.updateRecord,
         resetRecord: villageActions.resetRecord,
-        getVillageProgress: villageActions.getVillageProgress
+        getVillageProgress: villageActions.getVillageProgress,
+        recordUnLoginOption: villageActions.recordUnLoginOption
       }
     },
     data () {
@@ -112,9 +114,19 @@
         if (from.path === '/village/advise' || from.path === '/village/fill/content') {
           return
         }
-        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0 || !this.isLogin)) {
+        if (from.path === '/entry' && !this.isLogin) {
           this.showQuestion()
           return
+        }
+        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0)) {
+          if (this.villageUnLoginRecord.questionNo !== 0) {
+            this.answerQuestion(this.villageUnLoginRecord.option)
+            this.recordUnLoginOption({questionNo: 0, option: false})
+            return
+          } else {
+            this.showQuestion()
+            return
+          }
         }
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
@@ -390,6 +402,7 @@
       * */
       answerQuestion (result) {
         if (!this.isLogin) {
+          this.recordUnLoginOption({questionNo: 1, option: result})
           this.$route.router.go('/entry')
         } else {
           this.lifeScore = result ? 10 : 2
@@ -569,34 +582,34 @@
       }
     }
     .user-img {
-      position: relative;
+      position: absolute;
       width: 2.4rem;
       height: 2.4rem;
       border: 4px solid #fff;
       border-radius: 50%;
       &-7, &-6{
         left: 7.2rem;
-        bottom: 29.5rem;
+        top: 3rem;
       }
       &-5 {
         left: 8.5rem;
-        bottom: 24.5rem
+        top: 7.7rem;
       }
       &-4 {
         left: 6.3rem;
-        bottom: 19.3rem;
+        top: 13rem;
       }
       &-3 {
         left: 9rem;
-        bottom: 14.7rem;
+        bottom: 11.4rem;
       }
       &-2 {
         left: 8.5rem;
-        bottom: 9.8rem;
+        bottom: 6.6rem;
       }
       &-1 {
         left: 6.6rem;
-        bottom: 5rem;
+        bottom: 2rem;
       }
     }
   }
