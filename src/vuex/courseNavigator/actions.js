@@ -69,7 +69,7 @@ export const getFirstChooseTxt = ({dispatch}) => {
       getWithoutAuth(
         {
           // url: getUrl('first_choose_txt')
-          url: getUrl('interview_valid_new').replace(':interviewCount', 0)
+          url: getUrl('course_list')
         }
       ).then(
         res => {

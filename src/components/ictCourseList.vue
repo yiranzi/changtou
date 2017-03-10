@@ -1,6 +1,5 @@
 <template>
   <div class="course-type-list" {{classType}}>
-    <p class="course-group-title">{{classType.categoryName}}</p>
     <div class="course-list" v-for="course in classType.subjectList">
       <img class="course-list-img"
            v-touch:tap="goToCourseDetail(course.type, course.subjectId)"

@@ -9,7 +9,7 @@ const state = {
   recommends: [],
   readingClassics: {},
   hasNewInterview: false,
-  firstChooseTxt: ''
+  firstChooseTxt: []
 }
 
 const mutations = {

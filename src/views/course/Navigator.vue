@@ -182,7 +182,7 @@
         //加载新手礼包
         this.loadNewerGift()
         //重置页面滚动位置
-        this.resetScroller()
+//        this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
         //显示头条精选的数据
@@ -234,9 +234,9 @@
             me.$refs.scroller.reset({
             top: 0
           })
-          me.$refs.vscroller.reset({
-            left: 0
-          })
+//          me.$refs.vscroller.reset({
+//            left: 0
+//          })
         })
         }, 150)
       },
@@ -257,10 +257,10 @@
         loadData().then(
           function () {
             // 设置滚动条高度
-            me.setScrollerHeight()
-//            setTimeout(() => {
+            setTimeout(() => {
+              me.setScrollerHeight()
 //              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-//          }, 200)
+          }, 200)
           }
         )
       },
@@ -309,9 +309,9 @@
           this.$refs.scroller.reset({
             top: 0
           })
-          this.$refs.vscroller.reset({
-            left: 0
-          })
+//          this.$refs.vscroller.reset({
+//            left: 0
+//          })
         })
       },
 
