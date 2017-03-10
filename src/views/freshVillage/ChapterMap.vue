@@ -121,10 +121,10 @@
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
-        if (from.path !== '/entry' || (/\/register\/end\//g.test(from.path))) { // 从主页面进入
-          this.fromMainPageProcess()
+        if (from.path !== '/entry' && !(/\/register\/end\//g.test(from.path))) { // 从主页面进入
+          this.fromMainPageEnterProcess()
         } else {
-          this.fromLoginRegisterProcess()   // 从登陆注册页面进入
+          this.fromLoginRegisterEnterProcess()   // 从登陆注册页面进入
         }
         this.setUserImagePosition()
       },
@@ -137,7 +137,7 @@
       /*
       * 从主页进入后的判断
       * */
-      fromMainPageProcess () {
+      fromMainPageEnterProcess () {
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
           this.activeChapterNo = 1
@@ -151,7 +151,7 @@
       /*
       * 从登陆注册页进入的判断处理
       * */
-      fromLoginRegisterProcess () {
+      fromLoginRegisterEnterProcess () {
         if (!this.isLogin) {
           this.showQuestion()
         } else {
