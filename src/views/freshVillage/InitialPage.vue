@@ -3,7 +3,7 @@
   * 新手村初始页面
   */
 <template>
-  <div class="village-home-page" v-touch:tap="goFreshVillageHomePageTap"></div>
+  <img style="width:100%;height:100%;" src="../../../static/image/freshVillage/fresh-village-initial-page.png" v-touch:tap="goFreshVillageHomePageTap"/>
 </template>
 
 <script>
@@ -21,9 +21,4 @@
 </script>
 
 <style style="less">
-  .village-home-page {
-    width: 100%;
-    height: 100%;
-    background: url('../../../static/image/freshVillage/fresh-village-initial-page.png') center center no-repeat / contain;
-  }
 </style>

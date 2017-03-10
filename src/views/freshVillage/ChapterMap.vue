@@ -6,22 +6,29 @@
   <div>
     <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
       <div class="other-element">
-        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
+        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
+        <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
         <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
         <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
       </div>
-      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
       <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
+      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
     </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
 </div>
 </template>
 <script>
+  import store from '../../vuex/store'
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
+  import ShareFloat from '../../components/share/ImageShareFloat.vue'
   import {villageActions} from '../../vuex/actions'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+    mixins: [mixinImageShare],
+    store,
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
@@ -33,7 +40,9 @@
         getChapter: villageActions.getChapter,
         getStory: villageActions.getStory,
         getQuestion: villageActions.getQuestion,
-        updateRecord: villageActions.updateRecord
+        updateRecord: villageActions.updateRecord,
+        resetRecord: villageActions.resetRecord,
+        getVillageProgress: villageActions.getVillageProgress
       }
     },
     data () {
@@ -47,7 +56,8 @@
         bgStyle: 'chapter1-bg',
         showNextChapterBtn: false,
         getOverLevel: 'user-img-1',
-        hasShownEncouragement: false
+        hasShownEncouragement: false,
+        showShareFloat: false
       }
     },
     computed: {
@@ -58,7 +68,7 @@
       },
       /*用户头像*/
       userImgUrl () {
-        return this.avatar ? this.avatar : '../../../static/image/defaultAvatar.png'
+        return this.avatar ? this.avatar : './static/image/defaultAvatar.png'
       },
       /*章节卡片信息*/
       chapterIntro () {
@@ -72,11 +82,8 @@
     },
     watch: {
       villageProgress () {
-        if (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7) {
-          this.showNextChapterBtn = true
-        } else {
-          this.showNextChapterBtn = false
-        }
+        this.setUserImagePosition()
+        this.judgeNextChapterBtnStatus()
       },
       activeChapterNo () {  //switch
         if (this.activeChapterNo === 1) {
@@ -84,23 +91,61 @@
         } else if (this.activeChapterNo === 2) {
           this.bgStyle = 'chapter2-bg'
         }
+        this.setUserImagePosition()
+        this.judgeNextChapterBtnStatus()
+      },
+      isLogin (newValue) {
+        if (newValue) {
+          this.getVillageProgress()
+        }
+      },
+      showWisdom (newValue) {
+        if (newValue) {
+          this.setViewBackHandler()
+        } else {
+          this.resetViewBackHandler()
+        }
       }
     },
     route: {
-      data () {
+      data ({from}) {
+        if (from.path === '/village/advise' || from.path === '/village/fill/content') {
+          return
+        }
+        if (from.path === '/entry' && (this.isLogin && this.villageProgress.chapterNo === 0 || !this.isLogin)) {
+          this.showQuestion()
+          return
+        }
         if (!this.isLogin) {
-          this.activeChapterNo = 0
-          this.activeQuestionNo = 0
+          this.resetRecord() // 将之前的记录清空
+          this.activeChapterNo = 1
+          this.activeQuestionNo = 1
+          this.chapter = this.getChapter(this.activeChapterNo)
           this.showChapterChoice()
         } else {
           this.JudgeProgress()
         }
+        this.judgeNextChapterBtnStatus()
+        this.setUserImagePosition()
       },
       deactivate () {
         this.hideMask()
+        this.resetViewBackHandler()
       }
     },
     methods: {
+      /**
+       * 设置物理键back
+       */
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.closeWisdom
+      },
+      /*
+      * 解绑物理back键
+      * */
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
       /*
       * 点击吐槽
       * */
@@ -108,13 +153,35 @@
         this.$route.router.go('/village/advise')
       },
       /*
+       * 改变下一章btn状态
+       * */
+      judgeNextChapterBtnStatus () {
+        if (this.villageProgress.chapterNo > this.activeChapterNo) {
+          this.showNextChapterBtn = true
+          return
+        }
+        if (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7) {
+          this.showNextChapterBtn = true
+        } else {
+          this.showNextChapterBtn = false
+        }
+      },
+      /*
       * 更换头像位置
       * */
       setUserImagePosition () {
-        if (this.villageProgress.questionNo !== 7) {
+        if ((this.villageProgress.chapterNo > this.activeChapterNo) || (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7)) {
+          this.getOverLevel = 'user-img-6'
+          return
+        }
+        if (this.villageProgress.chapterNo < this.activeChapterNo && this.villageProgress.questionNo === 7) {
+          this.getOverLevel = 'user-img-1'
+          return
+        }
+        if (this.villageProgress.questionNo !== 6 || this.villageProgress.questionNo !== 7) {
           this.getOverLevel = `user-img-${this.villageProgress.questionNo + 1}`
         } else {
-          this.getOverLevel = 'user-img-1'
+          this.getOverLevel = 'user-img-6'
         }
       },
       /*
@@ -139,7 +206,6 @@
       * 判断进度
       * */
       JudgeProgress () {
-        this.setUserImagePosition()
         if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
@@ -161,17 +227,15 @@
         } else {
           if (this.villageProgress.questionNo < 6) {
             this.activeQuestionNo = this.villageProgress.questionNo + 1
-            if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && this.activeQuestionNo === 3 && !this.hasShownEncouragement) {
+            if (this.specialLevelJudge(this.activeQuestionNo) && !this.hasShownEncouragement) {
               this.showEncourage()
               this.hasShownEncouragement = true
               return
             }
-            if (this.villageProgress.chapterNo === 2 && this.activeQuestionNo === 5 && !this.hasShownEncouragement) {
-              this.showEncourage()
-              this.hasShownEncouragement = true
-              return
-            }
-          //  this.specialLevelJudge(this.activeQuestionNo)
+            this.showQuestion()
+          } else if (this.villageProgress.questionNo === 6) {
+            this.onRecordedQuestionTap(this.activeQuestionNo)
+          } else if (this.villageProgress.chapterNo < this.activeChapterNo) {
             this.showQuestion()
           }
         }
@@ -187,8 +251,8 @@
         }
         this.showMask({
           component: 'freshVillage/ChapterChoice.vue',
-          hideOnMaskTap: false,
-          callbackName: 'onChapterSelected', //onChapterSelected
+          hideOnMaskTap: true,
+          callbackName: 'onChapterSelected',
           componentData: choiceComponentData,
           callbackFn: this.villageShowTheStory.bind(this)
         })
@@ -198,7 +262,7 @@
       * */
       villageShowTheStory (chapterNum) {
         if ((!this.isLogin && chapterNum === 1) || ((this.isLogin) && (chapterNum <= this.villageProgress.chapterNo + 1))) {
-          this.activeChapterNo = chapterNum
+          this.activeChapterNo = chapterNum                       /*当前章节确定*/
           this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
           setTimeout(this.showChapterStory, 300)
         }
@@ -219,16 +283,17 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        if (this.isLogin && (this.villageProgress.questionNo !== 6 && this.villageProgress.questionNo !== 7)) {
-          this.activeQuestionNo = this.villageProgress.questionNo + 1
-        } else {
-          this.activeQuestionNo = 1
+        if (this.isLogin && this.activeChapterNo <= this.villageProgress.chapterNo) {
+          return
         }
-        this.setUserImagePosition()
-        setTimeout(() => {
-          this.showQuestion()
-        },
-        300)
+        if (!this.isLogin || this.isLogin && (this.activeChapterNo > this.villageProgress.chapterNo &&
+          (this.villageProgress.questionNo === 7 || this.villageProgress.chapterNo === 0))) {
+          this.activeQuestionNo = 1
+          setTimeout(() => {
+            this.showQuestion()
+          },
+          300)
+        }
       },
       /*
       * 获取当前问题内容
@@ -253,40 +318,55 @@
        * 选择关卡
        * */
       onLevelTap (level) {
-        if (level <= this.villageProgress.questionNo) {
+        if (this.activeChapterNo < this.villageProgress.chapterNo) {
+          this.onRecordedQuestionTap(level)
+          return
+        }
+        if (this.villageProgress.chapterNo === this.activeChapterNo) {
+          if (this.villageProgress.questionNo === 7 || level <= this.villageProgress.questionNo) {
+            this.onRecordedQuestionTap(level)
+            return
+          }
+          if (level > this.villageProgress.questionNo + 1) {
+            return
+          }
+          if (level === this.villageProgress.questionNo + 1) {
+            if (this.specialLevelJudge(level) && !this.hasShownEncouragement) {
+              this.showEncourage()
+              this.hasShownEncouragement = true
+              return
+            }
+            this.activeQuestionNo = level
+            this.showQuestion()
+          }
+          return
+        }
+        if (this.activeChapterNo > this.villageProgress.chapterNo && level < this.activeQuestionNo + 1) {
           this.activeQuestionNo = level
-          this.getActiveQuestion()
-          this.showTheExpands()
-        } else if (level === this.villageProgress.questionNo + 1) {
-        //  this.specialLevelJudge(level)
-          if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
-            this.showEncourage()
-            this.hasShownEncouragement = true
-            return
-          }
-          if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
-            this.showEncourage()
-            this.hasShownEncouragement = true
-            return
-          }
-          this.activeQuestionNo = level      // activeQuestionNo改变的契机
           this.showQuestion()
         }
       },
-      /*判断是否为特殊关卡*/
-//      specialLevelJudge (level) {
-//        console.log('specialLevelJudge', this.hasShownEncouragement)
-//        if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3 && !this.hasShownEncouragement) {
-//          this.showEncourage()
-//          this.hasShownEncouragement = true
-//          return
-//        }
-//        if (this.villageProgress.chapterNo === 2 && level === 5 && !this.hasShownEncouragement) {
-//          this.showEncourage()
-//          this.hasShownEncouragement = true
-//          return
-//        }
-//      },
+
+      /*
+      * 进入答过的题目时的操作
+      * */
+      onRecordedQuestionTap (level) {
+        this.activeQuestionNo = level
+        this.getActiveQuestion()
+        this.showTheExpands()
+      },
+      /*
+      * 判断是否为特殊关卡
+      * */
+      specialLevelJudge (level) {
+        if ((this.villageProgress.chapterNo === 0 || this.villageProgress.chapterNo === 1) && level === 3) {
+          return true
+        } else if (this.villageProgress.chapterNo === 2 && level === 5) {
+          return true
+        } else {
+          return false
+        }
+      },
       /*
       * 显示鼓励
       * */
@@ -294,15 +374,15 @@
         this.showMask({
           component: 'freshVillage/GiveEncouragement.vue',
           hideOnMaskTap: false,
-          callbackName: 'showAdviceEditor',
+          callbackName: 'onEncouragementPageTap',
           componentData: 1,
-          callbackFn: this.showAdviceEditor.bind(this)
+          callbackFn: this.onEncouragementPageTap.bind(this)
         })
       },
       /*
-      *跳转到吐槽编辑页
+      *判断是否可以跳转到吐槽编辑页
       * */
-      showAdviceEditor () {
+      onEncouragementPageTap () {
         this.$route.router.go('/village/fill/content')
       },
       /*
@@ -364,8 +444,8 @@
        *
        * */
       showUpgradeJudgement () {
-        if (this.activeQuestionNo !== 6 && this.activeQuestionNo !== 7) {
-          this.setUserImagePosition()
+        if (this.activeChapterNo < this.villageProgress.chapterNo || (this.activeChapterNo === this.villageProgress.chapterNo && (this.activeQuestionNo === 7 || this.villageProgress.questionNo === 7))) {
+          return
         }
         if (this.activeQuestionNo === 6) {
          setTimeout(() => {
@@ -380,12 +460,23 @@
         this.showMask({
           component: 'freshVillage/Proverbs.vue',
           hideOnMaskTap: false,
-          callbackName: 'closeProverb',
+          callbackName: 'onVillageProverbTap',
           componentData: this.question.proverbs,
-          callbackFn: this.showUpgradeJudgement.bind(this)
+          callbackFn: this.onVillageProverbTap.bind(this)
         })
+        const shareImgId = 'village-proverb'
+        setTimeout(this.loadShareImageUrl(shareImgId), 500)
       },
-
+      /*
+      * 点击箴言页面的操作
+      * */
+      onVillageProverbTap (type) {
+        if (type === 1) {
+          this.showShareFloat = true
+        } else {
+          this.showUpgradeJudgement()
+        }
+      },
       /*
       * 显示突发事件
       * */
@@ -409,21 +500,35 @@
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
           hideOnMaskTap: false,
-          callbackName: 'villageUpdateRecord',
+          callbackName: 'onVillageUpgradeTap',
           componentData: upgradePageData,
-          callbackFn: this.updateTheRecord.bind(this)
+          callbackFn: this.onVillageUpgradeTap.bind(this)
         })
+        const shareImgId = 'village-upgrade-detail'
+        setTimeout(this.loadShareImageUrl(shareImgId), 500)
       },
+
+      loadShareImageUrl (shareImgId) {
+        const origin = window.document.getElementById(shareImgId)
+        const element = origin.cloneNode(true)
+        const height = origin.offsetHeight
+        const width = origin.offsetWidth
+        this.setShareImageUrl({element, height, width})
+      },
+
       /*
-      * 提交答题记录
+      * 提交答题记录,分享
       * */
-      updateTheRecord () {
+      onVillageUpgradeTap (type) {
         this.updateRecord(this.activeChapterNo, 7)
         this.getOverLevel = 'user-img-1'
+        if (type === 2) {
+          this.showShareFloat = true
+        }
       }
     },
     components: {
-      //  chapterChoice,
+      ShareFloat,
       wisdom
     }
   }
@@ -436,31 +541,31 @@
     height: 100%;
     .level {
       position: absolute;
-      width: 2.1rem;
-      height: 2.1rem;
+      width: 3rem;
+      height: 3rem;
       &-6 {
-        left: 7.7rem;
-        top: 6.1rem;
+        left: 7.2rem;
+        top: 4.7rem;
       }
       &-5 {
-        left: 8.96rem;
-        top: 11.4rem;
+        left: 8.5rem;
+        top: 9.8rem;
       }
       &-4 {
-        left: 6.7rem;
-        top: 16.6rem;
+        left: 6.3rem;
+        top: 15.5rem;
       }
       &-3 {
-        left: 9.4rem;
-        bottom: 9.7rem;
+        left: 9rem;
+        bottom: 9.6rem;
       }
       &-2 {
-        left: 8.9rem;
-        bottom: 4.8rem;
+        left: 8.5rem;
+        bottom: 4.7rem;
       }
       &-1 {
-        left: 6.8rem;
-        bottom: .2rem;
+        left: 6.6rem;
+        bottom: 0;
       }
     }
     .user-img {
@@ -469,24 +574,20 @@
       height: 2.4rem;
       border: 4px solid #fff;
       border-radius: 50%;
-      &-7 {
-        left: 7.4rem;
-        top: -30.1rem;
-      }
-      &-6 {
-        left: 7.4rem;
-        top: -30.1rem;
+      &-7, &-6{
+        left: 7.2rem;
+        bottom: 29.5rem;
       }
       &-5 {
-        left: 8.6rem;
-        top: -24.8rem;
+        left: 8.5rem;
+        bottom: 24.5rem
       }
       &-4 {
-        left: 6.4rem;
-        top: -19.6rem;
+        left: 6.3rem;
+        bottom: 19.3rem;
       }
       &-3 {
-        left: 9.2rem;
+        left: 9rem;
         bottom: 14.7rem;
       }
       &-2 {
@@ -525,10 +626,18 @@
       opacity: .7;
       color: #888;
     }
+    .close-icon-container {
+      display:inline-block;
+      position: absolute;
+      top: 1rem;
+      right: .75rem;
+      width: 2rem;
+      height: 2rem;
+    }
     .close-icon:after{
       position: absolute;
-      top: 1.3rem;
-      right: .75rem;
+      top: .6rem;
+      right: .6rem;
       font-family: 'myicon';
       content: '\e90d';
       font-size: .9rem;

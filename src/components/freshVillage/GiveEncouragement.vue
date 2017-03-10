@@ -4,18 +4,24 @@
 */
 <template>
   <div class="village-encouragement">
-    <span class="close-icon" v-touch:tap="onCloseTap"></span>
-    <div class="village-encouragement-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
+    <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
+    <img class="encourage-img" :src="imgSrc"/>
+      <div class="encourage-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
   </div>
 </template>
 <script>
   export default {
+    data () {
+      return {
+        imgSrc: './static/image/give-encouragement.png'
+      }
+    },
     methods: {
       /**
        * 跪求鼓励吐槽
        */
       onEncouragementTap () {
-        this.$dispatch('showAdviceEditor')
+        this.$dispatch('onEncouragementPageTap')
       },
       /**
        * 右上角关闭窗口
@@ -30,34 +36,27 @@
   .village-encouragement {
     width: 12.5rem;
     height: 16rem;
-    background: #e8f5f0 url("../../../static/image/give-encouragement.png") center 4.5rem no-repeat / 7.25rem 5.2rem;
-    border-radius: .5rem;
-    position: relative;
-    overflow: hidden;
-    .close-icon{
-      position: absolute;
-      display: inline-block;
-      top: .75rem;
-      right: .75rem;
-      line-height: .75rem;
-    &:before{
-       line-height: .75rem;
-       font-family: 'myicon';
-       content: '\e90d';
-       font-size: .75rem !important;
-       color: #aaa;
-     }
+    background-color: #e8f5f0;
+    border-radius: 20px;
+    .encourage-img {
+      position: relative;
+      margin: 0 auto;
+      display: block;
+      top: 3.5rem;
+      width: 9rem;
     }
-    .village-encouragement-btn {
+    .encourage-btn{
+      position: relative;
       width: 8rem;
       height: 1.7rem;
       line-height: 1.7rem;
       background: #49a385;
       border-radius: .85rem;
-      margin: 12.25rem auto 0;
       text-align: center;
       font-size: .8rem;
       color: #fff;
+      margin: 0 auto;
+      top: 6rem;
     }
   }
 </style>

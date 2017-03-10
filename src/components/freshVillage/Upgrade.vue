@@ -1,23 +1,23 @@
 /**
- * Created by zhongyan on 2017/3/1.
- *
- */
+* Created by zhongyan on 2017/3/1.
+*
+*/
 <template>
   <div>
-  <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
+    <img class="cover-pic" src="../../assets/styles/image/freshVillage/upgrade.png"/>
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
-
-      <div class="upgrade-detail">
+      <div class="village-upgrade-close-container" v-touch:tap="updateRecord"><span class="close-icon"></span></div>
+      <div class="village-upgrade-detail" id="village-upgrade-detail">
         <img class="user-img" :src="avatarUrl"/>
         <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.{{componentData.chapterNo}}</div><span class="close-icon" v-touch:tap="updateRecord"></span>
+        <div class="level">LV.{{componentData.chapterNo}}</div>
         <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
         <div class="life-score"><span class="round"></span>生命值<span class="score">+15</span></div>
       </div>
-      <div class="share-btn">去炫耀</div>
+      <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
   export default {
@@ -29,9 +29,14 @@
         return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'
       }
     },
+    ready () {
+    },
     methods: {
       updateRecord () {
-        this.$dispatch('villageUpdateRecord')
+        this.$dispatch('onVillageUpgradeTap', 1)
+      },
+      toShare () {
+        this.$dispatch('onVillageUpgradeTap', 2)
       }
     }
   }
@@ -44,6 +49,25 @@
     z-index: 1;
     width: 157%;
   }
+  .village-upgrade-close-container {
+    display: inline-block;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    z-index: 1;
+    right: .2rem;
+    top: 1.2rem;
+    .close-icon:after {
+      display: inline-block;
+      position: absolute;
+      right: .5rem;
+      top: .5rem;
+      font-family: 'myicon';
+      content: '\e90d';
+      color: #aaa;
+      font-size: .9rem;
+    }
+  }
   .fresh-village-upgrade {
     position: relative;
     .upgrade-part-title {
@@ -54,24 +78,26 @@
       font-weight: bold;
       color: #fff;
     }
-    .upgrade-detail {
-      position: relative;
-      width: 12rem;
-      height: 15rem;
-      border-radius: 20px;
-      background-color: #ca414b;
-    }
-    .close-icon:after {
-      display: inline-block;
-      position: absolute;
-      z-index: 1;
-      right: 1rem;
-      top: 1rem;
-      font-family: 'myicon';
-      content: '\e90d';
-      color: #aaa;
+    .share-btn {
+      margin: 1.5rem auto 0;
+      width: 8.5rem;
+      height: 1.95rem;
+      line-height: 1.95rem;
+      text-align: center;
+      border: 2px solid #fff;
       font-size: .8rem;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 39px;
     }
+  }
+  .village-upgrade-detail {
+    position: relative;
+    width: 12rem;
+    height: 15rem;
+    border-radius: 20px;
+    background-color: #ca414b;
+
     .user-img {
       display: block;
       position: relative;
@@ -139,18 +165,6 @@
       float: right;
       font-size: .65rem;
       color: #ccc;
-    }
-    .share-btn {
-      margin: 1.5rem auto 0;
-      width: 8.5rem;
-      height: 1.95rem;
-      line-height: 1.95rem;
-      text-align: center;
-      border: 2px solid #fff;
-      font-size: .8rem;
-      font-weight: bold;
-      color: #fff;
-      border-radius: 39px;
     }
   }
 </style>

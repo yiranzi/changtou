@@ -5,7 +5,7 @@
 <template>
   <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="fresh-village-wisdom">
-      <span class="close-icon" v-touch:tap="onCloseTap"></span>
+      <div class="close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
@@ -69,10 +69,18 @@ export default {
     position: relative;
     width: 100%;
     background-color: #fff;
+    .close-icon-container {
+      display: inline-block;
+      position: absolute;
+      top: .6rem;
+      right: .75rem;
+      width: 2rem;
+      height: 2rem;
+    }
     .close-icon:after{
       position: absolute;
-      top: 1.25rem;
-      right: .75rem;
+      top: .6rem;
+      right: .6rem;
       font-family: 'myicon';
       content: '\e90d';
       font-size: .75rem;

@@ -76,7 +76,7 @@ const mixin = {
       this.shareImageHeight = height
 
       const ratio = (650 / this.shareImageHeight).toFixed(2)
-      const ShareContentStyle = `width: ${width};height: ${height};transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
+      const ShareContentStyle = `width: ${width}px;height: ${height}px;transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
 
       const eleHtml =
         `<div class="in-app-image-share-panel">

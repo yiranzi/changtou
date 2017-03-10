@@ -7,7 +7,7 @@
       <ict-titlebar :right-options="rightOptions" v-el:title-bar>
         <a slot="right">发布</a>我要吐槽
       </ict-titlebar>
-      <textarea v-model="content" placeholder="不吐不快,话憋在心里会生病..." :style="textareaStyle" v-el:textarea></textarea>
+      <textarea v-model="content" placeholder="不吐不快,话憋在心里会生病..." autofocus :style="textareaStyle" v-el:textarea></textarea>
     </div>
 </template>
 <script>
@@ -42,6 +42,12 @@ export default {
       this.rightOptions.disabled = !(/\S/.test(val))
     }
   },
+  route: {
+    deactivate () {
+      this.content = ''
+    }
+  },
+
   methods: {
     /**
      * 点击提交
