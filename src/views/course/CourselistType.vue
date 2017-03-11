@@ -84,7 +84,7 @@
 
         data () {
             return {
-              currTabItem: 's', //选项卡当前选中项目 s表示简介, c表示目录
+              currTabItem: 's', //测试git
               currTabIndex: 0,
               topPic: [
                   {background: 'url(../../assets/styles/image/courseList/classType/bigPic/bigpic_beginer.png)'},
