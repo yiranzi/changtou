@@ -84,7 +84,7 @@
 
         data () {
             return {
-              currTabItem: 's', //测试git
+              currTabItem: 's', //测试git git 222
               currTabIndex: 0,
               topPic: [
                   {background: 'url(../../assets/styles/image/courseList/classType/bigPic/bigpic_beginer.png)'},
