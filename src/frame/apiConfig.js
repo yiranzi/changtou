@@ -214,7 +214,12 @@ const apiUrl = {
     /**
      * 版本信息
      */
-  'app_update_content': '/system/app/version'            // 获得更新后版本号和更新的功能
+  'app_update_content': '/system/app/version',            // 获得更新后版本号和更新的功能
+  /**
+   * 头条精选
+   */
+  'homepage_toppicks': '/homepage/toppicks/',            // 头条精选 内容
+  'toppicks_sign': '/homepage/toppicks/sign/:userId'            // 头条精选 签到
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

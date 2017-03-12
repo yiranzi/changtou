@@ -31,6 +31,7 @@ import * as newerGuide from './newerGuide/actions'
 import * as classicReadingActions from './classicReading/actions'
 import * as villageActions from './freshVillage/actions'
 import * as appUpdateActions from './appUpdate/actions'
+import * as topPicksActions from './topPicks/actions'
 export {
   userActions,
   navigatorActions,
@@ -61,5 +62,6 @@ export {
   newerGuide,  //入门指南
   classicReadingActions,   //大咖读经典
   villageActions,  //新手村
-  appUpdateActions  //应用更新
+  appUpdateActions,  //应用更新
+  topPicksActions  //头条精选
 }

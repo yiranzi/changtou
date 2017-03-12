@@ -336,8 +336,8 @@ export function configRouter (router) {
     /**
      * 头条精彩
      */
-    '/headline': {
-      component: require('../views/headline/Headline.vue')
+    '/topPicks': {
+      component: require('../views/topPicks/TopPicks.vue')
     }
   })
 
