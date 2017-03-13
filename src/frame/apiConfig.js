@@ -98,6 +98,11 @@ const apiUrl = {
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
   'interview_valid_new': '/homepage/interview/interview-valid-new/:interviewCount', //院生故事新消息
 
+    /**
+     * 每日精选
+     */
+   // 'first_choose_txt': '', //头条精选的内容
+
   /**
    * 每日一题
    */
