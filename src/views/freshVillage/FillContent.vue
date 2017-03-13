@@ -26,7 +26,7 @@ export default {
         callback: this.onSubmitTap,
         disabled: true
       },
-      content: '' //用户填写的信息
+      content: '' //用户填写的信息,
     }
   },
   computed: {
@@ -43,11 +43,14 @@ export default {
     }
   },
   route: {
+    data () {
+      console.log('route')
+      this.$els.textarea.focus()
+    },
     deactivate () {
       this.content = ''
     }
   },
-
   methods: {
     /**
      * 点击提交

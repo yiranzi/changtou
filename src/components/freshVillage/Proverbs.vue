@@ -4,7 +4,7 @@
  */
 <template>
     <div class="fresh-village-proverbs">
-      <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
+      <div class="village-close-icon-container proverb-close" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       <div class="village-proverbs" id="village-proverb">
         <div class="proverbs-top">
           <div class="proverbs-title">投资箴言</div>
@@ -37,9 +37,14 @@ export default {
 </script>
 <style lang="less">
   .fresh-village-proverbs {
+    position: relative;
     min-height: 22rem;
     background-color: #fff;
     border-radius: 20px;
+    .proverb-close {
+      position: absolute;
+      z-index: 2;
+    }
     .share-btn {
       position: absolute;
       left: 4rem;
@@ -55,8 +60,9 @@ export default {
     }
   }
     .village-proverbs {
-      min-height: 22rem;
-      width:14.5rem;
+      /*position: relative;*/
+      /*min-height: 22rem;*/
+      /*width:14.5rem;*/
       background-color: #fff;
       border-radius: 20px;
       text-align: left;
@@ -78,6 +84,7 @@ export default {
           padding-left: 1rem;
         }
         &-content {
+          position: relative;
           padding: 1.5rem 1rem;
           p {
             margin: 0;
@@ -89,7 +96,7 @@ export default {
             display: inline-block;
             position: absolute;
             right: 1rem;
-            margin-top: 1rem;
+          /*  bottom: 1rem;*/
             font-size: .65rem;
             color: #666;
           }
