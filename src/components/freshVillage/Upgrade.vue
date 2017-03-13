@@ -8,12 +8,14 @@
     <div class="fresh-village-upgrade">
       <div class="upgrade-part-title">- 理财新手村 - </div>
       <div class="village-upgrade-close-container" v-touch:tap="updateRecord"><span class="close-icon"></span></div>
-      <div class="village-upgrade-detail" id="village-upgrade-detail">
-        <img class="user-img" :src="avatarUrl"/>
-        <div class="upgrade-title">- 理财能力升级 -</div>
-        <div class="level">LV.{{componentData.chapterNo}}</div>
-        <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
-        <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+15</span></div>
+      <div class="village-upgrade-container" id="village-upgrade-detail">
+        <div class="village-upgrade-detail">
+          <img class="user-img" :src="avatarUrl"/>
+          <div class="upgrade-title">- 理财能力升级 -</div>
+          <div class="level">LV.{{componentData.chapterNo}}</div>
+          <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
+          <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+15</span></div>
+        </div>
       </div>
       <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
     </div>
@@ -56,7 +58,7 @@
     height: 2rem;
     z-index: 1;
     right: .2rem;
-    top: 1.2rem;
+    top: 2.2rem;
     .close-icon:after {
       display: inline-block;
       position: absolute;
@@ -72,7 +74,7 @@
     position: relative;
     .upgrade-part-title {
       position: relative;
-      top: -2.6rem;
+      top: -1.6rem;
       text-align: center;
       font-size: .9rem;
       font-weight: bold;
@@ -91,29 +93,30 @@
       border-radius: 39px;
     }
   }
+  .village-upgrade-container {
+    padding-top: 1rem;
+    position: relative;
+  }
   .village-upgrade-detail {
     position: relative;
+    padding: 1px;
     width: 12rem;
     height: 15rem;
-    border-radius: 20px;
+    border-radius: 12px;
     background-color: #ca414b;
     vertical-align: middle;
     .user-img {
       display: block;
-      position: relative;
-      top: 1.25rem;
-      margin: 0 auto;
+      margin: 1.25rem auto 0;
       width: 3.2rem;
       border-radius: 50%;
       border: 8px solid #b23842;
     }
     .upgrade-title {
-      position: relative;
-      top: 1.7rem;
       width: 6rem;
       height:1.3rem;
       line-height: 1.3rem;
-      margin: 0 auto;
+      margin: 1rem auto 0;
       color: #fff;
       background-color: #8d2d34;
       font-size: .7rem;
@@ -121,9 +124,7 @@
       border-radius: .65rem;
     }
     .level {
-      position: relative;
-      top: 1.6rem;
-      margin: 0 auto;
+      margin: .3rem auto 0;
       text-align: center;
       font-size: 2.5rem;
       color: #ffe52a;
@@ -134,8 +135,7 @@
       vertical-align:middle;
     }
     .bottom-title {
-      position: relative;
-      top: 3rem;
+      margin-top: .8rem;
       text-align: center;
       font-size: .6rem;
       color: #79272d;
@@ -148,11 +148,9 @@
       margin: 0 .5rem;
     }
     .life-score {
-      position: relative;
       display: inline-block;
       vertical-align: middle;
-      bottom: -3.4rem;
-      margin: 0 2.25rem;
+      margin: .3rem 2.25rem 0;
       color: #ccc;
       font-size: .65rem;
     }

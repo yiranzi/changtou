@@ -118,6 +118,8 @@
     },
     route: {
       data ({from}) {
+       // this.showUpgrade()
+       // this.updateRecord(0, 0)
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
@@ -498,7 +500,9 @@
           callbackFn: this.onVillageProverbTap.bind(this)
         })
         const shareImgId = 'village-proverb'
-        setTimeout(this.loadShareImageUrl(shareImgId), 500)
+        setTimeout(() => {
+          this.loadShareImageUrl(shareImgId)
+        }, 500)
       },
       /*
       * 点击箴言页面的操作
@@ -538,12 +542,15 @@
           callbackFn: this.onVillageUpgradeTap.bind(this)
         })
         const shareImgId = 'village-upgrade-detail'
-        setTimeout(this.loadShareImageUrl(shareImgId), 500)
+        setTimeout(() => {
+          this.loadShareImageUrl(shareImgId)
+        }, 3000)
       },
 
       loadShareImageUrl (shareImgId) {
         const origin = window.document.getElementById(shareImgId)
         const element = origin.cloneNode(true)
+        console.log(element)
         const height = origin.offsetHeight
         const width = origin.offsetWidth
         this.setShareImageUrl({element, height, width})
