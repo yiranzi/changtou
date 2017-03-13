@@ -4,7 +4,6 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <!--滚动条-->
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
@@ -53,28 +52,6 @@
           </div>
         </div>
 
-        <!--<div class="popular-list popularSpe">-->
-          <!--<p class="area-label">-->
-            <!--<span class="color-span"> </span>-->
-            <!--<span class="title">人气必备</span>-->
-          <!--</p>-->
-          <!--<scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">-->
-            <!--<div class="box-container" >-->
-                <!--<div class="box-item" v-for="item in recommends"-->
-                     <!--v-touch:tap="goToRecommendDetail(item,$index)">-->
-                  <!--<img :src="item.imgUrl">-->
-                  <!--<p class="sub-title">{{item.title}}</p>-->
-                  <!--<p class="sub-price">￥{{item.price}}</p>-->
-                <!--</div>-->
-            <!--</div>-->
-          <!--</scroller>-->
-        <!--</div>-->
-        <!--<div class="daily-question" v-touch:tap="goToDailyQuestion">-->
-          <!--<p>每日一题 积攒你的财商</p>-->
-          <!--<p class="daily-subtext">财富自由之路第一步</p>-->
-          <!--<span class="daily-anpic-container"></span>-->
-        <!--</div>-->
-
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -90,7 +67,7 @@
             </div>
           </div>
         </div>
-        <!---->
+
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
@@ -130,7 +107,6 @@
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
-        <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
   </div>
@@ -181,8 +157,6 @@
         this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
-        //重置页面滚动位置
-//        this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
         //显示头条精选的数据
@@ -309,9 +283,6 @@
           this.$refs.scroller.reset({
             top: 0
           })
-//          this.$refs.vscroller.reset({
-//            left: 0
-//          })
         })
       },
 

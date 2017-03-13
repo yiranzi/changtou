@@ -94,7 +94,7 @@
       },
       goToCourseListType () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
-          position: '院生访谈'
+          position: '课程分类入口'
         })
         this.$route.router.go('/totalListType')
       }

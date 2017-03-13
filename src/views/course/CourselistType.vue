@@ -24,9 +24,7 @@
             </tab>
           </div>
           <!--课程分类内容-->
-          <div>
-            <course-list v-for="(key,item) in courseList" v-show='currTabIndex === key' :class-type="courseList[currTabIndex]"></course-list>
-          </div>
+          <course-list v-for="(key,item) in courseList" v-show='currTabIndex === key' :class-type="courseList[currTabIndex]"></course-list>
         </div>
     </scroller>
   </div>
