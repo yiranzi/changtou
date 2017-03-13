@@ -65,7 +65,8 @@ const mixin = {
               originCanvas.style.display = 'none'
 
               let base64 = this.convertCanvasToBase64(originCanvas)
-              window.document.body.removeChild(element)
+
+              //window.document.body.removeChild(element)
               resolve(base64)
             }
           )
@@ -107,6 +108,7 @@ const mixin = {
       const result = window.document.body.appendChild(node)
       const shareContent = window.document.getElementById('in-app-image-share-content')
       shareContent.appendChild(element)
+      console.log(result)
       return Promise.resolve(result)
     },
 
@@ -114,11 +116,12 @@ const mixin = {
      * 将canvas转成base64
      * @param originCanvas
      * @returns {*|String|string}
+     *
        */
     convertCanvasToBase64 (originCanvas) {
       let canvas = window.document.body.appendChild(originCanvas)
       const base64 = canvas.toDataURL()
-      window.document.body.removeChild(canvas)
+      //window.document.body.removeChild(canvas)
       return Promise.resolve(base64)
     },
 
