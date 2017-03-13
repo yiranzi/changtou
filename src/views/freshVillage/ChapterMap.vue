@@ -223,7 +223,12 @@
       * 判断进度
       * */
       JudgeProgress () {
-        if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7) { //根据开放到的关卡章节要动态修改！
+          this.activeChapterNo = 2
+          this.showChapterChoice()
+          return
+        }
+        if (this.villageProgress.chapterNo === 0 || (this.villageProgress.questionNo === 7 && this.villageProgress.chapterNo !== 2)) { //只到第三关
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
         } else {
@@ -285,6 +290,7 @@
         }
       },
       /*
+
       * 显示章节故事浮层
       * */
       showChapterStory () {
