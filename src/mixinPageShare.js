@@ -8,7 +8,13 @@ import {statisticsMap} from './statistics/statisticsMap'
 const mixin = {
   data () {
     return {
-      showShareFloat: false
+      showShareFloat: false,
+      shareConfig: {
+        title: '',
+        desc: '',
+        link: '',
+        imgUrl: ''
+      }
     }
   },
   methods: {

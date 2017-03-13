@@ -29,13 +29,13 @@
           </div>
         </div>
       </scroller>
-      <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
+      <page-share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></page-share-float>
     </div>
 </template>
 <script>
   import Scroller from 'vux/scroller'
   import IctTitlebar from '../../components/IctTitleBar.vue'
-  import ShareFloat from '../interview/InterviewFloat.vue'
+  import PageShareFloat from '../../components/share/PageShareFloat.vue'
   import {Device, platformMap} from '../../plugin/device'
   import {MSITE_URL} from '../../frame/serverConfig'
   import mixinPageShare from '../../mixinPageShare'
@@ -151,7 +151,7 @@
   components: {
     IctTitlebar,
     Scroller,
-    ShareFloat
+    PageShareFloat
   }
 }
 </script>
