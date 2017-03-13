@@ -53,7 +53,12 @@ export default {
       border-radius: 27px;
       border: 1px solid #05af10;
     }
+  }
     .village-proverbs {
+      min-height: 22rem;
+      background-color: #fff;
+      border-radius: 20px;
+      text-align: left;
       .proverbs {
         &-top {
           width: 14.5rem;
@@ -93,5 +98,4 @@ export default {
         }
       }
     }
-  }
 </style>
