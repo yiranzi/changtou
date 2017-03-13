@@ -21,7 +21,13 @@ const mixin = {
     return {
       showShareFloat: false,
       shareImageWidth: 0,
-      shareImageHeight: 0
+      shareImageHeight: 0,
+      shareConfig: {
+        title: '',
+        desc: '',
+        link: '',
+        imgUrl: ''
+      }
     }
   },
   methods: {
@@ -59,6 +65,7 @@ const mixin = {
               originCanvas.style.display = 'none'
 
               let base64 = this.convertCanvasToBase64(originCanvas)
+              window.document.body.removeChild(element)
               resolve(base64)
             }
           )

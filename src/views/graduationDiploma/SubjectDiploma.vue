@@ -143,12 +143,6 @@
       this.subjectId = params.subjectId
       this.getDiplomaDetails(this.subjectId).then(
         details => {
-          this.shareConfig = {
-            title: '毕业奖状',
-            desc: '',
-            link: '',
-            imgUrl: ''
-          }
           this.onViewChange()
 
           setTimeout(
