@@ -105,7 +105,6 @@ export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
 *
 * 当未登录进入时，清除之前记录
 * */
-
 export const resetRecord = ({dispatch}) => {
   dispatch('RESET_VILLAGE_RECORD')
 }
