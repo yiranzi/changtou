@@ -1,7 +1,7 @@
 <template>
   <div class="course-list-type">
     <!--标题-->
-    <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
+    <ict-titlebar v-el:titlebar>课程分类</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
           <!--图片展示-->
