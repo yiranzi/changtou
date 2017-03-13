@@ -56,6 +56,7 @@ export default {
   }
     .village-proverbs {
       min-height: 22rem;
+      width:14.5rem;
       background-color: #fff;
       border-radius: 20px;
       text-align: left;
