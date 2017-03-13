@@ -6,7 +6,7 @@
 const state = {
   professionalProduct: {},
   vipProduct: {},
-  sGroupNumber: ''
+  groupNumber: ''
 }
 
 const mutations = {
@@ -36,8 +36,8 @@ const mutations = {
    * @param professionalProduct
    * @constructor
    */
-  UPDATE_GROUP_INFO (state, sGroupNumber) {
-    state.sGroupNumber = sGroupNumber
+  UPDATE_GROUP_INFO (state, groupNumber) {
+    state.groupNumber = groupNumber
   }
 }
 

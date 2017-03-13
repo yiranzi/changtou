@@ -37,7 +37,7 @@
       actions: {
         getProfessionalProduct: strategyProductActions.getProfessionalProduct,
         getProfessionalNotice: strategyNoticeActions.getProfessionalNotice,
-        DownLoadGroupData: strategyProductActions.getProfessionalGroupNumber
+        downLoadGroupData: strategyProductActions.getProfessionalGroupNumber
       }
     },
     data () {
@@ -47,7 +47,7 @@
     },
     route: {
         data () {
-            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice(), this.DownLoadGroupData()]).then(
+            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice(), this.downLoadGroupData()]).then(
               this.setScrollerHeight()
             )
         }

@@ -6,7 +6,7 @@
 <template>
   <div class="course-list">
     <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
-    <div v-touch:tap="goToCourseListType">
+    <div class="enter-class-txt" v-touch:tap="goToCourseListType">
       <span>课程分类</span>
     </div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
@@ -194,6 +194,13 @@
         font-size: 0.65rem;
         color: #aaa;
       }
+    }
+    .enter-class-txt{
+      position:absolute;
+      right: 0.3rem;
+      top: 0.8rem;
+      font-size: 0.6rem;
+      color: #ffffff;
     }
   }
 </style>

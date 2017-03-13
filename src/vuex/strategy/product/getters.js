@@ -13,5 +13,5 @@ export const vipProduct = (state) => {
 
 // 获取qq数据
 export const groupNumber = (state) => {
-  return state.strategyProduct.sGroupNumber
+  return state.strategyProduct.groupNumber
 }
