@@ -40,31 +40,6 @@
 
     <!--底部的btn-->
     <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
-      <!--<div v-if="currStatus === 'L'" class="btn-box">-->
-        <!--<ict-button class="right">加载中..</ict-button>-->
-      <!--</div>-->
-
-      <!--<div v-if="currStatus === 'W'" class="btn-box">
-        <ict-button class="left" v-touch:tap="audition">试听</ict-button>
-        <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
-      </div>
-
-      <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活课程</ict-button>
-      </div>
-
-      <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
-        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
-      </div>
-
-      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
-      </div>
-
-      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
-      </div>-->
       <!--听课提醒-->
       <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
@@ -909,7 +884,7 @@
         let date = new Date()
         date.setDate(date.getDate() + 1)
         date.setHours(parseInt(this.remindTimeData[0]))
-        date.setMinutes(parseInt(this.remindTimeData[1]))
+        date.setMinutes(parseInt(this.remindTimeData[1] - 1))
         let remindList = []
         for (let i = 0; i < 7; i++) {
           remindList.push(date.getTime() - currTime)
