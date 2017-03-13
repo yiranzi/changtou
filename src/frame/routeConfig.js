@@ -336,7 +336,7 @@ export function configRouter (router) {
     /**
      * 头条精彩
      */
-    '/topPicks': {
+    '/top-picks': {
       component: require('../views/topPicks/TopPicks.vue')
     }
   })

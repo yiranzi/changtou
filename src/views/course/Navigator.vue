@@ -402,7 +402,7 @@
           position: '院生访谈'
         })
         //this.$route.router.go('/interview/interview-list')
-        this.$route.router.go('/topPicks')
+        this.$route.router.go('/top-picks')
       },
 
       /**
