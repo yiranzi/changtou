@@ -436,7 +436,6 @@
         updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
-
     /**
      *
      */
@@ -617,10 +616,10 @@
         this.isRemindShow = false
         this.isRemoveRemindShow = false
         this.isRemindSet = false
-        this.remindTimeValue = [hours[0], mins[0]]
         this.remindTimeStart = {}
         this.remindTimeEnd = {}
         this.remindList = {}
+        this.clearTimePicker()
       }
     },
 
@@ -920,7 +919,7 @@
        **/
       hideRemind () {
         this.isRemindShow = false
-        this.remindTimeValue = [hours[0], mins[0]]
+        this.clearTimePicker()
       },
       /**
        * 取消提醒设置显示
@@ -965,7 +964,7 @@
         this.isRemindShow = false
         this.isRemindSet = true
         this.showCheckTip('设置成功')
-        this.remindTimeValue = [hours[0], mins[0]]
+        this.clearTimePicker()
       },
       /**
        * 取消定时提醒
@@ -985,6 +984,14 @@
         this.isRemoveRemindShow = false
         this.isRemindSet = false
         this.showCheckTip('取消成功')
+        this.clearTimePicker()
+      },
+      /**
+       * 定时器picker归零
+       **/
+      clearTimePicker () {
+        this.remindTimeValue = [hours[0], mins[0]]
+        this.remindTimeData = ['0', '0']
       },
       /**
        * 选择题被点击

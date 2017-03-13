@@ -114,8 +114,6 @@ const deleteLocalNotificationWithIdentifierKeyInIOS = (identifierKey) => {
  */
 const addLocalNotificationForANDROID = (builderId, content, title,
                                         notificaitonID, broadcastTime, extras) => {
-  console.log(builderId, content, title,
-    notificaitonID, broadcastTime, extras)
   if (window.plugins) {
     window.plugins.jPushPlugin.addLocalNotification(builderId, content, title,
       notificaitonID, broadcastTime, extras)
