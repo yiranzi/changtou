@@ -118,7 +118,6 @@
     },
     route: {
       data ({from}) {
-       // this.showUpgrade()
        // this.updateRecord(0, 0)
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return

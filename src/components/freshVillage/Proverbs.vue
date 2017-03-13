@@ -60,9 +60,6 @@ export default {
     }
   }
     .village-proverbs {
-      /*position: relative;*/
-      /*min-height: 22rem;*/
-      /*width:14.5rem;*/
       background-color: #fff;
       border-radius: 20px;
       text-align: left;
@@ -96,7 +93,6 @@ export default {
             display: inline-block;
             position: absolute;
             right: 1rem;
-          /*  bottom: 1rem;*/
             font-size: .65rem;
             color: #666;
           }
