@@ -82,7 +82,6 @@
     width: 2rem;
     height: 2rem;
     .close-icon:after {
-      display: inline-block;
       position: absolute;
       right: .6rem;
       top: .6rem;

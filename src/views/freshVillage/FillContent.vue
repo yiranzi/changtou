@@ -47,7 +47,6 @@ export default {
       this.content = ''
     }
   },
-
   methods: {
     /**
      * 点击提交
