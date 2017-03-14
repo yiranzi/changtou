@@ -1,22 +1,11 @@
 <template>
-  <div class="course-type-list" {{classType}}>
-    <div class="course-list" v-for="course in classType.subjectList">
+  <div class="course-type-list" {{courseData}}>
+    <div class="course-list" v-for="course in courseData.courses">
       <img class="course-list-img"
-           v-touch:tap="goToCourseDetail(course.type, course.subjectId)"
+           v-touch:tap="goToCourseDetail(course.pay, course.subjectId)"
            v-bind:src=course.pic>
       <div class="course-list-info"
-           v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
-        <p class="course-list-title">{{course.title}}</p>
-        <p class="course-list-subtitle">{{course.description}}</p>
-        <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="course.price">￥{{course.price}}</span></p>
-      </div>
-    </div>
-    <div class="course-list" v-for="course in classType.subjectList">
-      <img class="course-list-img"
-           v-touch:tap="goToCourseDetail(course.type, course.subjectId)"
-           v-bind:src=course.pic>
-      <div class="course-list-info"
-           v-touch:tap="goToCourseDetail(course.type, course.subjectId)">
+           v-touch:tap="goToCourseDetail(course.pay, course.subjectId)">
         <p class="course-list-title">{{course.title}}</p>
         <p class="course-list-subtitle">{{course.description}}</p>
         <p class="course-list-count">{{course.studentCount}}人学过<span class="course-list-price" v-if="course.price">￥{{course.price}}</span></p>
@@ -106,8 +95,7 @@
         },
         components: {},
         props: [
-        'classType',
-          'mytest'
+        'courseData'
         ],
         methods: {
         goToCourseDetail (type, subjectId) {

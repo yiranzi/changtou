@@ -6,7 +6,7 @@
 <template>
   <div class="course-list">
     <ict-titlebar v-el:titlebar>全部课程</ict-titlebar>
-    <div class="enter-class-txt" v-touch:tap="goToCourseListType">
+    <div class="enter-class-txt" v-touch:tap="goToCourseClassification">
       <span>课程分类</span>
     </div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
@@ -40,8 +40,6 @@
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
-  import {eventMap} from '../../frame/eventConfig'
-  import {statisticsMap} from '../../statistics/statisticsMap'
 
   export default {
     vuex: {
@@ -92,11 +90,8 @@
       goToProfessionalStrategy () {
         this.$route.router.go('/strategy/professional/intro')
       },
-      goToCourseListType () {
-        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
-          position: '院生访谈'
-        })
-        this.$route.router.go('/totalListType')
+      goToCourseClassification () {
+        this.$route.router.go('/course/classification')
       }
     },
     components: {

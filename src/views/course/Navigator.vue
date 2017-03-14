@@ -33,8 +33,8 @@
               <span class="under-banner-title">院生故事</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
-            <div v-touch:tap="goToCourseListType" class="under-banner-item">
-              <i class="under-banner-icon interview"></i>
+            <div v-touch:tap="goToCourseClassification" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
               <span class="under-banner-title">课程分类</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
@@ -42,38 +42,16 @@
         </div>
 
         <!--头条精选-->
-        <div class="first-choose">
+        <div class="head-line">
           <div class="icon">
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">你的投资有目标吗？+ {{firstChooseTxt}}</span>
+          <span class="topic-txt">{{headLineTitle}}</span>
           <div class="gift">
             <i class="picture"></i>
           </div>
         </div>
-
-        <!--<div class="popular-list popularSpe">-->
-          <!--<p class="area-label">-->
-            <!--<span class="color-span"> </span>-->
-            <!--<span class="title">人气必备</span>-->
-          <!--</p>-->
-          <!--<scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">-->
-            <!--<div class="box-container" >-->
-                <!--<div class="box-item" v-for="item in recommends"-->
-                     <!--v-touch:tap="goToRecommendDetail(item,$index)">-->
-                  <!--<img :src="item.imgUrl">-->
-                  <!--<p class="sub-title">{{item.title}}</p>-->
-                  <!--<p class="sub-price">￥{{item.price}}</p>-->
-                <!--</div>-->
-            <!--</div>-->
-          <!--</scroller>-->
-        <!--</div>-->
-        <!--<div class="daily-question" v-touch:tap="goToDailyQuestion">-->
-          <!--<p>每日一题 积攒你的财商</p>-->
-          <!--<p class="daily-subtext">财富自由之路第一步</p>-->
-          <!--<span class="daily-anpic-container"></span>-->
-        <!--</div>-->
 
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
@@ -130,7 +108,6 @@
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
-        <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
   </div>
@@ -157,7 +134,7 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        firstChooseTxt: navigatorGetters.firstChooseTxt
+        headLineTitle: navigatorGetters.headLineTitle
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -168,7 +145,7 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
-        getFirstChooseTxt: navigatorActions.getFirstChooseTxt
+        getHeadLineTitle: navigatorActions.getHeadLineTitle
       }
     },
 
@@ -181,12 +158,10 @@
         this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
-        //重置页面滚动位置
-//        this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
         //显示头条精选的数据
-        this.showFirstChooseTxt()
+        this.showHeadLineTitle()
       }
     },
 
@@ -234,9 +209,6 @@
             me.$refs.scroller.reset({
             top: 0
           })
-//          me.$refs.vscroller.reset({
-//            left: 0
-//          })
         })
         }, 150)
       },
@@ -259,7 +231,6 @@
             // 设置滚动条高度
             setTimeout(() => {
               me.setScrollerHeight()
-//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
           }, 200)
           }
         )
@@ -309,9 +280,6 @@
           this.$refs.scroller.reset({
             top: 0
           })
-//          this.$refs.vscroller.reset({
-//            left: 0
-//          })
         })
       },
 
@@ -414,11 +382,11 @@
       /**
        * 跳转到全部课程列表-分类排列
        */
-      goToCourseListType () {
+      goToCourseClassification () {
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
-          position: '院生访谈'
+          position: '课程分类'
         })
-        this.$route.router.go('/totalListType')
+        this.$route.router.go('/course/classification')
       },
 
       /**
@@ -471,9 +439,8 @@
       /**
        * 显示头条精选数据
        */
-      showFirstChooseTxt () {
-        console.log('call func')
-        this.getFirstChooseTxt()
+      showHeadLineTitle () {
+        this.getHeadLineTitle()
       },
 
       /**
@@ -804,8 +771,8 @@
       }
     }
     .under-banner-icon{
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.6rem;
+      height: 1.6rem;
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
@@ -829,6 +796,10 @@
 
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
+    }
+
+    .under-banner-icon.classification{
+      background: url("../../assets/styles/image/navigator/classification.png") no-repeat center center / contain;
     }
   /*理财新手村-首页入口*/
     .fresh-village{
@@ -886,7 +857,7 @@
     }
 
     /*头条精选*/
-    .first-choose {
+    .head-line {
       font-size: 0;
       position: relative;
       margin: 0.25rem auto 0.5rem;

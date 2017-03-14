@@ -32,6 +32,6 @@ export const hasNewInterview = (state) => {
 }
 
 //获得
-export const firstChooseTxt = (state) => {
-  return state.navigator.firstChooseTxt
+export const headLineTitle = (state) => {
+  return state.navigator.headLineTitle
 }

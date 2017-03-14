@@ -63,17 +63,16 @@ export const isInterviewChange = ({ dispatch }, interviewCount) => {
  * @param dispatch
  * @returns {Promise}
  */
-export const getFirstChooseTxt = ({dispatch}) => {
+export const getHeadLineTitle = ({dispatch}) => {
   return new Promise(
     (resolve, reject) => {
       getWithoutAuth(
         {
-          // url: getUrl('first_choose_txt')
-          url: getUrl('course_list')
+          url: getUrl('headline_txt')
         }
       ).then(
         res => {
-          dispatch('UPDATE_NAIGATOR_FIRST_CHOOSE_TXT', res)
+          dispatch('UPDATE_NAIGATOR_HEAD_LINE_TXT', res)
           resolve(res)
         },
         err => {

@@ -9,7 +9,7 @@ const state = {
   recommends: [],
   readingClassics: {},
   hasNewInterview: false,
-  firstChooseTxt: []
+  headLineTitle: []
 }
 
 const mutations = {
@@ -23,8 +23,8 @@ const mutations = {
   UPDATE_NAIGATOR_DATA_INTERVIEW (state, data) {
     state.hasNewInterview = data
   },
-  UPDATE_NAIGATOR_FIRST_CHOOSE_TXT (state, firstChooseTxt) {
-    state.firstChooseTxt = firstChooseTxt
+  UPDATE_NAIGATOR_HEAD_LINE_TXT (state, headLineData) {
+    state.headLineTitle = headLineData.title
   }
 }
 

@@ -41,6 +41,7 @@ const apiUrl = {
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
   'course_list': '/course/free/category-list', //课程列表
+  'course_classification': '/course/classify', //课程分类列表
 
   'expense_records': '/student/expense/lesson/record', //付费课程进度
   'expense_subject_specific': '/course/subject/specific/P/:subjectId', //付费课程简介
@@ -101,7 +102,7 @@ const apiUrl = {
     /**
      * 每日精选
      */
-   // 'first_choose_txt': '', //头条精选的内容
+   'headline_txt': '/homepage/headline', //头条精选的内容
 
   /**
    * 每日一题

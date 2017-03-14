@@ -28,8 +28,8 @@ export function configRouter (router) {
       component: require('../views/course/Courselist.vue')
     },
 
-    '/totalListType': { //查看所有课程列-按照分类排列
-      component: require('../views/course/CourselistType.vue')
+    '/course/classification': { //查看所有课程列-按照分类排列
+      component: require('../views/course/Classification.vue')
     },
     'subject/detail/F/:subjectId/:position': { //课程详情页
       component: require('../views/course/CourseDetailFree.vue')

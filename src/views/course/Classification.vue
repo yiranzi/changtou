@@ -1,5 +1,5 @@
 <template>
-  <div class="course-list-type">
+  <div class="course-classification">
     <!--标题-->
     <ict-titlebar v-el:titlebar>课程分类</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
@@ -25,14 +25,14 @@
           </div>
           <!--课程分类内容-->
           <div>
-            <course-list v-for="(key,item) in courseList" v-show='currTabIndex === key' :class-type="courseList[currTabIndex]"></course-list>
+            <course-classification-list v-for="(key,item) in courseClassification" v-show='currTabIndex === key' :course-data="courseClassification[currTabIndex]"></course-classification-list>
           </div>
         </div>
     </scroller>
   </div>
 </template>
 <style lang = "less">
-  .course-list-type{
+  .course-classification{
     .mycenter{
       display: flex;
       flex-direction: row;
@@ -64,12 +64,12 @@
     }
     .class-type-buttons{
       height: 2.65rem;
-      padding:0 2.5rem;
+      padding:0 2rem;
       .fix-vuex-height
       {
         height: 2.6rem;
         .fix-vuex-line-height{
-          line-height: 1.3rem;
+          line-height: 1.1rem;
         }
       }
       .class-button-icon{
@@ -85,7 +85,7 @@
 
 <script>
   import {Tab, TabItem} from 'vux/tab'
-  import courseList from '../../components/ictCourseList.vue'
+  import courseClassificationList from '../../components/ClassificationList.vue'
   import {courselistActions} from '../../vuex/actions'
   import {courselistGetters} from '../../vuex/getters'
   import IctTitlebar from '../../components/IctTitleBar.vue'
@@ -94,11 +94,17 @@
     export default {
       vuex: {
         getters: {
-          courseList: courselistGetters.courseList
+          courseClassification: courselistGetters.courseClassification
         },
         actions: {
-          loadList: courselistActions.loadCourseList
+          loadClassification: courselistActions.loadClassification
         }
+      },
+//      切换的时候重新设置高度
+      watch: {
+          'currTabIndex': function () {
+            this.setScrollerHeight()
+          }
       },
       methods: {
         /**
@@ -107,17 +113,17 @@
         setScrollerHeight () {
           const me = this
           setTimeout(function () {
-            me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.clientHeight) + 'px'
+            me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.offsetHeight) + 'px'
             me.$nextTick(() => {
               me.$refs.scroller.reset({
                 top: 0
               })
             })
-          }, 100)
+          }, 300)
         }
       },
       ready () {
-        this.loadList().then(this.setScrollerHeight)
+        this.loadClassification()
         },
       route: {
         data () {
@@ -127,7 +133,7 @@
       },
       data () {
             return {
-              scrollerHeight: '0',
+              scrollerHeight: '0px',
               currTabIndex: 0,
               //大图
               topPic: [
@@ -171,7 +177,7 @@
       components: {
         Tab,
         TabItem,
-        courseList,
+        courseClassificationList,
         IctTitlebar,
         Scroller
       }
