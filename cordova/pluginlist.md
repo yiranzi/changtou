@@ -11,7 +11,7 @@ cordova plugin add cordova-plugin-file-transfer
 cordova plugin add cordova-plugin-media
 cordova plugin add cordova-plugin-app-version
 cordova plugin add cordova-plugin-inappbrowser
-cordova plugin add jpush-phonegap-plugin --variable APP_KEY=7cc90eaad71ac3582d375f57
+cordova plugin add jpush-phonegap-plugin --variable API_KEY=7cc90eaad71ac3582d375f57
 cordova plugin add cordova-plugin-qqsdk  --variable QQ_APP_ID=101246042
 cordova plugin add cordova-plugin-weibosdk --variable WEIBO_APP_ID=2787606898
 //微信插件
