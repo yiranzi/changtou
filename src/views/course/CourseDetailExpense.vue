@@ -270,7 +270,6 @@
      */
     data () {
       return {
-        currDate: '',
         isShareShow: false,   //分享浮层显示
         isRemindShow: false,   //定时弹框状态
         isRemoveRemindShow: false,  //取消弹框显示
@@ -372,7 +371,7 @@
           this.isRemindSet = true
           this.remindTimeData = items.time[0]   //------------------------
           this.getCurrDateNum()   //获取当前是第几天
-        } else {      //如果超出提醒期说明定时器过时，把缓存和本地通知清空
+        } else {      //如果超出提醒期,说明定时器过时，把缓存和本地通知清空
           this.isRemindSet = false
           clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
           Jpush.clearLocalNotifications()
@@ -660,6 +659,7 @@
        **/
       clearTimeData () {
         //清空定时状态
+        this.remindTimeData = ['0', '0']
         this.isRemindShow = false
         this.isRemoveRemindShow = false
         this.isRemindSet = false
@@ -698,8 +698,6 @@
        **/
       getSetTime () {
         let currDate = new Date()
-        currDate.setSeconds(0)    //把当前时间秒数归零
-        this.currDate = currDate.getTime()
         currDate.setDate(currDate.getDate() + 1)    //提醒从设置第二天起算
         let startTime = {   //第一次提醒的年月日
           year: currDate.getFullYear(),
@@ -719,11 +717,12 @@
        * 获取每天提醒的时间
        **/
       getRemindList () {
-        let currTime = this.currDate   //获得当前时间毫秒数
+        let currTime = new Date().getTime()  //获得当前时间毫秒数
         let date = new Date()
         date.setDate(date.getDate() + 1)    //当前时间的第二天
         date.setHours(parseInt(this.remindTimeData[0]))   //把小时和分钟设定到选择的时间
         date.setMinutes(parseInt(this.remindTimeData[1]))
+        date.setSeconds(0)
         let remindList = []     //用一个数组保存提醒的毫秒数
         for (let i = 0; i < 7; i++) {   //循环七天的提醒时间
           remindList.push(date.getTime() - currTime)    //提醒时间-当前时间=当前时间距每次提醒的毫秒数
@@ -745,6 +744,7 @@
        * 定时提醒设置显示
        **/
       showRemind () {
+        this.remindTimeData = ['0', '0']
         this.isRemindShow = true
         getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
       },
@@ -783,6 +783,7 @@
       },
       setLocalNotificationANDROID () {      //安卓设置提醒
         if (Device.platform === platformMap.ANDROID) {
+            console.log(111)
           for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
             Jpush.setLocalNotificationANDROID(
               1,
@@ -837,7 +838,7 @@
       removeRemind () {
         this.deleteLocalNotificationWithIdentifierKeyInIOS()
         this.removeLocalNotificationANDROID()
-        this.afterSetRemind()
+        this.afterRemoveRemind()
       },
 
       /**
