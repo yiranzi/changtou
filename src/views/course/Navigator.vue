@@ -106,6 +106,7 @@
     </scroller>
   </div>
 </template>
+
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
@@ -139,6 +140,7 @@
         getVillageProgress: villageActions.getVillageProgress
       }
     },
+
     route: {
       data ({from}) {
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
@@ -154,6 +156,7 @@
         this.showInterviewNew()
       }
     },
+
     data () {
       return {
         scrollerHeight: '0px',
@@ -164,7 +167,9 @@
       }
     },
     ready () {
+
     },
+
     computed: {
       banners () {
         let banners = this.originBanners
@@ -179,6 +184,7 @@
         return newBanners
       }
     },
+    
     methods: {
       /**
        * 设置滚动条高度
