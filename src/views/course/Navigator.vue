@@ -47,7 +47,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">{{headLineTitle}}</span>
+          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -190,6 +190,14 @@
           }
         )
         return newBanners
+      },
+      headLineTitleCalcLength: function () {
+        const titleString = this.headLineTitle.length
+        const length = titleString.length
+        if (length > 9) {
+          const titleString = titleString.slice(0, 9) + '...'
+        }
+        return titleString
       }
     },
 
@@ -895,6 +903,8 @@
         height:0.7rem;
         line-height: 0.7rem;
         color: #aaa;
+        display:inline-block;
+        width: 10.4rem;
         overflow: hidden;
       }
 
