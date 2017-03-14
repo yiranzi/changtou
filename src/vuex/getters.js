@@ -31,7 +31,7 @@ import * as newerGuideGetters from './newerGuide/getters'
 import * as classicReadingGetters from './classicReading/getters'
 import * as villageGetters from './freshVillage/getters'
 import * as appUpdateGetters from './appUpdate/getters'
-import * as topPicksGetters from './topPicks/getters'
+import * as headlineGetters from './headline/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -63,5 +63,5 @@ export {
   classicReadingGetters,  //大咖读经典
   villageGetters,  //理财新手村
   appUpdateGetters,  //应用更新
-  topPicksGetters  //头条精选
+  headlineGetters  //头条精选
 }

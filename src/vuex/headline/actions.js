@@ -1,21 +1,21 @@
 /**
  * Created by zyr on 2016/10/8.
  */
-import {getWithinAuth, getWithoutAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, getWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
  * 获取头条精选
  * @param dispatch
  */
-export const getTopPicksList = ({ dispatch }) => {
+export const getHeadlineContent = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithoutAuth({
-        url: getUrl('homepage_toppicks')
+        url: getUrl('homepage_headline')
       }).then(
         function (data) {
-          dispatch('TOP_PICKS_LIST', data)
+          dispatch('HEADLINE_CONTENT', data)
           resolve(data)
         },
         function (err) {
@@ -31,14 +31,37 @@ export const getTopPicksList = ({ dispatch }) => {
  * @param dispatch
  *
  */
-export const getUserSignState = ({ dispatch }) => {
+export const getCheckinState = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('homepage_toppicks_signin_hassigned')
+        url: getUrl('homepage_headline_checkin_haschecked')
       }).then(
         function (data) {
-          dispatch('IS_SIGN', data)
+          dispatch('USER_IS_CHECKIN', data)
+          resolve(data)
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 获取用户是否连续签到
+ * @param dispatch
+ *
+ */
+export const getSerialCheckin = ({ dispatch }) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth({
+        url: getUrl('homepage_headline_checkin_serial')
+      }).then(
+        function (data) {
+          dispatch('USER_IS_SERIAL_CHECKIN', data)
           resolve(data)
         },
         function (err) {
@@ -54,14 +77,14 @@ export const getUserSignState = ({ dispatch }) => {
  * @param dispatch
  *
  */
-export const getUserSignCount = ({ dispatch }) => {
+export const getCheckinCount = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('homepage_toppicks_signin_count')
+        url: getUrl('homepage_headline_checkin_count')
       }).then(
         function (data) {
-          dispatch('USER_SIGN_COUNT', data)
+          dispatch('USER_CHECKIN_COUNT', data)
           resolve(data)
         },
         function (err) {
@@ -77,11 +100,11 @@ export const getUserSignCount = ({ dispatch }) => {
  * @param dispatch
  *
  */
-export const signUpdate = (userId) => {
+export const checkinUpdate = () => {
   return new Promise(
     (resolve, reject) => {
-      postWithinAuth({
-        url: getUrl('homepage_toppicks_signin_signupdate')
+      getWithinAuth({
+        url: getUrl('homepage_headline_checkin_update')
       }).then(
         function (data) {
           resolve(data)

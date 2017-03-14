@@ -33,7 +33,7 @@ import classicReading from './classicReading/store'
 import newerGuide from './newerGuide/store'
 import freshVillage from './freshVillage/store'
 import appUpdate from './appUpdate/store'
-import topPicks from './topPicks/store'
+import headline from './headline/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -67,6 +67,6 @@ export default new Vuex.Store({
     newerGuide, //入门指南
     freshVillage,  //理财新手村
     appUpdate,   //应用更新
-    topPicks   //头条精选
+    headline   //头条精选
   }
 })
