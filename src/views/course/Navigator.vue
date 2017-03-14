@@ -4,7 +4,6 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <!--滚动条-->
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
@@ -68,7 +67,7 @@
             </div>
           </div>
         </div>
-        <!---->
+
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
