@@ -300,7 +300,9 @@ export function configRouter (router) {
     '/ebook/chapter/:bookId/:chapterId': {
       component: require('../views/ebook/Chapter.vue')
     },
-    /*大咖读经典*/
+    /*
+    *大咖读经典
+    */
     '/classic/reading/:classicId': {
       component: require('../views/classicReading/ClassicReading.vue')
     },
@@ -310,6 +312,25 @@ export function configRouter (router) {
     */
     '/start': {
       component: require('../views/start/GuideView.vue')
+    },
+    /**
+     * 新手村
+     */
+    //我要吐槽
+    '/village/advise': {
+      component: require('../views/freshVillage/Advise.vue')
+    },
+    //内容填写
+    '/village/fill/content': {
+      component: require('../views/freshVillage/FillContent.vue')
+    },
+    // 新手村主界面
+    '/village/map': {
+      component: require('../views/freshVillage/ChapterMap.vue')
+    },
+    //新手村初始页面
+    '/village/initialPage': {
+      component: require('../views/freshVillage/InitialPage.vue')
     }
   })
 

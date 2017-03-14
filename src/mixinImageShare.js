@@ -32,7 +32,6 @@ const mixin = {
     setShareImageUrl ({element, height, width}) {
       this.renderHtml({element, height, width}).then(this.convertHtmlToBase64).then(
         (base64) => {
-          console.log(base64)
           this.shareConfig.imgUrl = base64
         }
       )

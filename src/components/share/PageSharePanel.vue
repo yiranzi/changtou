@@ -27,14 +27,15 @@
 </template>
 <script>
   import {Device, platformMap} from '../../plugin/device'
+  import {nativeVersion} from '../../plugin/version'
   export default {
   computed: {
     isInApp () {
       return (Device.platform === platformMap.ANDROID || Device.platform === platformMap.IOS)
     },
-    //ios中 暂不才显示微博分享
+    //android > 2.6.1 才能显示 微博分享
     canWeiboShare () {
-      return !(Device.platform === platformMap.IOS)
+      return (Device.platform === platformMap.ANDROID) && (nativeVersion >= 20601)
     }
   },
   methods: {
