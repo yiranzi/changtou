@@ -191,11 +191,12 @@
         )
         return newBanners
       },
+
       headLineTitleCalcLength: function () {
-        const titleString = this.headLineTitle.length
-        const length = titleString.length
-        if (length > 9) {
-          const titleString = titleString.slice(0, 9) + '...'
+        let titleString = this.headLineTitle
+        let length = titleString.length
+        if (length > 13) {
+            titleString = titleString.slice(0, 13) + '...'
         }
         return titleString
       }
