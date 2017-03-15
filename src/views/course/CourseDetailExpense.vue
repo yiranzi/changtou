@@ -40,36 +40,74 @@
 
     <!--底部的btn-->
     <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
-      <!--<div v-if="currStatus === 'L'" class="btn-box">-->
-        <!--<ict-button class="right">加载中..</ict-button>-->
-      <!--</div>-->
-
-      <div v-if="currStatus === 'W'" class="btn-box">
-        <ict-button class="left" v-touch:tap="audition">试听</ict-button>
-        <ict-button class="right" v-touch:tap="buy">立即购买</ict-button>
+      <!--听课提醒-->
+      <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+          <div class="action-detail-btn" v-touch:tap="postpone">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
+            <div class="action-detail-btn-text">延期</div>
+          </div>
+          <div class="action-detail-btn" v-touch:tap="suspend">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
+            <div class="action-detail-btn-text">暂停</div>
+          </div>
+        </div>
+        <div class="right-btn">
+          <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="right-btn-changeText">修改提醒</span></div>
+        </div>
       </div>
-
-      <div v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="active" style="background-color: #ff9800">激活课程</ict-button>
+      <!--立即购买-->
+      <div class="btn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+          <div class="action-detail-btn" v-touch:tap="audition">
+            <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
+            <div class="action-detail-btn-text">试听</div>
+          </div>
+        </div>
+        <div class="right-btn" v-touch:tap="buy">
+          <div>立即购买</div>
+        </div>
       </div>
-
-      <div v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="left" v-if="!isSuspendUsed && currRecord && !currRecord.finishDate" v-touch:tap="suspend">暂停课程</ict-button>
-        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
+      <!--毕业-->
+      <div class="btn-box-active" v-if="currStatus === 'Y' || currStatus === 'E'">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="right-btn" v-touch:tap="postpone">延期</div>
       </div>
-
+      <!--激活课程-->
+      <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="right-btn" v-touch:tap="active">激活课程</div>
+      </div>
       <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="resume">开启课程</ict-button>
-      </div>
-
-      <div v-if="(currStatus === 'Y' || currStatus === 'E') && currSubject && currSubject.type == 'M'" class="btn-box">
-        <ict-button class="right" v-touch:tap="postpone">{{postText}}</ict-button>
+        <div class="right-btn" v-touch:tap="resume">开启课程</div>
       </div>
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
+    <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
   </div>
+
 </template>
 <style lang="less">
   .subject-detail {
@@ -109,41 +147,71 @@
       position: fixed;
       /*background: red;*/
       width: 100%;
-      height: 2.1rem;
+      height: 98/40rem;
       bottom: 0;
       /*font-size: 0;*/
       z-index: 101;
-
-        .btn-box {
-          display: flex;
-
-        .ict-btn {
-          border-radius: 0 !important;
+        .btn-box,.btn-box-buy,.btn-box-active{
+          text-align: center;
+          height:100%;
+          display:flex;
+          flex-direction:row;
+          .action-btn{
+            display: flex;
+            flex-direction:row;
+            .action-detail-btn{
+              width: 2.5rem;
+              padding:10/40rem 0 8/40rem;
+              .action-detail-btn-icon{
+                display:block;
+                img{
+                  width: 40/40rem;
+                  height: 1rem;
+                }
+                .shareIcon{
+                  width: 36/40rem;
+                }
+              }
+              .action-detail-btn-text{
+                text-align: center;
+                font-size: 22/40rem;
+                display: block;
+              }
+            }
         }
-
-        .left {
-          background: #f0eff5;
-          color: #00b0f0;
-          font-size: 34/40rem;
-          flex: 24;
-          /*flex-grow: 1;*/
-        }
-
-        .right {
-          /*border-left: 1px solid #898989;*/
+        .right-btn{
+          height:100%;
+          flex: 1;
           font-size: 34/40rem;
           color: #fff;
+          background-color: #c9b280;
+          line-height: 98/40rem;
+          &-changeText{
+            margin-left: 3/4rem;
+            line-height: 0.9rem;
+            height: 0.9rem;
+            color: #eee;
+            border: 1px solid #eee;
+            font-size: 22/40rem;
+            border-radius: 0.9rem;
+            box-sizing: border-box;
+            padding: 0 6/40rem;
+            display: inline-block;
+           }
+        }
+      }
+      .btn-box-buy{
+        .right-btn{
           background-color: #00b0f0;
-          flex: 51;
-
-          &:active,&:visited{
-            color: #898989;
-          }
+        }
+      }
+      .btn-box-active{
+        .right-btn{
+          background-color: #ff9800;
         }
       }
     }
   }
-
 </style>
 <script>
   import IctBackBtn from '../../components/IctCourseBackBtn.vue'
@@ -159,11 +227,17 @@
   import Sticky from 'vux/sticky'
   import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
   import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
-  import {setSessionCache} from '../../util/cache'
+  import {setSessionCache, setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {MSITE_URL} from '../../frame/serverConfig'
+  import mixinPageShare from '../../mixinPageShare'
+  import {Device, platformMap} from '../../plugin/device'
+  import {Jpush} from '../../plugin/jpush'
+  import CourseRemind from '../../components/course/CourseRemind.vue'
+  import PageShareFloat from '../../components/share/PageShareFloat.vue'
   export default {
+    mixin: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
@@ -191,12 +265,22 @@
         updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
       }
     },
-
     /**
      *
      */
     data () {
       return {
+        isShareShow: false,   //分享浮层显示
+        isRemindShow: false,   //定时弹框状态
+        isRemoveRemindShow: false,  //取消弹框显示
+        isRemindSet: false,   //是否设定定时提醒
+        remindTimeData: ['0', '0'],
+
+        remindTimeStart: {},   //提醒开始时间
+        remindTimeEnd: {},   //提醒结束时间
+        remindList: {},  //提醒时间毫秒数列表
+        remindCurrDate: 0,  //当前是第几天
+
         isResponsive: true, // 当前页面是否处于可响应状态 (响应 音频播放完成,全屏 事件)
         scrollerHeight: '480px',
 
@@ -277,6 +361,22 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        //读取缓存，判断之前有没有设置定时提醒
+        let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)    //读取对应课程的上课提醒缓存
+        let currDate = new Date().getTime()   //读取现在的时间
+        if (items && ((parseInt(items.remindList[6]) + parseInt(items.oldTime)) - currDate >= 0)) {   //如果有缓存，说明设置过提醒，把现在的缓存里的最后一次提醒和现在的时间相减，如果>0说明还在提醒期内，否则就把定时提醒归零
+          this.remindTimeStart = items.start    //从缓存中取出数据
+          this.remindTimeEnd = items.end
+          this.remindList[subjectId] = items.remindList
+          this.isRemindSet = true
+          this.remindTimeData = items.time[0]   //------------------------
+          this.getCurrDateNum()   //获取当前是第几天
+        } else {      //如果超出提醒期,说明定时器过时，把缓存和本地通知清空
+          this.isRemindSet = false
+          clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
+          Jpush.clearLocalNotifications()
+        }
+        //-------------------------------------------
         this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
@@ -344,6 +444,7 @@
           this.$broadcast('expense-detail-deactive')
           next()
         }
+        this.clearTimeData()
       }
     },
 
@@ -539,9 +640,206 @@
           this.$broadcast('playNextCapterExpense')
         }
       }
+
     },
 
     methods: {
+      /**
+       * 点击空白消失模态层
+       **/
+      closeModal () {
+        this.hideRemind()
+        this.hideRemoveRemind()
+      },
+      onSetTimeChange (value) {   //日期picker选中的值
+        this.remindTimeData = [value[0], value[1]]
+      },
+      /**
+       * 离开页面时清空定时状态
+       **/
+      clearTimeData () {
+        //清空定时状态
+        this.remindTimeData = ['0', '0']
+        this.isRemindShow = false
+        this.isRemoveRemindShow = false
+        this.isRemindSet = false
+        this.remindTimeStart = {}
+        this.remindTimeEnd = {}
+        this.remindList = {}
+        this.clearTimePicker()
+      },
+
+      /**
+       * 定时器picker归零
+       **/
+      clearTimePicker () {
+        this.$broadcast('clearTimePicker')
+      },
+
+      /**
+       * 获取当前课程提醒第几天
+       **/
+      getCurrDateNum () {
+        let currDate = new Date().getTime()   //获取现在的时间
+        let endDate = new Date(this.remindTimeEnd.year + '-' + this.remindTimeEnd.month + '-' + this.remindTimeEnd.day + ' 0:00:00')    //获取设定的最后一次提醒时间
+        endDate.setDate(endDate.getDate() + 1)    //时间设定到最后一天的24:00
+        let leftTime = endDate.getTime() - currDate   //算出时间差
+        let currDateNumList = [7, 6, 5, 4, 3, 2, 1, 0]
+        this.remindCurrDate = currDateNumList[Math.floor(leftTime / (24 * 3600 * 1000))]
+      },
+      /**
+       * 显示分享浮层
+       **/
+      showShare () {
+        this.isShareShow = true
+      },
+      /**
+       * 获取定时开始和结束日期
+       **/
+      getSetTime () {
+        let currDate = new Date()
+        currDate.setDate(currDate.getDate() + 1)    //提醒从设置第二天起算
+        let startTime = {   //第一次提醒的年月日
+          year: currDate.getFullYear(),
+          month: currDate.getMonth() + 1,
+          day: currDate.getDate()
+        }
+        this.remindTimeStart = startTime
+        currDate.setDate(currDate.getDate() + 6)    //时间设定到七天后，结束的日期
+        let endTime = {
+          year: currDate.getFullYear(),
+          month: currDate.getMonth() + 1,
+          day: currDate.getDate()
+        }
+        this.remindTimeEnd = endTime
+      },
+      /**
+       * 获取每天提醒的时间
+       **/
+      getRemindList () {
+        let currTime = new Date().getTime()  //获得当前时间毫秒数
+        let date = new Date()
+        date.setDate(date.getDate() + 1)    //当前时间的第二天
+        date.setHours(parseInt(this.remindTimeData[0]))   //把小时和分钟设定到选择的时间
+        date.setMinutes(parseInt(this.remindTimeData[1]))
+        date.setSeconds(0)
+        let remindList = []     //用一个数组保存提醒的毫秒数
+        for (let i = 0; i < 7; i++) {   //循环七天的提醒时间
+          remindList.push(date.getTime() - currTime)    //提醒时间-当前时间=当前时间距每次提醒的毫秒数
+          date.setDate(date.getDate() + 1)  //每次加一天
+        }
+        this.remindList[this.subjectId] = remindList    //把数组保存到变量
+        let items = {           //编辑缓存内容
+          oldTime: currTime,    //设定时的毫秒数
+          remindList,   //时间列表
+          'start': this.remindTimeStart,    //开始时间
+          'end': this.remindTimeEnd,    //结束时间
+          'time': [this.remindTimeData]   //提醒的小时和分钟
+        }
+        setLocalCache(('REMIND_TIME_DATA_SUBID_' + this.subjectId), items)    //设置缓存
+        this.getCurrDateNum()     //获取当前的第几天
+      },
+
+      /**
+       * 定时提醒设置显示
+       **/
+      showRemind () {
+        this.remindTimeData = ['0', '0']
+        this.isRemindShow = true
+        getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
+      },
+
+      /**
+       * 定时提醒隐藏
+       **/
+      hideRemind () {
+        this.isRemindShow = false
+        this.clearTimePicker()
+      },
+      /**
+       * 取消提醒设置显示
+       **/
+      showRemoveRemind () {
+        this.isRemoveRemindShow = true
+      },
+      /**
+       * 取消提醒隐藏
+       **/
+      hideRemoveRemind () {
+        this.isRemoveRemindShow = false
+      },
+      setLocalNotificationIOS () {      //ios设置提醒
+        if (Device.platform === platformMap.IOS) {
+          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
+            Jpush.setLocalNotificationIOS(
+              parseInt(this.remindList[this.subjectId][i]),
+              `买房子存票子，同学今天${parseInt(this.remindTimeData[0]) + ':' + parseInt(this.remindTimeData[1])}你有一节${this.currSubject.title}课程,请做好上课准备。`,
+              1,
+              this.subjectId + '' + i,
+              ''
+            )
+          }
+        }
+      },
+      setLocalNotificationANDROID () {      //安卓设置提醒
+        if (Device.platform === platformMap.ANDROID) {
+          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
+            Jpush.setLocalNotificationANDROID(
+              1,
+              `买房子存票子，同学今天${parseInt(this.remindTimeData[0]) + ':' + parseInt(this.remindTimeData[1])}你有一节${this.currSubject.title}课程,请做好上课准备。`,
+              '长投学堂',
+              this.subjectId + '' + i,
+              parseInt(this.remindList[this.subjectId][i]),
+              ''
+            )
+          }
+        }
+      },
+      /**
+       *  设置定时提醒
+       **/
+      afterSetRemind () {
+        this.isRemindShow = false
+        this.isRemindSet = true
+        this.$broadcast('showCheckTipSet')
+        this.clearTimePicker()
+      },
+      setRemind () {
+        this.getRemindList()
+        this.setLocalNotificationANDROID()
+        this.setLocalNotificationIOS()
+        this.afterSetRemind()
+      },
+      /**
+       * 取消定时提醒
+       **/
+      deleteLocalNotificationWithIdentifierKeyInIOS () {      //IOS清除本地通知
+        if (Device.platform === platformMap.IOS) {
+          for (let i = 0; i < 7; i++) {
+            Jpush.deleteLocalNotificationWithIdentifierKeyInIOS(this.subjectId + '' + i)
+          }
+        }
+      },
+      removeLocalNotificationANDROID () {     //安卓清除本地通知
+        if (Device.platform === platformMap.ANDROID) {
+          for (let i = 0; i < 7; i++) {
+            Jpush.removeLocalNotificationANDROID(this.subjectId + '' + i)
+          }
+        }
+      },
+      afterRemoveRemind () {
+        clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
+        this.isRemoveRemindShow = false
+        this.isRemindSet = false
+        this.$broadcast('showCheckTipCancel')
+        this.clearTimePicker()
+      },
+      removeRemind () {
+        this.deleteLocalNotificationWithIdentifierKeyInIOS()
+        this.removeLocalNotificationANDROID()
+        this.afterRemoveRemind()
+      },
+
       /**
        * 选择题被点击
        **/
@@ -1131,7 +1429,6 @@
         this.$route.router.go(`/questionNaire/${naireId}`)
       }
     },
-
     components: {
       WebAudio,
       Tab,
@@ -1144,7 +1441,9 @@
       choiceFloat,
       essayFloat,
       PptPanel,
-      IctBackBtn
+      IctBackBtn,
+      PageShareFloat,
+      CourseRemind
     }
   }
 </script>
