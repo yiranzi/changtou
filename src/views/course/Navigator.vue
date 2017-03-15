@@ -13,10 +13,9 @@
         <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
-        <div class="must-hava">
-          <p class="area-label">
-            <span class="color-span"> </span>
-            <span class="title">人气必备</span>
+        <div class="head-navigator">
+          <p class="head-title">
+            <span>为你优选</span>
           </p>
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
@@ -46,7 +45,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
+          <span v-touch:tap="removeColumnChange" class="topic-txt">{{headLineTitle}}</span><!--//这里需要添加跳转.(暂时做测试按钮)-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -123,6 +122,7 @@
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
+  import {appVersion} from '../../frame/versionConfig'
   export default {
     vuex: {
       getters: {
@@ -133,7 +133,8 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        headLineTitle: navigatorGetters.headLineTitle
+        headLineTitle: navigatorGetters.headLineTitle,
+        columnChangeData: navigatorGetters.columnChangeData
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -144,7 +145,8 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
-        getHeadLineTitle: navigatorActions.getHeadLineTitle
+        getHeadLineTitle: navigatorActions.getHeadLineTitle,
+        getColumnChange: navigatorActions.getColumnChange
       }
     },
 
@@ -161,6 +163,8 @@
         this.showInterviewNew()
         //显示头条精选的数据
         this.showHeadLineTitle()
+        //比对版本号,判定是否是最新版本
+        this.ifColumnChange()
       }
     },
 
@@ -170,7 +174,8 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '' // 前一个页面url
+        fromPath: '', // 前一个页面url
+        appVersion//版本信息
       }
     },
     ready () {
@@ -202,6 +207,70 @@
     },
 
     methods: {
+      removeColumnChange () {
+        window.localStorage.removeItem('versionNo')
+      },
+      //判定是否当前版本号小于最新版本号
+      ifVertionNotLeast () {
+        console.log('login!But if hava vertion changed?')
+        let versionNo = window.localStorage.getItem('versionNo')
+        if (!versionNo) {
+          console.log('no value')
+          return true
+        }
+        if (versionNo !== appVersion) {
+          console.log('not least')
+          return true
+        } else {
+          console.log('is least')
+          return false
+        }
+      },
+      ifColumnContentEmpty () {
+        console.log('erter watch ifColumnContentEmpty')
+        if (this.columnChangeData.title) {
+          window.localStorage.setItem('versionNo', appVersion)
+          console.log(this.columnChangeData.title + '已经修改')
+          //弹出弹框
+          this.columnChange()
+        } else {
+          console.log('内容为空')
+        }
+      },
+
+      ifColumnChange () {
+        //判定0:是否已经登录
+        if (this.isLogin) {
+          //判定1:本地比对版本号.
+          if (this.ifVertionNotLeast()) {
+            //如果没有版本号或者版本号小于当前版本号.则进行
+            //判定2:发送获取栏目变更的请求,获取变更内容
+            this.getColumnChange().then(() => {
+                this.ifColumnContentEmpty()
+            })
+          } else {
+            //否则.退出即可
+            console.log('least vertion and have pop')
+          }
+        } else {
+          console.log('未登录')
+        }
+      },
+      columnChange () {
+        console.log('columnChange')
+        this.showMask({
+          component: 'mycourse/ColumnChange.vue',
+          componentData: this.columnChangeData.title,
+          hideOnMaskTap: true,
+          callbackName: 'onColumnChange',
+          callbackFn: this.onColumnChange.bind(this) //组件上的
+        })
+      },
+      onColumnChange () {
+        console.log('go route!')
+        this.$route.router.go('/course/classification')
+//        this.$route.router.go('this.columnChangeData.mbUrl')
+      },
       /**
        * 设置滚动条高度
        */
@@ -451,6 +520,11 @@
         this.getHeadLineTitle()
       },
 
+//      请求获取栏目变更信息
+      getColumnChange () {
+        this.getColumnChange()
+      },
+
       /**
        * 跳转到大咖读经典
        * */
@@ -458,7 +532,8 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
         })
-        this.$route.router.go(`/classic/reading/${classicId}`)   /*classicId放在url中传递*/
+        this.$route.router.go(`/classic/reading/${classicId}`)
+        /*classicId放在url中传递*/
       },
 
       backHandler () {
@@ -766,7 +841,7 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-      border-bottom: 0.5rem #f0eff5 solid;
+
       font-size: 0.55rem;
       color: #444;
 
@@ -860,28 +935,33 @@
     }
 
     /*人气必备*/
-    .must-hava{
+    .head-navigator{
+      border-bottom: 0.025rem #f0eff5 solid;
       height:5.5rem;
+      .head-title{
+        padding: 0.75rem 1.35rem 0.75rem;
+        font-size: 0.8rem;
+      }
     }
 
     /*头条精选*/
     .head-line {
       font-size: 0;
       position: relative;
-      margin: 0.25rem auto 0.5rem;
-      height: 3rem;
+      height: 2.5rem;
       background-color: #fff;
+      border-bottom: 0.5rem solid #f0eff5;
       .icon {
+        position: relative;
         vertical-align: middle;
         display: inline-block;
-        width: 3.75rem;
-        height: 3rem;
+        height: 2.5rem;
         .picture{
+          margin: 0.5rem 0.7rem 0.5rem 1.3rem;
           font-size: 0px;
           display:inline-block;
           width: 1.6rem;
           height: 1.5rem;
-          margin: 0.75rem 1.35rem 0.75rem;
           background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
         }
       }
@@ -889,7 +969,7 @@
       .line{
         vertical-align: middle;
         display:inline-block;
-        width: 0.25rem;
+        width: 0.025rem;
         height: 1.75rem;
         background-color: #f0f0f0;
         margin: auto auto;
@@ -898,14 +978,16 @@
 
       .topic-txt{
         vertical-align: middle;
-        margin: auto 3.5rem auto 0.75rem;
+        margin-left:0.75rem;
         font-size: 0.7rem;
-        height:0.7rem;
+        height: 0.7rem;
         line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
-        width: 10.4rem;
+        width: 11rem;
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .gift{
