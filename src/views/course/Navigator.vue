@@ -7,45 +7,51 @@
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class"></swiper>
-        <div class="under-banner">
-          <div v-touch:tap="goToNewertestStart" class="under-banner-item">
-            <i class="under-banner-icon newer-test "></i>
-            <span class="under-banner-title">理财揭秘</span>
-          </div>
-          <div v-touch:tap="goToNewerGuide" class="under-banner-item">
-            <i class="under-banner-icon newer-guide"></i>
-            <span class="under-banner-title">入门指南</span>
-          </div>
-          <div v-touch:tap="goToInterviewList" class="under-banner-item">
-            <i class="under-banner-icon interview"></i>
-            <span class="under-banner-title">院生故事</span>
-            <i class="new-interview-icon" v-show="hasNewInterview"></i>
-          </div>
-        </div>
-        <div class="popular-list popularSpe">
+                :show-desc-mask="false" dots-class="dots-class">
+        </swiper>
+        <!--理财新手村-入口-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
+        <!--banner-->
+        <div class="must-hava">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
           </p>
-          <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">
-            <div class="box-container" >
-                <div class="box-item" v-for="item in recommends"
-                     v-touch:tap="goToRecommendDetail(item,$index)">
-                  <img :src="item.imgUrl">
-                  <p class="sub-title">{{item.title}}</p>
-                  <p class="sub-price">￥{{item.price}}</p>
-                </div>
+          <div class="under-banner">
+            <div v-touch:tap="goToNewertestStart" class="under-banner-item">
+              <i class="under-banner-icon newer-test "></i>
+              <span class="under-banner-title">理财揭秘</span>
             </div>
-          </scroller>
+            <div v-touch:tap="goToNewerGuide" class="under-banner-item">
+              <i class="under-banner-icon newer-guide"></i>
+              <span class="under-banner-title">入门指南</span>
+            </div>
+            <div v-touch:tap="goToInterviewList" class="under-banner-item">
+              <i class="under-banner-icon interview"></i>
+              <span class="under-banner-title">院生故事</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+            <div v-touch:tap="goToCourseClassification" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
+              <span class="under-banner-title">课程分类</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+          </div>
         </div>
-        <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          <p>每日一题 积攒你的财商</p>
-          <p class="daily-subtext">财富自由之路第一步</p>
-          <span class="daily-anpic-container"></span>
+
+        <!--头条精选-->
+        <div class="head-line">
+          <div class="icon">
+            <i class="picture"></i>
+          </div>
+          <span class="line"></span>
+          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
+          <div class="gift">
+            <i class="picture"></i>
+          </div>
         </div>
-        <!--理财新手村-入口-->
-        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -61,7 +67,7 @@
             </div>
           </div>
         </div>
-        <!---->
+
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
@@ -98,10 +104,9 @@
         </div>
 
         <div class="strategy-entry">
-          <img src="../../assets/styles/image/home/home-strategy.jpg" v-touch:tap="goToStrategy">
+          <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
-        <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
   </div>
@@ -127,7 +132,8 @@
         recommends: navigatorGetters.recommends,
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
-        hasNewInterview: navigatorGetters.hasNewInterview
+        hasNewInterview: navigatorGetters.hasNewInterview,
+        headLineTitle: navigatorGetters.headLineTitle
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -137,7 +143,8 @@
         receiveGiftPackage: giftActions.receiveGiftPackage,
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
-        getVillageProgress: villageActions.getVillageProgress
+        getVillageProgress: villageActions.getVillageProgress,
+        getHeadLineTitle: navigatorActions.getHeadLineTitle
       }
     },
 
@@ -150,10 +157,10 @@
         this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
-        //重置页面滚动位置
-        this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
+        //显示头条精选的数据
+        this.showHeadLineTitle()
       }
     },
 
@@ -182,6 +189,15 @@
           }
         )
         return newBanners
+      },
+
+      headLineTitleCalcLength: function () {
+        let titleString = this.headLineTitle
+        let length = titleString.length
+        if (length > 13) {
+            titleString = titleString.slice(0, 13) + '...'
+        }
+        return titleString
       }
     },
 
@@ -200,9 +216,6 @@
           me.$nextTick(() => {
             me.$refs.scroller.reset({
             top: 0
-          })
-          me.$refs.vscroller.reset({
-            left: 0
           })
         })
         }, 150)
@@ -224,10 +237,9 @@
         loadData().then(
           function () {
             // 设置滚动条高度
-            me.setScrollerHeight()
-//            setTimeout(() => {
-//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-//          }, 200)
+            setTimeout(() => {
+              me.setScrollerHeight()
+          }, 200)
           }
         )
       },
@@ -275,9 +287,6 @@
         this.$nextTick(() => {
           this.$refs.scroller.reset({
             top: 0
-          })
-          this.$refs.vscroller.reset({
-            left: 0
           })
         })
       },
@@ -379,6 +388,16 @@
       },
 
       /**
+       * 跳转到全部课程列表-分类排列
+       */
+      goToCourseClassification () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '课程分类'
+        })
+        this.$route.router.go('/course/classification')
+      },
+
+      /**
        * 跳转到每日一题
        */
       goToDailyQuestion () {
@@ -423,6 +442,13 @@
           // 未登录
           this.$route.router.go('/village/initialPage')
         }
+      },
+
+      /**
+       * 显示头条精选数据
+       */
+      showHeadLineTitle () {
+        this.getHeadLineTitle()
       },
 
       /**
@@ -741,20 +767,20 @@
       align-items: center;
       background-color: #fff;
       border-bottom: 0.5rem #f0eff5 solid;
-      font-size: 0.75rem;
+      font-size: 0.55rem;
       color: #444;
 
       .under-banner-item{
         position: relative;
         text-align: center;
-        padding: 34/40rem 0 26/40rem;
+        /*padding: 34/40rem 0 26/40rem;*/
         box-sizing: border-box;
         flex: 1;
       }
     }
     .under-banner-icon{
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.6rem;
+      height: 1.6rem;
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
@@ -779,12 +805,15 @@
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
     }
+
+    .under-banner-icon.classification{
+      background: url("../../assets/styles/image/navigator/classification.png") no-repeat center center / contain;
+    }
   /*理财新手村-首页入口*/
     .fresh-village{
       width: 100%;
-      height: 6rem;
+      height: 4.5rem;
       background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
-      margin: 1rem 0 0;
     }
   /*大咖读经典*/
     .classic-info >p {
@@ -829,6 +858,71 @@
       bottom: 4rem;
       right: .75rem
     }
-  }
 
+    /*人气必备*/
+    .must-hava{
+      height:5.5rem;
+    }
+
+    /*头条精选*/
+    .head-line {
+      font-size: 0;
+      position: relative;
+      margin: 0.25rem auto 0.5rem;
+      height: 3rem;
+      background-color: #fff;
+      .icon {
+        vertical-align: middle;
+        display: inline-block;
+        width: 3.75rem;
+        height: 3rem;
+        .picture{
+          font-size: 0px;
+          display:inline-block;
+          width: 1.6rem;
+          height: 1.5rem;
+          margin: 0.75rem 1.35rem 0.75rem;
+          background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
+        }
+      }
+
+      .line{
+        vertical-align: middle;
+        display:inline-block;
+        width: 0.25rem;
+        height: 1.75rem;
+        background-color: #f0f0f0;
+        margin: auto auto;
+        line-height: 100%;
+      }
+
+      .topic-txt{
+        vertical-align: middle;
+        margin: auto 3.5rem auto 0.75rem;
+        font-size: 0.7rem;
+        height:0.7rem;
+        line-height: 0.7rem;
+        color: #aaa;
+        display:inline-block;
+        width: 10.4rem;
+        overflow: hidden;
+      }
+
+      .gift{
+        vertical-align: middle;
+        display:inline-block;
+        position: absolute;
+        top: 0.5rem;
+        right: 0;
+        .picture{
+          vertical-align: middle;
+          font-size: 0px;
+          display:inline-block;
+          width: 2.85rem;
+          height: 0.775rem;
+          background: url("../../../static/image/firstNewsChoose/gift.png") no-repeat center center / contain;
+        }
+      }
+    }
+  }
 </style>

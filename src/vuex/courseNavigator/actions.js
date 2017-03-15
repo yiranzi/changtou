@@ -58,3 +58,27 @@ export const isInterviewChange = ({ dispatch }, interviewCount) => {
   })
 }
 
+/**
+ * 获取头条精选 数据
+ * @param dispatch
+ * @returns {Promise}
+ */
+export const getHeadLineTitle = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithoutAuth(
+        {
+          url: getUrl('headline_txt')
+        }
+      ).then(
+        res => {
+          dispatch('UPDATE_NAIGATOR_HEAD_LINE_TXT', res)
+          resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+
