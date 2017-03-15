@@ -13,14 +13,17 @@
           </div>
           <!--按钮栏-->
           <div class= "class-type-buttons">
-            <tab class="fix-vuex-height" :line-width= 1rem active-color='#00b0f0' :index.sync ="currTabIndex" >
-              <tab-item class="fix-vuex-line-height mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
-                  <div>
-                    <img class = "class-button-icon" v-show ="currTabIndex == key" v-bind:src="iconsPicClick[key]"></img>
-                    <img class = "class-button-icon" v-show ="currTabIndex != key" v-bind:src="iconsPic[key]"></img>
-                  </div>
-                  <span class = "class-button-txt">{{item}}</span>
-              </tab-item>
+            <tab class="mycenter fix-vuex-height" :line-width= 1rem active-color='#00b0f0' :index.sync ="currTabIndex" >
+              <div class="mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
+                  <tab-item class="fix-vuex-line-height mycenter">
+                    <div>
+                      <img class = "class-button-icon" v-show ="currTabIndex == key" v-bind:src="iconsPicClick[key]"></img>
+                      <img class = "class-button-icon" v-show ="currTabIndex != key" v-bind:src="iconsPic[key]"></img>
+                    </div>
+                    <span class = "class-button-txt">{{item}}</span>
+                  </tab-item>
+                  <!--<span class="line mycenter" v-if="key!==3"></span>-->
+              </div>
             </tab>
           </div>
           <!--课程分类内容-->
@@ -36,7 +39,7 @@
     .mycenter{
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
     }
     .course-type-top{
@@ -63,13 +66,23 @@
       background: no-repeat center center;
     }
     .class-type-buttons{
-      height: 2.65rem;
-      padding:0 2rem;
+      height: 2.6rem;
+      padding:0 1.5rem;
+      background-color: #fafafa;
       .fix-vuex-height
       {
         height: 2.6rem;
         .fix-vuex-line-height{
           line-height: 1.1rem;
+        }
+        .line{
+          /*vertical-align: middle;*/
+          display:inline-block;
+          width: 0.025rem;
+          height: 1.75rem;
+          background-color: #f0f0f0;
+          /*margin: auto auto;*/
+          /*line-height: 100%;*/
         }
       }
       .class-button-icon{

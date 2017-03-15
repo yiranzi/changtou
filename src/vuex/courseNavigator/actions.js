@@ -82,3 +82,28 @@ export const getHeadLineTitle = ({dispatch}) => {
     })
 }
 
+/**
+ * 获取栏目更新内容
+ */
+export const getColumnChange = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      console.log('push ajax')
+      getWithoutAuth(
+        {
+          url: getUrl('headline_txt')
+          // url: getUrl('column_change')
+        }
+      ).then(
+        res => {
+          console.log('receive ajax')
+          dispatch('UPDATE_NAIGATOR_COLUMN_CHANGE', res)
+          resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+
