@@ -41,6 +41,7 @@ const apiUrl = {
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
   'course_list': '/course/free/category-list', //课程列表
+  'course_classification': '/course/classify', //课程分类列表
 
   'expense_records': '/student/expense/lesson/record', //付费课程进度
   'expense_subject_specific': '/course/subject/specific/P/:subjectId', //付费课程简介
@@ -98,6 +99,11 @@ const apiUrl = {
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
   'interview_valid_new': '/homepage/interview/interview-valid-new/:interviewCount', //院生故事新消息
 
+    /**
+     * 每日精选
+     */
+   'headline_txt': '/homepage/headline', //头条精选的内容
+
   /**
    * 每日一题
    */
@@ -148,6 +154,7 @@ const apiUrl = {
   'strategy_professional_intro': '/strategy/promotion/professional',
   'strategy_vip_intro': '/strategy/promotion/vip',
   'strategy_notice': '/strategy/data/message/:authority', // 通知
+  'strategy_qq_number': '/strategy/qqGroup/:authority', // qq群号
 
   /**
    * 毕业礼

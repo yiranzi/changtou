@@ -127,3 +127,58 @@ export const getProfessionalProduct = ({dispatch}) => {
       )
     })
 }
+
+/**
+ * 获取QQ群 Vip版
+ */
+export const getVipGroupNumber = ({dispatch}) => {
+  getGroup('V').then(
+    function (res) {
+      dispatch('UPDATE_GROUP_INFO', res.message)
+    }
+  ).catch(
+    function (err) {
+      console.dir(err)
+    }
+  )
+}
+
+/**
+ *  获取QQ群 专业版
+ */
+export const getProfessionalGroupNumber = ({dispatch}) => {
+  getGroup('P').then(
+      function (res) {
+        dispatch('UPDATE_GROUP_INFO', res.message)
+      }
+    ).catch(
+      function (err) {
+        console.dir(err)
+      }
+    )
+}
+
+/**
+ *  获取QQ群
+ * @param type
+ * @returns {Promise}
+ */
+const getGroup = (type) => {
+  const authority = type === 'V' ? 'V' : 'P'
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('strategy_qq_number').replace(':authority', authority)
+        }
+      ).then(
+        res => {
+          resolve(res)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+}
+
