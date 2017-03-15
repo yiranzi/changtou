@@ -783,7 +783,6 @@
       },
       setLocalNotificationANDROID () {      //安卓设置提醒
         if (Device.platform === platformMap.ANDROID) {
-            console.log(111)
           for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
             Jpush.setLocalNotificationANDROID(
               1,
