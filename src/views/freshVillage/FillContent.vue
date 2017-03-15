@@ -4,10 +4,10 @@
  */
 <template>
     <div class="village-fill-content">
-      <ict-titlebar :right-options="rightOptions" v-el:title-bar>
-        <a slot="right">发布</a>我要吐槽
+      <ict-titlebar :left-options="barLeftOption" :right-options="rightOptions" v-el:title-bar>
+        <a slot="right">提交</a>我要吐槽
       </ict-titlebar>
-      <textarea v-model="content" placeholder="不吐不快,话憋在心里会生病..." autofocus :style="textareaStyle" v-el:textarea></textarea>
+      <textarea v-model="content" placeholder="不吐不快,话憋在心里会生病..." :style="textareaStyle" v-el:textarea></textarea>
     </div>
 </template>
 <script>
@@ -22,6 +22,10 @@ export default {
   },
   data () {
     return {
+      barLeftOption: { //titlebar
+        showBack: true,
+        callback: this.onBack
+      },
       rightOptions: { //titlebar
         callback: this.onSubmitTap,
         disabled: true
@@ -43,22 +47,55 @@ export default {
     }
   },
   route: {
+    data () {
+      setTimeout(() => {
+        this.$els.textarea.focus()
+        this.setViewBackHandler()
+      }, 300)
+    },
     deactivate () {
       this.content = ''
+      this.resetViewBackHandler()
     }
   },
   methods: {
     /**
+     * 设置物理键back
+     */
+    setViewBackHandler () {
+      this.$parent.viewBackHandler = this.onBack
+    },
+    /*
+     * 退出页面时解除物理键back绑定关系
+     * */
+    resetViewBackHandler () {
+      this.$parent.viewBackHandler = null
+    },
+    /**
      * 点击提交
      */
     onSubmitTap () {
-      if (/\S/.test(this.content)) {
-        this.submitAdvise({
+      const textarea = this.$els.textarea
+      textarea.blur()
+      setTimeout(() => {
+        if (/\S/.test(this.content)) {
+          this.submitAdvise({
           content: this.content
         }).then(
           window.history.back()
         )
-      }
+        }
+      }, 300)
+    },
+    /*
+    * 点击返回按钮
+    * */
+    onBack () {
+      const textarea = this.$els.textarea
+      textarea.blur()
+      setTimeout(() => {
+        window.history.back()
+      }, 300)
     }
   },
   components: {

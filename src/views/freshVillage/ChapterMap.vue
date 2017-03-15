@@ -10,7 +10,7 @@
         <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
         <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
-        <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
+        <div class="go-btn" :class="rightBtnStyle" v-touch:tap="goNextStep"></div>
       </div>
       <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
       <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
@@ -89,6 +89,24 @@
         } else {
           return false
         }
+      },
+      /*主页右下按钮显示敬请期待*/
+      showWaitBtn () {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7 && this.activeChapterNo === 2) { //需要根据具体开放的章节修改！
+          return true
+        } else {
+          return false
+        }
+      },
+      /*按钮样式改变*/
+      rightBtnStyle () {
+        if (this.showNextChapterBtn && this.showWaitBtn) {
+          return 'wait-btn'
+        } else if (this.showNextChapterBtn) {
+          return 'next-btn'
+        } else {
+          return 'go-btn'
+        }
       }
     },
     watch: {
@@ -118,7 +136,6 @@
     },
     route: {
       data ({from}) {
-       // this.updateRecord(0, 0)
         if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
@@ -708,7 +725,21 @@
       background-size: contain;
     }
     .next-btn {
+      position: absolute;
+      bottom: .5rem;
+      right: 3rem;
+      width: 3.6rem;
+      height: 3.75rem;
       background: url('../../assets/styles/image/freshVillage/next.png') no-repeat;
+      background-size: contain;
+    }
+    .wait-btn {
+      position: absolute;
+      bottom: .5rem;
+      right: 3rem;
+      width: 3.6rem;
+      height: 3.75rem;
+      background: url('../../assets/styles/image/freshVillage/wait.png') no-repeat;
       background-size: contain;
     }
   }
