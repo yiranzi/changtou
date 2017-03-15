@@ -10,10 +10,10 @@
   </div>
   <div class="remind remind-cancel" :id="isRemoveRemindShow?'show':''">
     <div class="remind-closebtn" v-touch:tap="closeModal"></div>
-    <div class="remind-title">取消上课提醒</div>
+    <div class="remind-title">上课提醒</div>
     <div class="remind-canceldate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
     <div class="remind-cancelimg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
-    <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
+    <div class="remind-btn"><div class="remind-actionbtn-left" v-touch:tap="closeModal">继续提醒</div><div class="remind-actionbtn-right" v-touch:tap="removeRemind">不再提醒</div></div>
   </div>
   <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'" v-touch:tap='closeModal'></div>
   <div class="remind-checktip" v-show="isCheckTipShow">{{remindCheckTip}}</div>
@@ -160,6 +160,19 @@
   .remind-cancel{
     height: 698/40rem;
     display: block;
+  }
+  .remind-actionbtn-left,.remind-actionbtn-right{
+    float: left;
+    height: 100%;
+    line-height: 98/40rem;
+  }
+  .remind-actionbtn-left{
+    width: 35%;
+    background-color: #eee;
+    color:#aaa;
+  }
+  .remind-actionbtn-right{
+    width: 65%;
   }
   #show{
     transform: translate(0,0);
