@@ -52,12 +52,12 @@ const mixin = {
     convertHtmlToBase64 (element) {
       this.shareImageWidth = element.offsetWidth
       this.shareImageHeight = element.offsetHeight
-
       return new Promise(
         (resolve, reject) => {
           html2canvas(element, {
             height: this.shareImageHeight,
-            width: this.shareImageWidth
+            width: this.shareImageWidth,
+            useCORS: true
           }).then(
             (originCanvas) => {
               originCanvas.style.height = this.shareImageHeight + 'px'
@@ -119,7 +119,6 @@ const mixin = {
        */
     convertCanvasToBase64 (originCanvas) {
       let canvas = window.document.body.appendChild(originCanvas)
-     // console.log('convertCanvasToBase64', originCanvas)
       const base64 = canvas.toDataURL()
       window.document.body.removeChild(canvas)
       return Promise.resolve(base64)
