@@ -27,18 +27,17 @@ export const getHeadlineContent = ({ dispatch }) => {
 }
 
 /**
- * 获取用户当天是否签到
+ * 获取用户签到信息
  * @param dispatch
- *
  */
-export const getCheckinState = ({ dispatch }) => {
+export const getCheckinData = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('homepage_headline_checkin_haschecked')
+        url: getUrl('homepage_headline_checkin_data')
       }).then(
         function (data) {
-          dispatch('USER_IS_CHECKIN', data)
+          dispatch('USER_CHECKIN_DATA', data)
           resolve(data)
         },
         function (err) {
@@ -50,53 +49,7 @@ export const getCheckinState = ({ dispatch }) => {
 }
 
 /**
- * 获取用户是否连续签到
- * @param dispatch
- *
- */
-export const getSerialCheckin = ({ dispatch }) => {
-  return new Promise(
-    (resolve, reject) => {
-      getWithinAuth({
-        url: getUrl('homepage_headline_checkin_serial')
-      }).then(
-        function (data) {
-          dispatch('USER_IS_SERIAL_CHECKIN', data)
-          resolve(data)
-        },
-        function (err) {
-          reject(err)
-        }
-      )
-    }
-  )
-}
-
-/**
- * 获取用户签到天数
- * @param dispatch
- *
- */
-export const getCheckinCount = ({ dispatch }) => {
-  return new Promise(
-    (resolve, reject) => {
-      getWithinAuth({
-        url: getUrl('homepage_headline_checkin_count')
-      }).then(
-        function (data) {
-          dispatch('USER_CHECKIN_COUNT', data)
-          resolve(data)
-        },
-        function (err) {
-          reject(err)
-        }
-      )
-    }
-  )
-}
-
-/**
- * 用户签到
+ * 用户进行签到
  * @param dispatch
  *
  */
@@ -104,9 +57,10 @@ export const checkinUpdate = () => {
   return new Promise(
     (resolve, reject) => {
       getWithinAuth({
-        url: getUrl('homepage_headline_checkin_update')
+        url: getUrl('homepage_headline_checkin_updata')
       }).then(
         function (data) {
+          console.log(data)
           resolve(data)
         },
         function (err) {
