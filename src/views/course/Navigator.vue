@@ -134,7 +134,8 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        headLineTitle: navigatorGetters.headLineTitle
+        headLineTitle: navigatorGetters.headLineTitle,
+        appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -837,7 +838,6 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-      border-bottom: 0.5rem #f0eff5 solid;
       font-size: 0.55rem;
       color: #444;
 
