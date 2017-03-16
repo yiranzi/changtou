@@ -167,7 +167,7 @@
       }
     },
     ready () {
-
+      this.$dispatch(eventMap.FIRST_SCREEN_LOADED)
     },
 
     computed: {
