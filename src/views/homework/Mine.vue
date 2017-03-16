@@ -43,7 +43,7 @@
                 <p  class="modules-title">{{subject.choiceTotal ? '选修作业' : '课后作业'}}</p>
                 <div v-for="essay in subject.lessons">
                   <p v-if="essay.hasEssay === 'Y'" v-touch:tap="onEssayTap(essay,subject.subjectId)" class="essay-item">
-                    <span :class="{'unavailable':!essay.available}">{{essay.title}}</span>
+                    <span class="essat-title"><span :class="{'unavailable':!essay.available}">{{essay.title}}</span></span>
                     <span class="essay-status" v-if="essay.available">{{essayStatus[essay.essayStatus]}}</span>
                   </p>
                 </div>
@@ -395,11 +395,19 @@
       border-bottom: 20/40rem solid #f0eff5;
       .essay-item{
         position: relative;
-        line-height: 88/40rem;
         font-size: 26/40rem;
         color: #666;
+        padding-right: 120/40rem;
+        display:flex;
+        align-items:center;
+        .essat-title{
+          height: 88/40rem;
+          display:flex;
+          align-items:center;
+        }
         .unavailable{
           color: #ddd;
+          white-space: pre-wrap;
         }
         .essay-status{
           position: absolute;

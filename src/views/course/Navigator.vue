@@ -40,7 +40,7 @@
         </div>
 
         <!--头条精选-->
-        <div class="head-line">
+        <div class="head-line" v-touch:tap="goToHeadline">
           <div class="icon">
             <i class="picture"></i>
           </div>
@@ -116,13 +116,14 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
+  import {navigatorGetters, userGetters, appUpdateGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions, appUpdateActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
   import {appVersion} from '../../frame/versionConfig'
+  import {convertVersionToNum} from '../../plugin/version.js'
   export default {
     vuex: {
       getters: {
@@ -134,7 +135,7 @@
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
         headLineTitle: navigatorGetters.headLineTitle,
-        columnChangeData: navigatorGetters.columnChangeData
+        appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -146,12 +147,15 @@
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
         getHeadLineTitle: navigatorActions.getHeadLineTitle,
+        getAppUpdate: appUpdateActions.getAppUpdate,
         getColumnChange: navigatorActions.getColumnChange
       }
     },
 
     route: {
       data ({from}) {
+        //是否显示更新提示
+        this.showAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -164,7 +168,7 @@
         //显示头条精选的数据
         this.showHeadLineTitle()
         //比对版本号,判定是否是最新版本
-        this.ifColumnChange()
+        this.showColumnChange()
       }
     },
 
@@ -207,45 +211,43 @@
     },
 
     methods: {
-      //删除数据用的测试方法
-      removeColumnChange () {
-        window.localStorage.removeItem('versionNo')
-      },
-      //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
-      ifVertionNotLeast () {
+      /**
+       * 判断应用是否更新
+       */
+       showAppUpdate () {
+         //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === appVersion))) {
+           // 显示更新提示,就存储最新版本号
+           setLocalCache('app-update', {appVersionNumber: appVersion})
+           // 应用更新内容
+           let appUpdateConentObj = {}
+           this.getAppUpdate().then(() => {
+            appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
+            appUpdateConentObj.appUpdateExplain = this.appUpdateContent['note'].split(',')
+             this.showMask({
+               component: 'AppUpdate.vue',
+               componentData: appUpdateConentObj
+             })
+           })
+         }
+       },
+
+      //如果没有版本号或者版本号过小.就需要弹出
+      isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
-        if (!versionNo) {
-          return true
-        }
-        if (versionNo !== appVersion) {
-          return true
-        } else {
-          return false
-        }
+        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
       },
-      //判断返回的ajax是否为有效内容(间接判定注册时间是否早于版本时间)
-      ifColumnContentEmpty () {
-        if (this.columnChangeData.content) {
-          window.localStorage.setItem('versionNo', appVersion)
-          //弹出弹框
-          this.columnChange()
-        } else {
-        }
-      },
+
       //进入主页判定版本变更的流程
-      ifColumnChange () {
-        //判定0:是否已经登录
-        if (this.isLogin) {
-          //判定1:本地比对版本号.
-          if (this.ifVertionNotLeast()) {
-            //如果没有版本号或者版本号小于当前版本号.则进行
-            //判定2:发送获取栏目变更的请求,获取变更内容
-            this.getColumnChange().then(() => {
-                this.ifColumnContentEmpty()
-            })
-          } else {
-            //否则.退出即可
-          }
+      showColumnChange () {
+        if (this.isLogin && this.isOldVersion()) {
+          this.getColumnChange().then((columnChangeData) => {
+            if (columnChangeData.content) {
+              window.localStorage.setItem('versionNo', appVersion)
+              //弹出弹框
+              this.columnChange()
+            }
+          })
         }
       },
       //打开弹窗
@@ -511,9 +513,14 @@
         this.getHeadLineTitle()
       },
 
-//      请求获取栏目变更信息
-      getColumnChange () {
-        this.getColumnChange()
+      /**
+       * 跳转到头条精选页面
+       */
+      goToHeadline () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '头条精选'
+        })
+        this.$route.router.go('/headline')
       },
 
       /**
@@ -523,7 +530,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
         })
-        this.$route.router.go(`/classic/reading/${classicId}`)/*classicId放在url中传递*/
+        this.$route.router.go(`/classic/reading/${classicId}`)   /*classicId放在url中传递*/
       },
 
       backHandler () {
@@ -831,7 +838,6 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-
       font-size: 0.55rem;
       color: #444;
 

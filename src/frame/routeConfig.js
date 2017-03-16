@@ -335,6 +335,13 @@ export function configRouter (router) {
     //新手村初始页面
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
+    },
+
+    /**
+     * 头条精彩
+     */
+    '/headline': {
+      component: require('../views/headline/Headline.vue')
     }
   })
 
