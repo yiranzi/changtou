@@ -208,7 +208,7 @@
     },
 
     methods: {
-      //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
+      //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
         return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
