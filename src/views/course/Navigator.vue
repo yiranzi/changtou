@@ -123,6 +123,7 @@
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
   import {appVersion} from '../../frame/versionConfig'
+  import {convertVersionToNum} from '../../plugin/version.js'
   export default {
     vuex: {
       getters: {
@@ -216,7 +217,9 @@
       //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
       isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
-        return !versionNo && versionNo < appVersion
+        console.log('1' + convertVersionToNum(versionNo))
+        console.log('2' + convertVersionToNum(appVersion))
+        return !versionNo && convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
       },
 
       //进入主页判定版本变更的流程
