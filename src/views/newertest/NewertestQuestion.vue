@@ -240,9 +240,21 @@
       deactivate () {
         // 回复back回退
         this.resumeBackAction()
+        this.resetViewData()
       }
     },
     methods: {
+      resetViewData () {
+        this.currQuIndex = 0 //当前题目序号
+        this.currOpsIndex = -1 //当前选项
+        this.maxQuIndex = 7 //最大的题目序号
+        this.isClicked = false // 是否点击选项
+        this.isFloatShow = false // 是否显示浮层
+        this.answer = [] //答案
+        this.comboId = 0 //模板id
+        this.level = 0 //等级
+        this.questionArr = []
+      },
       onCancel () {
         this.$route.router.go('/main')
       },

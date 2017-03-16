@@ -345,15 +345,19 @@
           position: '新手测试'
         })
         const me = this
-        me.loadNewertestReport().then(function (newertestReport) {
-          if (newertestReport) {
-            me.$route.router.go('/newertest/ending')
-          } else {
-            me.$route.router.go('/newertest/start')
-          }
-        }).catch(function () {
-          me.showAlert('信息加载失败，请重试！')
-        })
+        if (this.isLogin) {
+          me.loadNewertestReport().then(function (newertestReport) {
+            if (newertestReport) {
+              me.$route.router.go('/newertest/ending')
+            } else {
+              me.$route.router.go('/newertest/start')
+            }
+          }).catch(function () {
+            me.showAlert('信息加载失败，请重试！')
+          })
+        } else {
+          me.$route.router.go('/newertest/start')
+        }
       },
 
       goToNewerGuide () {
