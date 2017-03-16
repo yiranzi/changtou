@@ -41,7 +41,7 @@
         </div>
 
         <!--头条精选-->
-        <div class="head-line">
+        <div class="head-line" v-touch:tap="goToHeadline">
           <div class="icon">
             <i class="picture"></i>
           </div>
@@ -117,12 +117,13 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
+  import {navigatorGetters, userGetters, appUpdateGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions, appUpdateActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
+  import {appVersion} from '../../frame/versionConfig'
   export default {
     vuex: {
       getters: {
@@ -133,7 +134,8 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        headLineTitle: navigatorGetters.headLineTitle
+        headLineTitle: navigatorGetters.headLineTitle,
+        appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -144,12 +146,15 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
-        getHeadLineTitle: navigatorActions.getHeadLineTitle
+        getHeadLineTitle: navigatorActions.getHeadLineTitle,
+        getAppUpdate: appUpdateActions.getAppUpdate
       }
     },
 
     route: {
       data ({from}) {
+        //是否显示更新提示
+        this.showAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -200,8 +205,29 @@
         return titleString
       }
     },
-    
+
     methods: {
+      /**
+       * 判断应用是否更新
+       */
+       showAppUpdate () {
+         //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === appVersion))) {
+           // 显示更新提示,就存储最新版本号
+           setLocalCache('app-update', {appVersionNumber: appVersion})
+           // 应用更新内容
+           let appUpdateConentObj = {}
+           this.getAppUpdate().then(() => {
+            appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
+            appUpdateConentObj.appUpdateExplain = this.appUpdateContent['note'].split(',')
+             this.showMask({
+               component: 'AppUpdate.vue',
+               componentData: appUpdateConentObj
+             })
+           })
+         }
+       },
+
       /**
        * 设置滚动条高度
        */
@@ -287,6 +313,9 @@
         this.$nextTick(() => {
           this.$refs.scroller.reset({
             top: 0
+          })
+          this.$refs.vscroller.reset({
+            left: 0
           })
         })
       },
@@ -449,6 +478,16 @@
        */
       showHeadLineTitle () {
         this.getHeadLineTitle()
+      },
+
+      /**
+       * 跳转到头条精选页面
+       */
+      goToHeadline () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '头条精选'
+        })
+        this.$route.router.go('/headline')
       },
 
       /**
@@ -812,8 +851,9 @@
   /*理财新手村-首页入口*/
     .fresh-village{
       width: 100%;
-      height: 4.5rem;
+      height: 6rem;
       background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
+      margin: 1rem 0 0;
     }
   /*大咖读经典*/
     .classic-info >p {
