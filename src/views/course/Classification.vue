@@ -22,7 +22,6 @@
                     </div>
                     <span class = "class-button-txt">{{item}}</span>
                   </tab-item>
-                  <!--<span class="line mycenter" v-if="key!==3"></span>-->
               </div>
             </tab>
           </div>
@@ -74,15 +73,6 @@
         height: 2.6rem;
         .fix-vuex-line-height{
           line-height: 1.1rem;
-        }
-        .line{
-          /*vertical-align: middle;*/
-          display:inline-block;
-          width: 0.025rem;
-          height: 1.75rem;
-          background-color: #f0f0f0;
-          /*margin: auto auto;*/
-          /*line-height: 100%;*/
         }
       }
       .class-button-icon{

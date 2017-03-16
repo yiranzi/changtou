@@ -11,9 +11,6 @@ const state = {
   hasNewInterview: false,
   headLineTitle: [],
   columnChangeData: []
-  // columnChangeVersionNo: '', //最新版本号
-  // columnChangeTxt: '', //栏目变更通知
-  // columnChangeUrl: ''//栏目变更跳转
 }
 
 const mutations = {
@@ -33,9 +30,6 @@ const mutations = {
   UPDATE_NAIGATOR_COLUMN_CHANGE (state, columnChangeData) {
     console.log('save ajax')
     state.columnChangeData = columnChangeData
-    // state.columnChangeTxt = columnChangeData.content
-    // state.columnChangeUrl = columnChangeData.bmUrl
-    // state.columnChangeVersionNo = columnChangeData.versionNo
   }
 }
 

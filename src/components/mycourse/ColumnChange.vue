@@ -9,7 +9,6 @@
           <ict-button class="mycenter button exit"v-touch:tap="onCloseTap">知道了</ict-button>
           <ict-button class="mycenter button go"v-touch:tap="onContentChangeTap">去看看</ict-button>
         </div>
-        <!--asdads-->
       </div>
     </div>
 </template>

@@ -38,6 +38,5 @@ export const headLineTitle = (state) => {
 
 //获得栏目变更信息
 export const columnChangeData = (state) => {
-  console.log('get ajax')
   return state.navigator.columnChangeData
 }

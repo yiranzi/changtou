@@ -91,12 +91,10 @@ export const getColumnChange = ({dispatch}) => {
       console.log('push ajax')
       getWithoutAuth(
         {
-          url: getUrl('headline_txt')
-          // url: getUrl('column_change')
+          url: getUrl('column_change')
         }
       ).then(
         res => {
-          console.log('receive ajax')
           dispatch('UPDATE_NAIGATOR_COLUMN_CHANGE', res)
           resolve(res)
         },

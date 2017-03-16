@@ -45,7 +45,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span v-touch:tap="removeColumnChange" class="topic-txt">{{headLineTitle}}</span><!--//这里需要添加跳转.(暂时做测试按钮)-->
+          <span v-touch:tap="removeColumnChange" class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -210,31 +210,24 @@
       removeColumnChange () {
         window.localStorage.removeItem('versionNo')
       },
-      //判定是否当前版本号小于最新版本号
+      //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
       ifVertionNotLeast () {
-        console.log('login!But if hava vertion changed?')
         let versionNo = window.localStorage.getItem('versionNo')
         if (!versionNo) {
-          console.log('no value')
           return true
         }
         if (versionNo !== appVersion) {
-          console.log('not least')
           return true
         } else {
-          console.log('is least')
           return false
         }
       },
       ifColumnContentEmpty () {
-        console.log('erter watch ifColumnContentEmpty')
-        if (this.columnChangeData.title) {
+        if (this.columnChangeData.content) {
           window.localStorage.setItem('versionNo', appVersion)
-          console.log(this.columnChangeData.title + '已经修改')
           //弹出弹框
           this.columnChange()
         } else {
-          console.log('内容为空')
         }
       },
 
@@ -250,26 +243,21 @@
             })
           } else {
             //否则.退出即可
-            console.log('least vertion and have pop')
           }
-        } else {
-          console.log('未登录')
         }
       },
       columnChange () {
-        console.log('columnChange')
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.title,
+          componentData: this.columnChangeData.content,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
         })
       },
       onColumnChange () {
-        console.log('go route!')
-        this.$route.router.go('/course/classification')
-//        this.$route.router.go('this.columnChangeData.mbUrl')
+//        this.$route.router.go('/course/classification')
+        this.$route.router.go('this.columnChangeData.mbUrl')
       },
       /**
        * 设置滚动条高度
@@ -532,8 +520,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
         })
-        this.$route.router.go(`/classic/reading/${classicId}`)
-        /*classicId放在url中传递*/
+        this.$route.router.go(`/classic/reading/${classicId}`)/*classicId放在url中传递*/
       },
 
       backHandler () {
