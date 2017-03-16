@@ -41,6 +41,7 @@ const apiUrl = {
   'homepage_app': '/homepage/app', //课程首页-app
   'homepage_msite': '/homepage/msite', //课程首页-m站
   'course_list': '/course/free/category-list', //课程列表
+  'course_classification': '/course/classify', //课程分类列表
 
   'expense_records': '/student/expense/lesson/record', //付费课程进度
   'expense_subject_specific': '/course/subject/specific/P/:subjectId', //付费课程简介
@@ -98,6 +99,16 @@ const apiUrl = {
   'load_interview_record': '/homepage/interview/interview-record/:interviewId', //获取访谈列表
   'interview_valid_new': '/homepage/interview/interview-valid-new/:interviewCount', //院生故事新消息
 
+    /**
+     * 每日精选
+     */
+   'headline_txt': '/homepage/headline', //头条精选的内容
+
+  /**
+   * 栏目变更
+   */
+  'column_change': '/system/app/column-change', //栏目变更
+
   /**
    * 每日一题
    */
@@ -148,6 +159,7 @@ const apiUrl = {
   'strategy_professional_intro': '/strategy/promotion/professional',
   'strategy_vip_intro': '/strategy/promotion/vip',
   'strategy_notice': '/strategy/data/message/:authority', // 通知
+  'strategy_qq_number': '/strategy/qqGroup/:authority', // qq群号
 
   /**
    * 毕业礼
@@ -210,7 +222,17 @@ const apiUrl = {
   'village_get_answer_record': '/eden/answer-record',  // 获得答题进度
   'village_update_answer_record': '/eden/answer-record/:chapterNo/:questionNo', //提交更新答题进度
   'village_get_proposal_list': '/eden/proposal-list/:pageIndex/:pageSize',  //获得新手村吐槽列表
-  'village_submit_proposal_list': '/eden/proposal-submit' //提交新手村吐槽
+  'village_submit_proposal_list': '/eden/proposal-submit',  //提交新手村吐槽
+    /**
+     * 版本信息
+     */
+  'app_update_content': '/system/app/version',            // 获得更新后版本号和更新的功能
+  /**
+   * 头条精选
+   */
+  'homepage_headline': '/homepage/headline',            // 头条精选 内容
+  'homepage_headline_checkin_data': '/homepage/headline/checkin/checkdata',     // 头条精选 签到信息
+  'homepage_headline_checkin_checked': '/homepage/headline/checkin/checked'   // 头条精选 签到功能数据更新
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

@@ -17,7 +17,7 @@
             <p class="subject-name">{{diplomaDetails && diplomaDetails.subjectName}}</p>
             <span class="graduation-date">{{diplomaDetails && diplomaDetails.graduateDate.split(' ')[0]}}</span>
           </div>
-          <div class="diploma-share-btn">
+          <div class="diploma-share-btn" v-if="canShare">
             <img src="../../../static/image/graduationDiploma/diploma-share-btn.png" v-touch:tap="showActionSharePanel">
           </div>
             <div>
