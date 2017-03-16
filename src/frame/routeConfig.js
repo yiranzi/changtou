@@ -342,6 +342,18 @@ export function configRouter (router) {
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
+    },
+    /**
+     * 新手村
+     */
+    '/buildingShowHouse': {
+      component: require('../views/building/buildingShowHouse.vue')
+    },
+    '/buildingRule': {
+      component: require('../views/building/buildingRule.vue')
+    },
+    '/buildingIntroducion': {
+      component: require('../views/building/buildingIntroduction.vue')
     }
   })
 
