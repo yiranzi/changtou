@@ -217,17 +217,14 @@
       //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
       isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
-        console.log('1' + convertVersionToNum(versionNo))
-        console.log('2' + convertVersionToNum(appVersion))
-        return !versionNo && convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
       },
 
       //进入主页判定版本变更的流程
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
-          this.getColumnChange().then((data) => {
-              console.log('传入的值是' + data)
-              if (data.title) {
+          this.getColumnChange().then((Columndata) => {
+              if (Columndata.title) {
                 window.localStorage.setItem('versionNo', appVersion)
                 //弹出弹框
                 this.columnChange()
