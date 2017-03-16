@@ -9,7 +9,8 @@ const state = {
   recommends: [],
   readingClassics: {},
   hasNewInterview: false,
-  headLineTitle: []
+  headLineTitle: [],
+  columnChangeData: []
 }
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   UPDATE_NAIGATOR_HEAD_LINE_TXT (state, headLineData) {
     state.headLineTitle = headLineData.title
+  },
+  UPDATE_NAIGATOR_COLUMN_CHANGE (state, columnChangeData) {
+    state.columnChangeData = columnChangeData
   }
 }
 
