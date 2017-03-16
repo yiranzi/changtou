@@ -41,7 +41,7 @@
         </div>
 
         <!--头条精选-->
-        <div class="head-line">
+        <div class="head-line" v-touch:tap="goToHeadline">
           <div class="icon">
             <i class="picture"></i>
           </div>
@@ -478,6 +478,16 @@
        */
       showHeadLineTitle () {
         this.getHeadLineTitle()
+      },
+
+      /**
+       * 跳转到头条精选页面
+       */
+      goToHeadline () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '头条精选'
+        })
+        this.$route.router.go('/headline')
       },
 
       /**
