@@ -45,7 +45,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span v-touch:tap="removeColumnChange" class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
+          <span class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -205,8 +205,9 @@
         return titleString
       }
     },
-    
+
     methods: {
+      //删除数据用的测试方法
       removeColumnChange () {
         window.localStorage.removeItem('versionNo')
       },
@@ -222,6 +223,7 @@
           return false
         }
       },
+      //判断返回的ajax是否为有效内容(间接判定注册时间是否早于版本时间)
       ifColumnContentEmpty () {
         if (this.columnChangeData.content) {
           window.localStorage.setItem('versionNo', appVersion)
@@ -230,7 +232,7 @@
         } else {
         }
       },
-
+      //进入主页判定版本变更的流程
       ifColumnChange () {
         //判定0:是否已经登录
         if (this.isLogin) {
@@ -246,6 +248,7 @@
           }
         }
       },
+      //打开弹窗
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
@@ -255,8 +258,8 @@
           callbackFn: this.onColumnChange.bind(this) //组件上的
         })
       },
+      //版本变更的跳转
       onColumnChange () {
-//        this.$route.router.go('/course/classification')
         this.$route.router.go('this.columnChangeData.mbUrl')
       },
       /**

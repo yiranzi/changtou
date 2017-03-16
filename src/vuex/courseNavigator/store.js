@@ -28,7 +28,6 @@ const mutations = {
     state.headLineTitle = headLineData.title
   },
   UPDATE_NAIGATOR_COLUMN_CHANGE (state, columnChangeData) {
-    console.log('save ajax')
     state.columnChangeData = columnChangeData
   }
 }

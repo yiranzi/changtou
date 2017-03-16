@@ -88,7 +88,6 @@ export const getHeadLineTitle = ({dispatch}) => {
 export const getColumnChange = ({dispatch}) => {
   return new Promise(
     (resolve, reject) => {
-      console.log('push ajax')
       getWithoutAuth(
         {
           url: getUrl('column_change')
