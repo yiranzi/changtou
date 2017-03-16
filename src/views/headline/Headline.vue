@@ -136,17 +136,13 @@
     vuex: {
       actions: {
         getHeadlineContent: headlineActions.getHeadlineContent,  // 获取头条精选内容
-        getCheckinState: headlineActions.getCheckinState,  // 获取用户当天是否签到
-        getSerialCheckin: headlineActions.getSerialCheckin,  // 获取用户是否连续签到
-        getCheckinCount: headlineActions.getCheckinCount,  // 获取用户签到天数
-        checkinUpdate: headlineActions.checkinUpdate  //  用户签到
+        getCheckinData: headlineActions.getCheckinData,  // 获取用户签到信息
+        checkinUpdate: headlineActions.checkinUpdate  //  用户进行签到
       },
       getters: {
-        headlineContent: headlineGetters.headlineContent,  // 头条精选内容
         isLogin: userGetters.isLogin,  //是否登录
-        userIsCheckin: headlineGetters.userIsCheckin,  // 用户当天是否签到
-        userIsSerialCheckin: headlineGetters.userIsSerialCheckin,  // 用户签到天数
-        userCheckinCount: headlineGetters.userCheckinCount  // 用户签到天数
+        headlineContent: headlineGetters.headlineContent,  // 头条精选内容
+        userCheckinData: headlineGetters.userCheckinData  // 用户签到信息
       }
     },
 
@@ -154,26 +150,16 @@
       data () {
         // 显示头条精选内容
         this.getHeadlineContent()
+        // 判断是否登录
         if (this.isLogin) {  // 已登陆
-          //  读取签到状态
-          Promise.all([this.getCheckinState(), this.getCheckinCount(), this.getSerialCheckin()]).then(() => {
-            console.log(this.userIsCheckin, '今天是否签到')
-            console.log(this.userCheckinCount, '之前累计签到次数')
-            console.log(this.userIsSerialCheckin, '是否连续签到')
-            //判断是否登录
-            this.isCheckin = this.userIsCheckin
-            this.checkinCount = this.userCheckinCount
-            if (this.isCheckin) {  // 当天已签到
-              this.showCheckinProgress(this.checkinCount)
-            } else {  // 当天未签到
-              if (this.userIsSerialCheckin) {  // 是连续签到
-                this.showCheckinProgress(this.checkinCount)  // 显示签到进度
-              } else {  // 未连续签到
-                this.checkinUpdate()
-                this.checkinCount = 0
-                this.showCheckinProgress(this.checkinCount)
-              }
-            }
+          // 获取签到信息
+          this.getCheckinData().then(() => {
+            console.log(this.userCheckinData.count, '签到次数')
+            console.log(this.userCheckinData.hasChecked, '当天是否签到')
+            console.log(this.userCheckinData.isSeria, '是否连续签到')
+            this.checkinCount = this.userCheckinData.count
+            this.isCheckin = this.userCheckinData.hasChecked
+            this.showCheckinProgress(this.checkinCount)
           })
         } else {  // 未登录
           this.isCheckin = false
@@ -184,8 +170,8 @@
 
     data () {
       return {
-        isCheckin: false,
         checkinCount: 0,
+        isCheckin: false,
         progressTotal: [
           {day: '第1', color: '#ff9800', src: '../../../static/image/headline/headline-checkin-today.png'},
           {day: '第2', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'},
