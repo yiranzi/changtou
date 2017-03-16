@@ -30,6 +30,8 @@ import * as ebookActions from './ebook/actions'
 import * as newerGuide from './newerGuide/actions'
 import * as classicReadingActions from './classicReading/actions'
 import * as villageActions from './freshVillage/actions'
+import * as appUpdateActions from './appUpdate/actions'
+import * as headlineActions from './headline/actions'
 export {
   userActions,
   navigatorActions,
@@ -59,5 +61,7 @@ export {
   ebookActions,      //电子书
   newerGuide,  //入门指南
   classicReadingActions,   //大咖读经典
-  villageActions  //新手村
+  villageActions,  //新手村
+  appUpdateActions,  //应用更新
+  headlineActions  //头条精选
 }

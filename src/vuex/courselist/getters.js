@@ -11,3 +11,8 @@
 export const courseList = (state) => {
   return state.courselist.totalList
 }
+
+//获得课程分类列表
+export const courseClassification = (state) => {
+  return state.courselist.courseClassification
+}

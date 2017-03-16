@@ -8,7 +8,9 @@ const state = {
   freeCourseList: [],
   recommends: [],
   readingClassics: {},
-  hasNewInterview: false
+  hasNewInterview: false,
+  headLineTitle: [],
+  columnChangeData: []
 }
 
 const mutations = {
@@ -21,6 +23,12 @@ const mutations = {
   },
   UPDATE_NAIGATOR_DATA_INTERVIEW (state, data) {
     state.hasNewInterview = data
+  },
+  UPDATE_NAIGATOR_HEAD_LINE_TXT (state, headLineData) {
+    state.headLineTitle = headLineData.title
+  },
+  UPDATE_NAIGATOR_COLUMN_CHANGE (state, columnChangeData) {
+    state.columnChangeData = columnChangeData
   }
 }
 

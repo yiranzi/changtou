@@ -27,6 +27,10 @@ export function configRouter (router) {
     '/totalList': { //查看所有课程列表页
       component: require('../views/course/Courselist.vue')
     },
+
+    '/course/classification': { //查看所有课程列-按照分类排列
+      component: require('../views/course/Classification.vue')
+    },
     'subject/detail/F/:subjectId/:position': { //课程详情页
       component: require('../views/course/CourseDetailFree.vue')
     },
@@ -331,6 +335,13 @@ export function configRouter (router) {
     //新手村初始页面
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
+    },
+
+    /**
+     * 头条精彩
+     */
+    '/headline': {
+      component: require('../views/headline/Headline.vue')
     }
   })
 
