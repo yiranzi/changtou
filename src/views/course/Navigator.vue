@@ -45,7 +45,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
+          <span v-touch:tap="removeVersionNo" class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -164,7 +164,7 @@
         //显示头条精选的数据
         this.showHeadLineTitle()
         //比对版本号,判定是否是最新版本
-        this.ifColumnChange()
+        this.showColumnChange()
       }
     },
 
@@ -208,51 +208,35 @@
 
     methods: {
       //删除数据用的测试方法
-      removeColumnChange () {
+      removeVersionNo () {
+//        window.localStorage.setItem('versionNo', '2.2.0')
         window.localStorage.removeItem('versionNo')
       },
+
       //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
-      ifVertionNotLeast () {
+      isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
-        if (!versionNo) {
-          return true
-        }
-        if (versionNo !== appVersion) {
-          return true
-        } else {
-          return false
-        }
+        return !versionNo && versionNo < appVersion
       },
-      //判断返回的ajax是否为有效内容(间接判定注册时间是否早于版本时间)
-      ifColumnContentEmpty () {
-        if (this.columnChangeData.content) {
-          window.localStorage.setItem('versionNo', appVersion)
-          //弹出弹框
-          this.columnChange()
-        } else {
-        }
-      },
+
       //进入主页判定版本变更的流程
-      ifColumnChange () {
-        //判定0:是否已经登录
-        if (this.isLogin) {
-          //判定1:本地比对版本号.
-          if (this.ifVertionNotLeast()) {
-            //如果没有版本号或者版本号小于当前版本号.则进行
-            //判定2:发送获取栏目变更的请求,获取变更内容
-            this.getColumnChange().then(() => {
-                this.ifColumnContentEmpty()
-            })
-          } else {
-            //否则.退出即可
-          }
+      showColumnChange () {
+        if (this.isLogin && this.isOldVersion()) {
+          this.getColumnChange().then((data) => {
+              console.log('传入的值是' + data)
+              if (data.title) {
+                window.localStorage.setItem('versionNo', appVersion)
+                //弹出弹框
+                this.columnChange()
+              }
+          })
         }
       },
       //打开弹窗
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.content,
+          componentData: this.columnChangeData.title,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
@@ -509,11 +493,6 @@
        */
       showHeadLineTitle () {
         this.getHeadLineTitle()
-      },
-
-//      请求获取栏目变更信息
-      getColumnChange () {
-        this.getColumnChange()
       },
 
       /**
