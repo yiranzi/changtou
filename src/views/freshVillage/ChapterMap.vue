@@ -562,18 +562,20 @@
         const shareImgId = 'village-upgrade-detail'
         setTimeout(() => {
           this.loadShareImageUrl(shareImgId)
-        }, 3000)
+        }, 300)
       },
-
+      /*
+      * 加载图片
+      * */
       loadShareImageUrl (shareImgId) {
         const origin = window.document.getElementById(shareImgId)
         const element = origin.cloneNode(true)
-        console.log(element)
         const height = origin.offsetHeight
         const width = origin.offsetWidth
-        this.setShareImageUrl({element, height, width})
+        setTimeout(() => {
+          this.setShareImageUrl({element, height, width})
+        }, 300)
       },
-
       /*
       * 提交答题记录,分享
       * */
