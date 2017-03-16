@@ -90,7 +90,7 @@ export const getColumnChange = ({dispatch}) => {
     (resolve, reject) => {
       getWithoutAuth(
         {
-          url: getUrl('headline_txt')
+          url: getUrl('column_change')
         }
       ).then(
         res => {

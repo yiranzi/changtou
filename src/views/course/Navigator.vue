@@ -45,7 +45,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span v-touch:tap="removeVersionNo" class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
+          <span class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -208,12 +208,6 @@
     },
 
     methods: {
-      //删除数据用的测试方法
-      removeVersionNo () {
-//        window.localStorage.setItem('versionNo', '2.2.0')
-        window.localStorage.removeItem('versionNo')
-      },
-
       //判定是否当前版本号不为最新版本号(之后改成判断是否小于)
       isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
@@ -223,8 +217,8 @@
       //进入主页判定版本变更的流程
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
-          this.getColumnChange().then((Columndata) => {
-              if (Columndata.title) {
+          this.getColumnChange().then((columnChangeData) => {
+              if (columnChangeData.content) {
                 window.localStorage.setItem('versionNo', appVersion)
                 //弹出弹框
                 this.columnChange()
@@ -236,7 +230,7 @@
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.title,
+          componentData: this.columnChangeData.content,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
