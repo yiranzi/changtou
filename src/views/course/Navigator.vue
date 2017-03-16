@@ -40,7 +40,7 @@
         </div>
 
         <!--头条精选-->
-        <div class="head-line">
+        <div class="head-line" v-touch:tap="goToHeadline">
           <div class="icon">
             <i class="picture"></i>
           </div>
@@ -116,8 +116,8 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
+  import {navigatorGetters, userGetters, appUpdateGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions, appUpdateActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -134,8 +134,7 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        headLineTitle: navigatorGetters.headLineTitle,
-        columnChangeData: navigatorGetters.columnChangeData
+        headLineTitle: navigatorGetters.headLineTitle
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -147,12 +146,15 @@
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
         getHeadLineTitle: navigatorActions.getHeadLineTitle,
+        getAppUpdate: appUpdateActions.getAppUpdate,
         getColumnChange: navigatorActions.getColumnChange
       }
     },
 
     route: {
       data ({from}) {
+        //是否显示更新提示
+        this.showAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -208,6 +210,27 @@
     },
 
     methods: {
+      /**
+       * 判断应用是否更新
+       */
+       showAppUpdate () {
+         //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === appVersion))) {
+           // 显示更新提示,就存储最新版本号
+           setLocalCache('app-update', {appVersionNumber: appVersion})
+           // 应用更新内容
+           let appUpdateConentObj = {}
+           this.getAppUpdate().then(() => {
+            appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
+            appUpdateConentObj.appUpdateExplain = this.appUpdateContent['note'].split(',')
+             this.showMask({
+               component: 'AppUpdate.vue',
+               componentData: appUpdateConentObj
+             })
+           })
+         }
+       },
+
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
         let versionNo = window.localStorage.getItem('versionNo')
@@ -218,11 +241,11 @@
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
           this.getColumnChange().then((columnChangeData) => {
-              if (columnChangeData.content) {
-                window.localStorage.setItem('versionNo', appVersion)
-                //弹出弹框
-                this.columnChange()
-              }
+            if (columnChangeData.content) {
+              window.localStorage.setItem('versionNo', appVersion)
+              //弹出弹框
+              this.columnChange()
+            }
           })
         }
       },
@@ -490,13 +513,23 @@
       },
 
       /**
+       * 跳转到头条精选页面
+       */
+      goToHeadline () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '头条精选'
+        })
+        this.$route.router.go('/headline')
+      },
+
+      /**
        * 跳转到大咖读经典
        * */
       goToClassicReading (classicId) {   /*统计数据*/
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '大咖读经典'
         })
-        this.$route.router.go(`/classic/reading/${classicId}`)/*classicId放在url中传递*/
+        this.$route.router.go(`/classic/reading/${classicId}`)   /*classicId放在url中传递*/
       },
 
       backHandler () {
@@ -804,7 +837,7 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-
+      border-bottom: 0.5rem #f0eff5 solid;
       font-size: 0.55rem;
       color: #444;
 
