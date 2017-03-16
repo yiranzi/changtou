@@ -205,7 +205,7 @@
         return titleString
       }
     },
-
+    
     methods: {
       removeColumnChange () {
         window.localStorage.removeItem('versionNo')
