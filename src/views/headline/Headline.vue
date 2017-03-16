@@ -137,7 +137,7 @@
       actions: {
         getHeadlineContent: headlineActions.getHeadlineContent,  // 获取头条精选内容
         getCheckinData: headlineActions.getCheckinData,  // 获取用户签到信息
-        checkinUpdate: headlineActions.checkinUpdate  //  用户进行签到
+        checked: headlineActions.checked  //  用户进行签到
       },
       getters: {
         isLogin: userGetters.isLogin,  //是否登录
@@ -154,16 +154,18 @@
         if (this.isLogin) {  // 已登陆
           // 获取签到信息
           this.getCheckinData().then(() => {
-            console.log(this.userCheckinData.count, '签到次数')
-            console.log(this.userCheckinData.hasChecked, '当天是否签到')
-            console.log(this.userCheckinData.isSeria, '是否连续签到')
             this.checkinCount = this.userCheckinData.count
             this.isCheckin = this.userCheckinData.hasChecked
+            if (!this.checkinCount && this.checkinCount !== 0) {
+              this.checkinCount = 0
+              this.isCheckin = false
+            }
             this.showCheckinProgress(this.checkinCount)
           })
         } else {  // 未登录
+          this.checkinCount = 0
           this.isCheckin = false
-          this.showCheckinProgress(0)  // 显示签到进度
+          this.showCheckinProgress(this.checkinCount)
         }
       }
     },
@@ -194,6 +196,7 @@
         if (dayIndex === 7) {  // 签到次数为7天
           // 已打卡
           for (let i = 0; i < dayIndex - 1; i++) {
+            this.progressTotal[i].day = '第' + (i + 1)
             this.progressTotal[i].color = '#ff9800'
             this.progressTotal[i].src = '../../../static/image/headline/headline-checkin-checkin.png'
           }
@@ -203,6 +206,7 @@
         } else {   // 签到数小于7
           // 重置默认状态
           for (let i = 0; i < 6; i++) {
+            this.progressTotal[i].day = '第' + (i + 1)
             this.progressTotal[i].color = '#9d9d9d'
             this.progressTotal[i].src = '../../../static/image/headline/headline-checkin-uncheckin.png'
           }
@@ -214,18 +218,16 @@
             }
           }
           // 要打卡
-          if (dayIndex < 6) {
-            // 签到小于6天
+          if (dayIndex < 6) {  // 签到小于6天
             if (this.isCheckin === false) {  // 未签到
               this.progressTotal[dayIndex].day = '今'
               this.progressTotal[dayIndex].color = '#ff9800'
               this.progressTotal[dayIndex].src = '../../../static/image/headline/headline-checkin-today.png'
-            } else {     // 已签到
-              this.progressTotal[dayIndex - 1].day = '今'
+            } else {   // 已签到
               this.progressTotal[dayIndex - 1].color = '#ff9800'
               this.progressTotal[dayIndex - 1].src = '../../../static/image/headline/headline-checkin-checkin.png'
             }
-          } else {
+          } else {  // 签到等于6天
             // 礼物
             if (this.isCheckin === false) {  // 未签到
               this.progressGift.color = '#ff9800'
@@ -246,14 +248,14 @@
           this.showCheckinProgress(this.checkinCount)
           if (this.checkinCount === 7) {
             // 弹出gift浮层
-            console.log('gift')
             this.showMask({
               component: 'headline/CheckinGift.vue',
               hideOnMaskTap: true
             })
             // 给后台传数据：该用户生命值加1000
+            console.log('生命值加1000')
           }
-          this.checkinUpdate()
+          this.checked()
         } else {  // 未登录
           this.$route.router.go('/entry')
         }

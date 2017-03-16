@@ -1,7 +1,7 @@
 /**
  * Created by zyr on 2016/10/8.
  */
-import {getWithinAuth, getWithoutAuth} from '../../frame/ajax'
+import {getWithinAuth, getWithoutAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
@@ -53,14 +53,13 @@ export const getCheckinData = ({ dispatch }) => {
  * @param dispatch
  *
  */
-export const checkinUpdate = () => {
+export const checked = () => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth({
-        url: getUrl('homepage_headline_checkin_updata')
+      postWithinAuth({
+        url: getUrl('homepage_headline_checkin_checked')
       }).then(
         function (data) {
-          console.log(data)
           resolve(data)
         },
         function (err) {
