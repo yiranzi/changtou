@@ -137,7 +137,7 @@
         position: relative;
         width: 15.25rem;
         height: 6.6rem;
-        margin-top: 0.75rem;
+        margin: 0.75rem 0 0.5rem;
         .pic{
           width: 15.25rem;
           height: 6.6rem;

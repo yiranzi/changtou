@@ -20,7 +20,7 @@ titlebar
         <slot name="left" ></slot>
       </div>
 
-      <h1 class="ict-titlebar-title" ><span v-show="title" :transition="transition">{{ title }}</span><slot></slot></h1>
+      <h1 class="ict-titlebar-title"><span v-show="title" :transition="transition">{{ title }}</span><slot></slot></h1>
 
       <div class="ict-titlebar-right" v-touch:tap="rightTapCallback" v-bind:class="{'disabled': isRightDisabled}">
         <slot name="right" ></slot>

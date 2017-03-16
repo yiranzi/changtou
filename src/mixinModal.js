@@ -180,10 +180,9 @@ const mixin = {
     [eventMap.SHOW_MASK]: function ({component, hideOnMaskTap, componentData, callbackName, callbackFn}) {
       const me = this
       me.isMaskShow = true
-
       // 执行完毕后, 重置标识
-      const realCallBack = () => {
-        callbackFn()
+      const realCallBack = (params) => {
+        callbackFn(params)
         me.hideMask()
       }
 

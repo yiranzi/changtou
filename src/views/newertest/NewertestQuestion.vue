@@ -240,9 +240,21 @@
       deactivate () {
         // 回复back回退
         this.resumeBackAction()
+        this.resetViewData()
       }
     },
     methods: {
+      resetViewData () {
+        this.currQuIndex = 0 //当前题目序号
+        this.currOpsIndex = -1 //当前选项
+        this.maxQuIndex = 7 //最大的题目序号
+        this.isClicked = false // 是否点击选项
+        this.isFloatShow = false // 是否显示浮层
+        this.answer = [] //答案
+        this.comboId = 0 //模板id
+        this.level = 0 //等级
+        this.questionArr = []
+      },
       onCancel () {
         this.$route.router.go('/main')
       },
@@ -287,19 +299,29 @@
       },
       //计算等级，模板id
       computeLevelId () {
-        let secondSelected = this.answer[1]
-        const eighthSelected = this.answer[7]
-        this.level = Number(secondSelected) + 1
-        if (secondSelected < 2) {
-          secondSelected = 0
+        const fourthSelect = this.answer[3]   //第四题答案
+        const eighthSelect = this.answer[7]   //第八题答案
+        const levelArr = [1, 3, 2]
+        this.level = levelArr[fourthSelect]    //根据第四题判断等级
+        if (fourthSelect === 0 || fourthSelect === 2) {
+            if (eighthSelect === 0) {
+                this.comboId = 7                          //第四题A/C第八题A为模板1
+            } else if (eighthSelect === 1 || eighthSelect === 2) {
+                this.comboId = 8                          //第四题A/C第八题B/C为模板2
+            }
+        } else if (fourthSelect === 1) {
+            if (eighthSelect === 0) {
+                this.comboId = 9                          //第四题B第八题A为模板3
+            } else if (eighthSelect === 1 || eighthSelect === 2) {
+                this.comboId = 10                            //第四题B第八题B/C为模板4
+            }
         }
-        const sum = Number(secondSelected) + Number(eighthSelected)
-        this.comboId = sum + 1
       },
       //刷新页面
       reset () {
         this.currQuIndex = 0
         this.currOpsIndex = -1
+        this.answer = []
       }
     },
     components: {

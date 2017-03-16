@@ -25,3 +25,8 @@ export const recommends = (state) => {
 export const readingClassics = (state) => {
   return state.navigator.readingClassics
 }
+
+// 院生故事新消息
+export const hasNewInterview = (state) => {
+  return state.navigator.hasNewInterview
+}

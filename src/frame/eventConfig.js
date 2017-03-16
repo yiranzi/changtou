@@ -5,8 +5,7 @@
 export const eventMap = {
   //INPUT_FOUCS: '输入框焦点移入', //此时手机键盘会被弹出
   APP_START: 'app_start',
- // NAVIGATOR_LOADED: '首页加载完毕',
-  GUIDE_VIEW_LOADED: '开机引导页加载完毕', //隐藏加载动画
+  FIRST_SCREEN_LOADED: '首页加载完毕',
   LOGIN_SUCCESS: 'login',
   REGISTER_SUCCESS: 'register',
   LOGOUT: 'logout',

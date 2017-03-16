@@ -1,29 +1,27 @@
 /**
  * Created by dongdong on 2016/10/19.
  */
-import {getWithinAuth, getWithoutAuth, postWithinAuth, postWithoutAuth} from '../../frame/ajax'
+import {getWithinAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
-import store from '../../vuex/store'
-const user = store.state.user
 
 const testQuestion = [
   {
-    'title': '1.你学习理财投资的目标是?',
-    'subtitle': '每个人心中都有憧憬,没有目标的人就是咸鱼',
-    'feedback': '学习理财最重要的就是学会制定目标。建立一个切实可行的目标，它会是你学习过程中最大的动力！',
+    'title': '1.见到“投资理财”这4个字，你怎么看？',
+    'subtitle': '每个人在心中都会有一个财富自由梦',
+    'feedback': '对待投资，每个人都有不同理解无所谓对错，确定自己内心想要什么，才能在学习投资理财的道路上，事倍功半哦！',
     'index': 1,
     'options': [
       {
         'index': 1,
-        'content': '实现财富自由环游世界'
+        'content': '财富自由啊！不然学它做什么！'
       },
       {
         'index': 2,
-        'content': '让家人过上更好的生活'
+        'content': '攒点小钱提升工资收入'
       },
       {
         'index': 3,
-        'content': '抵御生活中各种未知风险'
+        'content': '这个不是骗人的吧'
       }
     ]
   },
@@ -70,25 +68,25 @@ const testQuestion = [
   {
     'title': '4.你愿意每天花多少时间学习理财投资呢?',
     'subtitle': '来来来，诚实的告诉小投你的计划是什么。',
-    'feedback': '从现在开始，迈出理财第一步。不管每天能投入多少时间，行动起来的你就是最棒的',
+    'feedback': '“一万小时天才理论”虽有夸张的地方，但投入和产出这个基本成正比关系。工作再忙，也要记得在学习投资上哪怕每天1分钟也是进步。',
     'index': 4,
     'options': [
       {
         'index': 1,
-        'content': '半小时'
+        'content': '至少花1个小时'
       },
       {
         'index': 2,
-        'content': '1-2小时'
+        'content': '每周5小时能挤出来'
       },
       {
         'index': 3,
-        'content': '2-4小时'
+        'content': '一周顶多2小时不能再多了'
       }
     ]
   },
   {
-    'title': '5.你知道沪深300指数是什么吗?',
+    'title': '5.你知道沪深300指数及涡轮的含义吗?',
     'subtitle': '接下来这道题深入的测验一下真实的投资知识和能力。',
     'feedback': null,
     'index': 5,
@@ -126,7 +124,7 @@ const testQuestion = [
   {
     'title': '7.如果你忽然继承了一笔10万元财产那么...?',
     'subtitle': '要求你必须进行一项投资，你会怎么办？',
-    'feedback': '我就是我，颜色不一样的烟火，在投资过程中认识自己很重要！不同的风险偏好、预期收益决定了适合你的投资品种和投资策略。',
+    'feedback': '理财就是理生活，不能盲目为了追求收益，而影响正常的生活。对风险的承担能力不同，在选择投资品种时要根据自己的情况私人订制。',
     'index': 7,
     'options': [
       {
@@ -179,8 +177,7 @@ export const loadQuestion = ({ dispatch }) => {
 export const postReport = ({ dispatch }, comboId, level) => {
   return new Promise(
     (resolve, reject) => {
-      const ajax = user.isLogin ? postWithinAuth : postWithoutAuth
-      ajax({
+      postWithinAuth({
         url: getUrl('newertest_report'),
         data: {
           comboId,
@@ -203,8 +200,7 @@ export const postReport = ({ dispatch }, comboId, level) => {
 export const loadNewertestReport = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
-      const ajax = user.isLogin ? getWithinAuth : getWithoutAuth
-      ajax({
+      getWithinAuth({
         url: getUrl('newertest_report')
       }).then(
         function (newertestReport) {
