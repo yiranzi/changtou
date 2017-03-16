@@ -20,8 +20,10 @@
 <script>
 import Scroller from 'vux/scroller'
 export default {
-  props: {
-    wisdomData: Object
+  route: {
+    data ({chapterId, questionId}) {
+
+    }
   },
   ready () {
     this.setScrollerHeight()
@@ -38,12 +40,7 @@ export default {
     }
   },
   methods: {
-    /*
-    * 点击关闭页面
-    * */
-    onCloseTap () {
-      this.$dispatch('close-wisdom')
-    },
+
     /*设置页面滑动高度*/
     setScrollerHeight () {
       const me = this

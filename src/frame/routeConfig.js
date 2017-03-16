@@ -331,6 +331,9 @@ export function configRouter (router) {
     //新手村初始页面
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
+    },
+    '/village/wisdom/:chapterId/:questionNo': {
+      component: require('../views/freshVillage/Wisdom.vue')
     }
   })
 

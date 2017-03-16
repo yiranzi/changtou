@@ -4,22 +4,23 @@
  */
 <template>
   <div>
-    <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
-      <div class="other-element">
-        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
-        <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
-        <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
-        <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
-        <div class="go-btn" :class="rightBtnStyle" v-touch:tap="goNextStep"></div>
+      <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
+        <div class="other-element">
+          <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
+          <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
+          <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
+          <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
+          <div class="go-btn" :class="rightBtnStyle" v-touch:tap="goNextStep"></div>
+        </div>
+        <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
+        <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
       </div>
-      <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
-      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
-    </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
     <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
-</div>
+  </div>
 </template>
 <script>
+  import Scroller from 'vux/scroller'
   import store from '../../vuex/store'
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
@@ -474,7 +475,8 @@
         let type = this.question.materialType
         switch (type) {
           case 1:
-            this.showWisdom = true
+            //this.showWisdom = true
+            this.$route.router.go(`/village/wisdom/${this.activeChapterNo}/${this.activeQuestionNo}`)
             break
           case 2:
             setTimeout(this.showProverbs, 300)
@@ -585,7 +587,8 @@
     },
     components: {
       ShareFloat,
-      wisdom
+      wisdom,
+      Scroller
     }
   }
 
