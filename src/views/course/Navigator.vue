@@ -417,6 +417,16 @@
       },
 
       /**
+       * 跳转到全部课程列表-分类排列
+       */
+      goToCourseClassification () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '课程分类'
+        })
+        this.$route.router.go('/course/classification')
+      },
+
+      /**
        * 跳转到每日一题
        */
       goToDailyQuestion () {
@@ -461,6 +471,13 @@
           // 未登录
           this.$route.router.go('/village/initialPage')
         }
+      },
+
+      /**
+       * 显示头条精选数据
+       */
+      showHeadLineTitle () {
+        this.getHeadLineTitle()
       },
 
       /**
@@ -779,20 +796,20 @@
       align-items: center;
       background-color: #fff;
       border-bottom: 0.5rem #f0eff5 solid;
-      font-size: 0.75rem;
+      font-size: 0.55rem;
       color: #444;
 
       .under-banner-item{
         position: relative;
         text-align: center;
-        padding: 34/40rem 0 26/40rem;
+        /*padding: 34/40rem 0 26/40rem;*/
         box-sizing: border-box;
         flex: 1;
       }
     }
     .under-banner-icon{
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.6rem;
+      height: 1.6rem;
       vertical-align: middle;
       display: block;
       margin: 0 auto 0.35rem;
@@ -816,6 +833,10 @@
 
     .under-banner-icon.newer-guide{
       background: url("../../assets/styles/image/navigator/guide.png") no-repeat center center / contain;
+    }
+
+    .under-banner-icon.classification{
+      background: url("../../assets/styles/image/navigator/classification.png") no-repeat center center / contain;
     }
   /*理财新手村-首页入口*/
     .fresh-village{
@@ -867,6 +888,71 @@
       bottom: 4rem;
       right: .75rem
     }
-  }
 
+    /*人气必备*/
+    .must-hava{
+      height:5.5rem;
+    }
+
+    /*头条精选*/
+    .head-line {
+      font-size: 0;
+      position: relative;
+      margin: 0.25rem auto 0.5rem;
+      height: 3rem;
+      background-color: #fff;
+      .icon {
+        vertical-align: middle;
+        display: inline-block;
+        width: 3.75rem;
+        height: 3rem;
+        .picture{
+          font-size: 0px;
+          display:inline-block;
+          width: 1.6rem;
+          height: 1.5rem;
+          margin: 0.75rem 1.35rem 0.75rem;
+          background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
+        }
+      }
+
+      .line{
+        vertical-align: middle;
+        display:inline-block;
+        width: 0.25rem;
+        height: 1.75rem;
+        background-color: #f0f0f0;
+        margin: auto auto;
+        line-height: 100%;
+      }
+
+      .topic-txt{
+        vertical-align: middle;
+        margin: auto 3.5rem auto 0.75rem;
+        font-size: 0.7rem;
+        height:0.7rem;
+        line-height: 0.7rem;
+        color: #aaa;
+        display:inline-block;
+        width: 10.4rem;
+        overflow: hidden;
+      }
+
+      .gift{
+        vertical-align: middle;
+        display:inline-block;
+        position: absolute;
+        top: 0.5rem;
+        right: 0;
+        .picture{
+          vertical-align: middle;
+          font-size: 0px;
+          display:inline-block;
+          width: 2.85rem;
+          height: 0.775rem;
+          background: url("../../../static/image/firstNewsChoose/gift.png") no-repeat center center / contain;
+        }
+      }
+    }
+  }
 </style>
