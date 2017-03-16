@@ -1,41 +1,47 @@
 <template>
   <div class="headline">
-    <ict-titlebar>
-      头条精选
-    </ict-titlebar>
-    <p class="headline-checkin-title">- 连续7日送礼包 -</p>
-    <div class="headline-checkin-progress">
-      <div class="headline-checkin-progress-once" v-for="item in progressTotal">
-        <span class="headline-checkin-progress-day">
-          <img v-bind:src="item.src" style="width: .95rem;height: .95rem;">
-          <p v-bind:style="{ color: item.color }">{{item.day}}日</p>
-        </span>
-        <span class="headline-checkin-progress-line">-</span>
+    <ict-titlebar v-el:titlebar>头条精选</ict-titlebar>
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+      <div>
+        <p class="headline-checkin-title">- 连续7日送礼包 -</p>
+        <div class="headline-checkin-progress">
+          <div class="headline-checkin-progress-once" v-for="item in progressTotal">
+          <span class="headline-checkin-progress-day">
+            <img v-bind:src="item.src" style="width: .95rem;height: .95rem;">
+            <p v-bind:style="{ color: item.color }">{{item.day}}日</p>
+          </span>
+            <span class="headline-checkin-progress-line">-</span>
+          </div>
+          <div class="headline-checkin-progress-gift">
+            <img v-bind:src="progressGift.src" style="width: 1.3rem;height: 1.3rem;">
+            <p v-bind:style="{ color: progressGift.color }">领礼包</p>
+          </div>
+        </div>
+        <div class="headline-checkin-btn" v-touch:tap="onCheckin" v-if="!isCheckin">
+          <img class="headline-checkin-btn-pic" src='../../../static/image/headline/headline-checkin-in.png'>
+        </div>
+        <div class="headline-article-title">{{headlineContent.title}}</div>
+        <div class="headline-author">
+          <div class="headline-author-head">
+            <img v-bind:src="headlineContent.authorImage"  style="width: 100%;">
+          </div>
+          <div class="headline-author-name">{{headlineContent.authorName}}</div>
+        </div>
+        <div class="headline-article" v-for="item in headlineContent.paragraph">
+          <div class="headline-article-content">{{item.content}}</div>
+          <img v-bind:src="item.conImage" style="width: 12rem;height: 7rem;">
+        </div>
+        <div class="headline-end">- END -</div>
       </div>
-      <div class="headline-checkin-progress-gift">
-        <img v-bind:src="progressGift.src" style="width: 1.3rem;height: 1.3rem;">
-        <p v-bind:style="{ color: progressGift.color }">领礼包</p>
-      </div>
-    </div>
-    <div class="headline-checkin-btn" v-touch:tap="onCheckin" v-if="!isCheckin">
-      <img class="headline-checkin-btn-pic" src='../../../static/image/headline/headline-checkin-in.png'>
-    </div>
-    <div class="headline-article-title">{{headlineContent.title}}</div>
-    <div class="headline-author">
-      <div class="headline-author-head">
-        <img v-bind:src="headlineContent.authorImage"  style="width: 100%;">
-      </div>
-      <div class="headline-author-name">{{headlineContent.authorName}}</div>
-    </div>
-    <div class="headline-article" v-for="item in headlineContent.paragraph">
-      <div class="headline-article-content">{{item.content}}</div>
-      <img v-bind:src="item.conImage" style="width: 12rem;height: 7rem;">
-    </div>
-    <div class="headline-end">- END -</div>
+    </scroller>
   </div>
 </template>
 <style lang="less">
   .headline{
+    .headline-top{
+      height: 1rem;
+      background: #00b0f0;
+    }
     .headline-checkin-title{
       color: #aaa;
       font-size: 20/40rem;
@@ -129,6 +135,7 @@
 </style>
 <script>
   import IctTitlebar from '../../components/IctTitleBar.vue'
+  import Scroller from 'vux/scroller'
   import {headlineGetters, userGetters} from '../../vuex/getters'
   import {headlineActions} from '../../vuex/actions'
 
@@ -148,6 +155,7 @@
 
     route: {
       data () {
+        this.setScrollerHeight()
         // 显示头条精选内容
         this.getHeadlineContent()
         // 判断是否登录
@@ -172,23 +180,39 @@
 
     data () {
       return {
+        scrollerHeight: '0px',
         checkinCount: 0,
         isCheckin: false,
         progressTotal: [
-          {day: '第1', color: '#ff9800', src: '../../../static/image/headline/headline-checkin-today.png'},
-          {day: '第2', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'},
-          {day: '第3', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'},
-          {day: '第4', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'},
-          {day: '第5', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'},
-          {day: '第6', color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-uncheckin.png'}
+          {day: '第1', color: '#ff9800', src: '/static/image/headline/headline-checkin-today.png'},
+          {day: '第2', color: '#9d9d9d', src: '/static/image/headline/headline-checkin-uncheckin.png'},
+          {day: '第3', color: '#9d9d9d', src: '/static/image/headline/headline-checkin-uncheckin.png'},
+          {day: '第4', color: '#9d9d9d', src: '/static/image/headline/headline-checkin-uncheckin.png'},
+          {day: '第5', color: '#9d9d9d', src: '/static/image/headline/headline-checkin-uncheckin.png'},
+          {day: '第6', color: '#9d9d9d', src: '/static/image/headline/headline-checkin-uncheckin.png'}
         ],   // 前6天进度样式
         progressGift: {
-          color: '#9d9d9d', src: '../../../static/image/headline/headline-checkin-gift-uncheckin.png'
+          color: '#9d9d9d', src: '/static/image/headline/headline-checkin-gift-uncheckin.png'
         }  // 礼物样式
       }
     },
 
     methods: {
+      /**
+       * 设置滚动高度
+       */
+      setScrollerHeight () {
+        const me = this
+        setTimeout(function () {
+          me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.clientHeight) + 'px'
+          me.$nextTick(() => {
+            me.$refs.scroller.reset({
+              top: 0
+            })
+          })
+        }, 300)
+      },
+
      /**
       * 显示签到进度
       */
@@ -198,23 +222,23 @@
           for (let i = 0; i < dayIndex - 1; i++) {
             this.progressTotal[i].day = '第' + (i + 1)
             this.progressTotal[i].color = '#ff9800'
-            this.progressTotal[i].src = '../../../static/image/headline/headline-checkin-checkin.png'
+            this.progressTotal[i].src = '/static/image/headline/headline-checkin-checkin.png'
           }
           // 显示礼物
           this.progressGift.color = '#ff9800'
-          this.progressGift.src = '../../../static/image/headline/headline-checkin-gift-checkin.png'
+          this.progressGift.src = '/static/image/headline/headline-checkin-gift-checkin.png'
         } else {   // 签到数小于7
           // 重置默认状态
           for (let i = 0; i < 6; i++) {
             this.progressTotal[i].day = '第' + (i + 1)
             this.progressTotal[i].color = '#9d9d9d'
-            this.progressTotal[i].src = '../../../static/image/headline/headline-checkin-uncheckin.png'
+            this.progressTotal[i].src = '/static/image/headline/headline-checkin-uncheckin.png'
           }
           // 已打卡
           if (dayIndex) {
             for (let i = 0; i < dayIndex; i++) {
               this.progressTotal[i].color = '#ff9800'
-              this.progressTotal[i].src = '../../../static/image/headline/headline-checkin-checkin.png'
+              this.progressTotal[i].src = '/static/image/headline/headline-checkin-checkin.png'
             }
           }
           // 要打卡
@@ -222,16 +246,16 @@
             if (this.isCheckin === false) {  // 未签到
               this.progressTotal[dayIndex].day = '今'
               this.progressTotal[dayIndex].color = '#ff9800'
-              this.progressTotal[dayIndex].src = '../../../static/image/headline/headline-checkin-today.png'
+              this.progressTotal[dayIndex].src = '/static/image/headline/headline-checkin-today.png'
             } else {   // 已签到
               this.progressTotal[dayIndex - 1].color = '#ff9800'
-              this.progressTotal[dayIndex - 1].src = '../../../static/image/headline/headline-checkin-checkin.png'
+              this.progressTotal[dayIndex - 1].src = '/static/image/headline/headline-checkin-checkin.png'
             }
           } else {  // 签到等于6天
             // 礼物
             if (this.isCheckin === false) {  // 未签到
               this.progressGift.color = '#ff9800'
-              this.progressGift.src = '../../../static/image/headline/headline-checkin-gift-today.png'
+              this.progressGift.src = '/static/image/headline/headline-checkin-gift-today.png'
             }
           }
         }
@@ -263,7 +287,8 @@
     },
 
     components: {
-      IctTitlebar
+      IctTitlebar,
+      Scroller
     }
   }
 </script>
