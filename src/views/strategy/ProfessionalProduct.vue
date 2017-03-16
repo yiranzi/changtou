@@ -8,6 +8,7 @@
     <scroll-text :text="notice"></scroll-text>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
+        <group-number :group-number="groupNumber"></group-number>
         <zhi-shubao :zhishubao="professionalProduct.zhiShuBao"></zhi-shubao>
         <ding-toubao :dingtoubao="professionalProduct.dingTouBao"></ding-toubao>
         <fen-jibao :fenjibao="professionalProduct.fenJiBao"></fen-jibao>
@@ -25,15 +26,18 @@
   import ScrollText from '../../components/strategy/StrategyScroll.vue'
   import {strategyProductActions, strategyNoticeActions} from '../../vuex/actions'
   import {strategyProductGetters, strategyNoticeGetters} from '../../vuex/getters'
+  import GroupNumber from '../../components/strategy/StrategyQQGroup.vue'
   export default {
     vuex: {
       getters: {
         professionalProduct: strategyProductGetters.professionalProduct,
-        notice: strategyNoticeGetters.strategyNotice
+        notice: strategyNoticeGetters.strategyNotice,
+        groupNumber: strategyProductGetters.groupNumber
       },
       actions: {
         getProfessionalProduct: strategyProductActions.getProfessionalProduct,
-        getProfessionalNotice: strategyNoticeActions.getProfessionalNotice
+        getProfessionalNotice: strategyNoticeActions.getProfessionalNotice,
+        downLoadGroupData: strategyProductActions.getProfessionalGroupNumber
       }
     },
     data () {
@@ -43,7 +47,7 @@
     },
     route: {
         data () {
-            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice()]).then(
+            return Promise.all([this.getProfessionalProduct(), this.getProfessionalNotice(), this.downLoadGroupData()]).then(
               this.setScrollerHeight()
             )
         }
@@ -71,7 +75,8 @@
       ZhiShubao,
       DingToubao,
       FenJibao,
-      ScrollText
+      ScrollText,
+      GroupNumber
     }
   }
 </script>

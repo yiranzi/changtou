@@ -27,3 +27,26 @@ export const loadCourseList = ({ dispatch }) => {
     }
   )
 }
+
+// 课程分类
+export const loadClassification = ({ dispatch }) => {
+  return new Promise(
+    (resolve, reject) => {
+      //获取课程分类列表
+      getWithoutAuth(
+        {
+          url: getUrl('course_classification')
+        }
+      ).then(
+        list => {
+          dispatch('DISPLAY_UPDATE_CLASSIFICATION_LIST', list)
+          resolve(list)
+        }
+      ).catch(
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}

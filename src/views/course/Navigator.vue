@@ -7,45 +7,51 @@
         <swiper :aspect-ratio="120/375" :list="banners"
                 stop-propagation dots-position="center"
                 :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class"></swiper>
-        <div class="under-banner">
-          <div v-touch:tap="goToNewertestStart" class="under-banner-item">
-            <i class="under-banner-icon newer-test "></i>
-            <span class="under-banner-title">理财揭秘</span>
-          </div>
-          <div v-touch:tap="goToNewerGuide" class="under-banner-item">
-            <i class="under-banner-icon newer-guide"></i>
-            <span class="under-banner-title">入门指南</span>
-          </div>
-          <div v-touch:tap="goToInterviewList" class="under-banner-item">
-            <i class="under-banner-icon interview"></i>
-            <span class="under-banner-title">院生故事</span>
-            <i class="new-interview-icon" v-show="hasNewInterview"></i>
-          </div>
-        </div>
-        <div class="popular-list popularSpe">
+                :show-desc-mask="false" dots-class="dots-class">
+        </swiper>
+        <!--理财新手村-入口-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
+        <!--banner-->
+        <div class="must-hava">
           <p class="area-label">
             <span class="color-span"> </span>
             <span class="title">人气必备</span>
           </p>
-          <scroller :lock-y='true' v-ref:vscroller :scrollbar-x="false" style="height=8.5rem">
-            <div class="box-container" >
-                <div class="box-item" v-for="item in recommends"
-                     v-touch:tap="goToRecommendDetail(item,$index)">
-                  <img :src="item.imgUrl">
-                  <p class="sub-title">{{item.title}}</p>
-                  <p class="sub-price">￥{{item.price}}</p>
-                </div>
+          <div class="under-banner">
+            <div v-touch:tap="goToNewertestStart" class="under-banner-item">
+              <i class="under-banner-icon newer-test "></i>
+              <span class="under-banner-title">理财揭秘</span>
             </div>
-          </scroller>
+            <div v-touch:tap="goToNewerGuide" class="under-banner-item">
+              <i class="under-banner-icon newer-guide"></i>
+              <span class="under-banner-title">入门指南</span>
+            </div>
+            <div v-touch:tap="goToInterviewList" class="under-banner-item">
+              <i class="under-banner-icon interview"></i>
+              <span class="under-banner-title">院生故事</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+            <div v-touch:tap="goToCourseClassification" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
+              <span class="under-banner-title">课程分类</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+          </div>
         </div>
-        <div class="daily-question" v-touch:tap="goToDailyQuestion">
-          <p>每日一题 积攒你的财商</p>
-          <p class="daily-subtext">财富自由之路第一步</p>
-          <span class="daily-anpic-container"></span>
+
+        <!--头条精选-->
+        <div class="head-line">
+          <div class="icon">
+            <i class="picture"></i>
+          </div>
+          <span class="line"></span>
+          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
+          <div class="gift">
+            <i class="picture"></i>
+          </div>
         </div>
-        <!--理财新手村-入口-->
-        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
@@ -61,7 +67,7 @@
             </div>
           </div>
         </div>
-        <!---->
+
         <div class="expenselist-area expenselistSpe">
           <p class="area-label">
             <span class="color-span"> </span>
@@ -98,10 +104,9 @@
         </div>
 
         <div class="strategy-entry">
-          <img src="../../assets/styles/image/home/home-strategy.jpg" v-touch:tap="goToStrategy">
+          <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
-        <!--<div style="height: 4.8rem; background-color: transparent"></div>-->
       </div>
     </scroller>
   </div>
@@ -129,6 +134,7 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
+        headLineTitle: navigatorGetters.headLineTitle,
         appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
@@ -140,6 +146,7 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
+        getHeadLineTitle: navigatorActions.getHeadLineTitle,
         getAppUpdate: appUpdateActions.getAppUpdate
       }
     },
@@ -155,10 +162,10 @@
         this.fromPath = from.path
         //加载新手礼包
         this.loadNewerGift()
-        //重置页面滚动位置
-        this.resetScroller()
         //显示院生故事有新消息
         this.showInterviewNew()
+        //显示头条精选的数据
+        this.showHeadLineTitle()
       }
     },
 
@@ -187,6 +194,15 @@
           }
         )
         return newBanners
+      },
+
+      headLineTitleCalcLength: function () {
+        let titleString = this.headLineTitle
+        let length = titleString.length
+        if (length > 13) {
+            titleString = titleString.slice(0, 13) + '...'
+        }
+        return titleString
       }
     },
 
@@ -227,9 +243,6 @@
             me.$refs.scroller.reset({
             top: 0
           })
-          me.$refs.vscroller.reset({
-            left: 0
-          })
         })
         }, 150)
       },
@@ -250,10 +263,9 @@
         loadData().then(
           function () {
             // 设置滚动条高度
-            me.setScrollerHeight()
-//            setTimeout(() => {
-//              me.$dispatch(eventMap.NAVIGATOR_LOADED)
-//          }, 200)
+            setTimeout(() => {
+              me.setScrollerHeight()
+          }, 200)
           }
         )
       },
@@ -402,7 +414,6 @@
           position: '院生访谈'
         })
         this.$route.router.go('/interview/interview-list')
-        //this.$route.router.go('/headline')
       },
 
       /**
