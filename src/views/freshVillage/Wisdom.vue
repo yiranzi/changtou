@@ -9,9 +9,9 @@
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
-          <div class="content-title">{{wisdomData && wisdomData.title}}</div>
+          <div class="content-title">{{question.wisdom && question.wisdom.title}}</div>
         </div>
-        <div class="wisdom-content">{{{wisdomContent}}}</div>
+        <div class="wisdom-content">{{question.wisdom}}</div>
       </div>
       <!--<div class=><span class="parting-line"></span>好文共赏<span class="parting-line"></span></div>-->
     </div>
@@ -19,10 +19,19 @@
 </template>
 <script>
 import Scroller from 'vux/scroller'
+import {villageActions} from '../../vuex/actions'
+
 export default {
+  vuex: {
+    actions: {
+      getChapter: villageActions.getChapter,
+      getQuestion: villageActions.getQuestion
+    }
+  },
   route: {
     data ({chapterId, questionId}) {
-
+      this.chapter = this.getChapter(chapterId)
+      this.question = this.getQuestion(this.chapter.questionArr, questionId)
     }
   },
   ready () {
@@ -30,7 +39,9 @@ export default {
   },
   data () {
     return {
-      scrollerHeight: '580px'
+      scrollerHeight: '580px',
+      chapter: {},
+      question: {}
     }
   },
   computed: {
