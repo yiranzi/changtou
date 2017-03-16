@@ -46,7 +46,7 @@
             background-color: #ffc82f;
             color: #444;
           }
-          .eixt {
+          .exit {
             background-color: #eee;
             color: #999;
           }
