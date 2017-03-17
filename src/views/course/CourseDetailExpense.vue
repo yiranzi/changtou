@@ -105,7 +105,7 @@
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
-    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
   </div>
 
 </template>
@@ -237,7 +237,7 @@
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
   export default {
-    mixin: [mixinPageShare],
+    mixins: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
