@@ -161,16 +161,12 @@
 <script>
   import {newertestActions} from '../../vuex/actions'
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
-//  import {newertestGetters} from '../../vuex/getters'
 
   export default {
     vuex: {
       actions: {
         loadQuestion: newertestActions.loadQuestion,
-        postReport: newertestActions.postReport
-      },
-      getters: {
-//        questionArr: newertestGetters.questionArr
+        getReport: newertestActions.getReport
       }
     },
 
@@ -276,7 +272,7 @@
           } else if (currQuIndex === this.maxQuIndex) {
             this.computeLevelId()
             const me = this
-            this.postReport(this.comboId, this.level).then(
+            this.getReport(this.comboId, this.level).then(
               function () {
                 me.$route.router.replace('/newertest/ending')
                 me.reset()
