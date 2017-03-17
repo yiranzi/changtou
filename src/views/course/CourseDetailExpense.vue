@@ -78,7 +78,7 @@
           </div>
           <div class="action-detail-btn" v-touch:tap="suspend">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
-            <div class="action-detail-btn-text">停课</div>
+            <div class="action-detail-btn-text">暂停</div>
           </div>
         </div>
         <div class="study-btn">
@@ -103,6 +103,15 @@
         </div>
       </div>
       <!--毕业-->
+      <div class="btn-box-active" v-if="currStatus === 'Y' || currStatus === 'E'">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="study-btn" v-touch:tap="postpone">延期</div>
+      </div>
       <!--激活课程-->
       <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
@@ -132,11 +141,11 @@
     <div class="remind remind-cancel" :id="isRemoveRemindShow?'show':''">
       <div class="remind-closeBtn" v-touch:tap="hideRemoveRemind"></div>
       <div class="remind-title">取消上课提醒</div>
-      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0]) + (remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
+      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
       <div class="remind-cancelImg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
       <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
     </div>
-    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
     <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'" v-touch:tap='closeModal'></div>
     <div class="remind-checkTip" v-show="isCheckTipShow">{{remindCheckTip}}</div>
   </div>
@@ -234,11 +243,14 @@
           &-changeText{
             margin-left: 3/4rem;
             line-height: 0.9rem;
+            height: 0.9rem;
             color: #eee;
             border: 1px solid #eee;
             font-size: 22/40rem;
             border-radius: 0.9rem;
+            box-sizing: border-box;
             padding: 0 6/40rem;
+            display: inline-block;
            }
         }
       }
@@ -285,7 +297,7 @@
       &-count-down{
          vertical-align: middle;
        }
-       
+
       &-timePicker{
         padding-bottom: 98/40rem;
        }
@@ -332,11 +344,12 @@
         font-size: 3/4rem;
         color: #aaa;
         &-text{
-          font-weight: bold;
           color:#0099ff;
+          magin-left:0.15rem
          }
         &-cancelText{
-          color: #ff0000;
+           color: #ff0000;
+           font-weight: bold;
          }
        }
       &-cancelDate{
@@ -459,7 +472,7 @@
 
         remindCheckTip: '',
         remindTimeList: [hours, mins],   //  提醒时间选择的列表
-        remindTimeValue: [hours[0], mins[0]],    //提醒时间的默认值
+        remindTimeValue: [hours[1], mins[1]],    //提醒时间的默认值
         remindTimeData: ['0', '0'],    //选择的提醒时间
 
         remindTimeStart: {},   //提醒开始时间
@@ -551,6 +564,7 @@
         } else {
           this.isRemindSet = false
           clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
+          Jpush.clearLocalNotifications()
         }
 
         this.isQuestionPlaced = false
@@ -623,7 +637,7 @@
         this.isRemindShow = false
         this.isRemoveRemindShow = false
         this.isRemindSet = false
-        this.remindTimeValue = ['0', '0']
+        this.remindTimeValue = [hours[1], mins[1]]
         this.remindTimeStart = {}
         this.remindTimeEnd = {}
         this.remindList = {}
@@ -849,9 +863,12 @@
       getCurrDateNum () {
         let currDate = new Date().getTime()
         let endDate = new Date(this.remindTimeEnd.year + '-' + this.remindTimeEnd.month + '-' + this.remindTimeEnd.day + ' 0:00:00')
+        endDate.setDate(endDate.getDate() + 1)
         let leftTime = endDate.getTime() - currDate
         let currDateNumList = [7, 6, 5, 4, 3, 2, 1, 0]
-        this.remindCurrDate = currDateNumList[Math.ceil(leftTime / 86400000)]
+        console.log(Math.floor(leftTime / 86400000))
+        console.log(new Date())
+        this.remindCurrDate = currDateNumList[Math.floor(leftTime / 86400000)]
       },
       /**
        * 显示分享浮层
@@ -883,7 +900,9 @@
        * 获取每天提醒的时间
        **/
       getRemindList () {
-        let currTime = new Date().getTime()
+        let currDate = new Date()
+        currDate.setSeconds(0)
+        let currTime = currDate.getTime()
         let date = new Date()
         date.setDate(date.getDate() + 1)
         date.setHours(parseInt(this.remindTimeData[0]))
@@ -915,6 +934,10 @@
        **/
       showRemind () {
         this.isRemindShow = true
+        /*const me = this
+        setTimeout(() => {
+            me.remindTimeValue = [hours[0], mins[0]]
+        }, 300)*/
         getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
       },
       /**
@@ -943,37 +966,44 @@
         if (Device.platform === platformMap.IOS) {
           for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
             Jpush.setLocalNotificationIOS(
-              this.remindList[this.subjectId][i],
-              '到时间上课啦',
+              parseInt(this.remindList[this.subjectId][i]),
+              `买房子存票子，同学今天${parseInt(this.remindTimeData[0]) + ':' + parseInt(this.remindTimeData[1])}你有一节${this.currSubject.title}课程,请做好上课准备。`,
               1,
-              'remind-' + this.subjectId,
-              {'name': '1'}
+              this.subjectId + '' + i,
+              ''
             )
           }
         }
         if (Device.platform === platformMap.ANDROID) {
-          Jpush.setLocalNotificationANDROID(
-            1,
-            '到时间上课啦',
-            '到时间上课啦',
-            'remind-' + this.subjectId,
-            1000,
-            {'name': 1}
-          )
-          this.isRemindShow = false
-          this.isRemindSet = true
-          this.showCheckTip('设置成功')
+          for (let i = 0; i < this.remindList[this.subjectId].length; i++) {
+            Jpush.setLocalNotificationANDROID(
+              1,
+              `买房子存票子，同学今天${parseInt(this.remindTimeData[0]) + ':' + parseInt(this.remindTimeData[1])}你有一节${this.currSubject.title}课程,请做好上课准备。`,
+              '长投学堂',
+              this.subjectId + '' + i,
+              parseInt(this.remindList[this.subjectId][i]),
+              ''
+            )
+          }
         }
+        this.isRemindShow = false
+        this.isRemindSet = true
+        this.showCheckTip('设置成功')
+        this.remindTimeValue = [hours[1], mins[1]]
       },
       /**
        * 取消定时提醒
        **/
       removeRemind () {
-        if (Device.platform === platformMap.ANDROID) {
-          Jpush.removeLocalNotificationANDROID('remind-' + this.subjectId)
+        if (Device.platform === platformMap.IOS) {
+          for (let i = 0; i < 7; i++) {
+            Jpush.deleteLocalNotificationWithIdentifierKeyInIOS(this.subjectId + '' + i)
+          }
         }
         if (Device.platform === platformMap.IOS) {
-          Jpush.deleteLocalNotificationIOS('remind-' + this.subjectId)
+          for (let i = 0; i < 7; i++) {
+            Jpush.removeLocalNotificationANDROID(this.subjectId + '' + i)
+          }
         }
         clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
         this.isRemoveRemindShow = false
