@@ -2,15 +2,15 @@
     <div class="building-introduction">
       <div class="background">
         <div class="exit">X</div>
-        <img class="top-color" src="../../../static/image/building/building-intro1.png">
+        <img class="top-pic" src="../../../static/image/building/building-intro1.png">
         <div class="content">
           <p>欢迎来到长投经典课程——股票初级课。</p>
           <p>投资之路如同盖楼，现实中，房价节节高，政策天天变。</p>
           <p>昨晚彻夜的游戏让你头昏脑涨，此刻蹲在厕所的你两脚发麻，但仍在积极地思考着人生。来到这个城市四年了，合租、月光的标签粘着你挥之不去。难道，这就是你的一生了吗？</p>
           <p>想在四环内买个一室一厅，已是遥不可及的梦想；但在长投，每个院生都会有一个自己的楼房，且看学完本课，你的房子，会是什么样……</p>
         </div>
-        <ict-button class="button"></ict-button>
-        <img src="../../../static/image/building/building-intro2.png">
+        <ict-button class="start-button">开始造房</ict-button>
+        <img class="bottom-img" src="../../../static/image/building/building-intro2.png">
       </div>
     </div>
 </template>
@@ -44,7 +44,7 @@
           margin: 1rem 0 1rem 0 ;
         }
       }
-      .button{
+      .start-button{
         margin-top: 60/40rem;
         border-radius: 1rem;
         height: 2rem;
@@ -53,7 +53,7 @@
         color:#fff;
         font-size: 0.8rem;
       }
-      .bottom{
+      .bottom-img{
         position:absolute;
         width: 610/40rem;
         height: 250/40rem;

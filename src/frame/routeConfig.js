@@ -346,13 +346,13 @@ export function configRouter (router) {
     /**
      * 新手村
      */
-    '/buildingShowHouse': {
+    '/building/showhouse': {
       component: require('../views/building/buildingShowHouse.vue')
     },
-    '/buildingRule': {
+    '/building/rule': {
       component: require('../views/building/buildingRule.vue')
     },
-    '/buildingIntroducion': {
+    '/building/introduction': {
       component: require('../views/building/buildingIntroduction.vue')
     }
   })

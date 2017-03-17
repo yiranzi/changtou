@@ -36,6 +36,21 @@
               <span class="under-banner-title">课程分类</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
+            <div v-touch:tap="goToTestPage1" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
+              <span class="under-banner-title">showhouse</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+            <div v-touch:tap="goToTestPage2" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
+              <span class="under-banner-title">rule</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
+            <div v-touch:tap="goToTestPage3" class="under-banner-item">
+              <i class="under-banner-icon classification"></i>
+              <span class="under-banner-title">introduction</span>
+              <i class="new-interview-icon" v-show="hasNewInterview"></i>
+            </div>
           </div>
         </div>
 
@@ -457,6 +472,19 @@
           position: '课程分类'
         })
         this.$route.router.go('/course/classification')
+      },
+      //测试界面
+      goToTestPage1 () {
+        this.$route.router.go('/building/showhouse')
+      },
+      //测试界面
+      goToTestPage2 () {
+        this.$route.router.go('/building/rule')
+      },
+
+      //测试界面
+      goToTestPage3 () {
+        this.$route.router.go('/building/introduction')
       },
 
       /**
