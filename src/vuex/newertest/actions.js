@@ -1,8 +1,10 @@
 /**
  * Created by dongdong on 2016/10/19.
  */
-import {getWithinAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, postWithinAuth, postWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
+import store from '../../vuex/store'
+const user = store.state.user
 
 const testQuestion = [
   {
@@ -175,9 +177,10 @@ export const loadQuestion = ({ dispatch }) => {
 
 //上传测试报告
 export const postReport = ({ dispatch }, comboId, level) => {
+  const ajax = user.isLogin ? postWithinAuth : postWithoutAuth
   return new Promise(
     (resolve, reject) => {
-      postWithinAuth({
+      ajax({
         url: getUrl('newertest_report'),
         data: {
           comboId,
