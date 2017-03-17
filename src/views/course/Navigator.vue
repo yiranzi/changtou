@@ -487,8 +487,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '头条精选'
         })
-        //this.$route.router.go('/headline')
-        this.$route.router.go('/building/BuildingShow')
+        this.$route.router.go('/headline')
       },
 
       /**
