@@ -38,7 +38,7 @@
       }
       .content{
         font-size: 26/40rem;
-        margin: 8.5rem 1.75rem 0 1.75rem;
+        margin: 1.35rem 1.75rem 0 1.75rem;
         color: #444;
         p{
           margin: 1rem 0 1rem 0 ;
