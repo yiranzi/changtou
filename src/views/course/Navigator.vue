@@ -45,7 +45,7 @@
           <span class="daily-anpic-container"></span>
         </div>
         <!--理财新手村-入口-->
-        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+        <!--<div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>-->
         <!--大咖读经典-->
         <div v-touch:tap="goToClassicReading(readingClassics.cbId)">
           <p class="area-label">
