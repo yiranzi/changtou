@@ -7,6 +7,7 @@
     <ict-sheet :title="title" :show="show" :btn-text="btnText" @confirm="onConfirmTap" @close="onClose">
       <div class="essay-float">
         <div class="essay-content" v-if="assignmentType === 'S'">{{{essayQuestion}}}</div>
+        <div class="essay-tip">...</div>
         <div class="essay-explain">
           {{{explain}}}
         </div>
@@ -85,6 +86,8 @@
   .essay-float{
     .essay-content{
       padding: 1rem 0.9rem 0.85rem;
+      height: 4.8rem;
+      overflow: hidden;
       font-size: 0.7rem;
       color: #444;
       *{
@@ -92,6 +95,12 @@
         padding: 0;
         list-style: none;
       }
+    }
+    .essay-tip{
+      padding: 0.5rem 1.5rem 0;
+      font-size: 0.65rem;
+      color: #00b0f0;
+      text-align: right;
     }
     .essay-explain{
       p {
