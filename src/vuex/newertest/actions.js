@@ -1,7 +1,7 @@
 /**
  * Created by dongdong on 2016/10/19.
  */
-import {getWithinAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, postWithinAuth, postWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 const testQuestion = [
@@ -178,6 +178,29 @@ export const postReport = ({ dispatch }, comboId, level) => {
   return new Promise(
     (resolve, reject) => {
       postWithinAuth({
+        url: getUrl('newertest_report'),
+        data: {
+          comboId,
+          level
+        }
+      }).then(
+        function (report) {
+          dispatch('NEWERTEST_UPDATE_REPORT', report)
+          resolve()
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+//获取测试结果
+export const getReport = ({ dispatch }, comboId, level) => {
+  return new Promise(
+    (resolve, reject) => {
+      postWithoutAuth({
         url: getUrl('newertest_report'),
         data: {
           comboId,
