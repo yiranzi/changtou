@@ -51,7 +51,7 @@
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="suspend">
+          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currSubject.finishDate">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">暂停</div>
           </div>
@@ -68,7 +68,7 @@
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="audition">
+          <div class="action-detail-btn" v-touch:tap="audition" v-if="!isSubjectBranch">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
             <div class="action-detail-btn-text">试听</div>
           </div>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <!--毕业-->
-      <div class="btn-box-active" v-if="currStatus === 'Y' || currStatus === 'E'">
+      <div class="btn-box-postpone" v-if="currStatus === 'Y' || currStatus === 'E'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
@@ -97,7 +97,13 @@
         </div>
         <div class="right-btn" v-touch:tap="active">激活课程</div>
       </div>
-      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box btn-box-open">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
         <div class="right-btn" v-touch:tap="resume">开启课程</div>
       </div>
     </div>
@@ -151,7 +157,7 @@
       bottom: 0;
       /*font-size: 0;*/
       z-index: 101;
-        .btn-box,.btn-box-buy,.btn-box-active{
+        .btn-box,.btn-box-buy,.btn-box-active,.btn-box-postpone{
           text-align: center;
           height:100%;
           display:flex;
@@ -200,7 +206,7 @@
            }
         }
       }
-      .btn-box-buy{
+      .btn-box-buy,.btn-box-open,.btn-box-postpone{
         .right-btn{
           background-color: #00b0f0;
         }
