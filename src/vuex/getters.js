@@ -64,6 +64,5 @@ export {
   classicReadingGetters,  //大咖读经典
   villageGetters,  //理财新手村
   appUpdateGetters,  //应用更新
-  headlineGetters,  //头条精选
-  buildingGetters  //造房子
+  headlineGetters  //头条精选
 }

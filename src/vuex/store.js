@@ -68,7 +68,6 @@ export default new Vuex.Store({
     newerGuide, //入门指南
     freshVillage,  //理财新手村
     appUpdate,   //应用更新
-    headline,   //头条精选
-    building   //造房子
+    headline   //头条精选
   }
 })

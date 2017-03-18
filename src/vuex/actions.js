@@ -64,6 +64,5 @@ export {
   classicReadingActions,   //大咖读经典
   villageActions,  //新手村
   appUpdateActions,  //应用更新
-  headlineActions,  //头条精选
-  buildingActions  //造房子
+  headlineActions  //头条精选
 }

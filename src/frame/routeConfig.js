@@ -342,14 +342,6 @@ export function configRouter (router) {
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
-    },
-
-    /**
-     * 造房子
-     */
-    // 造房子展示页
-    '/building/BuildingShow': {
-      component: require('../views/building/BuildingShow.vue')
     }
   })
 
