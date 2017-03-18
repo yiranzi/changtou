@@ -9,9 +9,9 @@
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
-          <div class="content-title">{{question.wisdom && question.wisdom.title}}</div>
+          <div class="content-title">{{question.wisdom.title}}</div>
         </div>
-        <div class="wisdom-content">{{question.wisdom}}</div>
+        <div class="wisdom-content">{{{wisdomContent}}}</div>
       </div>
       <!--<div class=><span class="parting-line"></span>好文共赏<span class="parting-line"></span></div>-->
     </div>
@@ -29,9 +29,10 @@ export default {
     }
   },
   route: {
-    data ({chapterId, questionId}) {
-      this.chapter = this.getChapter(chapterId)
-      this.question = this.getQuestion(this.chapter.questionArr, questionId)
+    data ({to: {params: {chapterNo, questionNo}}}) {
+      this.chapter = this.getChapter(parseInt(chapterNo))
+      this.question = this.getQuestion(this.chapter.questionArr, parseInt(questionNo))
+      this.content = this.question.wisdom.content
     }
   },
   ready () {
@@ -41,13 +42,14 @@ export default {
     return {
       scrollerHeight: '580px',
       chapter: {},
-      question: {}
+      question: {},
+      content: ''
     }
   },
   computed: {
     /*小智的内容*/
     wisdomContent () {
-      return this.wisdomData && this.wisdomData.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
+      return this.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
     }
   },
   methods: {
@@ -65,6 +67,9 @@ export default {
         })
         }, 500
       )
+    },
+    onCloseTap () {
+      this.$route.router.go('/village/map')
     }
   },
   components: {

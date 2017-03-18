@@ -332,8 +332,13 @@ export function configRouter (router) {
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
     },
-    '/village/wisdom/:chapterId/:questionNo': {
+    //新手村今日小智
+    '/village/wisdom/:chapterNo/:questionNo': {
       component: require('../views/freshVillage/Wisdom.vue')
+    },
+    //新手村章节开始页
+    '/village/chapterstart/:chapterNo': {
+      component: require('../views/freshVillage/ChapterStart.vue')
     }
   })
 

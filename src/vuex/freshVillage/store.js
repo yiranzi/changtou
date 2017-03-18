@@ -5,7 +5,7 @@
 const state = {
   adviseList: [],
   villageProgress: {
-    chapterNo: 0,
+    chapterNo: 1,
     questionNo: 0
   }
 }
@@ -32,7 +32,7 @@ const mutations = {
   },
 
   RESET_VILLAGE_RECORD (state) {
-    state.villageProgress.chapterNo = 0
+    state.villageProgress.chapterNo = 1
     state.villageProgress.questionNo = 0
   }
 }
