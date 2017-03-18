@@ -448,6 +448,7 @@
       .in-app-image-share-content{
         padding-top: 1px;
         box-sizing: border-box;
+        margin: 0 auto;
       }
     }
     .qrcode-panel{

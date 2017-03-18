@@ -3,16 +3,11 @@
   * 新手村初始页面
   */
 <template>
-  <img style="width:100%;height:100%;" :src="bgSrc" v-touch:tap="goFreshVillageHomePageTap"/>
+  <img style="width:100%;height:100%;" src="../../../static/image/freshVillage/fresh-village-initial-page.png" v-touch:tap="goFreshVillageHomePageTap"/>
 </template>
 
 <script>
   export default {
-    data () {
-      return {
-        bgSrc: './static/image/freshVillage/fresh-village-initial-page.png'
-      }
-    },
     methods: {
       /*
       * 跳转到新手村答题主页面
