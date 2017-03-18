@@ -105,6 +105,11 @@ const apiUrl = {
    'headline_txt': '/homepage/headline', //头条精选的内容
 
   /**
+   * 栏目变更
+   */
+  'column_change': '/system/app/column-change', //栏目变更
+
+  /**
    * 每日一题
    */
   'load_daily_question': '/homepage/daily-question/lastest-question', //获取每日一题

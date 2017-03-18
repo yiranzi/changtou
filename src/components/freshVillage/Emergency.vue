@@ -5,7 +5,8 @@
 <template>
     <div class="fresh-village-emergency">
       <div class="emergency-top">
-        <span class="emergency-title">突发状况</span><span class="close-icon" v-touch:tap="onCloseTap"></span>
+        <span class="emergency-title">突发状况</span>
+        <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       </div>
       <div class="emergency-middle">
         <div class="emergency-content">{{componentData.emergencyStory}}</div>
@@ -48,16 +49,6 @@ export default {
       font-weight: bold;
       color: #78793f;
       margin: 1rem 0 0 1rem;
-    }
-    .close-icon:after {
-      display: inline-block;
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-family: 'myicon';
-      content: '\e90d';
-      color: #aaa;
-      font-size: .8rem;
     }
     .emergency-middle {
       background-color: #fff;

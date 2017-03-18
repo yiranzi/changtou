@@ -347,6 +347,6 @@ export function configRouter (router) {
 
   // redirect
   router.redirect({
-    '': '/start'
+    '': '/main'
   })
 }
