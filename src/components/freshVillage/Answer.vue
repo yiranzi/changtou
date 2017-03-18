@@ -5,14 +5,15 @@
 <template>
     <div class="fresh-village-answer-result">
       <div class="answer-result">
-        <span class="title">思考一下</span><span class="close-icon" v-touch:tap="onCloseTap"></span>
+        <span class="title">思考一下</span>
+        <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       </div>
       <div class="result-middle">
         <div class="result-explain">{{componentData.feedback}}</div>
         <div class="result-title">
           <span class="parting-line"></span>选择结果<span class="parting-line"></span>
         </div>
-        <div class="life-score"><span class="round"></span>生命值<span class="score">+{{componentData.lifeScore}}</span></div>
+        <div class="life-score"><span class="round"></span><span class="socre-name">生命值</span><span class="score">+{{componentData.lifeScore}}</span></div>
       </div>
       <div class="confirm-btn" v-touch:tap="next">懂了</div>
     </div>
@@ -48,16 +49,6 @@ export default {
       font-weight: bold;
       color: #444;
       margin: 1rem 0 0 1rem;
-    }
-    .close-icon:after {
-      display: inline-block;
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-family: 'myicon';
-      content: '\e90d';
-      color: #aaa;
-      font-size: .8rem;
     }
     .result-middle {
       background-color: #fff;
@@ -96,10 +87,13 @@ export default {
       background-color: #8EAE05;
       margin-right: .5rem;
     }
+    .score-name{
+      vertical-align:middle;
+    }
     .score {
       display: inline-block;
       vertical-align: middle;
-      float: right;
+      margin-left: 6.5rem;
       font-size: .65rem;
       color: #f12938;
     }

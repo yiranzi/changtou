@@ -8,6 +8,7 @@
       <div class="scroll-content active-position" >
         <chapter-choice-item  v-for="chapterCardInfo in componentData.chapterIntro"
                               :chapter-card-info="chapterCardInfo"
+                              :present-chapter="presentChapter"
                               v-on:village-enter-chapter="villageEnterChapter"
                               class="question-pic">
         </chapter-choice-item>
@@ -28,6 +29,7 @@
       }
     },
     computed: {
+      /*记录中答题记录*/
       presentChapter () {
         return this.componentData.villageProgress
       }
@@ -46,6 +48,9 @@
       this.setPresentChapterPosition()
     },
     methods: {
+      /*
+      * 点击进入章节按钮
+      * */
       villageEnterChapter (chapterNum) {
         if (chapterNum === 3) {
           return
@@ -58,6 +63,9 @@
           this.$dispatch('onChapterSelected', chapterNum)
         }
       },
+      /*
+      *根据记录将当前章节重新设置显示内容位置
+      * */
       resetScroller (scrollerLeftWidth) {
         setTimeout(() => {
           this.$nextTick(() => {
@@ -74,13 +82,13 @@
         let presentChapter
         let scrollerLeftWidth = 0
         if (this.presentChapter.chapterNo === 1) {
-          if ((this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6)) {
+          if (this.presentChapter.questionNo === 7) {
             presentChapter = 2
           } else {
             presentChapter = 1
           }
         } else if (this.presentChapter.chapterNo === 2) {
-          if (this.presentChapter.questionNo === 7 || this.presentChapter.questionNo === 6) {
+          if (this.presentChapter.questionNo === 7) {
             presentChapter = 3
           } else {
             presentChapter = 2

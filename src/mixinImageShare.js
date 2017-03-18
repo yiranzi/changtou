@@ -21,7 +21,13 @@ const mixin = {
     return {
       showShareFloat: false,
       shareImageWidth: 0,
-      shareImageHeight: 0
+      shareImageHeight: 0,
+      shareConfig: {
+        title: '',
+        desc: '',
+        link: '',
+        imgUrl: ''
+      }
     }
   },
   methods: {
@@ -58,6 +64,7 @@ const mixin = {
               originCanvas.style.display = 'none'
 
               let base64 = this.convertCanvasToBase64(originCanvas)
+              window.document.body.removeChild(element)
               resolve(base64)
             }
           )
@@ -75,7 +82,7 @@ const mixin = {
       this.shareImageHeight = height
 
       const ratio = (650 / this.shareImageHeight).toFixed(2)
-      const ShareContentStyle = `width: ${width};height: ${height};transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
+      const ShareContentStyle = `width: ${width}px;height: ${height}px;transform: scale3d(${ratio}, ${ratio}, 1);transform-origin: 50% 0 0;`
 
       const eleHtml =
         `<div class="in-app-image-share-panel">
@@ -99,6 +106,7 @@ const mixin = {
       const result = window.document.body.appendChild(node)
       const shareContent = window.document.getElementById('in-app-image-share-content')
       shareContent.appendChild(element)
+     // console.log(result)
       return Promise.resolve(result)
     },
 
@@ -106,9 +114,11 @@ const mixin = {
      * 将canvas转成base64
      * @param originCanvas
      * @returns {*|String|string}
+     *
        */
     convertCanvasToBase64 (originCanvas) {
       let canvas = window.document.body.appendChild(originCanvas)
+     // console.log('convertCanvasToBase64', originCanvas)
       const base64 = canvas.toDataURL()
       window.document.body.removeChild(canvas)
       return Promise.resolve(base64)
