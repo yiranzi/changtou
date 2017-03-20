@@ -14,9 +14,9 @@
 
         <!--banner-->
         <div class="head-navigator">
-          <p class="head-title">
-            <span>为你优选</span>
-          </p>
+          <!--<p class="head-title">-->
+            <!--<span>为你优选</span>-->
+          <!--</p>-->
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
               <i class="under-banner-icon newer-test "></i>
