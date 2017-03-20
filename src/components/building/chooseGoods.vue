@@ -1,15 +1,15 @@
-<template {{goodsData}}>
+<template>
   <div>
-    {{goodsData}}
+    {{componentData}}
   </div>
   <div>
     {{itemId}}
   </div>
   <div>
-    {{goodsData.maxGoodsNum}}
+    {{componentData.maxGoodsNum}}
   </div>
   <div>
-    {{goodsData.useGoodsNum}}
+    {{componentData.useGoodsNum}}
   </div>
   <div  v-touch:tap="onChooseGood">返回玩家选择</div>
 </template>
@@ -22,12 +22,14 @@
               choose: 1
           }
       },
-      props: [
-        'goodsData'
-      ],
+      props: {
+        componentData: Object
+      },
+//
+
       computed: {
           'itemId': function () {
-            return this.goodsData.itemId
+            return this.componentData.itemId
           }
       },
       methods: {

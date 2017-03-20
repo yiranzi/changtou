@@ -14,17 +14,28 @@
     export default {
         data () {
             return {
-                choose: 0,
-                //传给我的数据是一个数组
-                goodsData: {
-                  itemId: 0,
-                  maxGoodsNum: 2,
-                  useGoodsNum: 0
-                }
+              //这个是用户的回调
+              choose: 0,
+              //传给我的数据是一个数组
+              goodsData: {
+                itemId: 0,
+                maxGoodsNum: 2,
+                useGoodsNum: 0
+              },
+              goodsData: {
+                grade: 5,
+              }
             }
         },
         components: {},
       methods: {
+        showGrade () {
+          component: 'building/gradeToBuild.vue',
+          componentData: this.goodsData,
+          hideOnMaskTap: true,
+          callbackName: 'ChangeGoods',
+          callbackFn: this.ChangeGoods.bind(this) //组件上的
+        }
         //选择完背景后的回调函数
         ChangeGoods (choose) {
           if (choose !== 0) {
