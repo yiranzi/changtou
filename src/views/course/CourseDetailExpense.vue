@@ -39,9 +39,9 @@
     </scroller>
 
     <!--底部的btn-->
-    <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
+    <div class="expensebottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
       <!--听课提醒-->
-      <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
+      <div class="expensebtn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
@@ -51,61 +51,67 @@
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="suspend">
+          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currSubject.finishDate">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">暂停</div>
           </div>
         </div>
-        <div class="right-btn">
+        <div class="expenseright-btn">
           <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
-          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="right-btn-changeText">修改提醒</span></div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="expenseright-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
-      <div class="btn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
+      <div class="expensebtn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="audition">
+          <div class="action-detail-btn" v-touch:tap="audition" v-if="!isSubjectBranch">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
             <div class="action-detail-btn-text">试听</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="buy">
+        <div class="expenseright-btn" v-touch:tap="buy">
           <div>立即购买</div>
         </div>
       </div>
       <!--毕业-->
-      <div class="btn-box-active" v-if="currStatus === 'Y' || currStatus === 'E'">
+      <div class="expensebtn-box-postpone" v-if="currStatus === 'Y' || currStatus === 'E'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="postpone">延期</div>
+        <div class="expenseright-btn" v-touch:tap="postpone">延期</div>
       </div>
       <!--激活课程-->
-      <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
+      <div class="expensebtn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="active">激活课程</div>
+        <div class="expenseright-btn" v-touch:tap="active">激活课程</div>
       </div>
-      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <div class="right-btn" v-touch:tap="resume">开启课程</div>
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="expensebtn-box expensebtn-box-open">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="expenseright-btn" v-touch:tap="resume">开启课程</div>
       </div>
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
-    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
   </div>
 
 </template>
@@ -143,7 +149,7 @@
     .vux-tab-item {
       font-size: 0.85rem;
     }
-    .bottom-area {
+    .expensebottom-area {
       position: fixed;
       /*background: red;*/
       width: 100%;
@@ -151,7 +157,7 @@
       bottom: 0;
       /*font-size: 0;*/
       z-index: 101;
-        .btn-box,.btn-box-buy,.btn-box-active{
+        .expensebtn-box,.expensebtn-box-buy,.expensebtn-box-active,.expensebtn-box-postpone{
           text-align: center;
           height:100%;
           display:flex;
@@ -179,7 +185,7 @@
               }
             }
         }
-        .right-btn{
+        .expenseright-btn{
           height:100%;
           flex: 1;
           font-size: 34/40rem;
@@ -200,13 +206,13 @@
            }
         }
       }
-      .btn-box-buy{
-        .right-btn{
+      .expensebtn-box-buy,.expensebtn-box-open,.expensebtn-box-postpone{
+        .expenseright-btn{
           background-color: #00b0f0;
         }
       }
-      .btn-box-active{
-        .right-btn{
+      .expensebtn-box-active{
+        .expenseright-btn{
           background-color: #ff9800;
         }
       }
@@ -237,7 +243,7 @@
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
   export default {
-    mixin: [mixinPageShare],
+    mixins: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,

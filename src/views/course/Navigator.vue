@@ -34,7 +34,6 @@
             <div v-touch:tap="goToCourseClassification" class="under-banner-item">
               <i class="under-banner-icon classification"></i>
               <span class="under-banner-title">课程分类</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
           </div>
         </div>
@@ -982,8 +981,6 @@
         vertical-align: middle;
         margin-left:0.75rem;
         font-size: 0.7rem;
-        height: 0.7rem;
-        line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
         width: 11rem;
