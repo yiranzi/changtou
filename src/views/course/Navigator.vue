@@ -10,7 +10,7 @@
                 :show-desc-mask="false" dots-class="dots-class">
         </swiper>
         <!--理财新手村-入口-->
-        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
+        <!--<div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>-->
 
         <!--banner-->
         <div class="head-navigator">
@@ -377,6 +377,8 @@
         //判断课程类型
         if (subject.type === 'P') {
           this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
+        } else if (subject.type === 'F') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
         } else if (subject.type === 'S') {
           this.$route.router.go(`/spec/topic/${subject.subjectId}`)   //跳转到打包课程
         } else if (subject.type === 'C') {
@@ -416,15 +418,19 @@
           position: '新手测试'
         })
         const me = this
-        me.loadNewertestReport().then(function (newertestReport) {
-          if (newertestReport) {
-            me.$route.router.go('/newertest/ending')
-          } else {
-            me.$route.router.go('/newertest/start')
-          }
-        }).catch(function () {
-          me.showAlert('信息加载失败，请重试！')
-        })
+        if (this.isLogin) {
+          me.loadNewertestReport().then(function (newertestReport) {
+            if (newertestReport) {
+              me.$route.router.go('/newertest/ending')
+            } else {
+              me.$route.router.go('/newertest/start')
+            }
+          }).catch(function () {
+            me.showAlert('信息加载失败，请重试！')
+          })
+        } else {
+          me.$route.router.go('/newertest/start')
+        }
       },
 
       goToNewerGuide () {
