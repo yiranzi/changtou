@@ -1,4 +1,7 @@
-<template>
+<template {{goodsData}}>
+  <div>
+    {{goodsData}}
+  </div>
   <div>
     {{itemId}}
   </div>

@@ -33,6 +33,7 @@
         width: 0.8rem;
         height: 0.8rem;
         color: #aaa;
+        line-height: 0.8rem;
       }
       .top-pic{
         margin-top: 2rem;

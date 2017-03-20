@@ -1,17 +1,4 @@
 <template>
-  <div>
-    种类
-    <input v-model="goodsData.itemId">
-  </div>
-  <div>
-    当前等级
-    <input v-model="goodsData.useGoodsNum">
-  </div>
-  <div>
-    最高等级
-    <input v-model="goodsData.maxGoodsNum">
-  </div>
-
     <div>
       <div v-touch:tap="showGrade">
         展示成绩
