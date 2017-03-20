@@ -233,8 +233,8 @@
 
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
-        if (!getLocalCache(('versionNo'))) return true
-        else if (getLocalCache(('versionNo')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        if (!getLocalCache(('column-version-no'))) return true
+        else if (getLocalCache(('column-version-no')['appVersionNo'] < convertVersionToNum(appVersion))) return true
         else return false
       },
 
