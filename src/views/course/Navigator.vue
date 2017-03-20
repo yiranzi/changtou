@@ -233,8 +233,9 @@
 
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
-        let versionNo = window.localStorage.getItem('versionNo')
-        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+        if (!getLocalCache(('versionNo'))) return true
+        else if (getLocalCache(('versionNo')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        else return false
       },
 
       //进入主页判定版本变更的流程
@@ -242,7 +243,7 @@
         if (this.isLogin && this.isOldVersion()) {
           this.getColumnChange().then((columnChangeData) => {
             if (columnChangeData.content) {
-              window.localStorage.setItem('versionNo', appVersion)
+              setLocalCache('versionNo', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
             }
