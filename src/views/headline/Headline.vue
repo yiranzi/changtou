@@ -177,6 +177,7 @@
 
     data () {
       return {
+        checkinState: false, //没登录的情况下是否被点击
         scrollerHeight: '0px',
         checkinCount: 0, // 用户签到次数
         isCheckin: false,  // 当天是否签到
@@ -238,12 +239,17 @@
           this.getCheckinData().then(() => {
             me.checkinCount = me.userCheckinData.count
             me.isCheckin = me.userCheckinData.hasChecked
-            if (!me.checkinCount && me.checkinCount !== 0) {
+            if (this.checkinState && !me.isCheckin) {
+              this.loginCheckin()
+              this.checkinState = false
+            }
+            if (!me.checkinCount && me.checkinCount !== 0) { // 判断开始是否签过到
               me.checkinCount = 0
               me.isCheckin = false
             }
             me.CheckinProgress(me.checkinCount)
           })
+          console.log(this.checkinState)
         } else {  // 未登录
           this.checkinCount = 0
           this.isCheckin = false
@@ -307,27 +313,35 @@
       onCheckin () {
         // 判断是否登录
         if (this.isLogin) {  // 已登录
-          this.isShowFeedback = true
-          const me = this
-          setTimeout(function () {
-            me.isShowFeedback = false
-          }, 2000)
-          this.isCheckin = true
-          this.checkinCount += 1
-          this.CheckinProgress(this.checkinCount)
-          if (this.checkinCount === 7) {
-            // 弹出gift浮层
-            this.showMask({
-              component: 'headline/CheckinGift.vue',
-              hideOnMaskTap: true
-            })
-            // 给后台传数据：该用户生命值加1000
-            console.log('生命值加1000')
-          }
-          this.checked()
+          this.loginCheckin()
         } else {  // 未登录
           this.$route.router.go('/entry')
+          this.checkinState = true
         }
+      },
+
+      /**
+      * 已登录被点击
+      */
+      loginCheckin () {
+        this.isShowFeedback = true
+        const me = this
+        setTimeout(function () {
+          me.isShowFeedback = false
+        }, 2000)
+        this.isCheckin = true
+        this.checkinCount += 1
+        this.CheckinProgress(this.checkinCount)
+        if (this.checkinCount === 7) {
+          // 弹出gift浮层
+          this.showMask({
+            component: 'headline/CheckinGift.vue',
+            hideOnMaskTap: true
+          })
+          // 给后台传数据：该用户生命值加1000
+          console.log('生命值加1000')
+        }
+        this.checked()
       }
     },
 

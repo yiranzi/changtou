@@ -32,7 +32,6 @@ import * as classicReadingActions from './classicReading/actions'
 import * as villageActions from './freshVillage/actions'
 import * as appUpdateActions from './appUpdate/actions'
 import * as headlineActions from './headline/actions'
-import * as buildingActions from './building/actions'
 export {
   userActions,
   navigatorActions,

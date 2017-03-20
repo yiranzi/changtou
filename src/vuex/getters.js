@@ -32,7 +32,6 @@ import * as classicReadingGetters from './classicReading/getters'
 import * as villageGetters from './freshVillage/getters'
 import * as appUpdateGetters from './appUpdate/getters'
 import * as headlineGetters from './headline/getters'
-import * as buildingGetters from './building/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航

@@ -34,7 +34,6 @@ import newerGuide from './newerGuide/store'
 import freshVillage from './freshVillage/store'
 import appUpdate from './appUpdate/store'
 import headline from './headline/store'
-import building from './building/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
