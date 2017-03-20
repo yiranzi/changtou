@@ -939,7 +939,7 @@
     /*人气必备*/
     .head-navigator{
       border-bottom: 0.025rem #f0eff5 solid;
-      height:5.5rem;
+      padding: 1rem 0;
       .head-title{
         padding: 0.75rem 1.35rem 0.75rem;
         font-size: 0.8rem;
