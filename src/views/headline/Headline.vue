@@ -32,7 +32,7 @@
         </div>
         <div class="headline-article" v-for="arctile in headlineContentArctile">
           <div class="headline-article-content">
-            <p v-for="text in arctile.content">
+            <p v-for="text in arctile.content" track-by="$index">
               {{text}}
             </p>
           </div>
