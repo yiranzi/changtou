@@ -425,6 +425,17 @@
             }
           )
         }
+
+        //判断是否显示相应课程状态提示
+        if (getLocalCache('curr-course-status').subjectStatusPrompt) {
+          let subjectStatus = getLocalCache('curr-course-status').subjectStatusPrompt
+          //显示相应课程的提示浮层
+          this.showMask({
+            component: `building/subjectPrompt${subjectStatus}.vue`,
+            hideOnMaskTap: true
+          })
+          clearLocalCache('curr-course-status')
+        }
       },
 
       /**
@@ -648,8 +659,6 @@
       //testBtn
       goToBuilding () {
         this.$route.router.go('/building/BuildingShow')
-        clearLocalCache('course-state')
-        setLocalCache('course-state', {courseProgress: this.expenseRecordsArr})
       },
       /**
        * 点击空白消失模态层

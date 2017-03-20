@@ -30,13 +30,13 @@
           </div>
           <div class="headline-author-name">{{headlineContent.authorName}}</div>
         </div>
-        <div class="headline-article" v-for="item in headlineContentArctile">
+        <div class="headline-article" v-for="arctile in headlineContentArctile">
           <div class="headline-article-content">
-            <p v-for="text in item.content">
+            <p v-for="text in arctile.content">
               {{text}}
             </p>
           </div>
-          <img v-bind:src="item.conImage" style="width: 12rem;height: 7rem;">
+          <img v-bind:src="arctile.conImage" style="width: 12rem;height: 7rem;">
         </div>
         <div class="headline-end">- END -</div>
       </div>
@@ -249,7 +249,6 @@
             }
             me.CheckinProgress(me.checkinCount)
           })
-          console.log(this.checkinState)
         } else {  // 未登录
           this.checkinCount = 0
           this.isCheckin = false
@@ -339,7 +338,6 @@
             hideOnMaskTap: true
           })
           // 给后台传数据：该用户生命值加1000
-          console.log('生命值加1000')
         }
         this.checked()
       }
