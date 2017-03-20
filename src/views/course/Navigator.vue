@@ -233,8 +233,9 @@
 
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
-        let versionNo = window.localStorage.getItem('versionNo')
-        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+        if (!getLocalCache(('column-version-no'))) return true
+        else if (getLocalCache(('column-version-no')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        else return false
       },
 
       //进入主页判定版本变更的流程
@@ -242,7 +243,7 @@
         if (this.isLogin && this.isOldVersion()) {
           this.getColumnChange().then((columnChangeData) => {
             if (columnChangeData.content) {
-              window.localStorage.setItem('versionNo', appVersion)
+              setLocalCache('column-version-no', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
             }
@@ -938,7 +939,7 @@
     /*人气必备*/
     .head-navigator{
       border-bottom: 0.025rem #f0eff5 solid;
-      height:5.5rem;
+      padding: 1rem 0;
       .head-title{
         padding: 0.75rem 1.35rem 0.75rem;
         font-size: 0.8rem;
