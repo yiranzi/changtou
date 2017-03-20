@@ -368,7 +368,7 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         //读取缓存，判断之前有没有设置定时提醒
-        let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)    //读取对应课程的上课提醒缓存
+        let items = getLocalCache('remind-data-subid-' + subjectId)    //读取对应课程的上课提醒缓存
         let currDate = new Date().getTime()   //读取现在的时间
         if (items && ((parseInt(items.remindList[6]) + parseInt(items.oldTime)) - currDate >= 0)) {   //如果有缓存，说明设置过提醒，把现在的缓存里的最后一次提醒和现在的时间相减，如果>0说明还在提醒期内，否则就把定时提醒归零
           this.remindTimeStart = items.start    //从缓存中取出数据
@@ -379,7 +379,7 @@
           this.getCurrDateNum()   //获取当前是第几天
         } else {      //如果超出提醒期,说明定时器过时，把缓存和本地通知清空
           this.isRemindSet = false
-          clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
+          clearLocalCache('remind-data-subid-' + subjectId)
           Jpush.clearLocalNotifications()
         }
         //-------------------------------------------
@@ -742,7 +742,7 @@
           'end': this.remindTimeEnd,    //结束时间
           'time': [this.remindTimeData]   //提醒的小时和分钟
         }
-        setLocalCache(('REMIND_TIME_DATA_SUBID_' + this.subjectId), items)    //设置缓存
+        setLocalCache(('remind-data-subid-' + this.subjectId), items)    //设置缓存
         this.getCurrDateNum()     //获取当前的第几天
       },
 
@@ -752,7 +752,7 @@
       showRemind () {
         this.remindTimeData = ['0', '0']
         this.isRemindShow = true
-        getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
+        getLocalCache('remind-data-subid-' + this.subjectId) ? '' : this.getSetTime()
       },
 
       /**
@@ -834,7 +834,7 @@
         }
       },
       afterRemoveRemind () {
-        clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
+        clearLocalCache('remind-data-subid-' + this.subjectId)
         this.isRemoveRemindShow = false
         this.isRemindSet = false
         this.$broadcast('showCheckTipCancel')
