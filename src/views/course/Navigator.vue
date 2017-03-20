@@ -976,8 +976,6 @@
         vertical-align: middle;
         margin-left:0.75rem;
         font-size: 0.7rem;
-        height: 0.7rem;
-        line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
         width: 11rem;
