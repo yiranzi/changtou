@@ -20,7 +20,7 @@
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
               <i class="under-banner-icon newer-test "></i>
-              <span class="under-banner-title">理财揭秘</span>
+              <span class="under-banner-title">测测财商</span>
             </div>
             <div v-touch:tap="goToNewerGuide" class="under-banner-item">
               <i class="under-banner-icon newer-guide"></i>
