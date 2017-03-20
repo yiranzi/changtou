@@ -17,7 +17,7 @@
     .background{
       width: 12rem;
       height: 17rem;
-      border-radius:20px;
+      border-radius: 0.5rem;
       .column-top{
         border-radius: 0.5rem 0.5rem 0 0;
         padding: 2.5rem 1rem 0 1rem;
@@ -46,7 +46,7 @@
             background-color: #ffc82f;
             color: #444;
           }
-          .eixt {
+          .exit {
             background-color: #eee;
             color: #999;
           }
