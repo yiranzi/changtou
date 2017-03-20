@@ -243,7 +243,7 @@
         if (this.isLogin && this.isOldVersion()) {
           this.getColumnChange().then((columnChangeData) => {
             if (columnChangeData.content) {
-              setLocalCache('versionNo', {appVersionNo: appVersion})
+              setLocalCache('column-version-no', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
             }
