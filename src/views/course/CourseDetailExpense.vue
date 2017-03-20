@@ -81,9 +81,9 @@
             <div class="action-detail-btn-text">暂停</div>
           </div>
         </div>
-        <div class="study-btn">
+        <div class="right-btn">
           <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
-          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="study-btn-changeText">修改提醒</span></div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="right-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
@@ -98,7 +98,7 @@
             <div class="action-detail-btn-text">试听</div>
           </div>
         </div>
-        <div class="study-btn" v-touch:tap="buy">
+        <div class="right-btn" v-touch:tap="buy">
           <div>立即购买</div>
         </div>
       </div>
@@ -110,7 +110,7 @@
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="study-btn" v-touch:tap="postpone">延期</div>
+        <div class="right-btn" v-touch:tap="postpone">延期</div>
       </div>
       <!--激活课程-->
       <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
@@ -120,34 +120,34 @@
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="study-btn" v-touch:tap="active">激活课程</div>
+        <div class="right-btn" v-touch:tap="active">激活课程</div>
       </div>
       <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <div class="study-btn" v-touch:tap="resume">开启课程</div>
+        <div class="right-btn" v-touch:tap="resume">开启课程</div>
       </div>
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
     <div class="remind" :id="isRemindShow?'show':''">
-      <div class="remind-closeBtn" v-touch:tap="hideRemind"></div>
+      <div class="remind-closebtn" v-touch:tap="hideRemind"></div>
       <div class="remind-title">设置上课提醒</div>
       <div class="remind-tip">最近一周</div>
       <div class="remind-img"><img src="../../assets/styles/image/courseDetail/setRemind.png"></div>
       <div class="remind-date">提醒时间<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日</div>
-      <div class="remind-timePicker"><picker :data='remindTimeList' :value.sync='remindTimeValue' @on-change='onSetTimeChange'></picker></div>
+      <div class="remind-timepicker"><picker :data='remindTimeList' :value.sync='remindTimeValue' @on-change='onSetTimeChange'></picker></div>
       <div class="remind-btn" v-touch:tap="setRemind">确定</div>
     </div>
     <div class="remind remind-cancel" :id="isRemoveRemindShow?'show':''">
-      <div class="remind-closeBtn" v-touch:tap="hideRemoveRemind"></div>
+      <div class="remind-closebtn" v-touch:tap="hideRemoveRemind"></div>
       <div class="remind-title">取消上课提醒</div>
-      <div class="remind-cancelDate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
-      <div class="remind-cancelImg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
+      <div class="remind-canceldate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
+      <div class="remind-cancelimg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
       <div class="remind-btn" v-touch:tap="removeRemind">确定</div>
     </div>
-    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
     <div :class="isRemindShow || isRemoveRemindShow ? 'modalCover-show' : 'modalCover'" v-touch:tap='closeModal'></div>
-    <div class="remind-checkTip" v-show="isCheckTipShow">{{remindCheckTip}}</div>
+    <div class="remind-checktip" v-show="isCheckTipShow">{{remindCheckTip}}</div>
   </div>
 </template>
 <style lang="less">
@@ -233,7 +233,7 @@
               }
             }
         }
-        .study-btn{
+        .right-btn{
           height:100%;
           flex: 1;
           font-size: 34/40rem;
@@ -255,17 +255,17 @@
         }
       }
       .btn-box-buy{
-        .study-btn{
+        .right-btn{
           background-color: #00b0f0;
         }
       }
       .btn-box-active{
-        .study-btn{
+        .right-btn{
           background-color: #ff9800;
         }
       }
     }
-    .remind-checkTip{
+    .remind-checktip{
       position: absolute;
       top: 0;
       bottom: 0;
@@ -291,24 +291,24 @@
       bottom: 0;
       background:#fff;
       z-index:200;
-      transition:all 0.5s;
+      /*transition:all 0.2s;
+      -webkit-transition:all 0.2s;*/
       -webkit-transform: translateY(100%);
       transform: translateY(100%);
       &-count-down{
          vertical-align: middle;
        }
-
-      &-timePicker{
+      &-timepicker{
         padding-bottom: 98/40rem;
        }
-      &-closeBtn{
+      &-closebtn{
         position: absolute;
         right: 3/4rem;
         top:3/4rem;
         width: 3/4rem;
         height: 3/4rem;
        }
-      &-closeBtn:before{
+      &-closebtn:before{
          position: absolute;
          font-family: 'myicon';
          content: '\e90d';
@@ -333,13 +333,14 @@
         width: 4.5rem;
         line-height: 1.5rem;
         height: 1.5rem;
+        box-sizing: border-box;
         border-top-right-radius: 3/4rem;
         border-bottom-right-radius: 3/4rem;
         left: 0;
         top:2.5rem;
         text-align: center;
        }
-      &-date,&-cancelDate{
+      &-date,&-canceldate{
         padding: 3rem 3/4rem 1rem;
         font-size: 3/4rem;
         color: #aaa;
@@ -352,7 +353,7 @@
            font-weight: bold;
          }
        }
-      &-cancelDate{
+      &-canceldate{
         padding-top: 1.5rem;
        }
       &-btn{
@@ -367,7 +368,7 @@
         color:#fff;
         background-color: #00b0f0;
        }
-      &-cancelImg{
+      &-cancelimg{
         height: 266/40rem;
         width: 154/40rem;
         padding-top: 0.5rem;
@@ -395,6 +396,7 @@
     }
     #show{
       transform: translate(0,0);
+      -webkit-transform: translate(0,0);
     }
   }
 </style>
@@ -421,6 +423,7 @@
   import {Jpush} from '../../plugin/jpush'
   import Picker from 'vux/picker'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
+  //初始化日期选择数组
   let hours = []
   let mins = []
   for (let i = 0; i < 24; i++) {
@@ -464,15 +467,15 @@
      */
     data () {
       return {
-        isCheckTipShow: false,
-        isShareShow: false,
+        isCheckTipShow: false,    //toast显示状态
+        isShareShow: false,   //分享浮层显示
         isRemindShow: false,   //定时弹框状态
         isRemoveRemindShow: false,  //取消弹框显示
-        isRemindSet: false,
+        isRemindSet: false,   //是否设定定时提醒
 
-        remindCheckTip: '',
+        remindCheckTip: '',   //toast的内容
         remindTimeList: [hours, mins],   //  提醒时间选择的列表
-        remindTimeValue: [hours[1], mins[1]],    //提醒时间的默认值
+        remindTimeValue: [hours[0], mins[0]],    //提醒时间的默认值
         remindTimeData: ['0', '0'],    //选择的提醒时间
 
         remindTimeStart: {},   //提醒开始时间
@@ -552,6 +555,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        //读取缓存，判断之前有没有设置定时提醒
         let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
         let currDate = new Date().getTime()
         if (items && ((parseInt(items.remindList[6]) + parseInt(items.oldTime)) - currDate >= 0)) {
@@ -566,7 +570,7 @@
           clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
           Jpush.clearLocalNotifications()
         }
-
+        //-------------------------------------------
         this.isQuestionPlaced = false
         // 判断前一个页面, 如果是从横屏退过来的页面不做其他处理
         if (from.path && from.path.indexOf('landscape/') > -1) {
@@ -634,10 +638,11 @@
           this.$broadcast('expense-detail-deactive')
           next()
         }
+        //清空定时状态
         this.isRemindShow = false
         this.isRemoveRemindShow = false
         this.isRemindSet = false
-        this.remindTimeValue = [hours[1], mins[1]]
+        this.remindTimeValue = [hours[0], mins[0]]
         this.remindTimeStart = {}
         this.remindTimeEnd = {}
         this.remindList = {}
@@ -866,8 +871,6 @@
         endDate.setDate(endDate.getDate() + 1)
         let leftTime = endDate.getTime() - currDate
         let currDateNumList = [7, 6, 5, 4, 3, 2, 1, 0]
-        console.log(Math.floor(leftTime / 86400000))
-        console.log(new Date())
         this.remindCurrDate = currDateNumList[Math.floor(leftTime / 86400000)]
       },
       /**
@@ -934,18 +937,15 @@
        **/
       showRemind () {
         this.isRemindShow = true
-        /*const me = this
-        setTimeout(() => {
-            me.remindTimeValue = [hours[0], mins[0]]
-        }, 300)*/
         getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
       },
-      
+
       /**
        * 定时提醒隐藏
        **/
       hideRemind () {
         this.isRemindShow = false
+        this.remindTimeValue = [hours[0], mins[0]]
       },
       /**
        * 取消提醒设置显示
@@ -990,7 +990,7 @@
         this.isRemindShow = false
         this.isRemindSet = true
         this.showCheckTip('设置成功')
-        this.remindTimeValue = [hours[1], mins[1]]
+        this.remindTimeValue = [hours[0], mins[0]]
       },
       /**
        * 取消定时提醒
