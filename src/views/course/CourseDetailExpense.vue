@@ -106,6 +106,7 @@
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+    <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;">造房子</div>
   </div>
 
 </template>
@@ -644,6 +645,12 @@
     },
 
     methods: {
+      //testBtn
+      goToBuilding () {
+        this.$route.router.go('/building/BuildingShow')
+        clearLocalCache('course-state')
+        setLocalCache('course-state', {courseProgress: this.expenseRecordsArr})
+      },
       /**
        * 点击空白消失模态层
        **/

@@ -106,22 +106,27 @@
 <script>
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
   //import buildingActions from '../../vuex/actions'
-  //import {buildingGetters, userGetters} from '../../vuex/getters'
-  import userGetters from '../../vuex/getters'
+  //import {buildingGetters, userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {userGetters, courseRecordsGetters} from '../../vuex/getters'
+  import {getLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
       actions: {
+
       },
       getters: {
-        isLogin: userGetters.isLogin
+        isLogin: userGetters.isLogin,
+        expenseRecords: courseRecordsGetters.expenseRecords
       }
     },
 
     route: {
       data () {
-        return {
-
+        console.log(getLocalCache('course-state'))
+        // 判断是否登录
+        if (this.isLogin) {
+          // 已登录
         }
       }
     },
@@ -133,9 +138,19 @@
     },
 
     methods: {
+      /**
+       * 关闭页面
+       **/
       onCancel () {
         window.history.back()
       }
+
+      /**
+       *
+      onCancel () {
+        window.history.back()
+      },
+       **/
     },
 
     components: {

@@ -2,23 +2,31 @@
  * Created by zyr on 2017.3.16
  * 造房子
 
-import {getWithoutAuth} from '../../frame/ajax'
+import {getWithoutAuth, postWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
  */
 
 /**
- * 应用更新
+ * 获取课程进度
  * @param dispatch
-export const getAppUpdate = ({ dispatch }) => {
+export const getCourseProgress = ({ dispatch }, subjectId) => {
   return new Promise((resolve, reject) => {
-    getWithoutAuth({
-        url: getUrl('app_update_content')
-      }).then(
-      function (data) {
-        dispatch('APP_UPDATE_CONTENT', data)
-        resolve(data)
+    postWithinAuth(
+      {
+        url: getUrl('expense_records'),
+        data: {
+          subjectId
+        }
+      }
+    ).then(
+      records => {
+        if (records.length) {
+          dispatch('UPDATE_EXPENSE_RECORD_ONE_SUBJECT', records[0])
+        }
+        resolve(records)
       },
       err => {
+        console.warn(err)
         reject(err)
       }
     )
