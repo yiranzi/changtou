@@ -1,18 +1,21 @@
 /**
  * Created by zyr on 2017.3.16
  * 造房子
+ */
 const state = {
-  appUpdateContent: {}
+  buildingGoodsStatus: {},
+  buildingUpdata: true
 }
 
 const mutations = {
-  APP_UPDATE_CONTENT (state, appUpdateContent) {
-    state.appUpdateContent = appUpdateContent
+  BUILDING_GOODS_STATUS (state, buildingGoodsStatus) {
+    state.buildingGoodsStatus = buildingGoodsStatus
+  },
+  BUILDING_UPDATA (state, buildingUpdata) {
+    state.buildingUpdata = buildingUpdata
   }
-
 }
 export default {
   state,
   mutations
 }
- */

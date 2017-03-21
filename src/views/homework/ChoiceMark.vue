@@ -34,8 +34,8 @@
   import Cell from 'vux/cell'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctStar from '../../components/IctStar.vue'
-  import {choiceGetters, userGetters} from '../../vuex/getters'
-  import {graduationDiplomaActions} from '../../vuex/actions'
+  import {choiceGetters, userGetters, buildingGetters} from '../../vuex/getters'
+  import {graduationDiplomaActions, buildingActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   export default {
@@ -43,10 +43,14 @@
     getters: {
       isLogin: userGetters.isLogin,
       report: choiceGetters.report,
-      knowledgeMap: choiceGetters.knowledgeMap
+      knowledgeMap: choiceGetters.knowledgeMap,
+      buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
+      buildingUpdata: buildingGetters.buildingUpdata
     },
     actions: {
-      getDiplomaList: graduationDiplomaActions.getDiplomaList
+      getDiplomaList: graduationDiplomaActions.getDiplomaList,
+      getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
+      updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus
     }
   },
   data () {
@@ -103,9 +107,54 @@
           callbackFn: this.reTest.bind(this) //组件上的
         })
       }
+      if (this.score >= 3) {
+        this.showTaskPassed()
+      }
     }
   },
   methods: {
+    /**
+     * 通过后显示作业通过浮层
+     */
+    showTaskPassed () {
+      let taskPassedData = {} // 传给浮层的数据
+      taskPassedData.type = 0  // 0表示通过的是选择题
+      taskPassedData.scoreNum = this.score  // 选择题的分数
+      /*
+      this.getBuildingGoodsStatus(this.subjectId).then(() => {
+        let goods = this.buildingGoodsStatus.goods
+        for (let i = 0; i < 6; i++) {
+          let goodsObj = {}
+          goodsObj.maxGoodsNum = 0
+          goodsObj.useGoodsNum = 0
+          if (!goods[i]) {
+            goods[i] = goodsObj
+          }
+        }
+        goods[this.lessonId - 17].maxGoodsNum = this.score - 2
+        console.log(goods)
+        this.updataBuildingGoodsStatus(this.subjectId, goods)
+        taskPassedData.maxGoodsNum = goods[this.lessonId - 17].maxGoodsNum
+        taskPassedData.useGoodsNum = goods[this.lessonId - 17].useGoodsNum
+      })
+      */
+      /*
+      this.showMask({
+        component: 'taskPassed.vue',
+        componentData: taskPassedData,
+        callbackName: 'goToBuilding',
+        callbackFn: this.goToBuilding.bind(this)
+      })
+      */
+     },
+
+    /**
+     * 去造房子展示页
+     */
+    goToBuilding () {
+      this.$route.router.go('/building/BuildingShow')
+    },
+
     /**
      * 完成
      */

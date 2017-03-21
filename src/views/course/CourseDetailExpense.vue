@@ -426,16 +426,8 @@
           )
         }
 
-        //判断是否显示相应课程状态提示
-        if (getLocalCache('curr-course-status').subjectStatusPrompt) {
-          let subjectStatus = getLocalCache('curr-course-status').subjectStatusPrompt
-          //显示相应课程的提示浮层
-          this.showMask({
-            component: `building/subjectPrompt${subjectStatus}.vue`,
-            hideOnMaskTap: true
-          })
-          clearLocalCache('curr-course-status')
-        }
+        //判断是否显示相应课程状态提示浮层
+        this.showSubjectStatePoint()
       },
 
       /**
@@ -656,10 +648,28 @@
     },
 
     methods: {
-      //testBtn
+      /**
+       * 进入造房子test入口
+       **/
       goToBuilding () {
         this.$route.router.go('/building/BuildingShow')
       },
+
+      /**
+       * 显示课程状态提示浮层
+       **/
+      showSubjectStatePoint () {
+        if (getLocalCache('curr-course-status').subjectStatusPoint) {
+          let subjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
+          //显示相应课程的提示浮层
+          this.showMask({
+            component: `building/subjectPoint${subjectStatus}.vue`,
+            hideOnMaskTap: true
+          })
+          clearLocalCache('curr-course-status')
+        }
+      },
+
       /**
        * 点击空白消失模态层
        **/
