@@ -4,11 +4,13 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <swiper :aspect-ratio="120/375" :list="banners"
-                stop-propagation dots-position="center"
-                :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class">
-        </swiper>
+        <div>
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class">
+          </swiper>
+        </div>
         <!--理财新手村-入口-->
         <!--<div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>-->
 
@@ -938,7 +940,7 @@
 
     /*人气必备*/
     .head-navigator{
-      border-bottom: 0.025rem #f0eff5 solid;
+      border-bottom: 1px #f0eff5 solid;
       padding: 1rem 0;
       .head-title{
         padding: 0.75rem 1.35rem 0.75rem;
