@@ -4,13 +4,7 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <div>
-          <swiper :aspect-ratio="120/375" :list="banners"
-                  stop-propagation dots-position="center"
-                  :auto="true" :interval="3000"
-                  :show-desc-mask="false" dots-class="dots-class">
-          </swiper>
-        </div>
+        <div class="empty"></div>
         <!--理财新手村-入口-->
         <!--<div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>-->
 
@@ -106,6 +100,13 @@
         <div class="strategy-entry">
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
+        </div>
+        <div class="fixswiper">
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class">
+          </swiper>
         </div>
       </div>
     </scroller>
@@ -602,6 +603,14 @@
 
 <style lang="less">
   .course-navigator{
+    .empty{
+      height: 6rem;
+    }
+    .fixswiper{
+      position: absolute;
+      width:100%;
+      top:0;
+    }
     background: #fff;
     .popularSpe{
       padding-bottom: .8rem;

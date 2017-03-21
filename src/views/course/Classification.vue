@@ -68,9 +68,11 @@
       background-color: #fafafa;
       .fix-vuex-height
       {
+        background-color: #fafafa;
         height: 2.6rem;
         .fix-vuex-line-height{
           line-height: 1.1rem;
+          /*background-color: #fafafa;*/
         }
       }
       .class-button-icon{
