@@ -33,6 +33,7 @@
           text-align: left;
           font-size: 0.7rem;
           color: #888;
+          overflow: hidden;
         }
       }
       .column-bottom {
