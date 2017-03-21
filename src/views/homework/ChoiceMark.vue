@@ -28,6 +28,7 @@
           <span class="retest-btn" v-touch:tap="reTest">重测</span>
         </div>
       </div>
+      <div class="building-test" v-touch:tap="goToBuildingAdd">完成作业造房子</div>
     </div>
 </template>
 <script>
@@ -114,13 +115,23 @@
   },
   methods: {
     /**
-     * 通过后显示作业通过浮层
+     * 通过后显示作业通过浮层并更新后台解锁物品
      */
     showTaskPassed () {
+      // 显示分数浮层
       let taskPassedData = {} // 传给浮层的数据
       taskPassedData.type = 0  // 0表示通过的是选择题
       taskPassedData.scoreNum = this.score  // 选择题的分数
       /*
+       this.showMask({
+       component: 'taskPassed.vue',
+       componentData: taskPassedData,
+       callbackName: 'goToBuildingAdd',
+       callbackFn: this.goToBuildingAdd.bind(this)
+       })
+       */
+      /*
+      // 进行物品解锁(更新)
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
         let goods = this.buildingGoodsStatus.goods
         for (let i = 0; i < 6; i++) {
@@ -134,16 +145,6 @@
         goods[this.lessonId - 17].maxGoodsNum = this.score - 2
         console.log(goods)
         this.updataBuildingGoodsStatus(this.subjectId, goods)
-        taskPassedData.maxGoodsNum = goods[this.lessonId - 17].maxGoodsNum
-        taskPassedData.useGoodsNum = goods[this.lessonId - 17].useGoodsNum
-      })
-      */
-      /*
-      this.showMask({
-        component: 'taskPassed.vue',
-        componentData: taskPassedData,
-        callbackName: 'goToBuilding',
-        callbackFn: this.goToBuilding.bind(this)
       })
       */
      },
@@ -151,8 +152,8 @@
     /**
      * 去造房子展示页
      */
-    goToBuilding () {
-      this.$route.router.go('/building/BuildingShow')
+    goToBuildingAdd () {
+      this.$route.router.go('/building/BuildingAdd')
     },
 
     /**
@@ -309,6 +310,11 @@
     }
     .yellow-text{
       color: #fbc02d;
+    }
+    .building-test{
+      position: fixed;
+      top: 0;
+      right: 0;
     }
   }
 </style>

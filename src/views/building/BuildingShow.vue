@@ -5,31 +5,24 @@
       造房计划
       <div class="building-show-rule">规则</div>
     </div>
-    <!--<scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">-->
+    <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <div class="building-show-entirety">
-          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding | guolv $index currCourseIndex">
+          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="$index < currCourseIndex">
             <img v-bind:src="item.buildingPic" style="width: 100%;">
             <div class="building-show-goods-state" v-if="item.isUsed === 0">
-              <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;" v-if="item.isUnlocked === 1">
-              <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;" v-if="item.isUnlocked === 0">
+              <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;">
             </div>
           </div>
         </div>
-        <div class="building-show-article" v-for="article in sdutyArticle" track-by="$index" v-if="($index === (currCourseIndex-1)) && (showArticle === 0)">
+        <div class="building-show-article" v-for="article in sdutyArticle" track-by="$index" v-show="($index === (currCourseIndex-1)) && (showArticle === 0)">
           <div class="building-show-article-title">{{article.pointTitle}}</div>
           <div class="building-show-article-content">在股票投资初级课•造房计划中，根据第<span>{{article.courseIndex}}</span>课的作业情况，将有机会选择你心仪的<span>{{article.buildingText}}</span>哦~~</div>
           <div class="building-show-unlocked-artilce" v-if="currCourseIndex === 1">解锁物品规则：<br>选择题3/4分——解锁初级物品<br>选择题５分/问答题３分——解锁中级物品<br>问答题４/5分——解锁高级物品</div>
         </div>
-        <div class="building-show-article article-center" v-for="article in selectArticle" v-if="($index === (currCourseIndex-1)) && (showArticle === 1)">
-          <div class="building-show-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
-          <div class="building-show-article-title">
-            <span v-for="item in article.pointTitle">{{item}}<br></span>
-          </div>
-        </div>
         <div class="start-study-btn" v-if="showStartStudy" v-touch:tap="goToStudy">开始学习</div>
       </div>
-    <!--</scroller>-->
+    </scroller>
   </div>
 </template>
 <style lang="less">
@@ -178,6 +171,8 @@
 
     route: {
       data () {
+        this.setScrollerHeight()
+        // 显示课程状态
         this.showSubjectStatus()
       }
     },
@@ -221,11 +216,7 @@
         } // 显示毕业文案
       }
     },
-    filters: {
-      guolv (index, item) {
-        return index < item
-      }
-    },
+
     methods: {
       /**
        * 显示课程状态
@@ -359,10 +350,11 @@
        **/
       onCancel () {
         window.history.back()
-      }
+      },
 
       /**
        * 设置滚动高度
+       */
       setScrollerHeight () {
         const me = this
         setTimeout(function () {
@@ -374,7 +366,6 @@
           })
         }, 300)
       }
-       */
     },
 
     components: {

@@ -350,6 +350,10 @@ export function configRouter (router) {
     // 造房子展示页
     '/building/BuildingShow': {
       component: require('../views/building/BuildingShow.vue')
+    },
+    // 造房子添加物品页
+    '/building/BuildingAdd': {
+      component: require('../views/building/BuildingAdd.vue')
     }
   })
 
