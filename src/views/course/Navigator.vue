@@ -137,7 +137,8 @@
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
         headLineTitle: navigatorGetters.headLineTitle,
-        appUpdateContent: appUpdateGetters.appUpdateContent
+        appUpdateContent: appUpdateGetters.appUpdateContent,
+        columnChangeData: navigatorGetters.columnChangeData
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -244,8 +245,8 @@
       //进入主页判定版本变更的流程
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
-          this.getColumnChange().then((columnChangeData) => {
-            if (columnChangeData.content) {
+          this.getColumnChange().then(() => {
+            if (this.columnChangeData.content) {
               setLocalCache('column-version-no', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
@@ -257,7 +258,7 @@
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.content,
+          componentData: this.columnChangeData,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
