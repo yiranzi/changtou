@@ -51,7 +51,7 @@
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currSubject.finishDate">
+          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currRecord.finishDate">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">暂停</div>
           </div>
