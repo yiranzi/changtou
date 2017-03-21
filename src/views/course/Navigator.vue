@@ -184,6 +184,8 @@
         this.showHeadLineTitle()
         //比对版本号,判定是否是最新版本
         this.showColumnChange()
+        //测试
+        this.showPackage()
       }
     },
 
