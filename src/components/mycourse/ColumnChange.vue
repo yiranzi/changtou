@@ -44,6 +44,7 @@
         .button {
           width: 4.8rem;
           height: 1.6rem;
+          text-align: center;
           .go {
             background-color: #ffc82f;
             color: #444;
