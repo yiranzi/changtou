@@ -13,10 +13,9 @@
         <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
-        <div class="must-hava">
-          <p class="area-label">
-            <span class="color-span"> </span>
-            <span class="title">人气必备</span>
+        <div class="head-navigator">
+          <p class="head-title">
+            <span>为你优选</span>
           </p>
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
@@ -41,12 +40,12 @@
         </div>
 
         <!--头条精选-->
-        <div class="head-line">
+        <div class="head-line" v-touch:tap="goToHeadline">
           <div class="icon">
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
+          <span class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -117,12 +116,14 @@
   import Scroller from 'vux/scroller'
   import Swiper from 'vux/swiper'
   import WebAudio from '../../components/WebAudio.vue'
-  import {navigatorGetters, userGetters} from '../../vuex/getters'
-  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions} from '../../vuex/actions'
+  import {navigatorGetters, userGetters, appUpdateGetters} from '../../vuex/getters'
+  import {navigatorActions, dailyQuestionActions, newertestActions, giftActions, villageActions, appUpdateActions} from '../../vuex/actions'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
+  import {appVersion} from '../../frame/versionConfig'
+  import {convertVersionToNum} from '../../plugin/version.js'
   export default {
     vuex: {
       getters: {
@@ -133,7 +134,8 @@
         readingClassics: navigatorGetters.readingClassics,
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
-        headLineTitle: navigatorGetters.headLineTitle
+        headLineTitle: navigatorGetters.headLineTitle,
+        appUpdateContent: appUpdateGetters.appUpdateContent
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -144,12 +146,16 @@
         isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
-        getHeadLineTitle: navigatorActions.getHeadLineTitle
+        getHeadLineTitle: navigatorActions.getHeadLineTitle,
+        getAppUpdate: appUpdateActions.getAppUpdate,
+        getColumnChange: navigatorActions.getColumnChange
       }
     },
 
     route: {
       data ({from}) {
+        //是否显示更新提示
+        this.showAppUpdate()
         this.$dispatch(eventMap.ACTIVE_TAB, 0)
         setLocalCache('statistics-entry-page', {entryPage: '首页'})
         //加载首页
@@ -161,6 +167,8 @@
         this.showInterviewNew()
         //显示头条精选的数据
         this.showHeadLineTitle()
+        //比对版本号,判定是否是最新版本
+        this.showColumnChange()
       }
     },
 
@@ -170,11 +178,12 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '' // 前一个页面url
+        fromPath: '', // 前一个页面url
+        appVersion//版本信息
       }
     },
     ready () {
-
+      this.$dispatch(eventMap.FIRST_SCREEN_LOADED)
     },
 
     computed: {
@@ -200,8 +209,61 @@
         return titleString
       }
     },
-    
+
     methods: {
+      /**
+       * 判断应用是否更新
+       */
+       showAppUpdate () {
+         //当获取到旧版本号，且和新版本号一致就不显示升级提示，反之，显示
+         if (!(getLocalCache('app-update') && (getLocalCache('app-update')['appVersionNumber'] === appVersion))) {
+           // 显示更新提示,就存储最新版本号
+           setLocalCache('app-update', {appVersionNumber: appVersion})
+           // 应用更新内容
+           let appUpdateConentObj = {}
+           this.getAppUpdate().then(() => {
+            appUpdateConentObj.appUpdateVersion = this.appUpdateContent['no']
+            appUpdateConentObj.appUpdateExplain = this.appUpdateContent['note'].split(',')
+             this.showMask({
+               component: 'AppUpdate.vue',
+               componentData: appUpdateConentObj
+             })
+           })
+         }
+       },
+
+      //如果没有版本号或者版本号过小.就需要弹出
+      isOldVersion () {
+        let versionNo = window.localStorage.getItem('versionNo')
+        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+      },
+
+      //进入主页判定版本变更的流程
+      showColumnChange () {
+        if (this.isLogin && this.isOldVersion()) {
+          this.getColumnChange().then((columnChangeData) => {
+            if (columnChangeData.content) {
+              window.localStorage.setItem('versionNo', appVersion)
+              //弹出弹框
+              this.columnChange()
+            }
+          })
+        }
+      },
+      //打开弹窗
+      columnChange () {
+        this.showMask({
+          component: 'mycourse/ColumnChange.vue',
+          componentData: this.columnChangeData.content,
+          hideOnMaskTap: true,
+          callbackName: 'onColumnChange',
+          callbackFn: this.onColumnChange.bind(this) //组件上的
+        })
+      },
+      //版本变更的跳转
+      onColumnChange () {
+        this.$route.router.go('this.columnChangeData.mbUrl')
+      },
       /**
        * 设置滚动条高度
        */
@@ -449,6 +511,16 @@
        */
       showHeadLineTitle () {
         this.getHeadLineTitle()
+      },
+
+      /**
+       * 跳转到头条精选页面
+       */
+      goToHeadline () {
+        this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
+          position: '头条精选'
+        })
+        this.$route.router.go('/headline')
       },
 
       /**
@@ -766,7 +838,6 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-      border-bottom: 0.5rem #f0eff5 solid;
       font-size: 0.55rem;
       color: #444;
 
@@ -860,28 +931,33 @@
     }
 
     /*人气必备*/
-    .must-hava{
+    .head-navigator{
+      border-bottom: 0.025rem #f0eff5 solid;
       height:5.5rem;
+      .head-title{
+        padding: 0.75rem 1.35rem 0.75rem;
+        font-size: 0.8rem;
+      }
     }
 
     /*头条精选*/
     .head-line {
       font-size: 0;
       position: relative;
-      margin: 0.25rem auto 0.5rem;
-      height: 3rem;
+      height: 2.5rem;
       background-color: #fff;
+      border-bottom: 0.5rem solid #f0eff5;
       .icon {
+        position: relative;
         vertical-align: middle;
         display: inline-block;
-        width: 3.75rem;
-        height: 3rem;
+        height: 2.5rem;
         .picture{
+          margin: 0.5rem 0.7rem 0.5rem 1.3rem;
           font-size: 0px;
           display:inline-block;
           width: 1.6rem;
           height: 1.5rem;
-          margin: 0.75rem 1.35rem 0.75rem;
           background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
         }
       }
@@ -889,7 +965,7 @@
       .line{
         vertical-align: middle;
         display:inline-block;
-        width: 0.25rem;
+        width: 0.025rem;
         height: 1.75rem;
         background-color: #f0f0f0;
         margin: auto auto;
@@ -898,14 +974,16 @@
 
       .topic-txt{
         vertical-align: middle;
-        margin: auto 3.5rem auto 0.75rem;
+        margin-left:0.75rem;
         font-size: 0.7rem;
-        height:0.7rem;
+        height: 0.7rem;
         line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
-        width: 10.4rem;
+        width: 11rem;
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .gift{

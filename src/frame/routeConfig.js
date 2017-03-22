@@ -343,6 +343,13 @@ export function configRouter (router) {
     //新手村章节开始页
     '/village/chapterstart/:chapterNo': {
       component: require('../views/freshVillage/ChapterStart.vue')
+    },
+
+    /**
+     * 头条精彩
+     */
+    '/headline': {
+      component: require('../views/headline/Headline.vue')
     }
   })
 

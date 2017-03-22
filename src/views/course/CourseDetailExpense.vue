@@ -1306,32 +1306,33 @@
             this.showConfirm({message: `仅支持在"${this.currSubject.relatedMajorSubjectTitle}"有效学习时间内购买该选修课`})
           }
         } else {
-          // 不是选修课, 判断是否弹出浮层，再转去订单页面
+          // 不是选修课, 先弹出浮层，再转去订单页面
           this.isShowUserAgreement()
         }
       },
 
       /**
-        * 点击立即购买后，判断是否弹出浮层
-        */
-       isShowUserAgreement () {
-         if (this.subjectId === '21') {
-           this.showMask({
-             component: 'strategy/UserAgreement.vue',
-             hideOnMaskTap: true,
-             callbackName: 'onAgreeTap',
-             callbackFn: this.onAgreeTap.bind(this)
-           })
-         } else {
-           this.goToPay()
-         }
-       },
-       /**
-        * 用户协议同意
-        */
-       onAgreeTap () {
-         this.goToPay()
-       },
+       * 点击立即购买后，判断是否弹出浮层
+       */
+      isShowUserAgreement () {
+        if (this.subjectId === '21') {
+          this.showMask({
+            component: 'strategy/UserAgreement.vue',
+            hideOnMaskTap: true,
+            callbackName: 'onAgreeTap',
+            callbackFn: this.onAgreeTap.bind(this)
+          })
+        } else {
+          this.goToPay()
+        }
+      },
+
+      /**
+       * 用户协议同意
+       */
+      onAgreeTap () {
+        this.goToPay()
+      },
 
       /**
        * 前去支付页面

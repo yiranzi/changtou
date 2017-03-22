@@ -31,7 +31,12 @@ export const hasNewInterview = (state) => {
   return state.navigator.hasNewInterview
 }
 
-//获得
+//获得头条精选信息
 export const headLineTitle = (state) => {
   return state.navigator.headLineTitle
+}
+
+//获得栏目变更信息
+export const columnChangeData = (state) => {
+  return state.navigator.columnChangeData
 }
