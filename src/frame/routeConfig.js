@@ -355,6 +355,16 @@ export function configRouter (router) {
     '/building/BuildingAdd': {
       component: require('../views/building/BuildingAdd.vue')
     }
+    /*
+    // 造房子介绍页
+    '/building/BuildingIntroduction': {
+      component: require('../views/building/BuildingIntroduction.vue')
+    },
+    // 造房子规则
+    '/building/BuildingRule': {
+      component: require('../views/building/BuildingRule.vue')
+    }
+     */
   })
 
   // redirect

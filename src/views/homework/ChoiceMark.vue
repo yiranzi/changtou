@@ -123,12 +123,12 @@
       taskPassedData.type = 0  // 0表示通过的是选择题
       taskPassedData.scoreNum = this.score  // 选择题的分数
       /*
-       this.showMask({
-       component: 'taskPassed.vue',
+      this.showMask({
+       component: 'GradeToBuild.vue',
        componentData: taskPassedData,
        callbackName: 'goToBuildingAdd',
        callbackFn: this.goToBuildingAdd.bind(this)
-       })
+      })
        */
       /*
       // 进行物品解锁(更新)

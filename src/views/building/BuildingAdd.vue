@@ -3,19 +3,22 @@
     <div class="building-show-title" v-el:titlebar>
       <div class="building-show-close" v-touch:tap="onCancel"></div>
       造房计划
-      <div class="building-show-rule">规则</div>
+      <div class="building-show-rule" v-touch:tap="goToBuildingRule">攻略</div>
     </div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <div class="building-show-entirety">
-          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToBuildingSelect($index)">
+        <div class="building-show-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
+          <div class="building-show-house-bg" v-if="showHouseBackground">
+            <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;">
+          </div>
+          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
             <img v-bind:src="item.buildingPic" style="width: 100%;">
             <div class="building-show-goods-state" v-if="item.isUsed === 0">
               <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;">
             </div>
           </div>
         </div>
-        <div class="building-show-article" v-for="article in selectArticle" v-show="$index === (unlockedGoodsCount-1)">
+        <div class="building-show-article" v-for="article in selectArticle" v-show="$index === notUsedGoodsIndex">
           <div class="building-show-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
           <div class="building-show-article-title">
             <span v-for="item in article.pointTitle">{{item}}<br></span>
@@ -60,9 +63,16 @@
       }
     }
     .building-show-entirety{
-      height: 710/40rem;
       overflow: hidden;
       position: relative;
+      .building-show-house-bg{
+        width: 630/40rem;
+        height: 206/40rem;
+        margin-left: -315/40rem;
+        position: absolute;
+        left: 50%;
+        top: 338/40rem;
+      }
       .building-show-single{
         width: 750/40rem;
         height: 300/40rem;
@@ -174,7 +184,10 @@
     data () {
       return {
         scrollerHeight: '0px',
-        unlockedGoodsCount: 1, // 解锁物品的个数
+        buildingHeight: '7.5', // 整个building的高度
+        unlockedCount: 1, // 解锁物品的个数
+        notUsedGoodsIndex: 0, // 未使用并最先解锁的物品的index
+        showHouseBackground: false, // 房子背景的显示
         noBorder: 'building-show-single-no-border', // 已使用去掉边框
         courseBuilding: [
           {buildingClass: 'building-show-single-location', buildingPic: './static/image/building/building-show-locked-1-1.png', isUnlocked: 1, isUsed: 0},
@@ -195,6 +208,18 @@
       }
     },
 
+    computed: {
+      buildingHeight () {
+        if (this.studyCourseCount === 1) {
+          return '7.5'
+        } else if (this.studyCourseCount === 2 || this.studyCourseCount === 3 || this.studyCourseCount === 4 || this.studyCourseCount === 5) {
+          return '14'
+        } else if (this.studyCourseCount === 6) {
+          return '17.75'
+        }
+      }
+    },
+
     methods: {
       /**
        * 显示课程状态
@@ -203,6 +228,7 @@
         // 获取物品状态
         //this.getBuildingGoodsStatus(4).then(() => {
           //let goods = this.buildingGoodsStatus.goods
+          let unlockedGoodsCount = 0
           let goods = [
             {maxGoodsNum: 1, useGoodsNum: 1},
             {maxGoodsNum: 3, useGoodsNum: 1},
@@ -219,13 +245,25 @@
               if (goods[i].useGoodsNum !== 0) { // 物品已使用
                 this.courseBuilding[i].isUsed = 1
                 this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
-                this.useGoodsCount += 1
+                if (i === 1) {
+                  this.showHouseBackground = true
+                }
               } else { // 物品未使用
                 this.courseBuilding[i].isUsed = 0
               }
-              this.unlockedGoodsCount += 1
+              unlockedGoodsCount += 1
             } else { // 物品未解锁
               this.courseBuilding[i].isUnlocked = 0
+            }
+          }
+          this.unlockedCount = unlockedGoodsCount
+          // 找出未使用的最先的物品的index
+          for (let i = 0; i < this.courseBuilding.length; i++) {
+            if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
+              if (goods[i].useGoodsNum === 0) { // 物品已使用
+                this.notUsedGoodsIndex = i
+                break
+              }
             }
           }
         //})
@@ -237,17 +275,17 @@
       goToSelectBuilding (index) {
         console.log(index)
         /*
-        let SelectBuilding = {}
+        let selectBuilding = {}
         // 获取物品状态
         this.getBuildingGoodsStatus(4).then(() => {
-          SelectBuilding.goodsType = index
-          SelectBuilding.maxGoodsNum = this.buildingGoodsStatus.goods[index].maxGoodsNum
-          SelectBuilding.useGoodsNum = this.buildingGoodsStatus.goods[index].useGoodsNum
+          selectBuilding.goodsType = index
+          selectBuilding.maxGoodsNum = this.buildingGoodsStatus.goods[index].maxGoodsNum
+          selectBuilding.useGoodsNum = this.buildingGoodsStatus.goods[index].useGoodsNum
         })
         // 显示浮层
         this.showMask({
-          component: 'SelectBuilding.vue',
-          componentData: SelectBuilding,
+          component: 'ChooseGoods.vue',
+          componentData: selectBuilding,
           callbackName: 'goToBuildingShow',
           callbackFn: this.goToBuildingShow.bind(this)
         })
@@ -255,10 +293,42 @@
       },
 
       /**
-       * 去开始学习的展示页
+       * 去开始学习的展示页(使用物品)
        **/
-      goToBuildingShow () {
-        this.$route.router.go('/building/BuildingShow')
+      goToBuildingShow (index, useGoods) {
+        this.getBuildingGoodsStatus(4).then(() => {
+          /*
+          let goods = this.buildingGoodsStatus.goods
+          goods[index].useGoodsNum = useGoods
+          this.updataBuildingGoodsStatus(4, goods)
+          */
+          //this.getBuildingGoodsStatus(4).then(() => {
+            let unlockedGoodsCount = 0 // 已解锁的物品数
+            let usedGoodsCount = 0 // 已使用的物品数
+            //let goods = this.buildingGoodsStatus.goods
+            let goods = [
+              {maxGoodsNum: 1, useGoodsNum: 1},
+              {maxGoodsNum: 2, useGoodsNum: 1},
+              {maxGoodsNum: 3, useGoodsNum: 0},
+              {maxGoodsNum: 0, useGoodsNum: 0},
+              {maxGoodsNum: 0, useGoodsNum: 0},
+              {maxGoodsNum: 0, useGoodsNum: 0}
+            ]
+            for (let i = 0; i < goods.length; i++) {
+              if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
+                if (goods[i].useGoodsNum !== 0) { // 物品已使用
+                  usedGoodsCount += 1
+                }
+                unlockedGoodsCount += 1
+              }
+            }
+            if (usedGoodsCount === unlockedGoodsCount) {
+              this.$route.router.go('/building/BuildingShow')
+            } else {
+              this.showSubjectStatus()
+            }
+          //})
+        })
       },
 
       /**
@@ -266,6 +336,13 @@
        **/
       onCancel () {
         window.history.back()
+      },
+
+      /**
+       * 规则
+       **/
+      goToBuildingRule () {
+        this.$route.router.go('/building/BuildingRule')
       },
 
       /**

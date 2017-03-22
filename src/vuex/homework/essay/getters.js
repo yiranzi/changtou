@@ -41,3 +41,7 @@ export const score = (state) => {
 export const status = (state) => {
   return state.homeworkEssay.status
 }
+// 问答题得分结果
+export const essayResult = (state) => {
+  return state.homeworkEssay.essayResult
+}

@@ -106,7 +106,7 @@
     <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
-    <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;">造房子</div>
+    <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;" v-if="subjectId == 4 && isUserLogin">造房子</div>
   </div>
 
 </template>
@@ -226,8 +226,8 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions, buildingActions} from '../../vuex/actions'
+  import {courseDetailGetters, courseRecordsGetters, essayGetters, userGetters, homeworkListGetters, buildingGetters} from '../../vuex/getters'
   import {setSessionCache, setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -244,7 +244,10 @@
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
         isUserLogin: userGetters.isLogin,
-        homeworkList: homeworkListGetters.homeworkList
+        homeworkList: homeworkListGetters.homeworkList,
+        buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
+        buildingUpdata: buildingGetters.buildingUpdata,
+        getEssayResult: essayGetters.getEssayResult
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -263,7 +266,11 @@
 
         syncHomeworkList: homeworkListActions.getHomeworkList,
         isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire,
-        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
+        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord,
+
+        getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
+        updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus,
+        essayResult: essayActions.essayResult
       }
     },
     /**
@@ -362,6 +369,7 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
+        console.log(this.subjectId)
         //读取缓存，判断之前有没有设置定时提醒
         let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)    //读取对应课程的上课提醒缓存
         let currDate = new Date().getTime()   //读取现在的时间
@@ -649,10 +657,82 @@
 
     methods: {
       /**
-       * 进入造房子test入口
+       * 显示问答题通过浮层
+       **/
+      showEssayPassed () {
+        if (this.subjectId === 4) {
+          console.log(this.subjectId)
+          this.getEssayResult(this.subjectId).then(() => {
+            console.log(this.essayResult)
+            if (!this.essayResult.remind) {
+              // 显示分数浮层
+              let taskPassedData = {} // 传给浮层的数据
+              taskPassedData.type = 1  // 1表示通过的是问答题题
+              taskPassedData.scoreNum = this.essayResult.score  // 选择题的分数
+              /*
+              this.showMask({
+               component: 'GradeToBuild.vue',
+               componentData: taskPassedData,
+               callbackName: 'goToBuildingAdd',
+               callbackFn: this.goToBuildingAdd.bind(this)
+              })
+               */
+               /*
+              // 进行物品解锁(更新)
+              this.getBuildingGoodsStatus(this.subjectId).then(() => {
+                let goods = this.buildingGoodsStatus.goods
+                for (let i = 0; i < 6; i++) {
+                  let goodsObj = {}
+                  goodsObj.maxGoodsNum = 0
+                  goodsObj.useGoodsNum = 0
+                  if (!goods[i]) {
+                    goods[i] = goodsObj
+                  }
+                }
+                goods[this.essayResult.sequence].maxGoodsNum = this.essayResult.score - 2
+                console.log(goods)
+                this.updataBuildingGoodsStatus(this.subjectId, goods)
+              })
+              */
+            }
+          })
+        }
+      },
+
+      /**
+       * 去造房子展示页(选择物品)
+       */
+      goToBuildingAdd () {
+        this.$route.router.go('/building/BuildingAdd')
+      },
+
+      /**
+       * 进入造房子
        **/
       goToBuilding () {
-        this.$route.router.go('/building/BuildingShow')
+        if (getLocalCache('first-building').firstBuilding) { // 不是第一次进入造房子
+          this.getBuildingGoodsStatus(4).then(() => {
+            let unlockedGoodsCount = 0 // 已解锁的物品数
+            let usedGoodsCount = 0 // 已使用的物品数
+            let goods = this.buildingGoodsStatus.goods
+            for (let i = 0; i < this.buildingGoodsStatus.length; i++) {
+              if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
+                if (goods[i].useGoodsNum !== 0) { // 物品已使用
+                  usedGoodsCount += 1
+                }
+                unlockedGoodsCount += 1
+              }
+            }
+            if (usedGoodsCount === unlockedGoodsCount) {
+              this.$route.router.go('/building/BuildingShow')
+            } else {
+              this.$route.router.go('/building/BuildingAdd')
+            }
+          })
+        } else { // 第一次进入造房子
+          setLocalCache('first-building', {firstBuilding: true})
+          this.$route.router.go('/building/BuildingIntroduction')
+        }
       },
 
       /**
@@ -662,10 +742,14 @@
         if (getLocalCache('curr-course-status').subjectStatusPoint) {
           let subjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
           //显示相应课程的提示浮层
+          /*
           this.showMask({
             component: `building/subjectPoint${subjectStatus}.vue`,
+            componentData: subjectStatus,
             hideOnMaskTap: true
           })
+          */
+          console.log(subjectStatus)
           clearLocalCache('curr-course-status')
         }
       },
