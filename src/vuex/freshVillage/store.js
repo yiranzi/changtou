@@ -5,9 +5,10 @@
 const state = {
   adviseList: [],
   villageProgress: {
-    chapterNo: 1,
+    chapterNo: 0,
     questionNo: 0
-  }
+  },
+  shouldQuestionShow: false
 }
 
 const mutations = {
@@ -30,9 +31,11 @@ const mutations = {
   FRESH_VILLAGE_PROGRESS (state, villageProgress) {
     state.villageProgress = villageProgress
   },
-
+  SHOULD_QUESTION_SHOW (state, status) {
+    state.shouldQuestionShow = status
+  },
   RESET_VILLAGE_RECORD (state) {
-    state.villageProgress.chapterNo = 1
+    state.villageProgress.chapterNo = 0
     state.villageProgress.questionNo = 0
   }
 }

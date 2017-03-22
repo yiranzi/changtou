@@ -14,7 +14,7 @@
       * */
       goFreshVillageHomePageTap () {
         //进入新手村的首页
-        this.$route.router.replace('/village/chapterstart/1')
+        this.$route.router.replace('/village/map')
       }
     }
   }

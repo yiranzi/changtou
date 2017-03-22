@@ -30,17 +30,19 @@ export default {
   },
   route: {
     data ({to: {params: {chapterNo, questionNo}}}) {
+      this.setBackBtnToMap()
       this.chapter = this.getChapter(parseInt(chapterNo))
       this.question = this.getQuestion(this.chapter.questionArr, parseInt(questionNo))
       this.content = this.question.wisdom.content
+      this.setScrollerHeight()
+    },
+    deactivate () {
+      this.resetViewBackHandler()
     }
-  },
-  ready () {
-    this.setScrollerHeight()
   },
   data () {
     return {
-      scrollerHeight: '580px',
+      scrollerHeight: '0px',
       chapter: {},
       question: {},
       content: ''
@@ -53,7 +55,18 @@ export default {
     }
   },
   methods: {
-
+    /**
+     * 解绑物理back键
+     **/
+    resetViewBackHandler () {
+      this.$parent.viewBackHandler = null
+    },
+    /**
+     * 设置物理返回键为隐藏浮层
+     **/
+    setBackBtnToMap () {
+      this.$parent.viewBackHandler = this.onCloseTap
+    },
     /*设置页面滑动高度*/
     setScrollerHeight () {
       const me = this
@@ -65,7 +78,7 @@ export default {
             top: 0
           })
         })
-        }, 500
+        }, 150
       )
     },
     onCloseTap () {
