@@ -31,6 +31,12 @@ const mutations = {
   FRESH_VILLAGE_PROGRESS (state, villageProgress) {
     state.villageProgress = villageProgress
   },
+  /**
+   * 判断是否要显示答题界面
+   * @param state
+   * @param status
+   * @constructor
+   */
   SHOULD_QUESTION_SHOW (state, status) {
     state.shouldQuestionShow = status
   },

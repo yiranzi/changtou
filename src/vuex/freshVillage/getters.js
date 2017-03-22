@@ -26,6 +26,11 @@ export const villageProgress = (state) => {
 export const villageUnLoginRecord = (state) => {
   return state.freshVillage.unLoginOptionRecord
 }
+/**
+ * 是否需要显示答题界面
+ * @param state
+ * @returns {*|boolean}
+ */
 export const shouldQuestionShow = (state) => {
   return state.freshVillage.shouldQuestionShow
 }

@@ -133,7 +133,15 @@
               }
               me.setScrollerHeight()
               if (!(me.villageProgress.questionNo && me.villageProgress.chapterNo)) {
-                me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
+                me.commitRecord(1,1).then(
+                  () => {
+                    me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
+                    me.villageUnLoginRecord = {
+                      questionNo: 0,
+                      option: null
+                    }
+                  }
+                )
               }
             })       //如果登陆，获取用户的进度
             return
@@ -180,10 +188,6 @@
       },
       deactivate () {
         this.resetViewBackHandler()
-        this.villageUnLoginRecord = {
-          questionNo: 0,
-          option: null
-        }
       }
     },
     methods: {
