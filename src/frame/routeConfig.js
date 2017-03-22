@@ -335,6 +335,14 @@ export function configRouter (router) {
     //新手村初始页面
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
+    },
+    //新手村今日小智
+    '/village/wisdom/:chapterNo/:questionNo': {
+      component: require('../views/freshVillage/Wisdom.vue')
+    },
+    //新手村章节开始页
+    '/village/chapterstart/:chapterNo': {
+      component: require('../views/freshVillage/ChapterStart.vue')
     }
   })
 
