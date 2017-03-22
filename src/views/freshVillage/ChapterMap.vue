@@ -52,7 +52,7 @@
         isUpgradeShow: false,   //当前章节是否显示过升级弹框
         scrollerHeight: '0px',  //屏幕滚动高度
         mapHeight: 0,   //整个地图的高度
-        isEncourageShow: false,   //是否显示过求吐槽
+        isShowEncourage: false,   //是否显示过求吐槽
         chapterNo: 0,    //当前章节序号
         questionNo: 0,   //当前题目序号
         chapter: {},  //当前章节内容
@@ -133,15 +133,11 @@
               }
               me.setScrollerHeight()
               if (!(me.villageProgress.questionNo && me.villageProgress.chapterNo)) {
-                me.commitRecord(1, 1).then(
-                  () => {
-                    me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
-                    me.villageUnLoginRecord = {
-                      questionNo: 0,
-                      option: null
-                    }
-                  }
-                )
+                me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
+                me.villageUnLoginRecord = {
+                  questionNo: 0,
+                  option: null
+                }
               } else {
                 this.actionWithLogin()
               }
@@ -390,7 +386,7 @@
               me.chapterNo += 1   //切换到第二章第一体
               me.questionNo = 0
               me.lifeScore = 0
-              me.isEncourageShow = false
+              me.isShowEncourage = false
               me.isUpgradeShow = false
               this.commitRecord()
             }
