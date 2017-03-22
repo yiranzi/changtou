@@ -26,3 +26,6 @@ export const villageProgress = (state) => {
 export const villageUnLoginRecord = (state) => {
   return state.freshVillage.unLoginOptionRecord
 }
+export const shouldQuestionShow = (state) => {
+  return state.freshVillage.shouldQuestionShow
+}

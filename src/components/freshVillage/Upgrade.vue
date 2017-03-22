@@ -10,11 +10,11 @@
       <div class="village-upgrade-close-container" v-touch:tap="updateRecord"><span class="close-icon"></span></div>
       <div class="village-upgrade-container" id="village-upgrade-detail">
         <div class="village-upgrade-detail">
-          <img class="user-img" :src="avatarUrl"/>
+            <div class="user-img" :style="avatarImg"></div>
           <div class="upgrade-title">- 理财能力升级 -</div>
           <div class="level">LV.{{componentData.chapterNo}}</div>
           <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
-          <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+15</span></div>
+          <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+{{componentData.lifeScore}}</span></div>
         </div>
       </div>
       <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
@@ -27,11 +27,9 @@
       componentData: Object
     },
     computed: {
-      avatarUrl () {
-        return this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'
+      avatarImg () {
+        return `background: url(${this.componentData.avatar ? this.componentData.avatar : './static/image/defaultAvatar.png'}) center no-repeat;background-size: 100% 100%;`
       }
-    },
-    ready () {
     },
     methods: {
       updateRecord () {
@@ -105,13 +103,12 @@
     border-radius: 12px;
     background-color: #ca414b;
     vertical-align: middle;
-    .user-img {
-      display: block;
-      margin: 1.25rem auto 0;
-      width: 3.2rem;
-      border-radius: 50%;
-      border: 8px solid #b23842;
-    }
+      .user-img {
+        margin: 1.25rem auto 0;
+        width: 3.4rem;
+        height: 3.4rem;
+        border-radius:  50%;
+      }
     .upgrade-title {
       width: 6rem;
       height:1.3rem;
@@ -128,7 +125,7 @@
       text-align: center;
       font-size: 2.5rem;
       color: #ffe52a;
-      font-family: '窄体';
+      font-family: '窄体'; /*等级字体为窄体*/
     }
     .score-name {
       display:inline-block;
