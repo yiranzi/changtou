@@ -133,7 +133,7 @@
               }
               me.setScrollerHeight()
               if (!(me.villageProgress.questionNo && me.villageProgress.chapterNo)) {
-                me.commitRecord(1,1).then(
+                me.commitRecord(1, 1).then(
                   () => {
                     me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
                     me.villageUnLoginRecord = {
@@ -142,6 +142,8 @@
                     }
                   }
                 )
+              } else {
+                this.actionWithLogin()
               }
             })       //如果登陆，获取用户的进度
             return
@@ -290,7 +292,6 @@
       onGoTap () {
         this.checkScrollerHeight()
         if (!(this.questionNo > 6 && this.chapterNo === 2)) {   //限定题目范围
-          const me = this
           if (this.villageProgress.questionNo === 0) {
             this.$route.router.go(`/village/chapterstart/${this.chapterNo}`)
             this.changeQuestionShow(true)
@@ -299,20 +300,6 @@
           //第三题第十一题显示求吐槽
           if ((this.questionNo === 3 && this.chapterNo === 1 && !this.isShowEncourage) || (this.questionNo === 5 && this.chapterNo === 2 && !this.isShowEncourage)) {
             this.showEncourage()
-            return
-          }
-          //当每章最后一题是按钮的操作
-          if (this.questionNo >= 7 && this.chapterNo < 2) {
-            this.chapterNo += 1   //切换到第二章第一体
-            this.questionNo = 0
-            this.lifeScore = 0
-            this.commitRecord().then(   //提交进度，跳转到章节开始页
-              () => {
-                me.isEncourageShow = false
-                me.isUpgradeShow = false
-                me.$route.router.go(`/village/chapterstart/${this.chapterNo}`)
-              }
-            )
             return
           }
           this.showQuestion()   //如果不是上面的情况，就显示当前问题
@@ -396,11 +383,17 @@
       checkIsUpgrade () {
         const me = this
         if (this.questionNo === 7 && !this.isUpgradeShow) {
-          this.questionNo += 1
-          this.commitRecord()
           setTimeout(() => {
-            me.showUpgrade(this.chapterNo)
-            this.isUpgradeShow = true
+            me.showUpgrade(me.chapterNo)
+            me.isUpgradeShow = true
+            if (me.chapterNo < 2) {
+              me.chapterNo += 1   //切换到第二章第一体
+              me.questionNo = 0
+              me.lifeScore = 0
+              me.isEncourageShow = false
+              me.isUpgradeShow = false
+              this.commitRecord()
+            }
           }, 150)
         }
         return
