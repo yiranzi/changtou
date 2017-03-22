@@ -122,13 +122,13 @@
         this.setBackBtnToMain()
         const me = this
         this.chapterArr = [this.getChapter(1), this.getChapter(2)]    //获取章节列表
-        if (from.path === '/village/initialPage') {
+        if (from.path === '/village/initialPage') {   //如果是从导航页进入，不显示题目
           this.changeQuestionShow(false)
         }
         if (from.path === '/entry') {       //从登录页面进来的判断
           if (this.isLogin) {
             this.getVillageProgress().then(() => {    //获得数据后
-              if (me.villageProgress.questionNo > 7) {
+              if (me.villageProgress.questionNo >= 6) {
                 me.isUpgradeShow = true
               }
               me.setScrollerHeight()
@@ -165,7 +165,7 @@
                 if (from.path.indexOf('/village/wisdom') !== -1) {
                   me.checkIsUpgrade()   //如果是从今日小智进入 判断有没有升级
                 }
-                if (me.shouldQuestionShow && me.villageProgress.questionNo === 0) {
+                if (me.shouldQuestionShow && me.villageProgress.questionNo === 0) {   //如果是第一题且满足条件，显示问题
                   me.showQuestion()
                   me.changeQuestionShow(false)
                 }
@@ -441,7 +441,7 @@
           component: 'freshVillage/GiveEncouragement.vue',
           hideOnMaskTap: false,
           callbackName: 'onEncouragementPageTap',
-          componentData: '跪求给点鼓励',
+          componentData: '',
           callbackFn: this.onEncouragementPageTap.bind(this)
         })
       },
