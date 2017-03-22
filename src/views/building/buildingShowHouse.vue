@@ -43,9 +43,9 @@
               choose: 0,
               //传给我的数据是一个数组
               goodsData: {
-                itemId: 0,
-                maxGoodsNum: 2,
-                useGoodsNum: 0
+                itemId: 2,
+                maxGoodsNum: 1,
+                useGoodsNum: 1
               },
               gradeData: {
                 testType: '选择题',
@@ -78,13 +78,15 @@
           })
         },
         //选择完背景后的回调函数
-        ChangeGoods (choose) {
-          if (choose !== 0) {
-            this.choose = choose
-            console.log('用户选择的是' + this.choose)
-          } else {
-            console.log('用户没有选择')
-          }
+        ChangeGoods (choose1, choose2) {
+            console.log('接受到1' + choose1)
+          console.log('接受到2' + choose2)
+//          if (choose !== 0) {
+//            this.choose = choose
+//            console.log('用户选择的是' + this.choose)
+//          } else {
+//            console.log('用户没有选择')
+//          }
         }
       }
     }

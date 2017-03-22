@@ -18,6 +18,7 @@
       width: 10rem;
       height: 592/40rem;
       background: url("../../../static/image/building/gradeResult/gradeBuilding.png") center center no-repeat;
+      background-size: cover;
       .content{
         position:absolute;
         top: 420/40rem;
