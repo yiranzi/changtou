@@ -661,11 +661,87 @@
        **/
       showSubjectStatus () {
         if (getLocalCache('curr-course-status')) {
-
-        } else {
-
+          let currSubjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
+            // 判断课程状态
+            switch (currSubjectStatus) {
+              case 'I':
+                console.log('未激活')
+                break
+              case 'P':
+                console.log('暂停')
+                break
+              case 'E':
+                console.log('过期')
+                break
+              default:
+                break
+            }
         }
       },
+
+      /**
+       * 提示激活
+       **/
+      showActiveSubject () {
+        const me = this
+        const activeHandler = function () {
+          me.active()
+        }
+        const msg = '<p>该课程未激活，激活后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '激活课程',
+            cancelText: '再看看',
+            okCallback: activeHandler
+          })
+        }, 100)
+      },
+
+      /**
+      * 提示开启
+      **/
+      showOpenSubject () {
+        const me = this
+        const activeHandler = function () {
+          me.resume()
+        }
+        const msg = '<p>该课程已暂停，开启后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '开启课程',
+            cancelText: '再看看',
+            okCallback: activeHandler
+          })
+        }, 100)
+      },
+
+      /**
+      * 提示延期
+      **/
+      showContinueSubject () {
+        const me = this
+        const activeHandler = function () {
+          me.postpone()
+        }
+        const msg = '<p>该课程已过期，延期后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '延期课程',
+            cancelText: '再看看',
+            okCallback: activeHandler
+          })
+        }, 100)
+      },
+
       /**
        * 显示问答题通过浮层
        **/
