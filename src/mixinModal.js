@@ -62,7 +62,6 @@ Vue.mixin({
        * @param callbackFn
        */
     showMask: function ({component, hideOnMaskTap = true, componentData, callbackName, callbackFn}) {
-      console.log('showMask')
       this.$dispatch(eventMap.SHOW_MASK, {component, hideOnMaskTap, componentData, callbackName, callbackFn})
     },
 
@@ -70,7 +69,6 @@ Vue.mixin({
      * 隐藏 mask
      */
     hideMask: function () {
-      console.log('hideMask')
       this.$dispatch(eventMap.HIDE_MASK)
     },
 
@@ -202,6 +200,7 @@ const mixin = {
         },
         methods: {
           onFloatMaskTap: function (e) {
+            this.$broadcast('on-mask-tap')
             if (e.preventDefault) {
               e.preventDefault()
             }
