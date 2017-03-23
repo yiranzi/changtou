@@ -5,11 +5,11 @@
 <template>
   <Scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
     <div class="fresh-village-wisdom">
-      <span class="close-icon" v-touch:tap="onCloseTap"></span>
+      <div class="close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
       <div>
         <div class="wisdom-top">
           <span class="wisdom-title">今日小智</span>
-          <div class="content-title">{{wisdomData && wisdomData.title}}</div>
+          <div class="content-title">{{question.wisdom.title}}</div>
         </div>
         <div class="wisdom-content">{{{wisdomContent}}}</div>
       </div>
@@ -19,30 +19,53 @@
 </template>
 <script>
 import Scroller from 'vux/scroller'
+import {villageActions} from '../../vuex/actions'
+
 export default {
-  props: {
-    wisdomData: Object
+  vuex: {
+    actions: {
+      getChapter: villageActions.getChapter,
+      getQuestion: villageActions.getQuestion
+    }
   },
-  ready () {
-    this.setScrollerHeight()
+  route: {
+    data ({to: {params: {chapterNo, questionNo}}}) {
+      this.setBackBtnToMap()
+      this.chapter = this.getChapter(parseInt(chapterNo))
+      this.question = this.getQuestion(this.chapter.questionArr, parseInt(questionNo))
+      this.content = this.question.wisdom.content
+      this.setScrollerHeight()
+    },
+    deactivate () {
+      this.resetViewBackHandler()
+    }
   },
   data () {
     return {
-      scrollerHeight: '580px'
+      scrollerHeight: '0px',
+      chapter: {},
+      question: {},
+      content: ''
     }
   },
   computed: {
     /*小智的内容*/
     wisdomContent () {
-      return this.wisdomData && this.wisdomData.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
+      return this.content.replace(/\$#/g, '<div>').replace(/#\$/g, '</div>').replace(/&\*/g, '<p>').replace(/\*&/g, '</p>')
     }
   },
   methods: {
-    /*
-    * 点击关闭页面
-    * */
-    onCloseTap () {
-      this.$dispatch('close-wisdom')
+    /**
+     * 解绑物理back键
+     **/
+    resetViewBackHandler () {
+      this.$parent.viewBackHandler = null
+    },
+    /**
+     * 设置物理返回键为隐藏浮层
+     **/
+    setBackBtnToMap () {
+      this.$parent.viewBackHandler = this.onCloseTap
     },
     /*设置页面滑动高度*/
     setScrollerHeight () {
@@ -55,8 +78,11 @@ export default {
             top: 0
           })
         })
-        }, 500
+        }, 150
       )
+    },
+    onCloseTap () {
+      this.$route.router.go('/village/map')
     }
   },
   components: {
@@ -69,10 +95,18 @@ export default {
     position: relative;
     width: 100%;
     background-color: #fff;
+    .close-icon-container {
+      display: inline-block;
+      position: absolute;
+      top: .6rem;
+      right: .75rem;
+      width: 2rem;
+      height: 2rem;
+    }
     .close-icon:after{
       position: absolute;
-      top: 1.25rem;
-      right: .75rem;
+      top: .6rem;
+      right: .6rem;
       font-family: 'myicon';
       content: '\e90d';
       font-size: .75rem;

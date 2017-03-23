@@ -293,15 +293,15 @@
         this.level = levelArr[fourthSelect]    //根据第四题判断等级
         if (fourthSelect === 0 || fourthSelect === 2) {
             if (eighthSelect === 0) {
-                this.comboId = 1                          //第四题A/C第八题A为模板1
+                this.comboId = 7                          //第四题A/C第八题A为模板1
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 2                          //第四题A/C第八题B/C为模板2
+                this.comboId = 8                          //第四题A/C第八题B/C为模板2
             }
         } else if (fourthSelect === 1) {
             if (eighthSelect === 0) {
-                this.comboId = 3                          //第四题B第八题A为模板3
+                this.comboId = 9                          //第四题B第八题A为模板3
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 4                            //第四题B第八题B/C为模板4
+                this.comboId = 10                            //第四题B第八题B/C为模板4
             }
         }
       },

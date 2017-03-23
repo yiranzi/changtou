@@ -13,14 +13,16 @@
           </div>
           <!--按钮栏-->
           <div class= "class-type-buttons">
-            <tab class="fix-vuex-height" :line-width= 1 active-color='#00b0f0' :index.sync ="currTabIndex" >
-              <tab-item class="fix-vuex-line-height mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
+            <tab class="mycenter fix-vuex-height" :line-width= 1rem active-color='#00b0f0' :index.sync ="currTabIndex" >
+              <div class="mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
+                  <tab-item class="fix-vuex-line-height mycenter">
                     <div>
                       <img class = "class-button-icon" v-show ="currTabIndex == key" v-bind:src="iconsPicClick[key]"></img>
                       <img class = "class-button-icon" v-show ="currTabIndex != key" v-bind:src="iconsPic[key]"></img>
                     </div>
                     <span class = "class-button-txt">{{item}}</span>
-              </tab-item>
+                  </tab-item>
+              </div>
             </tab>
           </div>
           <!--课程分类内容-->

@@ -36,21 +36,6 @@
               <span class="under-banner-title">课程分类</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
-            <div v-touch:tap="goToTestPage1" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">showhouse</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
-            </div>
-            <div v-touch:tap="goToTestPage2" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">rule</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
-            </div>
-            <div v-touch:tap="goToTestPage3" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">introduction</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
-            </div>
           </div>
         </div>
 
@@ -184,8 +169,6 @@
         this.showHeadLineTitle()
         //比对版本号,判定是否是最新版本
         this.showColumnChange()
-        //测试
-        this.showPackage()
       }
     },
 
@@ -200,7 +183,7 @@
       }
     },
     ready () {
-
+      this.$dispatch(eventMap.FIRST_SCREEN_LOADED)
     },
 
     computed: {
@@ -475,19 +458,6 @@
         })
         this.$route.router.go('/course/classification')
       },
-      //测试界面
-      goToTestPage1 () {
-        this.$route.router.go('/building/showhouse')
-      },
-      //测试界面
-      goToTestPage2 () {
-        this.$route.router.go('/building/rule')
-      },
-
-      //测试界面
-      goToTestPage3 () {
-        this.$route.router.go('/building/introduction')
-      },
 
       /**
        * 跳转到每日一题
@@ -521,7 +491,7 @@
           // 已登录
           this.getVillageProgress().then(
             function (progress) {
-              if (progress) {
+              if (progress.chapterNo) {
                 // 有进度  进入新手村的首页
                 me.$route.router.go('/village/map')
               } else {
