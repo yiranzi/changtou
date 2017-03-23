@@ -344,16 +344,16 @@ export function configRouter (router) {
       component: require('../views/headline/Headline.vue')
     },
     /**
-     * 新手村
+     * 造房计划
      */
     '/building/showhouse': {
-      component: require('../views/building/buildingShowHouse.vue')
+      component: require('../views/building/BuildingShowHouse.vue')
     },
     '/building/rule': {
-      component: require('../views/building/buildingRule.vue')
+      component: require('../views/building/BuildingRule.vue')
     },
     '/building/introduction': {
-      component: require('../views/building/buildingIntroduction.vue')
+      component: require('../views/building/BuildingIntroduction.vue')
     }
   })
 
