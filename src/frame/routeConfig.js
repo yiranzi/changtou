@@ -346,7 +346,7 @@ export function configRouter (router) {
     },
 
     /**
-     * 头条精彩
+     * 头条精选
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
@@ -355,6 +355,7 @@ export function configRouter (router) {
 
   // redirect
   router.redirect({
+    //'': '/main'
     '': '/start'
   })
 }

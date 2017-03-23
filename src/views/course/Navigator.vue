@@ -4,23 +4,19 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <swiper :aspect-ratio="120/375" :list="banners"
-                stop-propagation dots-position="center"
-                :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class">
-        </swiper>
+        <div class="empty"></div>
         <!--理财新手村-入口-->
         <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
         <div class="head-navigator">
-          <p class="head-title">
-            <span>为你优选</span>
-          </p>
+          <!--<p class="head-title">-->
+            <!--<span>为你优选</span>-->
+          <!--</p>-->
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
               <i class="under-banner-icon newer-test "></i>
-              <span class="under-banner-title">理财揭秘</span>
+              <span class="under-banner-title">测测财商</span>
             </div>
             <div v-touch:tap="goToNewerGuide" class="under-banner-item">
               <i class="under-banner-icon newer-guide"></i>
@@ -34,7 +30,6 @@
             <div v-touch:tap="goToCourseClassification" class="under-banner-item">
               <i class="under-banner-icon classification"></i>
               <span class="under-banner-title">课程分类</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
           </div>
         </div>
@@ -106,6 +101,13 @@
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
+        <div class="fixswiper">
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class">
+          </swiper>
+        </div>
       </div>
     </scroller>
   </div>
@@ -135,7 +137,8 @@
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
         headLineTitle: navigatorGetters.headLineTitle,
-        appUpdateContent: appUpdateGetters.appUpdateContent
+        appUpdateContent: appUpdateGetters.appUpdateContent,
+        columnChangeData: navigatorGetters.columnChangeData
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -234,16 +237,17 @@
 
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
-        let versionNo = window.localStorage.getItem('versionNo')
-        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+        if (!getLocalCache(('column-version-no'))) return true
+        else if (getLocalCache(('column-version-no')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        else return false
       },
 
       //进入主页判定版本变更的流程
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
-          this.getColumnChange().then((columnChangeData) => {
-            if (columnChangeData.content) {
-              window.localStorage.setItem('versionNo', appVersion)
+          this.getColumnChange().then(() => {
+            if (this.columnChangeData.content) {
+              setLocalCache('column-version-no', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
             }
@@ -254,7 +258,7 @@
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.content,
+          componentData: this.columnChangeData,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
@@ -600,6 +604,14 @@
 
 <style lang="less">
   .course-navigator{
+    .empty{
+      height: 6rem;
+    }
+    .fixswiper{
+      position: absolute;
+      width:100%;
+      top:0;
+    }
     background: #fff;
     .popularSpe{
       padding-bottom: .8rem;
@@ -938,8 +950,8 @@
 
     /*人气必备*/
     .head-navigator{
-      border-bottom: 0.025rem #f0eff5 solid;
-      height:5.5rem;
+      border-bottom: 1px #f0eff5 solid;
+      padding: 1rem 0;
       .head-title{
         padding: 0.75rem 1.35rem 0.75rem;
         font-size: 0.8rem;
@@ -982,8 +994,6 @@
         vertical-align: middle;
         margin-left:0.75rem;
         font-size: 0.7rem;
-        height: 0.7rem;
-        line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
         width: 11rem;

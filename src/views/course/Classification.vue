@@ -13,16 +13,14 @@
           </div>
           <!--按钮栏-->
           <div class= "class-type-buttons">
-            <tab class="mycenter fix-vuex-height" :line-width= 1rem active-color='#00b0f0' :index.sync ="currTabIndex" >
-              <div class="mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
-                  <tab-item class="fix-vuex-line-height mycenter">
+            <tab class="fix-vuex-height" :line-width= 1 active-color='#00b0f0' :index.sync ="currTabIndex" >
+              <tab-item class="fix-vuex-line-height mycenter" v-for="(key,item) in buttonsTxt" :selected="currTabIndex ===  key">
                     <div>
                       <img class = "class-button-icon" v-show ="currTabIndex == key" v-bind:src="iconsPicClick[key]"></img>
                       <img class = "class-button-icon" v-show ="currTabIndex != key" v-bind:src="iconsPic[key]"></img>
                     </div>
                     <span class = "class-button-txt">{{item}}</span>
-                  </tab-item>
-              </div>
+              </tab-item>
             </tab>
           </div>
           <!--课程分类内容-->
@@ -67,9 +65,10 @@
     .class-type-buttons{
       height: 2.6rem;
       padding:0 1.5rem;
-      background-color: #fff;
+      background-color: #fafafa;
       .fix-vuex-height
       {
+        background-color: #fafafa;
         height: 2.6rem;
         .fix-vuex-line-height{
           line-height: 1.1rem;
@@ -130,7 +129,6 @@
         },
       route: {
         data () {
-          this.currTabIndex = 0
           this.setScrollerHeight()
         }
       },
@@ -140,10 +138,10 @@
               currTabIndex: 0,
               //大图
               topPic: [
-                '../../../static/image/classType/bigPic/bigpic_beginer.png',
-                '../../../static/image/classType/bigPic/bigpic_stock.png',
-                '../../../static/image/classType/bigPic/bigpic_fund.png',
-                '../../../static/image/classType/bigPic/bigpic_live.png'
+                './static/image/classType/bigPic/bigpic_beginer.png',
+                './static/image/classType/bigPic/bigpic_stock.png',
+                './static/image/classType/bigPic/bigpic_fund.png',
+                './static/image/classType/bigPic/bigpic_live.png'
                 ],
               //大图文本行1
               introTxt1: [
@@ -163,17 +161,17 @@
               buttonsTxt: ['入门', '股票', '基金', '生活'],
               //分类按钮图标
               iconsPic: [
-                '../../../static/image/classType/icon/beginer.png',
-                '../../../static/image/classType/icon/stock.png',
-                '../../../static/image/classType/icon/live.png',
-                '../../../static/image/classType/icon/fund.png'
+                './static/image/classType/icon/beginer.png',
+                './static/image/classType/icon/stock.png',
+                './static/image/classType/icon/live.png',
+                './static/image/classType/icon/fund.png'
               ],
               //分类按钮图标激活
               iconsPicClick: [
-                '../../../static/image/classType/icon/beginer_a.png',
-                '../../../static/image/classType/icon/stock_a.png',
-                '../../../static/image/classType/icon/live_a.png',
-                '../../../static/image/classType/icon/fund_a.png'
+                './static/image/classType/icon/beginer_a.png',
+                './static/image/classType/icon/stock_a.png',
+                './static/image/classType/icon/live_a.png',
+                './static/image/classType/icon/fund_a.png'
               ]
             }
         },

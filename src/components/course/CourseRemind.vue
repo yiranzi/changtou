@@ -4,14 +4,14 @@
     <div class="remind-title">设置上课提醒</div>
     <div class="remind-tip">最近一周</div>
     <div class="remind-img"><img src="../../assets/styles/image/courseDetail/setRemind.png"></div>
-    <div class="remind-date">提醒时间<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日</div>
+    <div class="remind-date">提醒时间<span class="remind-date-text">{{remindTimeStart.month}}</span>月<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.month}}</span>月<span class="remind-date-text">{{remindTimeEnd.day}}</span>日</div>
     <div class="remind-timepicker"><picker :data='remindTimeList' :value.sync='remindTimeValue' @on-change='onSetTimeChange'></picker></div>
     <div class="remind-btn" v-touch:tap="setRemind">确定</div>
   </div>
   <div class="remind remind-cancel" :id="isRemoveRemindShow?'show':''">
     <div class="remind-closebtn" v-touch:tap="closeModal"></div>
     <div class="remind-title">上课提醒</div>
-    <div class="remind-canceldate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
+    <div class="remind-canceldate"><span class="remind-date-cancelText">取消</span>每日提醒<span class="remind-date-text">{{remindTimeStart.month}}</span>月<span class="remind-date-text">{{remindTimeStart.day}}</span>日~<span class="remind-date-text">{{remindTimeEnd.month}}</span>月<span class="remind-date-text">{{remindTimeEnd.day}}</span>日&nbsp&nbsp<span class="remind-date-text">{{(remindTimeData[0] == 0 ? '0时' : remindTimeData[0])}}  {{(remindTimeData[1] == 0 ? '0分' : remindTimeData[1])}}</div>
     <div class="remind-cancelimg"><img src="../../assets/styles/image/courseDetail/noRemind.png"></div>
     <div class="remind-btn"><div class="remind-actionbtn-left" v-touch:tap="closeModal">继续提醒</div><div class="remind-actionbtn-right" v-touch:tap="removeRemind">不再提醒</div></div>
   </div>
