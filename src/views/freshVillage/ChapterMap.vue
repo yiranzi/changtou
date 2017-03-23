@@ -6,22 +6,29 @@
   <div>
     <div v-if="!showWisdom" class="chapter-map" :class="bgStyle">
       <div class="other-element">
-        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span><span class="close-icon" v-touch:tap="exitVillage"></span>
+        <span class="chapter-title" v-touch:tap="showChapterStory">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
+        <div class="close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
         <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
         <img class="back-chapter" src="../../assets/styles/image/freshVillage/back.png" v-touch:tap="backToChapter"/>
-        <div class="go-btn" v-touch:tap="goNextStep" :class="{'next-btn' : showNextChapterBtn}"></div>
+        <div class="go-btn" :class="rightBtnStyle" v-touch:tap="goNextStep"></div>
       </div>
-      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
       <img class="user-img" :class="getOverLevel" :src="userImgUrl"/>
+      <div class="level" :class="getLevelCls(i)" v-for="i in 6" v-touch:tap="onLevelTap(i + 1)"></div>
     </div>
     <wisdom v-if="showWisdom" :wisdom-data="wisdomData" @close-wisdom="closeWisdom"></wisdom>
+    <share-float :show.sync="showShareFloat"  @confirm="cancelShare" v-touch:tap="onActionTap"></share-float>
 </div>
 </template>
 <script>
+  import store from '../../vuex/store'
   import {userGetters, villageGetters} from '../../vuex/getters'
   import wisdom from './Wisdom.vue'
+  import ShareFloat from '../../components/share/ImageShareFloat.vue'
   import {villageActions} from '../../vuex/actions'
+  import mixinImageShare from '../../mixinImageShare'
   export default {
+    mixins: [mixinImageShare],
+    store,
     vuex: {
       getters: {
         isLogin: userGetters.isLogin,
@@ -47,9 +54,13 @@
         lifeScore: 0,
         showWisdom: false,
         bgStyle: 'chapter1-bg',
-        showNextChapterBtn: false,
         getOverLevel: 'user-img-1',
-        hasShownEncouragement: false
+        hasShownEncouragement: false,
+        showShareFloat: false,
+        villageUnLoginRecord: {
+          questionNo: 0,
+          option: false
+        }
       }
     },
     computed: {
@@ -69,13 +80,38 @@
       /*今日小智内容*/
       wisdomData () {
         return this.question.wisdom
+      },
+      /* 改变下一章btn状态显示*/
+      showNextChapterBtn () {
+        if (this.villageProgress.chapterNo > this.activeChapterNo ||
+          (this.villageProgress.chapterNo === this.activeChapterNo && this.villageProgress.questionNo === 7)) {
+          return true
+        } else {
+          return false
+        }
+      },
+      /*主页右下按钮显示敬请期待*/
+      showWaitBtn () {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7 && this.activeChapterNo === 2) { //需要根据具体开放的章节修改！
+          return true
+        } else {
+          return false
+        }
+      },
+      /*按钮样式改变*/
+      rightBtnStyle () {
+        if (this.showNextChapterBtn && this.showWaitBtn) {
+          return 'wait-btn'
+        } else if (this.showNextChapterBtn) {
+          return 'next-btn'
+        } else {
+          return 'go-btn'
+        }
       }
-      /*关卡背景*/
     },
     watch: {
-      villageProgress (newValue) {
+      villageProgress () {
         this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
       },
       activeChapterNo () {  //switch
         if (this.activeChapterNo === 1) {
@@ -84,54 +120,86 @@
           this.bgStyle = 'chapter2-bg'
         }
         this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
       },
       isLogin (newValue) {
         if (newValue) {
           this.getVillageProgress()
         }
+      },
+      showWisdom (newValue) {
+        if (newValue) {
+          this.setViewBackHandler()
+        } else {
+          this.resetViewBackHandler()
+        }
       }
     },
     route: {
       data ({from}) {
-        if (from.path === '/entry' || from.path === '/village/advise') {
+        if (from.path === '/village/advise' || from.path === '/village/fill/content') { // 吐槽页面，鼓励编辑页面
           return
         }
+        if (from.path !== '/entry' && !(/\/register\/end\//g.test(from.path))) { // 从主页面进入
+          this.fromMainPageEnterProcess()
+        } else {
+          this.fromLoginRegisterEnterProcess()   // 从登陆注册页面进入
+        }
         this.setUserImagePosition()
-        this.judgeNextChapterBtnStatus()
+      },
+      deactivate () {
+        this.hideMask()
+        this.resetViewBackHandler()
+      }
+    },
+    methods: {
+      /*
+      * 从主页进入后的判断
+      * */
+      fromMainPageEnterProcess () {
         if (!this.isLogin) {
           this.resetRecord() // 将之前的记录清空
-          this.activeChapterNo = 0
-          this.activeQuestionNo = 0
+          this.activeChapterNo = 1
+          this.activeQuestionNo = 1
+          this.chapter = this.getChapter(this.activeChapterNo)
           this.showChapterChoice()
         } else {
           this.JudgeProgress()
         }
       },
-      deactivate () {
-        this.hideMask()
-      }
-    },
-    methods: {
+      /*
+      * 从登陆注册页进入的判断处理
+      * */
+      fromLoginRegisterEnterProcess () {
+        if (!this.isLogin) {
+          this.showQuestion()
+        } else {
+          if (this.villageProgress.chapterNo !== 0) {
+            this.JudgeProgress()
+          } else if (this.villageUnLoginRecord.questionNo === 0) {
+            this.showQuestion()
+          } else {
+            this.answerQuestion(this.villageUnLoginRecord.option)
+            this.recordUnLoginOption(0, false)
+          }
+        }
+      },
+      /**
+       * 设置物理键back
+       */
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.closeWisdom
+      },
+      /*
+      * 解绑物理back键
+      * */
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
       /*
       * 点击吐槽
       * */
       onAdviceTap () {
         this.$route.router.go('/village/advise')
-      },
-      /*
-       * 改变下一章btn状态
-       * */
-      judgeNextChapterBtnStatus () {
-        if (this.villageProgress.chapterNo > this.activeChapterNo) {
-          this.showNextChapterBtn = true
-          return
-        }
-        if (this.villageProgress.chapterNo === this.activeChapterNo && (this.villageProgress.questionNo === 6 || this.villageProgress.questionNo === 7)) {
-          this.showNextChapterBtn = true
-        } else {
-          this.showNextChapterBtn = false
-        }
       },
       /*
       * 更换头像位置
@@ -173,7 +241,12 @@
       * 判断进度
       * */
       JudgeProgress () {
-        if (this.villageProgress.chapterNo === 0 || this.villageProgress.questionNo === 7) {
+        if (this.villageProgress.chapterNo === 2 && this.villageProgress.questionNo === 7) { //根据开放到的关卡章节要动态修改！
+          this.activeChapterNo = 2
+          this.showChapterChoice()
+          return
+        }
+        if (this.villageProgress.chapterNo === 0 || (this.villageProgress.questionNo === 7 && this.villageProgress.chapterNo !== 2)) { //只到第三关
           this.activeChapterNo = this.villageProgress.chapterNo + 1
           this.showChapterChoice()
         } else {
@@ -200,6 +273,10 @@
               return
             }
             this.showQuestion()
+          } else if (this.villageProgress.questionNo === 6) {
+            this.onRecordedQuestionTap(this.activeQuestionNo)
+          } else if (this.villageProgress.chapterNo < this.activeChapterNo) {
+            this.showQuestion()
           }
         }
       },
@@ -214,8 +291,8 @@
         }
         this.showMask({
           component: 'freshVillage/ChapterChoice.vue',
-          hideOnMaskTap: false,
-          callbackName: 'onChapterSelected', //onChapterSelected
+          hideOnMaskTap: true,
+          callbackName: 'onChapterSelected',
           componentData: choiceComponentData,
           callbackFn: this.villageShowTheStory.bind(this)
         })
@@ -225,12 +302,13 @@
       * */
       villageShowTheStory (chapterNum) {
         if ((!this.isLogin && chapterNum === 1) || ((this.isLogin) && (chapterNum <= this.villageProgress.chapterNo + 1))) {
-          this.activeChapterNo = chapterNum
+          this.activeChapterNo = chapterNum                       /*当前章节确定*/
           this.chapter = this.getChapter(this.activeChapterNo)  // 获取章节内容
           setTimeout(this.showChapterStory, 300)
         }
       },
       /*
+
       * 显示章节故事浮层
       * */
       showChapterStory () {
@@ -246,7 +324,11 @@
       * 从小故事下一步按钮进入答题
       * */
       startChapter () {
-        if (!this.isLogin || (this.isLogin && this.activeChapterNo >= this.villageProgress.chapterNo && this.villageProgress.questionNo === 0)) {
+        if (this.isLogin && this.activeChapterNo <= this.villageProgress.chapterNo) {
+          return
+        }
+        if (!this.isLogin || this.isLogin && (this.activeChapterNo > this.villageProgress.chapterNo &&
+          (this.villageProgress.questionNo === 7 || this.villageProgress.chapterNo === 0))) {
           this.activeQuestionNo = 1
           setTimeout(() => {
             this.showQuestion()
@@ -272,6 +354,15 @@
           componentData: this.question,
           callbackFn: this.answerQuestion.bind(this)
         })
+      },
+      /*
+       * 设置记录未登录前选项
+       * */
+      recordUnLoginOption (questionNo, option) {
+        this.villageUnLoginRecord = {
+          questionNo: questionNo,
+          option: option
+        }
       },
       /*
        * 选择关卡
@@ -341,20 +432,15 @@
       /*
       *判断是否可以跳转到吐槽编辑页
       * */
-      onEncouragementPageTap (type) {
-       // if (type === 1) {
-          this.$route.router.go('/village/fill/content')
-      //  } else {
-      //    setTimeout(() => {
-      //      this.showQuestion()
-       //   }, 300)
-     //   }
+      onEncouragementPageTap () {
+        this.$route.router.go('/village/fill/content')
       },
       /*
       * 记录选择的项上传记录
       * */
       answerQuestion (result) {
         if (!this.isLogin) {
+          this.recordUnLoginOption(1, result)
           this.$route.router.go('/entry')
         } else {
           this.lifeScore = result ? 10 : 2
@@ -425,12 +511,25 @@
         this.showMask({
           component: 'freshVillage/Proverbs.vue',
           hideOnMaskTap: false,
-          callbackName: 'closeProverb',
+          callbackName: 'onVillageProverbTap',
           componentData: this.question.proverbs,
-          callbackFn: this.showUpgradeJudgement.bind(this)
+          callbackFn: this.onVillageProverbTap.bind(this)
         })
+        const shareImgId = 'village-proverb'
+        setTimeout(() => {
+          this.loadShareImageUrl(shareImgId)
+        }, 500)
       },
-
+      /*
+      * 点击箴言页面的操作
+      * */
+      onVillageProverbTap (type) {
+        if (type === 1) {
+          this.showShareFloat = true
+        } else {
+          this.showUpgradeJudgement()
+        }
+      },
       /*
       * 显示突发事件
       * */
@@ -454,20 +553,40 @@
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
           hideOnMaskTap: false,
-          callbackName: 'villageUpdateRecord',
+          callbackName: 'onVillageUpgradeTap',
           componentData: upgradePageData,
-          callbackFn: this.updateTheRecord.bind(this)
+          callbackFn: this.onVillageUpgradeTap.bind(this)
         })
+        const shareImgId = 'village-upgrade-detail'
+        setTimeout(() => {
+          this.loadShareImageUrl(shareImgId)
+        }, 300)
       },
       /*
-      * 提交答题记录
+      * 加载图片
       * */
-      updateTheRecord () {
+      loadShareImageUrl (shareImgId) {
+        const origin = window.document.getElementById(shareImgId)
+        const element = origin.cloneNode(true)
+        const height = origin.offsetHeight
+        const width = origin.offsetWidth
+        setTimeout(() => {
+          this.setShareImageUrl({element, height, width})
+        }, 300)
+      },
+      /*
+      * 提交答题记录,分享
+      * */
+      onVillageUpgradeTap (type) {
         this.updateRecord(this.activeChapterNo, 7)
         this.getOverLevel = 'user-img-1'
+        if (type === 2) {
+          this.showShareFloat = true
+        }
       }
     },
     components: {
+      ShareFloat,
       wisdom
     }
   }
@@ -480,66 +599,62 @@
     height: 100%;
     .level {
       position: absolute;
-      width: 2.1rem;
-      height: 2.1rem;
+      width: 3rem;
+      height: 3rem;
       &-6 {
-        left: 7.7rem;
-        top: 6.1rem;
+        left: 7.2rem;
+        top: 4.7rem;
       }
       &-5 {
-        left: 8.96rem;
-        top: 11.4rem;
+        left: 8.5rem;
+        top: 9.8rem;
       }
       &-4 {
-        left: 6.7rem;
-        top: 16.6rem;
+        left: 6.3rem;
+        top: 15.5rem;
       }
       &-3 {
-        left: 9.4rem;
-        bottom: 9.7rem;
+        left: 9rem;
+        bottom: 9.6rem;
       }
       &-2 {
-        left: 8.9rem;
-        bottom: 4.8rem;
+        left: 8.5rem;
+        bottom: 4.7rem;
       }
       &-1 {
-        left: 6.8rem;
-        bottom: .2rem;
+        left: 6.6rem;
+        bottom: 0;
       }
     }
     .user-img {
-      position: relative;
+      position: absolute;
       width: 2.4rem;
       height: 2.4rem;
       border: 4px solid #fff;
       border-radius: 50%;
-      &-7 {
-        left: 7.4rem;
-        top: -30.1rem;
-      }
-      &-6 {
-        left: 7.4rem;
-        top: -30.1rem;
+      &-7, &-6{
+        left: 7.2rem;
+        top: 3rem;
       }
       &-5 {
-        left: 8.6rem;
-        top: -24.8rem;
+        left: 8.5rem;
+        top: 7.7rem;
       }
       &-4 {
-        left: 6.4rem;
-        top: -19.6rem;
+        left: 6.3rem;
+        top: 13rem;
       }
       &-3 {
-        left: 9.2rem;
-        bottom: 14.7rem;
+        left: 9rem;
+        bottom: 11.4rem;
       }
       &-2 {
         left: 8.5rem;
-        bottom: 9.8rem;
+        bottom: 6.6rem;
       }
       &-1 {
         left: 6.6rem;
-        bottom: 5rem;
+        bottom: 2rem;
       }
     }
   }
@@ -569,10 +684,18 @@
       opacity: .7;
       color: #888;
     }
+    .close-icon-container {
+      display:inline-block;
+      position: absolute;
+      top: 1rem;
+      right: .75rem;
+      width: 2rem;
+      height: 2rem;
+    }
     .close-icon:after{
       position: absolute;
-      top: 1.3rem;
-      right: .75rem;
+      top: .6rem;
+      right: .6rem;
       font-family: 'myicon';
       content: '\e90d';
       font-size: .9rem;
@@ -604,7 +727,21 @@
       background-size: contain;
     }
     .next-btn {
+      position: absolute;
+      bottom: .5rem;
+      right: 3rem;
+      width: 3.6rem;
+      height: 3.75rem;
       background: url('../../assets/styles/image/freshVillage/next.png') no-repeat;
+      background-size: contain;
+    }
+    .wait-btn {
+      position: absolute;
+      bottom: .5rem;
+      right: 3rem;
+      width: 3.6rem;
+      height: 3.75rem;
+      background: url('../../assets/styles/image/freshVillage/wait.png') no-repeat;
       background-size: contain;
     }
   }

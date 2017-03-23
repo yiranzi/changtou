@@ -20,3 +20,9 @@ export const adviseList = (state) => {
 export const villageProgress = (state) => {
   return state.freshVillage.villageProgress
 }
+/*
+* 记载未登陆前选择
+* */
+export const villageUnLoginRecord = (state) => {
+  return state.freshVillage.unLoginOptionRecord
+}
