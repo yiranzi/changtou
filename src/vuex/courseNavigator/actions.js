@@ -1,7 +1,7 @@
 /**
  * Created by jun on 2016/8/23.
  */
-import {getWithoutAuth, getWithinAuth} from '../../frame/ajax'
+import {getWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 export const loadNavigatorDataInApp = ({ dispatch }) => {
@@ -88,7 +88,7 @@ export const getHeadLineTitle = ({dispatch}) => {
 export const getColumnChange = ({dispatch}) => {
   return new Promise(
     (resolve, reject) => {
-      getWithinAuth(
+      getWithoutAuth(
         {
           url: getUrl('column_change')
         }
