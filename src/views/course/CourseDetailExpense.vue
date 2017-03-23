@@ -51,7 +51,7 @@
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currSubject.finishDate">
+          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currRecord.finishDate">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">暂停</div>
           </div>
@@ -200,7 +200,7 @@
             border: 1px solid #eee;
             font-size: 22/40rem;
             border-radius: 0.9rem;
-            box-sizing: border-box;
+            box-sizing: content-box;
             padding: 0 6/40rem;
             display: inline-block;
            }
@@ -450,6 +450,7 @@
           this.$broadcast('expense-detail-deactive')
           next()
         }
+        this.isShareShow = false
         this.clearTimeData()
       }
     },
@@ -651,6 +652,18 @@
 
     methods: {
       /**
+       * 设置物理返回键绑定消失浮层
+       **/
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.closeShare
+      },
+      /**
+       * 解除物理返回键绑定
+       **/
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
+      /**
        * 点击空白消失模态层
        **/
       closeModal () {
@@ -698,6 +711,11 @@
        **/
       showShare () {
         this.isShareShow = true
+        this.setViewBackHandler()
+      },
+      closeShare () {
+        this.isShareShow = false
+        this.resetViewBackHandler()
       },
       /**
        * 获取定时开始和结束日期
