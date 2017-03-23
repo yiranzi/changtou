@@ -72,6 +72,7 @@
           </div>
         </div>
       </scroller>
+      <building-entry></building-entry>
     </div>
 </template>
 <script>
@@ -82,6 +83,7 @@
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
+  import buildingEntry from '../../components/building/entry.vue'
 export default {
   vuex: {
     getters: {
@@ -196,6 +198,12 @@ export default {
     }
   },
   methods: {
+    /**
+     * 造房计划入口
+     **/
+    goToBuilding () {
+      this.$route.router.go('/building/introduction')
+    },
     /**
      *  去阅读电子书 若有阅读进度 则去上次阅读进度处
      */
@@ -332,7 +340,8 @@ export default {
   components: {
     IctTitlebar,
     IctButton,
-    Scroller
+    Scroller,
+    buildingEntry
   }
 }
 </script>

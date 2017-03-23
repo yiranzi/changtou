@@ -103,9 +103,10 @@
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
-    <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
+    <!--<div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>-->
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
+     <building-entry></building-entry>
   </div>
 
 </template>
@@ -236,6 +237,7 @@
   import {Jpush} from '../../plugin/jpush'
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
+  import buildingEntry from '../../components/building/entry.vue'
   export default {
     mixin: [mixinPageShare],
     vuex: {
@@ -1466,7 +1468,8 @@
       PptPanel,
       IctBackBtn,
       PageShareFloat,
-      CourseRemind
+      CourseRemind,
+      buildingEntry
     }
   }
 </script>
