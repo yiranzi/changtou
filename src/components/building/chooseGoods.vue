@@ -1,28 +1,29 @@
 <template>
   <div class="choose-goods">
     <swiper v-ref:swiper height="100px" :auto='false' class="goods-choose-swiper" dots-class="dots-class"   >
-      <swiper-item class="item-white" v-for="(key,item) in items">
+      <swiper-item class="item-white" v-for="(key,item) in introTxt[1]">
         <p class="title">{{introTxt[itemId][key]}}</p>
         <div class="centerpic" v-if="componentData.maxGoodsNum < key">
-          <img class="pic" v-bind:src="lockedPic[itemId][key]">
-          <img class="choose-or-lock" v-bind:src="choose[0]">
+          <img class="pic" :src="lockedPic[itemId][key]">
+          <img class="choose-or-lock" :src="choose[0]">
           <div class="bottom-div">
             <div class="lock-txt">
               <p v-if="key == 1">{{lockTxt2[key]}}</p>
               <p v-if="key == 2">{{lockTxt2[key]}}</p>
+              <span>选择题、问答题均取第一次作答成绩，珍惜答题机会</span>
             </div>
           </div>
         </div>
         <div class="centerpic" v-else>
-          <img class="pic"  v-bind:src="unlockedPic[itemId][key]">
+          <img class="pic"  :src="unlockedPic[itemId][key]">
           <div v-show="componentData.useGoodsNum == key">
-            <img class="choose-or-lock" v-bind:src="choose[1]">
+            <img class="choose-or-lock" :src="choose[1]">
             <div class="bottom-div">
               <span class="button have-used">已使用</span>
             </div>
           </div>
           <div class="bottom-div" v-else>
-            <span class="button use"v-touch:tap="onChooseGood(key)">使用</span>
+            <span class="button use" v-touch:tap="onChooseGood(key)">使用</span>
           </div>
         </div>
       </swiper-item>
@@ -101,6 +102,10 @@
           height: 64/40rem;
           line-height: 64/40rem;
           .lock-txt {
+              p{
+                margin-bottom: .5rem;
+              }
+              line-height: .7rem;
               border: 2px solid #FFFFFF;
               color: #888;
               font-size: 26/40rem;
@@ -131,13 +136,11 @@
     export default {
       data () {
           return {
-            chooseD: 1,
-            items: [1, 2, 3],
             //大图文本行2
             lockTxt2: [
-              '',
-              '回答再多一些吧',
-              '简答题都回答了就好了'
+              '选择题3分以上即可解锁该物品',
+              '选择题5分或问答题3分以上即可解锁该物品',
+              '问答题4分以上即可解锁该物品'
             ],
             choose: [
               './static/image/building/choose/lock.png',
@@ -250,6 +253,10 @@
             return this.componentData.itemId
           }
       },
+      /*
+      *点击mask的时候触发事件
+      * dispatch数据给父节点(只能传递一个参数)
+       */
       events: {
         'on-mask-tap' () {
             this.onMaskHide()

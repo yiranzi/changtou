@@ -18,12 +18,9 @@
     export default {
         methods: {
           goToBuilding () {
+              /*这里需要换上正确的入口.这个入口是测试入口*/
             this.$route.router.go('/building/introduction')
           }
-        },
-        data () {
-            return {}
-        },
-        components: {}
+        }
     }
 </script>

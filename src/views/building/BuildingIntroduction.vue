@@ -84,11 +84,7 @@
       },
     methods: {
       back () {
-        if (parseInt(window.sessionStorage.getItem('count')) <= 1) {
-          this.$route.router.go('/main')
-        } else {
-          window.history.back()
-        }
+        window.history.back()
       },
       goToStartBuildHouse () {
         this.$route.router.go('/building/showhouse')

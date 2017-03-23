@@ -199,12 +199,6 @@ export default {
   },
   methods: {
     /**
-     * 造房计划入口
-     **/
-    goToBuilding () {
-      this.$route.router.go('/building/introduction')
-    },
-    /**
      *  去阅读电子书 若有阅读进度 则去上次阅读进度处
      */
     gotoReadBook () {

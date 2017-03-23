@@ -58,9 +58,6 @@
       goToBuild () {
         this.$dispatch('goToBuild')
       }
-    },
-    components: {
     }
-
   }
 </script>
