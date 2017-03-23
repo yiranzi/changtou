@@ -6,14 +6,14 @@
 </template>
 
 <script>
-  import {eventMap} from '../../frame/eventConfig'
+//  import {eventMap} from '../../frame/eventConfig'
 
   export default {
     /*
     *数据加载完成后，隐藏加载动图
     * */
     ready () {
-      this.$dispatch(eventMap.GUIDE_VIEW_LOADED)
+//      this.$dispatch(eventMap.FIRST_SCREEN_LOADED)
     },
     methods: {
       /*

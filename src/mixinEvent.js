@@ -119,14 +119,7 @@ const mixin = {
     /**
      * 首屏加载完毕
      */
-    /*[eventMap.NAVIGATOR_LOADED]: function () {
-      this.hideSplashscreen()
-    },*/
-
-    /**
-     * 开机引导页加载完毕
-     */
-    [eventMap.GUIDE_VIEW_LOADED]: function () {
+    [eventMap.FIRST_SCREEN_LOADED]: function () {
       this.hideSplashscreen()
     },
 
