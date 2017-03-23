@@ -3,7 +3,7 @@
       <div class="background">
         <div class="column-top">
           <img class="bigpic" src='../../../static/image/navigator/column-change.png'>
-          <p class="txt">{{componentData}}</p>
+          <p class="txt">{{componentData.content}}</p>
         </div>
         <div class="mycenter column-bottom">
           <ict-button class="mycenter button exit"v-touch:tap="onCloseTap">知道了</ict-button>
@@ -30,8 +30,10 @@
           height: 4.35rem;
         }
         .txt{
+          text-align: left;
           font-size: 0.7rem;
           color: #888;
+          overflow: hidden;
         }
       }
       .column-bottom {
@@ -42,6 +44,7 @@
         .button {
           width: 4.8rem;
           height: 1.6rem;
+          text-align: center;
           .go {
             background-color: #ffc82f;
             color: #444;
@@ -79,7 +82,7 @@
         }
       },
       props: {
-        componentData: String
+        componentData: Object
       }
     }
 </script>
