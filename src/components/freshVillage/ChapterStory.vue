@@ -4,15 +4,16 @@
  */
 <template>
   <div class="chapter-story">
-    <div class="chapter-top">
+    <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
+    <div class="chapterstory-top">
       <p class="story">小故事</p>
       <p class="story-text">{{componentData.story}}</p>
-      <div class="task">
-        <p class="task-title">任务</p>
-        <div class="task-content">{{componentData.task}}</div>
+      <div class="storytask">
+        <p class="storytask-title">任务</p>
+        <div class="storytask-content">{{componentData.task}}</div>
       </div>
     </div>
-    <div class="next-btn" v-touch:tap="onEnterMainPageTap">明白了</div>
+    <div class="story-next-btn" v-touch:tap="onEnterMainPageTap">明白了</div>
     </div>
 </template>
 <script>
@@ -23,13 +24,16 @@ export default {
   methods: {
     onEnterMainPageTap () {
       this.$dispatch('villageStartChapter')
+    },
+    onCloseTap () {
+      this.$dispatch('hideMask')
     }
   }
 }
 </script>
 <style lang="less">
   .chapter-story {
-    .chapter-top {
+    .chapterstory-top {
       width: 14.5rem;
       min-height: 20rem;
       border-radius: 20px 20px 0 0;
@@ -49,7 +53,7 @@ export default {
         color: #666;
         margin: 0 .9rem;
       }
-      .task {
+      .storytask {
         background-color: #FFF9EB;
         color: #b07f50;
         margin: 1rem .9rem 0 ;
@@ -65,7 +69,7 @@ export default {
         }
       }
     }
-    .next-btn {
+    .story-next-btn {
       text-align: center;
       height: 2rem;
       line-height: 2rem;
@@ -75,5 +79,6 @@ export default {
       border-radius: 0 0 20px 20px;
     }
   }
+
 
 </style>

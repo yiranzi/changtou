@@ -497,7 +497,7 @@
           // 已登录
           this.getVillageProgress().then(
             function (progress) {
-              if (progress) {
+              if (progress.chapterNo) {
                 // 有进度  进入新手村的首页
                 me.$route.router.go('/village/map')
               } else {
