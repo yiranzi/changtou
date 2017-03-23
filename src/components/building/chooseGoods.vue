@@ -18,11 +18,11 @@
           <div v-show="componentData.useGoodsNum == key">
             <img class="choose-or-lock" v-bind:src="choose[1]">
             <div class="bottom-div">
-              <span class="button use">已使用</span>
+              <span class="button have-used">已使用</span>
             </div>
           </div>
           <div class="bottom-div" v-else>
-            <span class="button have-used"v-touch:tap="onChooseGood(key)">使用</span>
+            <span class="button use"v-touch:tap="onChooseGood(key)">使用</span>
           </div>
         </div>
       </swiper-item>
@@ -107,7 +107,7 @@
             }
             .button {
               display: inline-block;
-              border-radius: 50%;
+              border-radius: 32/40rem;
               width: 260/40rem;
               font-size: 30/40rem;
               font-weight: bold;
@@ -250,11 +250,17 @@
             return this.componentData.itemId
           }
       },
+      events: {
+        'on-mask-tap' () {
+            this.onMaskHide()
+        }
+      },
       methods: {
         onChooseGood (chooseId) {
-          console.log(chooseId)
           this.componentData.useGoodsNum = chooseId
-//          this.$dispatch('ChangeGoods',  this.componentData.useGoodsNum.itemId,  this.componentData.useGoodsNum)
+        },
+        onMaskHide () {
+          this.$dispatch('ChangeGoods', this.componentData)
         }
       },
       components: {
