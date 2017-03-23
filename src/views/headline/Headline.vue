@@ -156,12 +156,14 @@
       actions: {
         getHeadlineContent: headlineActions.getHeadlineContent,  // 获取头条精选内容
         getCheckinData: headlineActions.getCheckinData,  // 获取用户签到信息
-        checked: headlineActions.checked  //  用户进行签到
+        checked: headlineActions.checked,  //  用户进行签到
+        updataAmount: headlineActions.updataAmount  //  用户进行签到
       },
       getters: {
         isLogin: userGetters.isLogin,  //是否登录
         headlineContent: headlineGetters.headlineContent,  // 头条精选内容
-        userCheckinData: headlineGetters.userCheckinData  // 用户签到信息
+        userCheckinData: headlineGetters.userCheckinData,  // 用户签到信息
+        getAmount: headlineGetters.getAmount  // 用户签到信息
       }
     },
 
@@ -344,6 +346,12 @@
             hideOnMaskTap: true
           })
           // 给后台传数据：该用户生命值加1000
+          let hp = 1000
+          this.updataAmount(hp).then(() => {
+            if (this.getAmount) {
+              console.log('增加成功')
+            }
+          })
         }
         this.checked()
       }
