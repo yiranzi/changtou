@@ -108,6 +108,9 @@ export const updateRecord = ({ dispatch }, chapterNo, questionNo) => {
 export const resetRecord = ({dispatch}) => {
   dispatch('RESET_VILLAGE_RECORD')
 }
+export const changeQuestionShow = ({dispatch}, status) => {
+  dispatch('SHOULD_QUESTION_SHOW', status)
+}
 /*
 * 获取章节卡片内容
 * */
