@@ -10,7 +10,7 @@
                 :show-desc-mask="false" dots-class="dots-class">
         </swiper>
         <!--理财新手村-入口-->
-        <!--<div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>-->
+        <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
         <div class="head-navigator">
