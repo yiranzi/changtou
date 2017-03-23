@@ -1,6 +1,6 @@
 <template>
     <div class="building-rule">
-      <ict-titlebar v-el:titlebar>课程分类</ict-titlebar>
+      <ict-titlebar v-el:titlebar>造房攻略</ict-titlebar>
       <div class="main">
         <div class="top-txt">
           <div>

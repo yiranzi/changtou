@@ -1,7 +1,6 @@
 <template>
     <div class="building-introduction">
       <div class="background">
-        <!--<ict-back-btn class="exit">X</ict-back-btn>-->
         <div class="exit" v-touch:tap="back">X</div>
         <img class="top-pic" src="../../../static/image/building/building-intro1.png">
         <div class="content">
@@ -75,15 +74,13 @@
 </style>
 <script>
   import IctButton from '../../components/IctButton.vue'
-  import IctBackBtn from '../../components/IctCourseBackBtn.vue'
   export default {
       data () {
           return {
           }
       },
       components: {
-        IctButton,
-        IctBackBtn
+        IctButton
       },
     methods: {
       back () {
@@ -94,7 +91,7 @@
         }
       },
       goToStartBuildHouse () {
-          console.log('go building house')
+        this.$route.router.go('/building/showhouse')
       }
     }
   }
