@@ -1,26 +1,26 @@
 <template>
-  <div class="building-show">
-    <div class="building-show-title" v-el:titlebar>
-      <div class="building-show-close" v-touch:tap="onCancel"></div>
+  <div class="building-add">
+    <div class="building-add-title" v-el:titlebar>
+      <div class="building-add-close" v-touch:tap="onCancel"></div>
       造房计划
-      <div class="building-show-rule" v-touch:tap="goToBuildingRule">攻略</div>
+      <div class="building-add-rule" v-touch:tap="goToBuildingRule">攻略</div>
     </div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <div class="building-show-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
-          <div class="building-show-house-bg" v-if="showHouseBackground">
-            <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;">
+        <div class="building-add-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
+          <div class="building-add-house-bg" v-if="showHouseBackground">
+            <img src="../../../static/image/building/building-show-house-bg.png" style="width: 100%;">
           </div>
-          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
+          <div class="building-add-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
             <img v-bind:src="item.buildingPic" style="width: 100%;">
-            <div class="building-show-goods-state" v-if="item.isUsed === 0">
+            <div class="building-add-goods-state" v-if="item.isUsed === 0">
               <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;">
             </div>
           </div>
         </div>
-        <div class="building-show-article" v-for="article in selectArticle" v-show="$index === notUsedGoodsIndex">
-          <div class="building-show-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
-          <div class="building-show-article-title">
+        <div class="building-add-article" v-for="article in selectArticle" v-show="$index === notUsedGoodsIndex">
+          <div class="building-add-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
+          <div class="building-add-article-title">
             <span v-for="item in article.pointTitle">{{item}}<br></span>
           </div>
         </div>
@@ -29,22 +29,22 @@
   </div>
 </template>
 <style lang="less">
-  .building-show{
+  .building-add{
     background: #fff;
-    .building-show-title{
+    .building-add-title{
       text-align: center;
       line-height: 84/40rem;
       color: #666;
       font-size: 34/40rem;
       padding: 1.2rem 0 46/40rem;
       position: relative;
-      .building-show-close {
+      .building-add-close {
         width: 2rem;
         height: 2rem;
         position: absolute;
         left: 0.4rem;
       }
-      .building-show-close:before {
+      .building-add-close:before {
         width: 0.8rem;
         line-height: 0.8rem;
         font-family: 'myicon';
@@ -53,7 +53,7 @@
         text-align: center;
         color: #aaa;
       }
-      .building-show-rule{
+      .building-add-rule{
         font-size: 28/40rem;
         color: #888;
         line-height: 84/40rem;
@@ -62,10 +62,10 @@
         right: 0.8rem;
       }
     }
-    .building-show-entirety{
+    .building-add-entirety{
       overflow: hidden;
       position: relative;
-      .building-show-house-bg{
+      .building-add-house-bg{
         width: 630/40rem;
         height: 206/40rem;
         margin-left: -315/40rem;
@@ -73,7 +73,7 @@
         left: 50%;
         top: 338/40rem;
       }
-      .building-show-single{
+      .building-add-single{
         width: 750/40rem;
         height: 300/40rem;
         box-sizing: border-box;
@@ -83,7 +83,7 @@
         align-items:center;
         justify-content: center;
         position: absolute;
-        .building-show-goods-state{
+        .building-add-goods-state{
           width: 66/40rem;
           height: 128/40rem;
           position: absolute;
@@ -92,53 +92,53 @@
           justify-content: center;
         }
       }
-      .building-show-single-no-border{
+      .building-add-single-no-border{
         border: none;
       }
-      .building-show-single-location{
+      .building-add-single-location{
         top: 0;
       }
-      .building-show-single-house{
+      .building-add-single-house{
         width: 360/40rem;
         height: 260/40rem;
         margin-left: -180/40rem;
         top: 130/40rem;
         left: 50%;
       }
-      .building-show-single-butler{
+      .building-add-single-butler{
         width: 100/40rem;
         height: 220/40rem;
         top: 311/40rem;
         left: 224/40rem;
       }
-      .building-show-single-pet{
+      .building-add-single-pet{
         width: 130/40rem;
         height: 130/40rem;
         top: 402/40rem;
         left: 108/40rem;
       }
-      .building-show-single-transportation{
+      .building-add-single-transportation{
         width: 310/40rem;
         height: 130/40rem;
         top: 402/40rem;
         left: 416/40rem;
       }
-      .building-show-single-sight{
+      .building-add-single-sight{
         width: 750/40rem;
         height: 140/40rem;
         top: 570/40rem;
       }
     }
-    .building-show-article{
+    .building-add-article{
       padding: 0 70/40rem 0;
       margin: 60/40rem 0 80/40rem;
       font-size: 26/40rem;
       color: #666;
       text-align: center;
-      .building-show-article-content{
+      .building-add-article-content{
         margin: 60/40rem 0;
       }
-      .building-show-unlocked-article{
+      .building-add-unlocked-article{
         color: #888;
       }
     }
@@ -188,14 +188,14 @@
         unlockedCount: 1, // 解锁物品的个数
         notUsedGoodsIndex: 0, // 未使用并最先解锁的物品的index
         showHouseBackground: false, // 房子背景的显示
-        noBorder: 'building-show-single-no-border', // 已使用去掉边框
+        noBorder: 'building-add-single-no-border', // 已使用去掉边框
         courseBuilding: [
-          {buildingClass: 'building-show-single-location', buildingPic: './static/image/building/building-show-locked-1-1.png', isUnlocked: 1, isUsed: 0},
-          {buildingClass: 'building-show-single-house', buildingPic: './static/image/building/building-show-locked-2-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-show-single-butler', buildingPic: './static/image/building/building-show-locked-3-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-show-single-pet', buildingPic: './static/image/building/building-show-locked-4-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-show-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 1, isUsed: 0},
-          {buildingClass: 'building-show-single-sight', buildingPic: './static/image/building/building-show-locked-6-1.png', isUnlocked: 0, isUsed: 0}
+          {buildingClass: 'building-add-single-location', buildingPic: './static/image/building/building-show-locked-1-1.png', isUnlocked: 1, isUsed: 0},
+          {buildingClass: 'building-add-single-house', buildingPic: './static/image/building/building-show-locked-2-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'building-add-single-butler', buildingPic: './static/image/building/building-show-locked-3-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'building-add-single-pet', buildingPic: './static/image/building/building-show-locked-4-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'building-add-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 1, isUsed: 0},
+          {buildingClass: 'building-add-single-sight', buildingPic: './static/image/building/building-show-locked-6-1.png', isUnlocked: 0, isUsed: 0}
         ], // 课程建筑(1表示已解锁或者被使用,0表示未解锁或者未使用)
         selectArticle: [
           {courseIndex: '一', pointTitle: ['买房最重要的是什么？location！location！location！', '万事开头难，好的地段是决定你房屋价值的重要指标？']},
@@ -210,11 +210,11 @@
 
     computed: {
       buildingHeight () {
-        if (this.studyCourseCount === 1) {
+        if (this.unlockedCount === 1) {
           return '7.5'
-        } else if (this.studyCourseCount === 2 || this.studyCourseCount === 3 || this.studyCourseCount === 4 || this.studyCourseCount === 5) {
+        } else if (this.unlockedCount === 2 || this.unlockedCount === 3 || this.unlockedCount === 4 || this.unlockedCount === 5) {
           return '14'
-        } else if (this.studyCourseCount === 6) {
+        } else if (this.unlockedCount === 6) {
           return '17.75'
         }
       }

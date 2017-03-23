@@ -247,7 +247,7 @@
         homeworkList: homeworkListGetters.homeworkList,
         buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
         buildingUpdata: buildingGetters.buildingUpdata,
-        getEssayResult: essayGetters.getEssayResult
+        essayResult: essayGetters.essayResult
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -270,7 +270,7 @@
 
         getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
         updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus,
-        essayResult: essayActions.essayResult
+        getEssayResult: essayActions.getEssayResult
       }
     },
     /**
@@ -369,7 +369,10 @@
        * @returns {{type: string}}
        */
       data ({to: {params: {subjectId}}, from}) {
-        console.log(this.subjectId)
+        // 判断是否显示相应课程状态提示浮层
+        this.showSubjectStatePoint()
+        // 判断显示问答题通过的浮层
+        this.showEssayPassed(subjectId)
         //读取缓存，判断之前有没有设置定时提醒
         let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)    //读取对应课程的上课提醒缓存
         let currDate = new Date().getTime()   //读取现在的时间
@@ -433,9 +436,6 @@
             }
           )
         }
-
-        //判断是否显示相应课程状态提示浮层
-        this.showSubjectStatePoint()
       },
 
       /**
@@ -657,18 +657,28 @@
 
     methods: {
       /**
+       * 显示课程状态提示
+       **/
+      showSubjectStatus () {
+        if (getLocalCache('curr-course-status')) {
+
+        } else {
+
+        }
+      },
+      /**
        * 显示问答题通过浮层
        **/
-      showEssayPassed () {
-        if (this.subjectId === 4) {
-          console.log(this.subjectId)
-          this.getEssayResult(this.subjectId).then(() => {
+      showEssayPassed (subjectId) {
+        if (subjectId === '4') {
+          this.getEssayResult(subjectId).then(() => {
             console.log(this.essayResult)
             if (!this.essayResult.remind) {
               // 显示分数浮层
               let taskPassedData = {} // 传给浮层的数据
               taskPassedData.type = 1  // 1表示通过的是问答题题
-              taskPassedData.scoreNum = this.essayResult.score  // 选择题的分数
+              taskPassedData.scoreNum = this.essayResult.score  // 问答题的分数
+              console.log(taskPassedData)
               /*
               this.showMask({
                component: 'GradeToBuild.vue',
@@ -679,7 +689,7 @@
                */
                /*
               // 进行物品解锁(更新)
-              this.getBuildingGoodsStatus(this.subjectId).then(() => {
+              this.getBuildingGoodsStatus(subjectId).then(() => {
                 let goods = this.buildingGoodsStatus.goods
                 for (let i = 0; i < 6; i++) {
                   let goodsObj = {}
@@ -689,9 +699,9 @@
                     goods[i] = goodsObj
                   }
                 }
-                goods[this.essayResult.sequence].maxGoodsNum = this.essayResult.score - 2
+                goods[this.essayResult.sequence - 17].maxGoodsNum = this.essayResult.score - 2
                 console.log(goods)
-                this.updataBuildingGoodsStatus(this.subjectId, goods)
+                this.updataBuildingGoodsStatus(subjectId, goods)
               })
               */
             }
@@ -700,35 +710,39 @@
       },
 
       /**
-       * 去造房子展示页(选择物品)
+       * 去造房子选择物品页(点击问答题通过浮层的入口)
        */
       goToBuildingAdd () {
         this.$route.router.go('/building/BuildingAdd')
       },
 
       /**
-       * 进入造房子
+       * 进入造房子(小房子按钮入口)
        **/
       goToBuilding () {
-        if (getLocalCache('first-building').firstBuilding) { // 不是第一次进入造房子
-          this.getBuildingGoodsStatus(4).then(() => {
-            let unlockedGoodsCount = 0 // 已解锁的物品数
-            let usedGoodsCount = 0 // 已使用的物品数
-            let goods = this.buildingGoodsStatus.goods
-            for (let i = 0; i < this.buildingGoodsStatus.length; i++) {
-              if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
-                if (goods[i].useGoodsNum !== 0) { // 物品已使用
-                  usedGoodsCount += 1
+        if (getLocalCache('first-building')) { // 不是第一次进入造房子
+          if (this.isUserLogin) { // 已登录
+            this.getBuildingGoodsStatus(4).then(() => {
+              let unlockedGoodsCount = 0 // 已解锁的物品数
+              let usedGoodsCount = 0 // 已使用的物品数
+              let goods = this.buildingGoodsStatus.goods
+              for (let i = 0; i < this.buildingGoodsStatus.length; i++) {
+                if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
+                  if (goods[i].useGoodsNum !== 0) { // 物品已使用
+                    usedGoodsCount += 1
+                  }
+                  unlockedGoodsCount += 1
                 }
-                unlockedGoodsCount += 1
               }
-            }
-            if (usedGoodsCount === unlockedGoodsCount) {
-              this.$route.router.go('/building/BuildingShow')
-            } else {
-              this.$route.router.go('/building/BuildingAdd')
-            }
-          })
+              if (usedGoodsCount === unlockedGoodsCount) {
+                this.$route.router.go('/building/BuildingShow')
+              } else {
+                this.$route.router.go('/building/BuildingAdd')
+              }
+            })
+          } else { // 未登录
+            this.$route.router.go('/building/BuildingShow')
+          }
         } else { // 第一次进入造房子
           setLocalCache('first-building', {firstBuilding: true})
           this.$route.router.go('/building/BuildingIntroduction')
@@ -739,12 +753,12 @@
        * 显示课程状态提示浮层
        **/
       showSubjectStatePoint () {
-        if (getLocalCache('curr-course-status').subjectStatusPoint) {
+        if (getLocalCache('curr-course-status')) {
           let subjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
           //显示相应课程的提示浮层
           /*
           this.showMask({
-            component: `building/subjectPoint${subjectStatus}.vue`,
+            component: `building/BuildingSubjectPoint.vue`,
             componentData: subjectStatus,
             hideOnMaskTap: true
           })

@@ -236,19 +236,25 @@
         if (this.isLogin) {  // 已登陆
           // 获取签到信息
           const me = this
-          this.getCheckinData().then(() => {
-            me.checkinCount = me.userCheckinData.count
-            me.isCheckin = me.userCheckinData.hasChecked
-            if (this.checkinState && !me.isCheckin) {
-              this.loginCheckin()
-              this.checkinState = false
-            }
-            if (!me.checkinCount && me.checkinCount !== 0) { // 判断开始是否签过到
-              me.checkinCount = 0
-              me.isCheckin = false
-            }
-            me.CheckinProgress(me.checkinCount)
-          })
+          if (this.checkinState) { // 未登录的时候点击过签到按钮
+            this.getCheckinData().then(() => {
+              me.isCheckin = me.userCheckinData.hasChecked
+              if (!me.isCheckin) { // 没登录的时候，点击签到，进行签到
+                me.loginCheckin()
+                me.checkinState = false
+              }
+            })
+          } else { // 未登录的时候用户没有点击过按钮
+            this.getCheckinData().then(() => {
+              me.checkinCount = me.userCheckinData.count
+              me.isCheckin = me.userCheckinData.hasChecked
+              if (!me.checkinCount && me.checkinCount !== 0) { // 判断开始是否签过到
+                me.checkinCount = 0
+                me.isCheckin = false
+              }
+              me.CheckinProgress(me.checkinCount)
+            })
+          }
         } else {  // 未登录
           this.checkinCount = 0
           this.isCheckin = false

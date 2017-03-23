@@ -9,7 +9,7 @@
       <div>
         <div class="building-show-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
           <div class="building-show-house-bg" v-if="usedGoodsCount >= 2">
-            <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;">
+            <img src="../../../static/image/building/building-show-house-bg.png" style="width: 100%;">
           </div>
           <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="$index < studyCourseCount" >
             <img v-bind:src="item.buildingPic" style="width: 100%;">
@@ -157,9 +157,6 @@
         margin-bottom: 60/40rem;
       }
     }
-    .article-center{
-      text-align: center;
-    }
     .start-study-btn{
       width: 340/40rem;
       height: 80/40rem;
@@ -269,13 +266,13 @@
           ]
         let subjectStatusInitial = 'I'
         this.subjectGraduation = false
-        this.getGoodsStatus(goodsInitial, subjectStatusInitial)
+        this.showGoodsStatus(goodsInitial, subjectStatusInitial)
         // 判断是否登录
         if (this.isLogin) { // 已登录
           // 判断购买状态
+          this.currSubjectStatus = this.expenseRecordsArr.find(subject => (subject.subjectId) === 4).lessonSet
           if (this.currSubjectStatus) {  // 已购买
             //获取该课程状态信息
-            this.currSubjectStatus = this.expenseRecordsArr.find(subject => (subject.subjectId) === 4).lessonSet
             //this.getBuildingGoodsStatus(4).then(() => {
               //let goods = this.buildingGoodsStatus.goods
               let goods = [
@@ -286,22 +283,21 @@
                 {maxGoodsNum: 0, useGoodsNum: 0},
                 {maxGoodsNum: 0, useGoodsNum: 0}
               ]
-              this.getGoodsStatus(goods, this.currSubjectStatus.graduated)
+              this.showGoodsStatus(goods, this.currSubjectStatus.graduated)
             //})
           } else { // 未购买
-            console.log('提示购买')
+            this.showBuyPoint()
           }
         } else { // 未登录
-          console.log('提示登录')
+          this.showLoginPoint()
         }
       },
 
       /**
-       * 物品状态
+       *  显示物品状态
        **/
-      getGoodsStatus (goods, subjectStatus) {
-        let usedGoodsCount = 0
-        // 物品显示状态
+      showGoodsStatus (goods, subjectStatus) {
+        let usedCount = 0
         for (let i = 0; i < goods.length; i++) {
           this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
           if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
@@ -310,10 +306,11 @@
             if (goods[i].useGoodsNum !== 0) { // 物品已使用
               this.courseBuilding[i].isUsed = 1
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
-              usedGoodsCount += 1
-              if (usedGoodsCount === 6) { // 全部使用
+              usedCount += 1
+              if (usedCount === 6) { // 全部使用
                 this.subjectGraduation = true
               }
+              this.usedGoodsCount = usedCount
             }
           } else { // 物品未解锁
             this.courseBuilding[i].isUnlocked = 0
@@ -324,7 +321,7 @@
         switch (subjectStatus) {
           case 'I':
             console.log('未激活')
-            this.studyCourseCount = 0
+            this.studyCourseCount = 1
             this.currArticleIndex = 1
             this.showStartStudy = true
             break
@@ -347,7 +344,7 @@
               this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
               this.showStartStudy = true
             } else { // 未完成初级课程
-              this.studyCourseCount = 0
+              this.studyCourseCount = 1
               this.currArticleIndex = 1
               this.showStartStudy = false
             }
@@ -370,6 +367,52 @@
       goToStudy () {
         setLocalCache('curr-course-status', {subjectStatusPoint: this.currSubjectStatus.graduated})
         this.$route.router.go('subject/detail/P/4/0')
+      },
+
+      /**
+       * 提示登录
+       **/
+      showLoginPoint () {
+        const me = this
+        const activeHandler = function () {
+          me.$route.router.go('/entry')
+        }
+        const msg = '<p>已购买股票投资初级课的用户登录后可参加造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '登录',
+            cancelText: '再看看',
+            okCallback: activeHandler
+          })
+        }, 100)
+      },
+
+      /**
+       * 提示登录
+       **/
+      showBuyPoint () {
+        const me = this
+        const activeHandler = function () {
+          const path = `/pay-S-${4}`
+          me.$route.router.on(path, {
+            component: require('../pay/SubjectOrder.vue')
+          })
+          me.$route.router.go(path)
+        }
+        const msg = '<p>您尚未购买股票投资初级课，购买后可参加造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '前往购买',
+            cancelText: '再看看',
+            okCallback: activeHandler
+          })
+        }, 100)
       },
 
       /**
