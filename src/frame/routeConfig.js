@@ -336,6 +336,14 @@ export function configRouter (router) {
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
     },
+    //新手村今日小智
+    '/village/wisdom/:chapterNo/:questionNo': {
+      component: require('../views/freshVillage/Wisdom.vue')
+    },
+    //新手村章节开始页
+    '/village/chapterstart/:chapterNo': {
+      component: require('../views/freshVillage/ChapterStart.vue')
+    },
 
     /**
      * 头条精彩
@@ -359,6 +367,6 @@ export function configRouter (router) {
 
   // redirect
   router.redirect({
-    '': '/main'
+    '': '/start'
   })
 }

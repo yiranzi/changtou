@@ -15,7 +15,7 @@
         </div>
         <div class="life-score"><span class="round"></span><span class="socre-name">生命值</span><span class="score">+{{componentData.lifeScore}}</span></div>
       </div>
-      <div class="confirm-btn" v-touch:tap="next">懂了</div>
+      <div class="confirm-btn" v-touch:tap="toExpands">懂了</div>
     </div>
 </template>
 <script>
@@ -27,8 +27,8 @@ export default {
     onCloseTap () {
       this.$dispatch('hideMask')
     },
-    next () {
-      this.$dispatch('showExpands')
+    toExpands () {
+      this.$dispatch('showExpands', this.componentData.type)
     }
   }
 }

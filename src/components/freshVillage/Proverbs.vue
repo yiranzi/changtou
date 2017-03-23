@@ -4,7 +4,7 @@
  */
 <template>
     <div class="fresh-village-proverbs">
-      <div class="village-close-icon-container proverb-close" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
+      <span class="close-icon" v-touch:tap="onCloseTap"></span>
       <div class="village-proverbs" id="village-proverb">
         <div class="proverbs-top">
           <div class="proverbs-title">投资箴言</div>
