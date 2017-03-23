@@ -21,6 +21,10 @@
             </div>
           </div>
           <div class="tip-time">更新时间{{duoyizi && duoyizi.updateDate}}</div>
+          <div class="week-change">
+            <p>本周新入排名 : <span v-for="name in duoyizi.top10">{{name}}</span></p>
+            <p>本周移除排名 : <span v-for="name in duoyizi.top10">{{name}}</span></p>
+          </div>
           <div class="tip-title">温馨提示</div>
           <p class="tip-paragraph" v-for="tip in duoyizi.tips">{{{tip}}}</p>
         </div>
@@ -40,7 +44,9 @@ export default {
           csi300Benefit: '',
           purchaseTip: '',
           totalBenefit: '',
-          top10: []
+          top10: [],
+          plus: [],
+          less: []
         }
       }
     }
@@ -118,6 +124,18 @@ export default {
           font-size: .65rem;
           color: #ff994e;
           font-weight: bold;
+        }
+      }
+    }
+    .week-change{
+      margin-top: 1rem;
+      p{
+        font-size: .65rem;
+        margin: 0;
+        margin: 0.6rem 0;
+        line-height: 1rem;
+        span{
+          margin-right: 0.3rem;
         }
       }
     }
