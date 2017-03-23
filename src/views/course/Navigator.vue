@@ -34,20 +34,6 @@
             <div v-touch:tap="goToCourseClassification" class="under-banner-item">
               <i class="under-banner-icon classification"></i>
               <span class="under-banner-title">课程分类</span>
-            </div>
-            <div v-touch:tap="goToTestPage1" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">showhouse</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
-            </div>
-            <div v-touch:tap="goToTestPage2" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">rule</span>
-              <i class="new-interview-icon" v-show="hasNewInterview"></i>
-            </div>
-            <div v-touch:tap="goToTestPage3" class="under-banner-item">
-              <i class="under-banner-icon classification"></i>
-              <span class="under-banner-title">introduction</span>
               <i class="new-interview-icon" v-show="hasNewInterview"></i>
             </div>
           </div>
@@ -183,8 +169,6 @@
         this.showHeadLineTitle()
         //比对版本号,判定是否是最新版本
         this.showColumnChange()
-        //测试
-        this.showPackage()
       }
     },
 
@@ -473,19 +457,6 @@
           position: '课程分类'
         })
         this.$route.router.go('/course/classification')
-      },
-      //测试界面
-      goToTestPage1 () {
-        this.$route.router.go('/building/showhouse')
-      },
-      //测试界面
-      goToTestPage2 () {
-        this.$route.router.go('/building/rule')
-      },
-
-      //测试界面
-      goToTestPage3 () {
-        this.$route.router.go('/building/introduction')
       },
 
       /**
@@ -1005,6 +976,8 @@
         vertical-align: middle;
         margin-left:0.75rem;
         font-size: 0.7rem;
+        height: 0.7rem;
+        line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
         width: 11rem;
