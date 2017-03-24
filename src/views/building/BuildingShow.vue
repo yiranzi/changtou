@@ -297,6 +297,46 @@
        *  显示物品状态
        **/
       showGoodsStatus (goods, subjectStatus) {
+        // 判断课程状态
+        switch (subjectStatus) {
+          case 'I':
+            console.log('未激活')
+            this.notActive()
+            break
+          case 'N':
+            console.log('在读')
+            this.studying (goods)
+            break
+          case 'P':
+            console.log('暂停')
+            this.stop()
+            break
+          case 'E':
+            console.log('过期')
+            this.expired()
+            break
+          case 'Y':
+            console.log('毕业')
+            this.graduation()
+            break
+          default:
+            break
+        }
+      },
+
+      /**
+       * 未激活
+       **/
+      notActive () {
+        this.studyCourseCount = 1
+        this.currArticleIndex = 1
+        this.showStartStudy = true
+      },
+
+      /**
+       * 在读
+       **/
+      studying (goods) {
         let usedCount = 0
         for (let i = 0; i < goods.length; i++) {
           this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
@@ -317,48 +357,43 @@
             this.courseBuilding[i].isUsed = 0
           }
         }
-        // 判断课程状态
-        switch (subjectStatus) {
-          case 'I':
-            console.log('未激活')
-            this.studyCourseCount = 1
-            this.currArticleIndex = 1
-            this.showStartStudy = true
-            break
-          case 'N':
-            console.log('在读')
-            this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-            this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-            this.showStartStudy = true
-            break
-          case 'P':
-            console.log('暂停')
-            this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-            this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-            this.showStartStudy = true
-            break
-          case 'E':
-            console.log('过期')
-            if (this.currSubjectStatus.finishDate) { // 已完成初级课程
-              this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-              this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-              this.showStartStudy = true
-            } else { // 未完成初级课程
-              this.studyCourseCount = 1
-              this.currArticleIndex = 1
-              this.showStartStudy = false
-            }
-            break
-          case 'Y':
-            console.log('毕业')
-            this.subjectGraduation = true
-            this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-            this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-            this.showStartStudy = false
-            break
-          default:
-            break
+        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
+        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
+        this.showStartStudy = true
+      },
+
+      /**
+       * 暂停
+       **/
+      stop () {
+        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
+        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
+        this.showStartStudy = true
+      },
+
+      /**
+       * 已过期
+       **/
+      expired () {
+        if (this.currSubjectStatus.finishDate) { // 已完成初级课程
+          this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
+          this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
+          this.showStartStudy = true
+        } else { // 未完成初级课程
+          this.studyCourseCount = 1
+          this.currArticleIndex = 1
+          this.showStartStudy = false
         }
+      },
+
+      /**
+       * 毕业
+       **/
+      graduation () {
+        this.subjectGraduation = true
+        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
+        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
+        this.showStartStudy = false
       },
 
       /**
