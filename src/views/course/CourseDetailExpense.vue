@@ -370,7 +370,7 @@
        */
       data ({to: {params: {subjectId}}, from}) {
         // 判断是否显示相应课程状态提示浮层
-        this.showSubjectStatePoint()
+        this.showSubjectStatus()
         // 判断显示问答题通过的浮层
         this.showEssayPassed(subjectId)
         //读取缓存，判断之前有没有设置定时提醒
@@ -662,20 +662,20 @@
       showSubjectStatus () {
         if (getLocalCache('curr-course-status')) {
           let currSubjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
-            // 判断课程状态
-            switch (currSubjectStatus) {
-              case 'I':
-                console.log('未激活')
-                break
-              case 'P':
-                console.log('暂停')
-                break
-              case 'E':
-                console.log('过期')
-                break
-              default:
-                break
-            }
+          // 判断课程状态
+          switch (currSubjectStatus) {
+            case 'I':
+              this.showActiveSubject()
+              break
+            case 'P':
+              this.showOpenSubject()
+              break
+            case 'E':
+              this.showContinueSubject()
+              break
+            default:
+              break
+          }
         }
       },
 
@@ -750,19 +750,6 @@
           this.getEssayResult(subjectId).then(() => {
             console.log(this.essayResult)
             if (!this.essayResult.remind) {
-              // 显示分数浮层
-              let taskPassedData = {} // 传给浮层的数据
-              taskPassedData.type = 1  // 1表示通过的是问答题题
-              taskPassedData.scoreNum = this.essayResult.score  // 问答题的分数
-              console.log(taskPassedData)
-              /*
-              this.showMask({
-               component: 'GradeToBuild.vue',
-               componentData: taskPassedData,
-               callbackName: 'goToBuildingAdd',
-               callbackFn: this.goToBuildingAdd.bind(this)
-              })
-               */
                /*
               // 进行物品解锁(更新)
               this.getBuildingGoodsStatus(subjectId).then(() => {
@@ -778,6 +765,18 @@
                 goods[this.essayResult.sequence - 17].maxGoodsNum = this.essayResult.score - 2
                 console.log(goods)
                 this.updataBuildingGoodsStatus(subjectId, goods)
+              })
+              */
+              // 显示分数浮层
+              let taskPassedData = {} // 传给浮层的数据
+              taskPassedData.type = '问答题'  // 问答题类型
+              taskPassedData.scoreNum = this.essayResult.score  // 问答题的分数
+              /*
+              this.showMask({
+               component: 'GradeToBuild.vue',
+               componentData: taskPassedData,
+               callbackName: 'goToBuildingAdd',
+               callbackFn: this.goToBuildingAdd.bind(this)
               })
               */
             }
@@ -822,25 +821,6 @@
         } else { // 第一次进入造房子
           setLocalCache('first-building', {firstBuilding: true})
           this.$route.router.go('/building/BuildingIntroduction')
-        }
-      },
-
-      /**
-       * 显示课程状态提示浮层
-       **/
-      showSubjectStatePoint () {
-        if (getLocalCache('curr-course-status')) {
-          let subjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
-          //显示相应课程的提示浮层
-          /*
-          this.showMask({
-            component: `building/BuildingSubjectPoint.vue`,
-            componentData: subjectStatus,
-            hideOnMaskTap: true
-          })
-          */
-          console.log(subjectStatus)
-          clearLocalCache('curr-course-status')
         }
       },
 

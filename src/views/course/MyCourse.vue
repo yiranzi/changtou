@@ -214,7 +214,7 @@ export default {
             let goods = [
               {maxGoodsNum: 1, useGoodsNum: 1},
               {maxGoodsNum: 2, useGoodsNum: 1},
-              {maxGoodsNum: 3, useGoodsNum: 0},
+              {maxGoodsNum: 3, useGoodsNum: 1},
               {maxGoodsNum: 0, useGoodsNum: 0},
               {maxGoodsNum: 0, useGoodsNum: 0},
               {maxGoodsNum: 0, useGoodsNum: 0}

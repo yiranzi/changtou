@@ -118,18 +118,6 @@
      * 通过后显示作业通过浮层并更新后台解锁物品
      */
     showTaskPassed () {
-      // 显示分数浮层
-      let taskPassedData = {} // 传给浮层的数据
-      taskPassedData.type = 0  // 0表示通过的是选择题
-      taskPassedData.scoreNum = this.score  // 选择题的分数
-      /*
-      this.showMask({
-       component: 'GradeToBuild.vue',
-       componentData: taskPassedData,
-       callbackName: 'goToBuildingAdd',
-       callbackFn: this.goToBuildingAdd.bind(this)
-      })
-       */
       /*
       // 进行物品解锁(更新)
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
@@ -147,6 +135,18 @@
         this.updataBuildingGoodsStatus(this.subjectId, goods)
       })
       */
+      // 显示分数浮层
+      let taskPassedData = {} // 传给浮层的数据
+      taskPassedData.type = '选择题'  // 选择题类型
+      taskPassedData.scoreNum = this.score  // 选择题的分数
+      /*
+      this.showMask({
+       component: 'GradeToBuild.vue',
+       componentData: taskPassedData,
+       callbackName: 'goToBuildingAdd',
+       callbackFn: this.goToBuildingAdd.bind(this)
+      })
+       */
      },
 
     /**

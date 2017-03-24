@@ -18,10 +18,10 @@
             </div>
           </div>
         </div>
-        <div class="building-show-article" v-for="article in sdutyArticle" v-show="$index === (currArticleIndex - 1) && !subjectGraduation">
+        <div class="building-show-article" v-for="article in sdutyArticle" v-show="$index === (studyCourseCount - 1) && !subjectGraduation">
           <div class="building-show-article-title">{{article.pointTitle}}</div>
           <div class="building-show-article-content">在股票投资初级课•造房计划中，根据第<span>{{article.courseIndex}}</span>课的作业情况，将有机会选择你心仪的<span>{{article.buildingText}}</span>哦~~</div>
-          <div class="building-show-unlocked-artilce" v-if="currArticleIndex === 1">解锁物品规则：<br>选择题3/4分——解锁初级物品<br>选择题5分/问答题3分——解锁中级物品<br>问答题4/5分——解锁高级物品</div>
+          <div class="building-show-unlocked-artilce" v-if="studyCourseCount === 1">解锁物品规则：<br>选择题3/4分——解锁初级物品<br>选择题5分/问答题3分——解锁中级物品<br>问答题4/5分——解锁高级物品</div>
         </div>
         <div class="building-show-graduation-article" v-show="subjectGraduation">
           <div>恭喜你！</div>
@@ -206,7 +206,6 @@
         buildingHeight: '7.5', // 整个building的高度
         currSubjectStatus: {}, // 初级课程的状态 (有则购买，为空则未购买)
         studyCourseCount: 1, // 可学课程数(从1开始)
-        currArticleIndex: 1, // 当前显示的文案
         subjectGraduation: false, // 初级课程是否毕业
         usedGoodsCount: 0, // 使用物品的个数
         showStartStudy: true, // 显示开始学习按钮
@@ -278,12 +277,38 @@
               let goods = [
                 {maxGoodsNum: 1, useGoodsNum: 1},
                 {maxGoodsNum: 2, useGoodsNum: 2},
-                {maxGoodsNum: 3, useGoodsNum: 2},
+                {maxGoodsNum: 3, useGoodsNum: 1},
                 {maxGoodsNum: 0, useGoodsNum: 0},
                 {maxGoodsNum: 0, useGoodsNum: 0},
                 {maxGoodsNum: 0, useGoodsNum: 0}
               ]
-              this.showGoodsStatus(goods, this.currSubjectStatus.graduated)
+              // 判断课程状态
+              switch (this.currSubjectStatus.graduated) {
+                case 'I':
+                  console.log('未激活')
+                  //this.showGoodsStatus(goods)
+                  this.studyCourseCount = 1
+                  this.showStartStudy = true
+                  break
+                case 'N':
+                  console.log('在读')
+                  this.showGoodsStatus(goods)
+                  break
+                case 'P':
+                  console.log('暂停')
+                  this.showGoodsStatus(goods)
+                  break
+                case 'E':
+                  console.log('过期')
+                  this.showGoodsStatus(goods)
+                  break
+                case 'Y':
+                  console.log('毕业')
+                  this.showGoodsStatus(goods)
+                  break
+                default:
+                  break
+              }
             //})
           } else { // 未购买
             this.showBuyPoint()
@@ -296,47 +321,7 @@
       /**
        *  显示物品状态
        **/
-      showGoodsStatus (goods, subjectStatus) {
-        // 判断课程状态
-        switch (subjectStatus) {
-          case 'I':
-            console.log('未激活')
-            this.notActive()
-            break
-          case 'N':
-            console.log('在读')
-            this.studying (goods)
-            break
-          case 'P':
-            console.log('暂停')
-            this.stop()
-            break
-          case 'E':
-            console.log('过期')
-            this.expired()
-            break
-          case 'Y':
-            console.log('毕业')
-            this.graduation()
-            break
-          default:
-            break
-        }
-      },
-
-      /**
-       * 未激活
-       **/
-      notActive () {
-        this.studyCourseCount = 1
-        this.currArticleIndex = 1
-        this.showStartStudy = true
-      },
-
-      /**
-       * 在读
-       **/
-      studying (goods) {
+      showGoodsStatus (goods) {
         let usedCount = 0
         for (let i = 0; i < goods.length; i++) {
           this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
@@ -347,9 +332,6 @@
               this.courseBuilding[i].isUsed = 1
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
               usedCount += 1
-              if (usedCount === 6) { // 全部使用
-                this.subjectGraduation = true
-              }
               this.usedGoodsCount = usedCount
             }
           } else { // 物品未解锁
@@ -357,43 +339,14 @@
             this.courseBuilding[i].isUsed = 0
           }
         }
-        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-        this.showStartStudy = true
-      },
-
-      /**
-       * 暂停
-       **/
-      stop () {
-        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-        this.showStartStudy = true
-      },
-
-      /**
-       * 已过期
-       **/
-      expired () {
-        if (this.currSubjectStatus.finishDate) { // 已完成初级课程
-          this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-          this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-          this.showStartStudy = true
-        } else { // 未完成初级课程
-          this.studyCourseCount = 1
-          this.currArticleIndex = 1
+        if (usedCount === 6) { // 完成
+          this.studyCourseCount = usedCount + 1
+          this.subjectGraduation = true
           this.showStartStudy = false
+        } else {
+          this.studyCourseCount = usedCount + 1
+          this.showStartStudy = true
         }
-      },
-
-      /**
-       * 毕业
-       **/
-      graduation () {
-        this.subjectGraduation = true
-        this.studyCourseCount = this.currSubjectStatus.lessonIds.length - 1
-        this.currArticleIndex = this.currSubjectStatus.lessonIds.length - 1
-        this.showStartStudy = false
       },
 
       /**
