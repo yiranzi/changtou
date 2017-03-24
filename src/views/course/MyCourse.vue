@@ -72,7 +72,7 @@
           </div>
         </div>
       </scroller>
-      <building-entry></building-entry>
+      <building-entry v-touch:tap="goToBuilding"></building-entry>
     </div>
 </template>
 <script>
@@ -329,6 +329,9 @@ export default {
      */
     goToMyDiploma () {
       this.$route.router.go('/graduation/list')
+    },
+    goToBuilding () {
+      //todo 课程界面进入造房的入口跳转
     }
   },
   components: {

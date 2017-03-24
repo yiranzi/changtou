@@ -354,10 +354,6 @@ export function configRouter (router) {
     /**
      * 造房计划
      */
-    // 展示房子
-    '/building/showhouse': {
-      component: require('../views/building/BuildingShowHouse.vue')
-    },
     //造房攻略
     '/building/rule': {
       component: require('../views/building/BuildingRule.vue')

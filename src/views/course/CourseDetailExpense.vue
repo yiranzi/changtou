@@ -106,7 +106,7 @@
     <!--<div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>-->
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
-     <building-entry></building-entry>
+     <building-entry v-touch:tap="goToBuilding"></building-entry>
   </div>
 
 </template>
@@ -1452,6 +1452,9 @@
         // 暂定为 问卷一
         const naireId = 1
         this.$route.router.go(`/questionNaire/${naireId}`)
+      },
+      goToBuilding () {
+        //todo 课程界面进入造房的入口跳转
       }
     },
     components: {
