@@ -34,7 +34,6 @@ import newerGuide from './newerGuide/store'
 import freshVillage from './freshVillage/store'
 import appUpdate from './appUpdate/store'
 import headline from './headline/store'
-import building from './building/store'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
@@ -68,7 +67,6 @@ export default new Vuex.Store({
     newerGuide, //入门指南
     freshVillage,  //理财新手村
     appUpdate,   //应用更新
-    headline,   //头条精选
-    building   //造房子
+    headline   //头条精选
   }
 })

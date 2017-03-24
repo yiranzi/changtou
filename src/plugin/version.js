@@ -37,5 +37,6 @@ const getNativeVersion = () => {
 
 export {
   nativeVersion,
-  getNativeVersion
+  getNativeVersion,
+  convertVersionToNum
 }

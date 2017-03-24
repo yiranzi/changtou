@@ -4,24 +4,19 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <swiper :aspect-ratio="120/375" :list="banners"
-                stop-propagation dots-position="center"
-                :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class">
-        </swiper>
+        <div class="empty"></div>
         <!--理财新手村-入口-->
         <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
-        <div class="must-hava">
-          <p class="area-label">
-            <span class="color-span"> </span>
-            <span class="title">人气必备</span>
-          </p>
+        <div class="head-navigator">
+          <!--<p class="head-title">-->
+            <!--<span>为你优选</span>-->
+          <!--</p>-->
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
               <i class="under-banner-icon newer-test "></i>
-              <span class="under-banner-title">理财揭秘</span>
+              <span class="under-banner-title">测测财商</span>
             </div>
             <div v-touch:tap="goToNewerGuide" class="under-banner-item">
               <i class="under-banner-icon newer-guide"></i>
@@ -46,7 +41,7 @@
             <i class="picture"></i>
           </div>
           <span class="line"></span>
-          <span class="topic-txt">{{headLineTitleCalcLength}}</span>
+          <span class="topic-txt">{{headLineTitle}}</span><!--这里需要添加跳转-->
           <div class="gift">
             <i class="picture"></i>
           </div>
@@ -107,6 +102,13 @@
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
+        <div class="fixswiper">
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class">
+          </swiper>
+        </div>
       </div>
     </scroller>
   </div>
@@ -124,6 +126,7 @@
   import {statisticsMap} from '../../statistics/statisticsMap'
   import {Device, platformMap} from '../../plugin/device'
   import {appVersion} from '../../frame/versionConfig'
+  import {convertVersionToNum} from '../../plugin/version.js'
   export default {
     vuex: {
       getters: {
@@ -135,7 +138,8 @@
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
         headLineTitle: navigatorGetters.headLineTitle,
-        appUpdateContent: appUpdateGetters.appUpdateContent
+        appUpdateContent: appUpdateGetters.appUpdateContent,
+        columnChangeData: navigatorGetters.columnChangeData
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -147,7 +151,8 @@
         isInterviewChange: navigatorActions.isInterviewChange,
         getVillageProgress: villageActions.getVillageProgress,
         getHeadLineTitle: navigatorActions.getHeadLineTitle,
-        getAppUpdate: appUpdateActions.getAppUpdate
+        getAppUpdate: appUpdateActions.getAppUpdate,
+        getColumnChange: navigatorActions.getColumnChange
       }
     },
 
@@ -166,6 +171,8 @@
         this.showInterviewNew()
         //显示头条精选的数据
         this.showHeadLineTitle()
+        //比对版本号,判定是否是最新版本
+        this.showColumnChange()
       }
     },
 
@@ -175,11 +182,12 @@
         isShowNewTestPop: false,
         giftMaskCount: 0,  // 显示新手礼包的次数 超过1则不显示礼包
         showNewerGiftIcon: false,  // 显示新手礼包领取图标
-        fromPath: '' // 前一个页面url
+        fromPath: '', // 前一个页面url
+        appVersion//版本信息
       }
     },
     ready () {
-
+      this.$dispatch(eventMap.FIRST_SCREEN_LOADED)
     },
 
     computed: {
@@ -228,6 +236,39 @@
          }
        },
 
+      //如果没有版本号或者版本号过小.就需要弹出
+      isOldVersion () {
+        if (!getLocalCache(('column-version-no'))) return true
+        else if (getLocalCache(('column-version-no')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        else return false
+      },
+
+      //进入主页判定版本变更的流程
+      showColumnChange () {
+        if (this.isLogin && this.isOldVersion()) {
+          this.getColumnChange().then(() => {
+            if (this.columnChangeData.content) {
+              setLocalCache('column-version-no', {appVersionNo: appVersion})
+              //弹出弹框
+              this.columnChange()
+            }
+          })
+        }
+      },
+      //打开弹窗
+      columnChange () {
+        this.showMask({
+          component: 'mycourse/ColumnChange.vue',
+          componentData: this.columnChangeData,
+          hideOnMaskTap: true,
+          callbackName: 'onColumnChange',
+          callbackFn: this.onColumnChange.bind(this) //组件上的
+        })
+      },
+      //版本变更的跳转
+      onColumnChange () {
+        this.$route.router.go('this.columnChangeData.mbUrl')
+      },
       /**
        * 设置滚动条高度
        */
@@ -314,9 +355,6 @@
           this.$refs.scroller.reset({
             top: 0
           })
-          this.$refs.vscroller.reset({
-            left: 0
-          })
         })
       },
 
@@ -343,6 +381,8 @@
         })
         //判断课程类型
         if (subject.type === 'P') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
+        } else if (subject.type === 'F') {
           this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
         } else if (subject.type === 'S') {
           this.$route.router.go(`/spec/topic/${subject.subjectId}`)   //跳转到打包课程
@@ -383,15 +423,19 @@
           position: '新手测试'
         })
         const me = this
-        me.loadNewertestReport().then(function (newertestReport) {
-          if (newertestReport) {
-            me.$route.router.go('/newertest/ending')
-          } else {
-            me.$route.router.go('/newertest/start')
-          }
-        }).catch(function () {
-          me.showAlert('信息加载失败，请重试！')
-        })
+        if (this.isLogin) {
+          me.loadNewertestReport().then(function (newertestReport) {
+            if (newertestReport) {
+              me.$route.router.go('/newertest/ending')
+            } else {
+              me.$route.router.go('/newertest/start')
+            }
+          }).catch(function () {
+            me.showAlert('信息加载失败，请重试！')
+          })
+        } else {
+          me.$route.router.go('/newertest/start')
+        }
       },
 
       goToNewerGuide () {
@@ -458,7 +502,7 @@
           // 已登录
           this.getVillageProgress().then(
             function (progress) {
-              if (progress) {
+              if (progress.chapterNo) {
                 // 有进度  进入新手村的首页
                 me.$route.router.go('/village/map')
               } else {
@@ -561,6 +605,14 @@
 
 <style lang="less">
   .course-navigator{
+    .empty{
+      height: 6rem;
+    }
+    .fixswiper{
+      position: absolute;
+      width:100%;
+      top:0;
+    }
     background: #fff;
     .popularSpe{
       padding-bottom: .8rem;
@@ -805,7 +857,6 @@
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
-      border-bottom: 0.5rem #f0eff5 solid;
       font-size: 0.55rem;
       color: #444;
 
@@ -851,9 +902,8 @@
   /*理财新手村-首页入口*/
     .fresh-village{
       width: 100%;
-      height: 6rem;
+      height: 4.5rem;
       background: url("../../../static/image/navigator/fresh-village.png") no-repeat center center / contain;
-      margin: 1rem 0 0;
     }
   /*大咖读经典*/
     .classic-info >p {
@@ -900,28 +950,33 @@
     }
 
     /*人气必备*/
-    .must-hava{
-      height:5.5rem;
+    .head-navigator{
+      border-bottom: 1px #f0eff5 solid;
+      padding: 1rem 0;
+      .head-title{
+        padding: 0.75rem 1.35rem 0.75rem;
+        font-size: 0.8rem;
+      }
     }
 
     /*头条精选*/
     .head-line {
       font-size: 0;
       position: relative;
-      margin: 0.25rem auto 0.5rem;
-      height: 3rem;
+      height: 2.5rem;
       background-color: #fff;
+      border-bottom: 0.5rem solid #f0eff5;
       .icon {
+        position: relative;
         vertical-align: middle;
         display: inline-block;
-        width: 3.75rem;
-        height: 3rem;
+        height: 2.5rem;
         .picture{
+          margin: 0.5rem 0.7rem 0.5rem 1.3rem;
           font-size: 0px;
           display:inline-block;
           width: 1.6rem;
           height: 1.5rem;
-          margin: 0.75rem 1.35rem 0.75rem;
           background: url("../../../static/image/firstNewsChoose/icon.png") no-repeat center center / contain;
         }
       }
@@ -929,7 +984,7 @@
       .line{
         vertical-align: middle;
         display:inline-block;
-        width: 0.25rem;
+        width: 0.025rem;
         height: 1.75rem;
         background-color: #f0f0f0;
         margin: auto auto;
@@ -938,14 +993,16 @@
 
       .topic-txt{
         vertical-align: middle;
-        margin: auto 3.5rem auto 0.75rem;
+        margin-left:0.75rem;
         font-size: 0.7rem;
-        height:0.7rem;
+        height: 0.7rem;
         line-height: 0.7rem;
         color: #aaa;
         display:inline-block;
-        width: 10.4rem;
+        width: 11rem;
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .gift{

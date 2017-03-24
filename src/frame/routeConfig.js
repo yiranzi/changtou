@@ -336,6 +336,14 @@ export function configRouter (router) {
     '/village/initialPage': {
       component: require('../views/freshVillage/InitialPage.vue')
     },
+    //新手村今日小智
+    '/village/wisdom/:chapterNo/:questionNo': {
+      component: require('../views/freshVillage/Wisdom.vue')
+    },
+    //新手村章节开始页
+    '/village/chapterstart/:chapterNo': {
+      component: require('../views/freshVillage/ChapterStart.vue')
+    },
 
     /**
      * 头条精彩
@@ -354,17 +362,15 @@ export function configRouter (router) {
     // 造房子添加物品页
     '/building/BuildingAdd': {
       component: require('../views/building/BuildingAdd.vue')
-    }
-    /*
-    // 造房子介绍页
-    '/building/BuildingIntroduction': {
-      component: require('../views/building/BuildingIntroduction.vue')
     },
-    // 造房子规则
+    //造房攻略
     '/building/BuildingRule': {
       component: require('../views/building/BuildingRule.vue')
+    },
+    //造房简介
+    '/building/BuildingIntroduction': {
+      component: require('../views/building/BuildingIntroduction.vue')
     }
-     */
   })
 
   // redirect

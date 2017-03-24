@@ -73,6 +73,7 @@
           <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;">造房子</div>
         </div>
       </scroller>
+      <building-entry v-touch:tap="goToBuilding"></building-entry>
     </div>
 </template>
 <script>
@@ -83,6 +84,7 @@
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters, buildingGetters} from '../../vuex/getters'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
+  import buildingEntry from '../../components/building/entry.vue'
 export default {
   vuex: {
     getters: {
@@ -373,12 +375,16 @@ export default {
      */
     goToMyDiploma () {
       this.$route.router.go('/graduation/list')
+    },
+    goToBuilding () {
+      //todo 课程界面进入造房的入口跳转
     }
   },
   components: {
     IctTitlebar,
     IctButton,
-    Scroller
+    Scroller,
+    buildingEntry
   }
 }
 </script>

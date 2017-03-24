@@ -4,8 +4,8 @@
 */
 <template>
   <div class="village-encouragement">
-    <span class="close-icon" v-touch:tap="onCloseTap"></span>
-      <img class="encourage-img" :src="imgSrc"/>
+    <div class="village-close-icon-container" v-touch:tap="onCloseTap"><span class="close-icon"></span></div>
+    <img class="encourage-img" :src="imgSrc"/>
       <div class="encourage-btn" v-touch:tap="onEncouragementTap" v-el:suggestion>跪求鼓励吐槽</div>
   </div>
 </template>
@@ -57,20 +57,6 @@
       color: #fff;
       margin: 0 auto;
       top: 6rem;
-    }
-    .close-icon{
-      position: absolute;
-      display: inline-block;
-      top: .75rem;
-      right: .75rem;
-      line-height: .75rem;
-    &:before{
-       line-height: .75rem;
-       font-family: 'myicon';
-       content: '\e90d';
-       font-size: .75rem !important;
-       color: #aaa;
-     }
     }
   }
 </style>

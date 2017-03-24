@@ -20,7 +20,7 @@ const defaultShareConfig = {
 Vue.mixin({
   data () {
     return {
-      shareConfig: null
+      shareConfig: {}
     }
   },
   methods: {

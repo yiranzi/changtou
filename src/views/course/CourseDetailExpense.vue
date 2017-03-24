@@ -39,9 +39,9 @@
     </scroller>
 
     <!--底部的btn-->
-    <div class="bottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
+    <div class="expensebottom-area" v-el:bottom-btn v-show="isBottomBtnShow">
       <!--听课提醒-->
-      <div class="btn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
+      <div class="expensebtn-box" v-if="currStatus === 'N' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
@@ -51,62 +51,68 @@
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/delayIcon.png"></div>
             <div class="action-detail-btn-text">延期</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="suspend">
+          <div class="action-detail-btn" v-touch:tap="suspend" v-if="!isSuspendUsed && !currRecord.finishDate">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/pauseIcon.png"></div>
             <div class="action-detail-btn-text">暂停</div>
           </div>
         </div>
-        <div class="right-btn">
+        <div class="expenseright-btn">
           <div v-if="!isRemindSet" v-touch:tap="showRemind">听课提醒</div>
-          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="right-btn-changeText">修改提醒</span></div>
+          <div v-if="isRemindSet" v-touch:tap="showRemoveRemind"><span class="remind-count-down">DAY{{remindCurrDate}}</span><span class="expenseright-btn-changeText">修改提醒</span></div>
         </div>
       </div>
       <!--立即购买-->
-      <div class="btn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
+      <div class="expensebtn-box-buy" v-if="!isUserLogin || currStatus === 'W'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
-          <div class="action-detail-btn" v-touch:tap="audition">
+          <div class="action-detail-btn" v-touch:tap="audition" v-if="!isSubjectBranch">
             <div class="action-detail-btn-icon"><img src="../../assets/styles/image/courseDetail/freeStudyIcon.png"></div>
             <div class="action-detail-btn-text">试听</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="buy">
+        <div class="expenseright-btn" v-touch:tap="buy">
           <div>立即购买</div>
         </div>
       </div>
       <!--毕业-->
-      <div class="btn-box-active" v-if="currStatus === 'Y' || currStatus === 'E'">
+      <div class="expensebtn-box-postpone" v-if="currStatus === 'Y' || currStatus === 'E'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="postpone">延期</div>
+        <div class="expenseright-btn" v-touch:tap="postpone">延期</div>
       </div>
       <!--激活课程-->
-      <div class="btn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
+      <div class="expensebtn-box-active" v-if="currStatus === 'I' && currSubject && currSubject.type == 'M'">
         <div class="action-btn">
           <div class="action-detail-btn" v-touch:tap="showShare">
             <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
             <div class="action-detail-btn-text">分享</div>
           </div>
         </div>
-        <div class="right-btn" v-touch:tap="active">激活课程</div>
+        <div class="expenseright-btn" v-touch:tap="active">激活课程</div>
       </div>
-      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="btn-box">
-        <div class="right-btn" v-touch:tap="resume">开启课程</div>
+      <div v-if="currStatus === 'P' && currSubject && currSubject.type == 'M'" class="expensebtn-box expensebtn-box-open">
+        <div class="action-btn">
+          <div class="action-detail-btn" v-touch:tap="showShare">
+            <div class="action-detail-btn-icon"><img class="shareIcon" src="../../assets/styles/image/courseDetail/shareIcon.png"></div>
+            <div class="action-detail-btn-text">分享</div>
+          </div>
+        </div>
+        <div class="expenseright-btn" v-touch:tap="resume">开启课程</div>
       </div>
     </div>
     <essay-float :show="showEssay" :has-choice=" !!selectedLesson && !!selectedLesson.choiceQuestion.length" @close="resumeHomework" @confirm="confirmEssay"></essay-float>
     <choice-float :show="showChoice"  @close="resumeHomework" @confirm="confirmChoice"></choice-float>
-    <div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>
+    <!--<div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>-->
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
-    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap"></page-share-float>
-    <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;" v-if="subjectId == 4 && isUserLogin">造房子</div>
+    <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
+     <building-entry v-touch:tap="goToBuilding"></building-entry>
   </div>
 
 </template>
@@ -144,7 +150,7 @@
     .vux-tab-item {
       font-size: 0.85rem;
     }
-    .bottom-area {
+    .expensebottom-area {
       position: fixed;
       /*background: red;*/
       width: 100%;
@@ -152,7 +158,7 @@
       bottom: 0;
       /*font-size: 0;*/
       z-index: 101;
-        .btn-box,.btn-box-buy,.btn-box-active{
+        .expensebtn-box,.expensebtn-box-buy,.expensebtn-box-active,.expensebtn-box-postpone{
           text-align: center;
           height:100%;
           display:flex;
@@ -180,7 +186,7 @@
               }
             }
         }
-        .right-btn{
+        .expenseright-btn{
           height:100%;
           flex: 1;
           font-size: 34/40rem;
@@ -195,19 +201,19 @@
             border: 1px solid #eee;
             font-size: 22/40rem;
             border-radius: 0.9rem;
-            box-sizing: border-box;
+            box-sizing: content-box;
             padding: 0 6/40rem;
             display: inline-block;
            }
         }
       }
-      .btn-box-buy{
-        .right-btn{
+      .expensebtn-box-buy,.expensebtn-box-open,.expensebtn-box-postpone{
+        .expenseright-btn{
           background-color: #00b0f0;
         }
       }
-      .btn-box-active{
-        .right-btn{
+      .expensebtn-box-active{
+        .expenseright-btn{
           background-color: #ff9800;
         }
       }
@@ -237,8 +243,9 @@
   import {Jpush} from '../../plugin/jpush'
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
+  import buildingEntry from '../../components/building/entry.vue'
   export default {
-    mixin: [mixinPageShare],
+    mixins: [mixinPageShare],
     vuex: {
       getters: {
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
@@ -374,7 +381,7 @@
         // 判断显示问答题通过的浮层
         this.showEssayPassed(subjectId)
         //读取缓存，判断之前有没有设置定时提醒
-        let items = getLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)    //读取对应课程的上课提醒缓存
+        let items = getLocalCache('remind-data-subid-' + subjectId)    //读取对应课程的上课提醒缓存
         let currDate = new Date().getTime()   //读取现在的时间
         if (items && ((parseInt(items.remindList[6]) + parseInt(items.oldTime)) - currDate >= 0)) {   //如果有缓存，说明设置过提醒，把现在的缓存里的最后一次提醒和现在的时间相减，如果>0说明还在提醒期内，否则就把定时提醒归零
           this.remindTimeStart = items.start    //从缓存中取出数据
@@ -385,7 +392,7 @@
           this.getCurrDateNum()   //获取当前是第几天
         } else {      //如果超出提醒期,说明定时器过时，把缓存和本地通知清空
           this.isRemindSet = false
-          clearLocalCache('REMIND_TIME_DATA_SUBID_' + subjectId)
+          clearLocalCache('remind-data-subid-' + subjectId)
           Jpush.clearLocalNotifications()
         }
         //-------------------------------------------
@@ -657,6 +664,18 @@
 
     methods: {
       /**
+       * 设置物理返回键绑定消失浮层
+       **/
+      setViewBackHandler () {
+        this.$parent.viewBackHandler = this.closeShare
+      },
+      /**
+       * 解除物理返回键绑定
+       **/
+      resetViewBackHandler () {
+        this.$parent.viewBackHandler = null
+      },
+      /**
        * 显示课程状态提示
        **/
       showSubjectStatus () {
@@ -872,6 +891,11 @@
        **/
       showShare () {
         this.isShareShow = true
+        this.setViewBackHandler()
+      },
+      closeShare () {
+        this.isShareShow = false
+        this.resetViewBackHandler()
       },
       /**
        * 获取定时开始和结束日期
@@ -916,7 +940,7 @@
           'end': this.remindTimeEnd,    //结束时间
           'time': [this.remindTimeData]   //提醒的小时和分钟
         }
-        setLocalCache(('REMIND_TIME_DATA_SUBID_' + this.subjectId), items)    //设置缓存
+        setLocalCache(('remind-data-subid-' + this.subjectId), items)    //设置缓存
         this.getCurrDateNum()     //获取当前的第几天
       },
 
@@ -926,7 +950,7 @@
       showRemind () {
         this.remindTimeData = ['0', '0']
         this.isRemindShow = true
-        getLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId) ? '' : this.getSetTime()
+        getLocalCache('remind-data-subid-' + this.subjectId) ? '' : this.getSetTime()
       },
 
       /**
@@ -1008,7 +1032,7 @@
         }
       },
       afterRemoveRemind () {
-        clearLocalCache('REMIND_TIME_DATA_SUBID_' + this.subjectId)
+        clearLocalCache('remind-data-subid-' + this.subjectId)
         this.isRemoveRemindShow = false
         this.isRemindSet = false
         this.$broadcast('showCheckTipCancel')
@@ -1646,7 +1670,8 @@
       PptPanel,
       IctBackBtn,
       PageShareFloat,
-      CourseRemind
+      CourseRemind,
+      buildingEntry
     }
   }
 </script>

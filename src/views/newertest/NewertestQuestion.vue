@@ -161,16 +161,12 @@
 <script>
   import {newertestActions} from '../../vuex/actions'
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
-//  import {newertestGetters} from '../../vuex/getters'
 
   export default {
     vuex: {
       actions: {
         loadQuestion: newertestActions.loadQuestion,
-        postReport: newertestActions.postReport
-      },
-      getters: {
-//        questionArr: newertestGetters.questionArr
+        getReport: newertestActions.getReport
       }
     },
 
@@ -240,9 +236,21 @@
       deactivate () {
         // 回复back回退
         this.resumeBackAction()
+        this.resetViewData()
       }
     },
     methods: {
+      resetViewData () {
+        this.currQuIndex = 0 //当前题目序号
+        this.currOpsIndex = -1 //当前选项
+        this.maxQuIndex = 7 //最大的题目序号
+        this.isClicked = false // 是否点击选项
+        this.isFloatShow = false // 是否显示浮层
+        this.answer = [] //答案
+        this.comboId = 0 //模板id
+        this.level = 0 //等级
+        this.questionArr = []
+      },
       onCancel () {
         this.$route.router.go('/main')
       },
@@ -264,7 +272,7 @@
           } else if (currQuIndex === this.maxQuIndex) {
             this.computeLevelId()
             const me = this
-            this.postReport(this.comboId, this.level).then(
+            this.getReport(this.comboId, this.level).then(
               function () {
                 me.$route.router.replace('/newertest/ending')
                 me.reset()
@@ -293,15 +301,15 @@
         this.level = levelArr[fourthSelect]    //根据第四题判断等级
         if (fourthSelect === 0 || fourthSelect === 2) {
             if (eighthSelect === 0) {
-                this.comboId = 1                          //第四题A/C第八题A为模板1
+                this.comboId = 7                          //第四题A/C第八题A为模板1
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 2                          //第四题A/C第八题B/C为模板2
+                this.comboId = 8                          //第四题A/C第八题B/C为模板2
             }
         } else if (fourthSelect === 1) {
             if (eighthSelect === 0) {
-                this.comboId = 3                          //第四题B第八题A为模板3
+                this.comboId = 9                          //第四题B第八题A为模板3
             } else if (eighthSelect === 1 || eighthSelect === 2) {
-                this.comboId = 4                            //第四题B第八题B/C为模板4
+                this.comboId = 10                            //第四题B第八题B/C为模板4
             }
         }
       },

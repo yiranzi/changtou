@@ -32,7 +32,6 @@ import * as classicReadingActions from './classicReading/actions'
 import * as villageActions from './freshVillage/actions'
 import * as appUpdateActions from './appUpdate/actions'
 import * as headlineActions from './headline/actions'
-import * as buildingActions from './building/actions'
 export {
   userActions,
   navigatorActions,
@@ -64,6 +63,5 @@ export {
   classicReadingActions,   //大咖读经典
   villageActions,  //新手村
   appUpdateActions,  //应用更新
-  headlineActions,  //头条精选
-  buildingActions  //造房子
+  headlineActions  //头条精选
 }
