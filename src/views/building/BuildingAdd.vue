@@ -160,6 +160,7 @@
   import Scroller from 'vux/scroller'
   import {buildingActions} from '../../vuex/actions'
   import {buildingGetters} from '../../vuex/getters'
+  import {getLocalCache, clearLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -226,17 +227,18 @@
        **/
       showSubjectStatus () {
         // 获取物品状态
-        //this.getBuildingGoodsStatus(4).then(() => {
-          //let goods = this.buildingGoodsStatus.goods
-          let unlockedGoodsCount = 0
-          let goods = [
-            {maxGoodsNum: 1, useGoodsNum: 1},
-            {maxGoodsNum: 3, useGoodsNum: 1},
-            {maxGoodsNum: 2, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0}
-          ]
+        this.getBuildingGoodsStatus(4).then(() => {
+          let goods = this.buildingGoodsStatus
+          for (let i = 0; i < 6; i++) {
+            let goodsObj = {}
+            goodsObj.maxGoodsNum = 0
+            goodsObj.useGoodsNum = 0
+            if (!goods[i]) {
+              goods[i] = goodsObj
+            }
+          }
+          //let unlockedGoodsCount = 0
+          console.log(goods)
           // 物品显示状态
           for (let i = 0; i < this.courseBuilding.length; i++) {
             this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
@@ -251,80 +253,59 @@
               } else { // 物品未使用
                 this.courseBuilding[i].isUsed = 0
               }
-              unlockedGoodsCount += 1
+              this.unlockedCount += 1
             } else { // 物品未解锁
               this.courseBuilding[i].isUnlocked = 0
             }
           }
-          this.unlockedCount = unlockedGoodsCount
+          //this.unlockedCount = unlockedGoodsCount
           // 找出未使用的最先的物品的index
-          for (let i = 0; i < this.courseBuilding.length; i++) {
-            if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
-              if (goods[i].useGoodsNum === 0) { // 物品已使用
-                this.notUsedGoodsIndex = i
-                break
-              }
-            }
+          if (getLocalCache('updata-goods')) {
+            this.notUsedGoodsIndex = getLocalCache('updata-goods').index
+            clearLocalCache('updata-goods')
           }
-        //})
+        })
       },
 
       /**
        * 显示选择物品浮层
        **/
       goToSelectBuilding (index) {
-        console.log(index)
-        //const me = this
-        /*
+        const me = this
         let selectBuilding = {}
         // 获取物品状态
         this.getBuildingGoodsStatus(4).then(() => {
-          selectBuilding.goodsType = index
-          selectBuilding.maxGoodsNum = me.buildingGoodsStatus.goods[index].maxGoodsNum
-          selectBuilding.useGoodsNum = me.buildingGoodsStatus.goods[index].useGoodsNum
+          selectBuilding.itemId = index
+          selectBuilding.maxGoodsNum = me.buildingGoodsStatus[index].maxGoodsNum
+          selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].useGoodsNum
           // 显示浮层
           me.showMask({
-            component: 'ChooseGoods.vue',
+            component: 'building/ChooseGoods.vue',
             componentData: selectBuilding,
-            callbackName: 'goToBuildingShow',
-            callbackFn: this.goToBuildingShow.bind(this)
+            callbackName: 'changeGoods',
+            callbackFn: this.changeGoods.bind(this)
           })
         })
-        */
       },
 
       /**
        * 去开始学习的展示页(使用物品)
        **/
-      goToBuildingShow (index, useGoods) {
+      changeGoods (selectBuilding) {
         this.getBuildingGoodsStatus(4).then(() => {
-          let unlockedGoodsCount = 0 // 已解锁的物品数
-          let usedGoodsCount = 0 // 已使用的物品数
-          //let goods = this.buildingGoodsStatus.goods
-          let goods = [
-            {maxGoodsNum: 1, useGoodsNum: 1},
-            {maxGoodsNum: 2, useGoodsNum: 1},
-            {maxGoodsNum: 3, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0},
-            {maxGoodsNum: 0, useGoodsNum: 0}
-          ]
-          //goods[index].useGoodsNum = useGoods
-          // 获取解锁物品和使用物品个数
-          for (let i = 0; i < goods.length; i++) {
-            if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
-              if (goods[i].useGoodsNum !== 0) { // 物品已使用
-                usedGoodsCount += 1
-              }
-              unlockedGoodsCount += 1
+          let goods = this.buildingGoodsStatus
+          for (let i = 0; i < 6; i++) {
+            let goodsObj = {}
+            goodsObj.maxGoodsNum = 0
+            goodsObj.useGoodsNum = 0
+            if (!goods[i]) {
+              goods[i] = goodsObj
             }
           }
-          if (usedGoodsCount === unlockedGoodsCount) {
+          goods[selectBuilding.itemId].useGoodsNum = selectBuilding.useGoodsNum
+          this.updataBuildingGoodsStatus(4, goods).then(() => {
             this.$route.router.go('/building/BuildingShow')
-          } else {
-            this.showSubjectStatus()
-          }
-          //this.updataBuildingGoodsStatus(4, goods)
+          })
         })
       },
 

@@ -28,7 +28,6 @@
           <span class="retest-btn" v-touch:tap="reTest">重测</span>
         </div>
       </div>
-      <div class="building-test" v-touch:tap="goToBuildingAdd">完成作业造房子</div>
     </div>
 </template>
 <script>
@@ -39,6 +38,7 @@
   import {graduationDiplomaActions, buildingActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+  import {setLocalCache} from '../../util/cache'
   export default {
   vuex: {
     getters: {
@@ -118,10 +118,11 @@
      * 通过后显示作业通过浮层并更新后台解锁物品
      */
     showTaskPassed () {
-      /*
       // 进行物品解锁(更新)
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
-        let goods = this.buildingGoodsStatus.goods
+        setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
+        let goods = this.buildingGoodsStatus
+        console.log(goods)
         for (let i = 0; i < 6; i++) {
           let goodsObj = {}
           goodsObj.maxGoodsNum = 0
@@ -130,23 +131,24 @@
             goods[i] = goodsObj
           }
         }
-        goods[this.lessonId - 17].maxGoodsNum = this.score - 2
+        if (this.essayResult.score === 3 || this.essayResult.score === 4) {
+          goods[this.essayResult.sequence - 17].maxGoodsNum = 1
+        } else {
+          goods[this.essayResult.sequence - 17].maxGoodsNum = 2
+        }
         console.log(goods)
         this.updataBuildingGoodsStatus(this.subjectId, goods)
       })
-      */
       // 显示分数浮层
       let taskPassedData = {} // 传给浮层的数据
-      taskPassedData.type = '选择题'  // 选择题类型
-      taskPassedData.scoreNum = this.score  // 选择题的分数
-      /*
+      taskPassedData.testType = '选择题'  // 选择题类型
+      taskPassedData.grade = this.score  // 选择题的分数
       this.showMask({
-       component: 'GradeToBuild.vue',
+       component: 'building/GradeToBuild.vue',
        componentData: taskPassedData,
        callbackName: 'goToBuildingAdd',
        callbackFn: this.goToBuildingAdd.bind(this)
       })
-       */
      },
 
     /**

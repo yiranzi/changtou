@@ -70,7 +70,6 @@
               </div>
             </div>
           </div>
-          <div v-touch:tap="goToBuilding" style="position: fixed;top: 0;right: 0;">造房子</div>
         </div>
       </scroller>
       <building-entry v-touch:tap="goToBuilding"></building-entry>
@@ -208,36 +207,7 @@ export default {
      **/
     goToBuilding () {
       if (getLocalCache('first-building')) { // 不是第一次进入造房子
-        if (this.isLogin) {
-          //this.getBuildingGoodsStatus(4).then(() => {
-            let unlockedGoodsCount = 0 // 已解锁的物品数
-            let usedGoodsCount = 0 // 已使用的物品数
-            //let goods = this.buildingGoodsStatus.goods
-            let goods = [
-              {maxGoodsNum: 1, useGoodsNum: 1},
-              {maxGoodsNum: 2, useGoodsNum: 1},
-              {maxGoodsNum: 3, useGoodsNum: 1},
-              {maxGoodsNum: 0, useGoodsNum: 0},
-              {maxGoodsNum: 0, useGoodsNum: 0},
-              {maxGoodsNum: 0, useGoodsNum: 0}
-            ]
-            for (let i = 0; i < goods.length; i++) {
-              if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
-                if (goods[i].useGoodsNum !== 0) { // 物品已使用
-                  usedGoodsCount += 1
-                }
-                unlockedGoodsCount += 1
-              }
-            }
-            if (usedGoodsCount === unlockedGoodsCount) {
-              this.$route.router.go('/building/BuildingShow')
-            } else {
-              this.$route.router.go('/building/BuildingAdd')
-            }
-          //})
-        } else {
-          this.$route.router.go('/building/BuildingShow')
-        }
+        this.$route.router.go('/building/BuildingShow')
       } else { // 第一次进入造房子
         setLocalCache('first-building', {firstBuilding: true})
         this.$route.router.go('/building/BuildingIntroduction')
@@ -375,9 +345,6 @@ export default {
      */
     goToMyDiploma () {
       this.$route.router.go('/graduation/list')
-    },
-    goToBuilding () {
-      //todo 课程界面进入造房的入口跳转
     }
   },
   components: {

@@ -87,7 +87,7 @@
         window.history.back()
       },
       goToStartBuildHouse () {
-        this.$route.router.go('/building/showhouse')
+        this.$route.router.go('/building/BuildingShow')
       }
     }
   }

@@ -172,7 +172,7 @@
 </style>
 <script>
   import IctCloseBtn from '../../components/IctCloseBtn.vue'
-  import {buildingActions} from '../../vuex/actions'
+  import {buildingActions, courseRecordActions} from '../../vuex/actions'
   import Scroller from 'vux/scroller'
   import {userGetters, courseRecordsGetters, choiceGetters, buildingGetters} from '../../vuex/getters'
   import {setLocalCache} from '../../util/cache'
@@ -180,6 +180,7 @@
   export default {
     vuex: {
       actions: {
+        loadAllExpenseRecords: courseRecordActions.loadAllExpenseRecords,
         getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
         updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus
       },
@@ -269,50 +270,55 @@
         // 判断是否登录
         if (this.isLogin) { // 已登录
           // 判断购买状态
-          this.currSubjectStatus = this.expenseRecordsArr.find(subject => (subject.subjectId) === 4).lessonSet
-          if (this.currSubjectStatus) {  // 已购买
-            //获取该课程状态信息
-            //this.getBuildingGoodsStatus(4).then(() => {
-              //let goods = this.buildingGoodsStatus.goods
-              let goods = [
-                {maxGoodsNum: 1, useGoodsNum: 1},
-                {maxGoodsNum: 2, useGoodsNum: 2},
-                {maxGoodsNum: 3, useGoodsNum: 1},
-                {maxGoodsNum: 0, useGoodsNum: 0},
-                {maxGoodsNum: 0, useGoodsNum: 0},
-                {maxGoodsNum: 0, useGoodsNum: 0}
-              ]
-              // 判断课程状态
-              switch (this.currSubjectStatus.graduated) {
-                case 'I':
-                  console.log('未激活')
-                  //this.showGoodsStatus(goods)
-                  this.studyCourseCount = 1
-                  this.showStartStudy = true
-                  break
-                case 'N':
-                  console.log('在读')
-                  this.showGoodsStatus(goods)
-                  break
-                case 'P':
-                  console.log('暂停')
-                  this.showGoodsStatus(goods)
-                  break
-                case 'E':
-                  console.log('过期')
-                  this.showGoodsStatus(goods)
-                  break
-                case 'Y':
-                  console.log('毕业')
-                  this.showGoodsStatus(goods)
-                  break
-                default:
-                  break
-              }
-            //})
-          } else { // 未购买
-            this.showBuyPoint()
-          }
+          this.loadAllExpenseRecords().then(() => {
+            console.log(this.expenseRecordsArr, 'expenseRecordsArr')
+            this.currSubjectStatus = this.expenseRecordsArr.find(subject => (subject.subjectId) === 4).lessonSet
+            console.log(this.currSubjectStatus, 'lessonSet')
+            if (this.currSubjectStatus) {  // 已购买
+              //获取该课程状态信息
+              this.getBuildingGoodsStatus(4).then(() => {
+                let goods = this.buildingGoodsStatus
+                console.log(goods)
+                for (let i = 0; i < 6; i++) {
+                  let goodsObj = {}
+                  goodsObj.maxGoodsNum = 0
+                  goodsObj.useGoodsNum = 0
+                  if (!goods[i]) {
+                    goods[i] = goodsObj
+                  }
+                }
+                // 判断课程状态
+                switch (this.currSubjectStatus.graduated) {
+                  case 'I':
+                    console.log('未激活')
+                    //this.showGoodsStatus(goods)
+                    this.studyCourseCount = 1
+                    this.showStartStudy = true
+                    break
+                  case 'N':
+                    console.log('在读')
+                    this.showGoodsStatus(goods)
+                    break
+                  case 'P':
+                    console.log('暂停')
+                    this.showGoodsStatus(goods)
+                    break
+                  case 'E':
+                    console.log('过期')
+                    this.showGoodsStatus(goods)
+                    break
+                  case 'Y':
+                    console.log('毕业')
+                    this.showGoodsStatus(goods)
+                    break
+                  default:
+                    break
+                }
+              })
+            } else { // 未购买
+              this.showBuyPoint()
+            }
+          })
         } else { // 未登录
           this.showLoginPoint()
         }
@@ -322,17 +328,18 @@
        *  显示物品状态
        **/
       showGoodsStatus (goods) {
-        let usedCount = 0
+        let usedCount = 0  // 暂时记录使用的次数
         for (let i = 0; i < goods.length; i++) {
           this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
           if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
             this.courseBuilding[i].isUnlocked = 1
-            this.courseBuilding[i].isUsed = 0
+            this.courseBuilding[i].isUsed = 1
             if (goods[i].useGoodsNum !== 0) { // 物品已使用
-              this.courseBuilding[i].isUsed = 1
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
               usedCount += 1
               this.usedGoodsCount = usedCount
+            } else {
+              this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].maxGoodsNum}.png`
             }
           } else { // 物品未解锁
             this.courseBuilding[i].isUnlocked = 0
@@ -354,7 +361,7 @@
        **/
       goToStudy () {
         setLocalCache('curr-course-status', {subjectStatusPoint: this.currSubjectStatus.graduated})
-        this.$route.router.go('subject/detail/P/4/0')
+        this.$route.router.go('/subject/detail/P/4/0')
       },
 
       /**
@@ -362,9 +369,6 @@
        **/
       showLoginPoint () {
         const me = this
-        const activeHandler = function () {
-          me.$route.router.go('/entry')
-        }
         const msg = '<p>已购买股票投资初级课的用户登录后可参加造房计划</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         setTimeout(function () {
@@ -373,13 +377,20 @@
             message: msg,
             okText: '登录',
             cancelText: '再看看',
-            okCallback: activeHandler
+            okCallback: me.goToLogin.bind(me)
           })
         }, 100)
       },
 
       /**
-       * 提示登录
+       * 登录
+       **/
+      goToLogin () {
+        this.$route.router.go('/entry')
+      },
+
+      /**
+       * 提示购买
        **/
       showBuyPoint () {
         const me = this
