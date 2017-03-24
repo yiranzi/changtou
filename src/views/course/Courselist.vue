@@ -193,8 +193,8 @@
     .enter-class-txt{
       position:absolute;
       right: 0.3rem;
-      top: 0.7rem;
-      font-size: 0.75rem;
+      top: 0.8rem;
+      font-size: 0.6rem;
       color: #ffffff;
     }
   }

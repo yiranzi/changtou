@@ -350,6 +350,17 @@ export function configRouter (router) {
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
+    },
+    /**
+     * 造房计划
+     */
+    //造房攻略
+    '/building/rule': {
+      component: require('../views/building/BuildingRule.vue')
+    },
+    //造房简介
+    '/building/introduction': {
+      component: require('../views/building/BuildingIntroduction.vue')
     }
   })
 
