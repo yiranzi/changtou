@@ -12,7 +12,6 @@ import {getUrl} from '../../frame/apiConfig'
 export const commitVillageHP = ({dispatch}, HP) => {
   return new Promise(
     (resolve, reject) => {
-      console.log(getUrl('village_commit_HP').replace(':amount', HP))
       putWithinAuth({
         url: getUrl('village_commit_HP').replace(':amount', HP)
       }).then(

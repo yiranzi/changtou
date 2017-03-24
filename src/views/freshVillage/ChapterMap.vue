@@ -128,12 +128,14 @@
         }
         if (from.path === '/entry' || from.path.indexOf('/register') !== -1) {       //从登录页面进来的判断
           if (this.isLogin) {
+            this.loadingStatus = false
             this.getVillageProgress().then(() => {    //获得数据后
+              me.loadingStatus = true
               if (me.villageProgress.questionNo >= 6) {
                 me.isUpgradeShow = true
               }
               me.setScrollerHeight()
-              if (!(me.villageProgress.questionNo && me.villageProgress.chapterNo)) {
+              if (!(me.villageProgress.questionNo >= 0 && me.villageProgress.chapterNo)) {
                 me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
                 me.villageUnLoginRecord = {
                   questionNo: 0,
