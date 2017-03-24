@@ -14,7 +14,7 @@
           <div class="upgrade-title">- 理财能力升级 -</div>
           <div class="level">LV.{{componentData.chapterNo}}</div>
           <div class="bottom-title"><span class="parting-line"></span>获得奖励<span class="parting-line"></span></div>
-          <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+{{componentData.lifeScore}}</span></div>
+          <div class="life-score"><span class="round"></span><span class="score-name">生命值</span><span class="score">+15</span></div>
         </div>
       </div>
       <div class="share-btn" v-touch:tap="toShare">去炫耀</div>
