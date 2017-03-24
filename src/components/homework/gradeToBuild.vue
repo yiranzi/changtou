@@ -5,7 +5,7 @@
         <p >恭喜你,{{componentData.testType}}{{componentData.grade}}分通过!</p>
       </div>
       <div class="buttonimg">
-        <img src="../../assets/styles/image/homework/gradeResult/gradeBuildingButton.png" v-touch:tap="goToBuild">
+        <img src="../../assets/styles/image/homework/passed/gradeBuildingButton.png" v-touch:tap="goToBuild">
       </div>
 
     </div>
@@ -17,7 +17,7 @@
       text-align: center;
       width: 10rem;
       height: 592/40rem;
-      background: url("../../assets/styles/image/homework/gradeResult/gradeBuilding.png") center center no-repeat;
+      background: url("../../assets/styles/image/homework/passed/gradeBuilding.png") center center no-repeat;
       background-size: cover;
       .content{
         position:absolute;
