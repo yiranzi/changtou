@@ -262,7 +262,7 @@
       },
       //版本变更的跳转
       onColumnChange () {
-        this.$route.router.go('this.columnChangeData.mbUrl')
+        this.$route.router.go(this.columnChangeData.mbUrl)
       },
       /**
        * 设置滚动条高度
