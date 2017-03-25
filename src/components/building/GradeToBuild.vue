@@ -56,7 +56,7 @@
     },
     methods: {
       goToBuild () {
-        this.$dispatch('goToBuild')
+        this.$dispatch('goToBuildingAdd')
       }
     }
   }

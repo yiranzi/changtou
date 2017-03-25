@@ -704,9 +704,6 @@
        **/
       showActiveSubject () {
         const me = this
-        const activeHandler = function () {
-          me.active()
-        }
         const msg = '<p>该课程未激活，激活后可开始课程学习，进行造房计划</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         setTimeout(function () {
@@ -715,7 +712,7 @@
             message: msg,
             okText: '激活课程',
             cancelText: '再看看',
-            okCallback: activeHandler
+            okCallback: me.active.bind(me)
           })
         }, 100)
       },
@@ -725,9 +722,6 @@
       **/
       showOpenSubject () {
         const me = this
-        const activeHandler = function () {
-          me.resume()
-        }
         const msg = '<p>该课程已暂停，开启后可开始课程学习，进行造房计划</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         setTimeout(function () {
@@ -736,7 +730,7 @@
             message: msg,
             okText: '开启课程',
             cancelText: '再看看',
-            okCallback: activeHandler
+            okCallback: me.resume.bind(me)
           })
         }, 100)
       },
@@ -746,9 +740,6 @@
       **/
       showContinueSubject () {
         const me = this
-        const activeHandler = function () {
-          me.postpone()
-        }
         const msg = '<p>该课程已过期，延期后可开始课程学习，进行造房计划</p>'
         // 这里加入延迟是防止出现msg被点透的情况
         setTimeout(function () {
@@ -757,7 +748,7 @@
             message: msg,
             okText: '延期课程',
             cancelText: '再看看',
-            okCallback: activeHandler
+            okCallback: me.postpone.bind(me)
           })
         }, 100)
       },

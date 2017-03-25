@@ -334,11 +334,11 @@
           if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
             this.courseBuilding[i].isUnlocked = 1
             this.courseBuilding[i].isUsed = 1
-            if (goods[i].useGoodsNum !== 0) { // 物品已使用
+            if (goods[i].useGoodsNum !== 0) { // 物品已被用户选择使用
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
               usedCount += 1
               this.usedGoodsCount = usedCount
-            } else {
+            } else { // 物品未被用户选择使用
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].maxGoodsNum}.png`
             }
           } else { // 物品未解锁
