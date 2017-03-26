@@ -210,6 +210,7 @@ export default {
         this.$route.router.go('/building/BuildingShow')
       } else { // 第一次进入造房子
         setLocalCache('first-building', {firstBuilding: true})
+        setLocalCache('building-path', {myCourse: true})
         this.$route.router.go('/building/BuildingIntroduction')
       }
     },

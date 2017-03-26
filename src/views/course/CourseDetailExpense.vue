@@ -759,14 +759,12 @@
       showEssayPassed (subjectId) {
         if (subjectId === '4') {
           this.getEssayResult(subjectId).then(() => {
-            console.log(this.essayResult)
-            if (this.essayResult.remind) {
+            if (!this.essayResult.remind) {
               // 记录被更新物品
               setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
               // 进行物品解锁(更新)
               this.getBuildingGoodsStatus(subjectId).then(() => {
                 let goods = this.buildingGoodsStatus
-                console.log(goods)
                 for (let i = 0; i < 6; i++) {
                   let goodsObj = {}
                   goodsObj.maxGoodsNum = 0
@@ -780,7 +778,6 @@
                 } else {
                   goods[this.essayResult.sequence - 17].maxGoodsNum = 3
                 }
-                console.log(goods)
                 this.updataBuildingGoodsStatus(subjectId, goods)
               })
               // 显示分数浮层

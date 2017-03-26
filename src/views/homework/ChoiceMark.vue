@@ -122,7 +122,6 @@
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
         setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
         let goods = this.buildingGoodsStatus
-        console.log(goods)
         for (let i = 0; i < 6; i++) {
           let goodsObj = {}
           goodsObj.maxGoodsNum = 0
@@ -136,7 +135,6 @@
         } else {
           goods[this.essayResult.sequence - 17].maxGoodsNum = 2
         }
-        console.log(goods)
         this.updataBuildingGoodsStatus(this.subjectId, goods)
       })
       // 显示分数浮层

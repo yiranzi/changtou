@@ -75,13 +75,13 @@
 <script>
   import IctButton from '../../components/IctButton.vue'
   export default {
-      data () {
-          return {
-          }
-      },
-      components: {
-        IctButton
-      },
+    data () {
+        return {
+        }
+    },
+    components: {
+      IctButton
+    },
     methods: {
       back () {
         window.history.back()

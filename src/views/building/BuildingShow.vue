@@ -175,7 +175,7 @@
   import {buildingActions, courseRecordActions} from '../../vuex/actions'
   import Scroller from 'vux/scroller'
   import {userGetters, courseRecordsGetters, choiceGetters, buildingGetters} from '../../vuex/getters'
-  import {setLocalCache} from '../../util/cache'
+  import {setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -271,14 +271,11 @@
         if (this.isLogin) { // 已登录
           // 判断购买状态
           this.loadAllExpenseRecords().then(() => {
-            console.log(this.expenseRecordsArr, 'expenseRecordsArr')
             this.currSubjectStatus = this.expenseRecordsArr.find(subject => (subject.subjectId) === 4).lessonSet
-            console.log(this.currSubjectStatus, 'lessonSet')
             if (this.currSubjectStatus) {  // 已购买
               //获取该课程状态信息
               this.getBuildingGoodsStatus(4).then(() => {
                 let goods = this.buildingGoodsStatus
-                console.log(goods)
                 for (let i = 0; i < 6; i++) {
                   let goodsObj = {}
                   goodsObj.maxGoodsNum = 0
@@ -289,26 +286,21 @@
                 }
                 // 判断课程状态
                 switch (this.currSubjectStatus.graduated) {
-                  case 'I':
-                    console.log('未激活')
+                  case 'I':  // 未激活
                     //this.showGoodsStatus(goods)
                     this.studyCourseCount = 1
                     this.showStartStudy = true
                     break
-                  case 'N':
-                    console.log('在读')
+                  case 'N': // 在读
                     this.showGoodsStatus(goods)
                     break
-                  case 'P':
-                    console.log('暂停')
+                  case 'P': // 暂停
                     this.showGoodsStatus(goods)
                     break
-                  case 'E':
-                    console.log('过期')
+                  case 'E': // 过期
                     this.showGoodsStatus(goods)
                     break
-                  case 'Y':
-                    console.log('毕业')
+                  case 'Y': // 毕业
                     this.showGoodsStatus(goods)
                     break
                   default:
@@ -336,11 +328,11 @@
             this.courseBuilding[i].isUsed = 1
             if (goods[i].useGoodsNum !== 0) { // 物品已被用户选择使用
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
-              usedCount += 1
-              this.usedGoodsCount = usedCount
             } else { // 物品未被用户选择使用
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].maxGoodsNum}.png`
             }
+            usedCount += 1
+            this.usedGoodsCount = usedCount
           } else { // 物品未解锁
             this.courseBuilding[i].isUnlocked = 0
             this.courseBuilding[i].isUsed = 0
@@ -418,7 +410,14 @@
        * 关闭页面
        **/
       onCancel () {
-        window.history.back()
+        if (getLocalCache('building-path')) {
+          if (getLocalCache('building-path').myCourse === true) {
+            this.$route.router.go('/mycourse')
+          }
+          clearLocalCache('building-path')
+        } else {
+          this.$route.router.go('/subject/detail/P/4/0')
+        }
       },
 
       /**

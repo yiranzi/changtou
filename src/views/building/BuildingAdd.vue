@@ -237,8 +237,6 @@
               goods[i] = goodsObj
             }
           }
-          //let unlockedGoodsCount = 0
-          console.log(goods)
           // 物品显示状态
           for (let i = 0; i < this.courseBuilding.length; i++) {
             this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
@@ -258,8 +256,7 @@
               this.courseBuilding[i].isUnlocked = 0
             }
           }
-          //this.unlockedCount = unlockedGoodsCount
-          // 找出未使用的最先的物品的index
+          // 获取激活的物品
           if (getLocalCache('updata-goods')) {
             this.notUsedGoodsIndex = getLocalCache('updata-goods').index
             clearLocalCache('updata-goods')
@@ -313,7 +310,7 @@
        * 关闭页面
        **/
       onCancel () {
-        window.history.back()
+        this.$route.router.go('/subject/detail/P/4/0')
       },
 
       /**
