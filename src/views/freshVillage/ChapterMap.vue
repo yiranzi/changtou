@@ -3,7 +3,7 @@
  *
  */
 <template>
-  <div>
+  <div class="chapter-map-container">
       <span class="villagechapter-title" v-touch:tap="onChapterTap">第{{chapterCharacterNo}}章  {{chapter.title}}</span>
       <div class="map-close-icon-container" v-touch:tap="exitVillage"><span class="close-icon"></span></div>
       <img class="discuss" src="../../assets/styles/image/freshVillage/discuss.png" v-touch:tap="onAdviceTap"/>
@@ -238,10 +238,6 @@
        * 当地图上问题的坐标点被点击
        **/
       onLevelTap (chapterNo, question) {    //当地图上问题的坐标点被点击
-        if (chapterNo < this.chapterNo || chapterNo === this.chapterNo && question.questionNo <= ((this.questionNo - 1) === 0 ? 1 : (this.questionNo - 1))) {  //判断是否为已答过的题目，如果答过，显示每日事件，否则无反应
-          this.showTheExpands(question.materialType, question, chapterNo)
-          return
-        }
         if (chapterNo === this.chapterNo && question.questionNo === this.questionNo) {    //如果是当前题目，显示问题
           if (this.villageProgress.questionNo === 0) {
             this.$route.router.go(`/village/chapterstart/${this.chapterNo}`)    //跳转到章节介绍页
@@ -254,6 +250,10 @@
             return
           }
           this.showQuestion()
+        }
+        if (chapterNo < this.chapterNo || chapterNo === this.chapterNo && question.questionNo <= ((this.questionNo - 1) === 0 ? 1 : (this.questionNo - 1))) {  //判断是否为已答过的题目，如果答过，显示每日事件，否则无反应
+          this.showTheExpands(question.materialType, question, chapterNo)
+          return
         }
       },
       /**
@@ -352,8 +352,8 @@
           me.showLoading()
           Promise.all([me.commitRecord(), me.commitVillageHP(me.question.answer === answer ? 10 : 2)]).then(   //提交答题进度并显示今日资料
             () => {
-              me.hideLoading()
               setTimeout(() => {
+                me.hideLoading()
                 me.showMask({
                   component: 'freshVillage/Answer.vue',
                   hideOnMaskTap: false,
@@ -405,8 +405,8 @@
         this.showLoading()
         this.commitVillageHP(parseInt(this.chapter.questionArr[this.questionNo - 2].emergency.lifeScore)).then(
           () => {
-            me.hideLoading()
             setTimeout(() => {
+              me.hideLoading()
               me.showEmergency()
             }, 150)
           }
@@ -421,8 +421,8 @@
           me.showLoading()
           me.commitVillageHP(15).then(
             () => {
-              me.hideLoading()
               setTimeout(() => {
+                me.hideLoading()
                 me.showUpgrade(me.chapterNo)
                 me.isUpgradeShow = true
                 me.updateUpgrade()
@@ -438,23 +438,13 @@
       updateUpgrade () {
         const me = this
         if (me.chapterNo < 2) {
-          me.showLoading()
           me.chapterNo += 1   //切换到第二章第一体
           me.questionNo = 0
           me.isShowEncourage = false
           me.isUpgradeShow = false
-          me.commitRecord().then(
-            () => {
-              me.hideLoading()
-            }
-          )
+          me.commitRecord()
         } else {
-          me.showLoading()
-          me.commitRecord().then(
-            () => {
-              me.hideLoading()
-            }
-          )
+          me.commitRecord()
         }
       },
       /*
@@ -600,6 +590,7 @@
 
 </script>
 <style lang="less">
+  .chapter-map-container {
   .chapter-map {
     position: relative;
     width: 750/40rem;
@@ -797,16 +788,6 @@
       background-size: contain;
       z-index: 50;
     }
-    .next-btn {
-      position: fixed;
-      bottom: .5rem;
-      right: 3rem;
-      width: 3.6rem;
-      height: 3.75rem;
-      background: url('../../assets/styles/image/freshVillage/next.png') no-repeat;
-      background-size: contain;
-      z-index: 50;
-    }
     .wait-btn {
       position: fixed;
       bottom: .5rem;
@@ -816,7 +797,7 @@
       background: url('../../assets/styles/image/freshVillage/wait.png') no-repeat;
       background-size: contain;
       z-index: 50;
-    }
+    }  }
 
 
 

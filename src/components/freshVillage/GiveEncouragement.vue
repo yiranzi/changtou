@@ -38,6 +38,15 @@
     height: 16rem;
     background-color: #e8f5f0;
     border-radius: 20px;
+  .close-icon:after{
+    position: absolute;
+    top: .6rem;
+    right: .6rem;
+    font-family: 'myicon';
+    content: '\e90d';
+    font-size: .9rem;
+    color: #666;
+  }
     .encourage-img {
       position: relative;
       margin: 0 auto;
