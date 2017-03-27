@@ -38,7 +38,7 @@
   import {graduationDiplomaActions, buildingActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-  import {setLocalCache} from '../../util/cache'
+  import {setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   export default {
   vuex: {
     getters: {
@@ -109,7 +109,9 @@
         })
       }
       if (this.score >= 3) {
-        this.showTaskPassed()
+        if (!getLocalCache('homework-pass')) {
+          this.showTaskPassed()
+        }
       }
     }
   },
@@ -147,13 +149,14 @@
        callbackName: 'goToAddBuilding',
        callbackFn: this.goToAddBuilding.bind(this)
       })
+      setLocalCache('homework-pass', {homeworkPass: true})
      },
 
     /**
-     * 去造房子展示页
+     * 去造房子展示页(选择物品)
      */
     goToAddBuilding () {
-      this.$route.router.go('/building/add')
+      this.$route.router.replace('/building/add')
     },
 
     /**
@@ -180,6 +183,7 @@
      * 重测
      */
     reTest () {
+      clearLocalCache('homework-pass')
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_RETEST, {
         lessonid: this.lessonId
       })

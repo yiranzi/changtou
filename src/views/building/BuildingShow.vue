@@ -178,7 +178,7 @@
   import {buildingActions, courseRecordActions} from '../../vuex/actions'
   import Scroller from 'vux/scroller'
   import {userGetters, courseRecordsGetters, choiceGetters, buildingGetters} from '../../vuex/getters'
-  import {setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
+  import {setLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -356,7 +356,7 @@
        **/
       goToStudy () {
         setLocalCache('curr-course-status', {subjectStatusPoint: this.currSubjectStatus.graduated})
-        this.$route.router.go('/subject/detail/P/4/0')
+        window.history.back()
       },
 
       /**
@@ -413,15 +413,7 @@
        * 关闭页面
        **/
       onCancel () {
-        if (getLocalCache('building-introduction')) {
-          clearLocalCache('building-introduction')
-          window.history.go(-2)
-        } else if (getLocalCache('add-building')) {
-          clearLocalCache('add-building')
-          this.$route.router.go('/subject/detail/P/4/0')
-        } else {
-          window.history.back()
-        }
+        window.history.back()
       },
 
       /**

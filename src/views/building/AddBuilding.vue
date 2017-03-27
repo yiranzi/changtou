@@ -237,7 +237,6 @@
               goods[i] = goodsObj
             }
           }
-          console.log(goods)
           // 物品显示状态
           for (let i = 0; i < this.courseBuilding.length; i++) {
             this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
@@ -284,7 +283,7 @@
           }
           // 显示浮层
           me.showMask({
-            component: 'building/ChooseGoods.vue',
+            component: 'building/chooseGoods.vue',
             componentData: selectBuilding,
             callbackName: 'changeGoods',
             callbackFn: this.changeGoods.bind(this)
@@ -309,7 +308,7 @@
           goods[selectBuilding.itemId].useGoodsNum = selectBuilding.useGoodsNum
           this.updataBuildingGoodsStatus(4, goods).then(() => {
             setLocalCache('add-building', {addBuilding: true})
-            this.$route.router.go('/building/show')
+            this.$route.router.replace('/building/show')
           })
         })
       },
@@ -318,7 +317,7 @@
        * 关闭页面
        **/
       onCancel () {
-        this.$route.router.go('/subject/detail/P/4/0')
+        window.history.back()
       },
 
       /**

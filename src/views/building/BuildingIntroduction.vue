@@ -74,7 +74,6 @@
 </style>
 <script>
   import IctButton from '../../components/IctButton.vue'
-  import {setLocalCache} from '../../util/cache'
   export default {
     data () {
         return {
@@ -88,8 +87,7 @@
         window.history.back()
       },
       goToStartBuildHouse () {
-        setLocalCache('building-introduction', {introduction: true})
-        this.$route.router.go('/building/show')
+        this.$route.router.replace('/building/show')
       }
     }
   }
