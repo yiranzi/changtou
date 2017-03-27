@@ -41,10 +41,15 @@ export default {
     min-height: 22rem;
     background-color: #fff;
     border-radius: 20px;
-    .proverb-close {
-      position: absolute;
-      z-index: 2;
-    }
+  .close-icon:after{
+    position: absolute;
+    top: .6rem;
+    right: .6rem;
+    font-family: 'myicon';
+    content: '\e90d';
+    font-size: .9rem;
+    color: #666;
+  }
     .share-btn {
       position: absolute;
       left: 4rem;

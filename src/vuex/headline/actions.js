@@ -79,7 +79,7 @@ export const updataAmount = ({ dispatch }, HP) => {
   return new Promise(
     (resolve, reject) => {
       putWithinAuth({
-        url: getUrl('homepage_headline_checkin_amount').replace(':amount', HP)
+        url: getUrl('village_commit_HP').replace(':amount', HP)
       }).then(
         function (data) {
           dispatch('GET_AMOUNT', data)

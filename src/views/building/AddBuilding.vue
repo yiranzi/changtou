@@ -1,26 +1,26 @@
 <template>
-  <div class="building-add">
-    <div class="building-add-title" v-el:titlebar>
-      <div class="building-add-close" v-touch:tap="onCancel"></div>
+  <div class="add-building">
+    <div class="add-building-title" v-el:titlebar>
+      <div class="add-building-close" v-touch:tap="onCancel"></div>
       造房计划
-      <div class="building-add-rule" v-touch:tap="goToBuildingRule">攻略</div>
+      <div class="add-building-rule" v-touch:tap="goToBuildingRule">攻略</div>
     </div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <div class="building-add-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
-          <div class="building-add-house-bg" v-if="showHouseBackground">
+        <div class="add-building-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
+          <div class="add-building-house-bg" v-if="showHouseBackground">
             <img src="../../../static/image/building/building-show-house-bg.png" style="width: 100%;">
           </div>
-          <div class="building-add-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
+          <div class="add-building-single" v-bind:class="[item.buildingClass, ($index !== notUsedGoodsIndex && item.isUsed !== 0) ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
             <img v-bind:src="item.buildingPic" style="width: 100%;">
-            <div class="building-add-goods-state" v-if="item.isUsed === 0">
+            <div class="add-building-goods-state" v-if="$index === notUsedGoodsIndex || item.isUsed === 0">
               <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;">
             </div>
           </div>
         </div>
-        <div class="building-add-article" v-for="article in selectArticle" v-show="$index === notUsedGoodsIndex">
-          <div class="building-add-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
-          <div class="building-add-article-title">
+        <div class="add-building-article" v-for="article in selectArticle" v-show="$index === notUsedGoodsIndex">
+          <div class="add-building-article-content">锵锵锵，恭喜你解锁了第<span>{{article.courseIndex}}</span>件物品<br>点击“+”为你的房子添砖加瓦吧</div>
+          <div class="add-building-article-title">
             <span v-for="item in article.pointTitle">{{item}}<br></span>
           </div>
         </div>
@@ -29,22 +29,22 @@
   </div>
 </template>
 <style lang="less">
-  .building-add{
+  .add-building{
     background: #fff;
-    .building-add-title{
+    .add-building-title{
       text-align: center;
       line-height: 84/40rem;
       color: #666;
       font-size: 34/40rem;
       padding: 1.2rem 0 46/40rem;
       position: relative;
-      .building-add-close {
+      .add-building-close {
         width: 2rem;
         height: 2rem;
         position: absolute;
         left: 0.4rem;
       }
-      .building-add-close:before {
+      .add-building-close:before {
         width: 0.8rem;
         line-height: 0.8rem;
         font-family: 'myicon';
@@ -53,7 +53,7 @@
         text-align: center;
         color: #aaa;
       }
-      .building-add-rule{
+      .add-building-rule{
         font-size: 28/40rem;
         color: #888;
         line-height: 84/40rem;
@@ -62,10 +62,10 @@
         right: 0.8rem;
       }
     }
-    .building-add-entirety{
+    .add-building-entirety{
       overflow: hidden;
       position: relative;
-      .building-add-house-bg{
+      .add-building-house-bg{
         width: 630/40rem;
         height: 206/40rem;
         margin-left: -315/40rem;
@@ -73,7 +73,7 @@
         left: 50%;
         top: 338/40rem;
       }
-      .building-add-single{
+      .add-building-single{
         width: 750/40rem;
         height: 300/40rem;
         box-sizing: border-box;
@@ -83,7 +83,7 @@
         align-items:center;
         justify-content: center;
         position: absolute;
-        .building-add-goods-state{
+        .add-building-goods-state{
           width: 66/40rem;
           height: 128/40rem;
           position: absolute;
@@ -92,53 +92,53 @@
           justify-content: center;
         }
       }
-      .building-add-single-no-border{
+      .add-building-single-no-border{
         border: none;
       }
-      .building-add-single-location{
+      .add-building-single-location{
         top: 0;
       }
-      .building-add-single-house{
+      .add-building-single-house{
         width: 360/40rem;
         height: 260/40rem;
         margin-left: -180/40rem;
         top: 130/40rem;
         left: 50%;
       }
-      .building-add-single-butler{
+      .add-building-single-butler{
         width: 100/40rem;
         height: 220/40rem;
         top: 311/40rem;
         left: 224/40rem;
       }
-      .building-add-single-pet{
+      .add-building-single-pet{
         width: 130/40rem;
         height: 130/40rem;
         top: 402/40rem;
         left: 108/40rem;
       }
-      .building-add-single-transportation{
+      .add-building-single-transportation{
         width: 310/40rem;
         height: 130/40rem;
         top: 402/40rem;
         left: 416/40rem;
       }
-      .building-add-single-sight{
+      .add-building-single-sight{
         width: 750/40rem;
         height: 140/40rem;
         top: 570/40rem;
       }
     }
-    .building-add-article{
+    .add-building-article{
       padding: 0 70/40rem 0;
       margin: 60/40rem 0 80/40rem;
       font-size: 26/40rem;
       color: #666;
       text-align: center;
-      .building-add-article-content{
+      .add-building-article-content{
         margin: 60/40rem 0;
       }
-      .building-add-unlocked-article{
+      .add-building-unlocked-article{
         color: #888;
       }
     }
@@ -160,7 +160,7 @@
   import Scroller from 'vux/scroller'
   import {buildingActions} from '../../vuex/actions'
   import {buildingGetters} from '../../vuex/getters'
-  import {getLocalCache, clearLocalCache} from '../../util/cache'
+  import {getLocalCache, clearLocalCache, setLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -189,14 +189,14 @@
         unlockedCount: 1, // 解锁物品的个数
         notUsedGoodsIndex: 0, // 未使用并最先解锁的物品的index
         showHouseBackground: false, // 房子背景的显示
-        noBorder: 'building-add-single-no-border', // 已使用去掉边框
+        noBorder: 'add-building-single-no-border', // 已使用去掉边框
         courseBuilding: [
-          {buildingClass: 'building-add-single-location', buildingPic: './static/image/building/building-show-locked-1-1.png', isUnlocked: 1, isUsed: 0},
-          {buildingClass: 'building-add-single-house', buildingPic: './static/image/building/building-show-locked-2-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-add-single-butler', buildingPic: './static/image/building/building-show-locked-3-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-add-single-pet', buildingPic: './static/image/building/building-show-locked-4-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-add-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 1, isUsed: 0},
-          {buildingClass: 'building-add-single-sight', buildingPic: './static/image/building/building-show-locked-6-1.png', isUnlocked: 0, isUsed: 0}
+          {buildingClass: 'add-building-single-location', buildingPic: './static/image/building/building-show-locked-1-1.png', isUnlocked: 1, isUsed: 0},
+          {buildingClass: 'add-building-single-house', buildingPic: './static/image/building/building-show-locked-2-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'add-building-single-butler', buildingPic: './static/image/building/building-show-locked-3-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'add-building-single-pet', buildingPic: './static/image/building/building-show-locked-4-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'add-building-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 0, isUsed: 0},
+          {buildingClass: 'add-building-single-sight', buildingPic: './static/image/building/building-show-locked-6-1.png', isUnlocked: 0, isUsed: 0}
         ], // 课程建筑(1表示已解锁或者被使用,0表示未解锁或者未使用)
         selectArticle: [
           {courseIndex: '一', pointTitle: ['买房最重要的是什么？location！location！location！', '万事开头难，好的地段是决定你房屋价值的重要指标？']},
@@ -242,6 +242,7 @@
             this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
             if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
               this.courseBuilding[i].isUnlocked = 1
+              this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-${goods[i].maxGoodsNum}.png`
               if (goods[i].useGoodsNum !== 0) { // 物品已使用
                 this.courseBuilding[i].isUsed = 1
                 this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
@@ -259,6 +260,7 @@
           // 获取激活的物品
           if (getLocalCache('updata-goods')) {
             this.notUsedGoodsIndex = getLocalCache('updata-goods').index
+            this.courseBuilding[this.notUsedGoodsIndex].buildingPic = `./static/image/building/building-show-locked-${this.notUsedGoodsIndex + 1}-${goods[this.notUsedGoodsIndex].useGoodsNum}.png`
             clearLocalCache('updata-goods')
           }
         })
@@ -274,10 +276,14 @@
         this.getBuildingGoodsStatus(4).then(() => {
           selectBuilding.itemId = index
           selectBuilding.maxGoodsNum = me.buildingGoodsStatus[index].maxGoodsNum
-          selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].useGoodsNum
+          if (me.buildingGoodsStatus[index].maxGoodsNum !== 0 && me.buildingGoodsStatus[index].useGoodsNum === 0) {
+            selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].maxGoodsNum
+          } else {
+            selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].useGoodsNum
+          }
           // 显示浮层
           me.showMask({
-            component: 'building/ChooseGoods.vue',
+            component: 'building/chooseGoods.vue',
             componentData: selectBuilding,
             callbackName: 'changeGoods',
             callbackFn: this.changeGoods.bind(this)
@@ -301,7 +307,8 @@
           }
           goods[selectBuilding.itemId].useGoodsNum = selectBuilding.useGoodsNum
           this.updataBuildingGoodsStatus(4, goods).then(() => {
-            this.$route.router.go('/building/BuildingShow')
+            setLocalCache('add-building', {addBuilding: true})
+            this.$route.router.replace('/building/show')
           })
         })
       },
@@ -310,14 +317,14 @@
        * 关闭页面
        **/
       onCancel () {
-        this.$route.router.go('/subject/detail/P/4/0')
+        window.history.back()
       },
 
       /**
        * 规则
        **/
       goToBuildingRule () {
-        this.$route.router.go('/building/BuildingRule')
+        this.$route.router.go('/building/rule')
       },
 
       /**

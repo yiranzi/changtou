@@ -1,6 +1,6 @@
 <template>
   <div class="chapterstart-choice-item">
-    <div class="map-close-icon-container" v-touch:tap="backToMap"><span class="close-icon"></span></div>
+    <div class="start-close-icon-container" v-touch:tap="backToMap"><span class="close-icon"></span></div>
     <div class="chapterstart-close"></div>
     <div class="chapterstart-wrapper">
       <p class="chapterstart-number">第{{chapterCharacterNum}}章</p>

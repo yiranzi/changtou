@@ -207,10 +207,10 @@ export default {
      **/
     goToBuilding () {
       if (getLocalCache('first-building')) { // 不是第一次进入造房子
-        this.$route.router.go('/building/BuildingShow')
+        this.$route.router.go('/building/show')
       } else { // 第一次进入造房子
         setLocalCache('first-building', {firstBuilding: true})
-        this.$route.router.go('/building/BuildingIntroduction')
+        this.$route.router.go('/building/introduction')
       }
     },
 
