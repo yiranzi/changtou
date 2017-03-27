@@ -108,7 +108,7 @@
           callbackFn: this.reTest.bind(this) //组件上的
         })
       }
-      if (this.score >= 3) {
+      if (this.score >= 3 && this.subjectId === '4') {
         if (!getLocalCache('homework-pass')) {
           this.showTaskPassed()
         }
