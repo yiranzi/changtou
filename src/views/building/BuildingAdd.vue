@@ -11,9 +11,9 @@
           <div class="building-add-house-bg" v-if="showHouseBackground">
             <img src="../../../static/image/building/building-show-house-bg.png" style="width: 100%;">
           </div>
-          <div class="building-add-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
+          <div class="building-add-single" v-bind:class="[item.buildingClass, ($index !== notUsedGoodsIndex && item.isUsed !== 0) ? noBorder : '']" v-for="item in courseBuilding" v-show="item.isUnlocked === 1" v-touch:tap="goToSelectBuilding($index)">
             <img v-bind:src="item.buildingPic" style="width: 100%;">
-            <div class="building-add-goods-state" v-if="item.isUsed === 0">
+            <div class="building-add-goods-state" v-if="$index === notUsedGoodsIndex || item.isUsed === 0">
               <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;">
             </div>
           </div>
@@ -160,7 +160,7 @@
   import Scroller from 'vux/scroller'
   import {buildingActions} from '../../vuex/actions'
   import {buildingGetters} from '../../vuex/getters'
-  import {getLocalCache, clearLocalCache} from '../../util/cache'
+  import {getLocalCache, clearLocalCache, setLocalCache} from '../../util/cache'
 
   export default {
     vuex: {
@@ -195,7 +195,7 @@
           {buildingClass: 'building-add-single-house', buildingPic: './static/image/building/building-show-locked-2-1.png', isUnlocked: 0, isUsed: 0},
           {buildingClass: 'building-add-single-butler', buildingPic: './static/image/building/building-show-locked-3-1.png', isUnlocked: 0, isUsed: 0},
           {buildingClass: 'building-add-single-pet', buildingPic: './static/image/building/building-show-locked-4-1.png', isUnlocked: 0, isUsed: 0},
-          {buildingClass: 'building-add-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 1, isUsed: 0},
+          {buildingClass: 'building-add-single-transportation', buildingPic: './static/image/building/building-show-locked-5-1.png', isUnlocked: 0, isUsed: 0},
           {buildingClass: 'building-add-single-sight', buildingPic: './static/image/building/building-show-locked-6-1.png', isUnlocked: 0, isUsed: 0}
         ], // 课程建筑(1表示已解锁或者被使用,0表示未解锁或者未使用)
         selectArticle: [
@@ -237,11 +237,13 @@
               goods[i] = goodsObj
             }
           }
+          console.log(goods)
           // 物品显示状态
           for (let i = 0; i < this.courseBuilding.length; i++) {
             this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
             if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
               this.courseBuilding[i].isUnlocked = 1
+              this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-${goods[i].maxGoodsNum}.png`
               if (goods[i].useGoodsNum !== 0) { // 物品已使用
                 this.courseBuilding[i].isUsed = 1
                 this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
@@ -259,6 +261,7 @@
           // 获取激活的物品
           if (getLocalCache('updata-goods')) {
             this.notUsedGoodsIndex = getLocalCache('updata-goods').index
+            this.courseBuilding[this.notUsedGoodsIndex].buildingPic = `./static/image/building/building-show-locked-${this.notUsedGoodsIndex + 1}-${goods[this.notUsedGoodsIndex].useGoodsNum}.png`
             clearLocalCache('updata-goods')
           }
         })
@@ -274,7 +277,11 @@
         this.getBuildingGoodsStatus(4).then(() => {
           selectBuilding.itemId = index
           selectBuilding.maxGoodsNum = me.buildingGoodsStatus[index].maxGoodsNum
-          selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].useGoodsNum
+          if (me.buildingGoodsStatus[index].maxGoodsNum !== 0 && me.buildingGoodsStatus[index].useGoodsNum === 0) {
+            selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].maxGoodsNum
+          } else {
+            selectBuilding.useGoodsNum = me.buildingGoodsStatus[index].useGoodsNum
+          }
           // 显示浮层
           me.showMask({
             component: 'building/ChooseGoods.vue',
@@ -301,6 +308,7 @@
           }
           goods[selectBuilding.itemId].useGoodsNum = selectBuilding.useGoodsNum
           this.updataBuildingGoodsStatus(4, goods).then(() => {
+            setLocalCache('building-add', {buildingAdd: true})
             this.$route.router.go('/building/BuildingShow')
           })
         })

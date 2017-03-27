@@ -30,7 +30,6 @@ export const getBuildingGoodsStatus = ({ dispatch }, subjectId) => {
  * @param dispatch
  */
 export const updataBuildingGoodsStatus = ({ dispatch }, subjectId, goods) => {
-  console.log(goods)
   return new Promise((resolve, reject) => {
     postWithinAuth(
       {

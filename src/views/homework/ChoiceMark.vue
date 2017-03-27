@@ -120,7 +120,7 @@
     showTaskPassed () {
       // 进行物品解锁(更新)
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
-        setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
+        setLocalCache('updata-goods', {index: this.lessonId - 17})
         let goods = this.buildingGoodsStatus
         for (let i = 0; i < 6; i++) {
           let goodsObj = {}
@@ -130,10 +130,10 @@
             goods[i] = goodsObj
           }
         }
-        if (this.essayResult.score === 3 || this.essayResult.score === 4) {
-          goods[this.essayResult.sequence - 17].maxGoodsNum = 1
+        if (this.score === 3 || this.score === 4) {
+          goods[this.lessonId - 17].maxGoodsNum = 1
         } else {
-          goods[this.essayResult.sequence - 17].maxGoodsNum = 2
+          goods[this.lessonId - 17].maxGoodsNum = 2
         }
         this.updataBuildingGoodsStatus(this.subjectId, goods)
       })

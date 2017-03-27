@@ -8,13 +8,16 @@
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
         <div class="building-show-entirety" v-bind:style="{ height: buildingHeight + 'rem' }">
-          <div class="building-show-house-bg" v-if="usedGoodsCount >= 2">
+          <div class="building-show-house-bg" v-if="studyCourseCount >= 2">
             <img src="../../../static/image/building/building-show-house-bg.png" style="width: 100%;">
           </div>
-          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="$index < studyCourseCount" >
+          <div class="building-show-single" v-bind:class="[item.buildingClass, item.isUsed ? noBorder : '']" v-for="item in courseBuilding" v-show="$index <= studyCourseCount" >
             <img v-bind:src="item.buildingPic" style="width: 100%;">
             <div class="building-show-goods-state" v-if="item.isUnlocked === 0">
               <img src="../../../static/image/building/building-show-locked.png" style="width: 100%;">
+            </div>
+            <div class="building-show-goods-state" v-if="item.isUsed === 0 && item.isUnlocked !== 0">
+              <img src="../../../static/image/building/building-show-unlocked.png" style="width: 100%;">
             </div>
           </div>
         </div>
@@ -325,14 +328,14 @@
           this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-1.png`
           if (goods[i].maxGoodsNum !== 0) { // 物品已解锁
             this.courseBuilding[i].isUnlocked = 1
-            this.courseBuilding[i].isUsed = 1
             if (goods[i].useGoodsNum !== 0) { // 物品已被用户选择使用
               this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].useGoodsNum}.png`
+              this.courseBuilding[i].isUsed = 1
+              usedCount += 1
+              this.usedGoodsCount = usedCount
             } else { // 物品未被用户选择使用
-              this.courseBuilding[i].buildingPic = `./static/image/building/building-show-unlocked-${i + 1}-${goods[i].maxGoodsNum}.png`
+              this.courseBuilding[i].buildingPic = `./static/image/building/building-show-locked-${i + 1}-${goods[i].maxGoodsNum}.png`
             }
-            usedCount += 1
-            this.usedGoodsCount = usedCount
           } else { // 物品未解锁
             this.courseBuilding[i].isUnlocked = 0
             this.courseBuilding[i].isUsed = 0
@@ -413,6 +416,9 @@
         if (getLocalCache('building-introduction')) {
           clearLocalCache('building-introduction')
           window.history.go(-2)
+        } else if (getLocalCache('building-add')) {
+          clearLocalCache('building-add')
+          this.$route.router.go('/subject/detail/P/4/0')
         } else {
           window.history.back()
         }
