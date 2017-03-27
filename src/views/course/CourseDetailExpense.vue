@@ -243,7 +243,7 @@
   import {Jpush} from '../../plugin/jpush'
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
-  import buildingEntry from '../../components/building/entry.vue'
+  import buildingEntry from '../../components/building/Entry.vue'
   export default {
     mixins: [mixinPageShare],
     vuex: {
