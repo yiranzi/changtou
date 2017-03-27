@@ -144,16 +144,16 @@
       this.showMask({
        component: 'building/GradeToBuild.vue',
        componentData: taskPassedData,
-       callbackName: 'goToBuildingAdd',
-       callbackFn: this.goToBuildingAdd.bind(this)
+       callbackName: 'goToAddBuilding',
+       callbackFn: this.goToAddBuilding.bind(this)
       })
      },
 
     /**
      * 去造房子展示页
      */
-    goToBuildingAdd () {
-      this.$route.router.go('/building/BuildingAdd')
+    goToAddBuilding () {
+      this.$route.router.go('/building/add')
     },
 
     /**

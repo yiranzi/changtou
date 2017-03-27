@@ -89,7 +89,7 @@
       },
       goToStartBuildHouse () {
         setLocalCache('building-introduction', {introduction: true})
-        this.$route.router.go('/building/BuildingShow')
+        this.$route.router.go('/building/show')
       }
     }
   }

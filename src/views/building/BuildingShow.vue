@@ -416,8 +416,8 @@
         if (getLocalCache('building-introduction')) {
           clearLocalCache('building-introduction')
           window.history.go(-2)
-        } else if (getLocalCache('building-add')) {
-          clearLocalCache('building-add')
+        } else if (getLocalCache('add-building')) {
+          clearLocalCache('add-building')
           this.$route.router.go('/subject/detail/P/4/0')
         } else {
           window.history.back()
@@ -428,7 +428,7 @@
        * 规则
        **/
       goToBuildingRule () {
-        this.$route.router.go('/building/BuildingRule')
+        this.$route.router.go('/building/rule')
       },
 
       /**
