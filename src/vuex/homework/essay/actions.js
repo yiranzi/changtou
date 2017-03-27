@@ -138,3 +138,29 @@ export const getEssayQuestion = ({dispatch}, lessonId) => {
 export const updateDraft = ({ dispatch }, draft) => {
   dispatch('UPDATE_ESSAY_DRAFT', draft)
 }
+
+/**
+ * 获取问答题得分结果
+ * @param dispatch
+ * @param subjectId
+ * @returns {Promise}
+ */
+export const getEssayResult = ({dispatch}, subjectId) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth(
+        {
+          url: getUrl('homework_get_essayscore').replace(':subjectId', subjectId)
+        }
+      ).then(
+        data => {
+          dispatch('ESSAT_RESULT', data)
+          resolve(data)
+        },
+        err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}

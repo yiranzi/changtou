@@ -112,7 +112,7 @@
     <!--<div class="question-naire-btn" v-if="isQuestionPlaced" v-touch:tap="gotoQuestionNaire"></div>-->
     <course-remind :is-remind-show="isRemindShow" :is-remove-remind-show="isRemoveRemindShow" :remind-time-start="remindTimeStart" :remind-time-end="remindTimeEnd" :remind-time-data="remindTimeData" @on-set-time-change="onSetTimeChange" @close-modal="closeModal" @set-remind="setRemind" @get-remove-remind="removeRemind"></course-remind>
     <page-share-float :show.sync="isShareShow" v-touch:tap="onActionTap" @confirm="cancelShare"></page-share-float>
-     <building-entry v-touch:tap="goToBuilding"></building-entry>
+     <building-entry v-touch:tap="goToBuilding" v-if="subjectId === '4'"></building-entry>
   </div>
 
 </template>
@@ -232,8 +232,8 @@
   import {Tab, TabItem} from 'vux/tab'
   import Scroller from 'vux/scroller'
   import Sticky from 'vux/sticky'
-  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions} from '../../vuex/actions'
-  import {courseDetailGetters, courseRecordsGetters, userGetters, homeworkListGetters} from '../../vuex/getters'
+  import {courseDetailActions, courseRecordActions, essayActions, choiceActions, homeworkListActions, questionNaireActions, buildingActions} from '../../vuex/actions'
+  import {courseDetailGetters, courseRecordsGetters, essayGetters, userGetters, homeworkListGetters, buildingGetters} from '../../vuex/getters'
   import {setSessionCache, setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -243,7 +243,7 @@
   import {Jpush} from '../../plugin/jpush'
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
-  import buildingEntry from '../../components/building/entry.vue'
+  import buildingEntry from '../../components/building/Entry.vue'
   export default {
     mixins: [mixinPageShare],
     vuex: {
@@ -251,7 +251,10 @@
         expenseSubjectArr: courseDetailGetters.expenseDetailArr,
         expenseRecordsArr: courseRecordsGetters.expenseRecords,
         isUserLogin: userGetters.isLogin,
-        homeworkList: homeworkListGetters.homeworkList
+        homeworkList: homeworkListGetters.homeworkList,
+        buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
+        buildingUpdata: buildingGetters.buildingUpdata,
+        essayResult: essayGetters.essayResult
       },
       actions: {
         loadExpenseSubject: courseDetailActions.loadExpenseSubject,
@@ -270,7 +273,11 @@
 
         syncHomeworkList: homeworkListActions.getHomeworkList,
         isSubmitQuestionNaire: questionNaireActions.isSubmitQuestionNaire,
-        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord
+        updateExpenseChapterRecord: courseRecordActions.updateExpenseChapterRecord,
+
+        getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
+        updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus,
+        getEssayResult: essayActions.getEssayResult
       }
     },
     /**
@@ -469,6 +476,10 @@
           imgUrl: newSubject.pic
         }
         this.onViewChange()
+        // 判断是否显示相应课程状态提示浮层
+        this.showSubjectStatus()
+        // 判断显示问答题通过的浮层
+        this.showEssayPassed(this.subjectId)
       },
       'currTabIndex': function () {
         this.$nextTick(() => {
@@ -664,6 +675,145 @@
       resetViewBackHandler () {
         this.$parent.viewBackHandler = null
       },
+      /**
+       * 显示课程状态提示
+       **/
+      showSubjectStatus () {
+        if (getLocalCache('curr-course-status')) {
+          let currSubjectStatus = getLocalCache('curr-course-status').subjectStatusPoint
+          // 判断课程状态
+          switch (currSubjectStatus) {
+            case 'I':
+              this.showActiveSubject()
+              break
+            case 'P':
+              this.showOpenSubject()
+              break
+            case 'E':
+              this.showContinueSubject()
+              break
+            default:
+              break
+          }
+          clearLocalCache('curr-course-status')
+        }
+      },
+
+      /**
+       * 提示激活
+       **/
+      showActiveSubject () {
+        const me = this
+        const msg = '<p>该课程未激活，激活后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '激活课程',
+            cancelText: '再看看',
+            okCallback: me.active.bind(me)
+          })
+        }, 100)
+      },
+
+      /**
+      * 提示开启
+      **/
+      showOpenSubject () {
+        const me = this
+        const msg = '<p>该课程已暂停，开启后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '开启课程',
+            cancelText: '再看看',
+            okCallback: me.resume.bind(me)
+          })
+        }, 100)
+      },
+
+      /**
+      * 提示延期
+      **/
+      showContinueSubject () {
+        const me = this
+        const msg = '<p>该课程已过期，延期后可开始课程学习，进行造房计划</p>'
+        // 这里加入延迟是防止出现msg被点透的情况
+        setTimeout(function () {
+          me.showConfirm({
+            title: '',
+            message: msg,
+            okText: '延期课程',
+            cancelText: '再看看',
+            okCallback: me.postpone.bind(me)
+          })
+        }, 100)
+      },
+
+      /**
+       * 显示问答题通过浮层
+       **/
+      showEssayPassed (subjectId) {
+        if (subjectId === '4') {
+          this.getEssayResult(subjectId).then(() => {
+            if (!this.essayResult.remind) {
+              // 记录被更新物品
+              setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
+              // 进行物品解锁(更新)
+              this.getBuildingGoodsStatus(subjectId).then(() => {
+                let goods = this.buildingGoodsStatus
+                for (let i = 0; i < 6; i++) {
+                  let goodsObj = {}
+                  goodsObj.maxGoodsNum = 0
+                  goodsObj.useGoodsNum = 0
+                  if (!goods[i]) {
+                    goods[i] = goodsObj
+                  }
+                }
+                if (this.essayResult.score === 3) {
+                  goods[this.essayResult.sequence - 17].maxGoodsNum = 2
+                } else {
+                  goods[this.essayResult.sequence - 17].maxGoodsNum = 3
+                }
+                this.updataBuildingGoodsStatus(subjectId, goods)
+              })
+              // 显示分数浮层
+              let taskPassedData = {} // 传给浮层的数据
+              taskPassedData.testType = '问答题'  // 问答题类型
+              taskPassedData.grade = this.essayResult.score  // 问答题的分数
+              this.showMask({
+               component: 'building/GradeToBuild.vue',
+               componentData: taskPassedData,
+               callbackName: 'goToBuildingAdd',
+               callbackFn: this.goToBuildingAdd.bind(this)
+              })
+            }
+          })
+        }
+      },
+
+      /**
+       * 去造房子选择物品页(点击问答题通过浮层的入口)
+       */
+      goToBuildingAdd () {
+        this.$route.router.go('/building/BuildingAdd')
+      },
+
+      /**
+       * 进入造房子(小房子按钮入口)
+       **/
+      goToBuilding () {
+        if (getLocalCache('first-building')) { // 不是第一次进入造房子
+          this.$route.router.go('/building/BuildingShow')
+        } else { // 第一次进入造房子
+          setLocalCache('first-building', {firstBuilding: true})
+          this.$route.router.go('/building/BuildingIntroduction')
+        }
+      },
+
       /**
        * 点击空白消失模态层
        **/
@@ -1475,9 +1625,6 @@
         // 暂定为 问卷一
         const naireId = 1
         this.$route.router.go(`/questionNaire/${naireId}`)
-      },
-      goToBuilding () {
-        //todo 课程界面进入造房的入口跳转
       }
     },
     components: {

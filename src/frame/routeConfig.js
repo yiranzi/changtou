@@ -346,27 +346,35 @@ export function configRouter (router) {
     },
 
     /**
-     * 头条精选
+     * 头条精彩
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
     },
+
     /**
-     * 造房计划
+     * 造房子
      */
+    // 造房子展示页
+    '/building/BuildingShow': {
+      component: require('../views/building/BuildingShow.vue')
+    },
+    // 造房子添加物品页
+    '/building/BuildingAdd': {
+      component: require('../views/building/BuildingAdd.vue')
+    },
     //造房攻略
-    '/building/rule': {
+    '/building/BuildingRule': {
       component: require('../views/building/BuildingRule.vue')
     },
     //造房简介
-    '/building/introduction': {
+    '/building/BuildingIntroduction': {
       component: require('../views/building/BuildingIntroduction.vue')
     }
   })
 
   // redirect
   router.redirect({
-    //'': '/main'
     '': '/start'
   })
 }
