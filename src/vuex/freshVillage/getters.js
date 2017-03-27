@@ -2,7 +2,14 @@
  * Created by jun on 2017/1/24
  * 新手村
  */
-
+/**
+ * 获取生命值
+ * @param state
+ * @returns {number|*}
+ */
+export const getVillageHP = (state) => {
+  return state.freshVillage.HP
+}
 /**
  * 吐槽内容列表
  * @param state
