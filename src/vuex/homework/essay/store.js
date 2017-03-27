@@ -10,7 +10,8 @@ const state = {
   createTime: '',  //提交时间
   remarkList: [], //留言列表
   score: 0, //作业分数
-  status: '' //作业状态
+  status: '', //作业状态
+  essayResult: {} //问答题得分结果
 }
 
 const mutations = {
@@ -60,6 +61,16 @@ const mutations = {
     state.essayLessonId = draft.lessonId
     state.createTime = draft.create_time
     state.essayQuestion = draft.assignment
+  },
+
+  /**
+   * 问答题得分结果
+   * @param state
+   * @param essayResult
+   * @constructor
+   */
+  ESSAT_RESULT (state, essayResult) {
+    state.essayResult = essayResult
   }
 }
 
