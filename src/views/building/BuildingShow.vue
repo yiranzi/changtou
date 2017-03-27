@@ -395,7 +395,6 @@
             component: require('../pay/SubjectOrder.vue')
           })
           me.$route.router.go(path)
-
         }
         const msg = '<p>您尚未购买股票投资初级课，购买后可参加造房计划</p>'
         // 这里加入延迟是防止出现msg被点透的情况
