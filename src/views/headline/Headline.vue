@@ -156,12 +156,14 @@
       actions: {
         getHeadlineContent: headlineActions.getHeadlineContent,  // 获取头条精选内容
         getCheckinData: headlineActions.getCheckinData,  // 获取用户签到信息
-        checked: headlineActions.checked  //  用户进行签到
+        checked: headlineActions.checked,  //  用户进行签到
+        updataAmount: headlineActions.updataAmount  //  用户进行签到
       },
       getters: {
         isLogin: userGetters.isLogin,  //是否登录
         headlineContent: headlineGetters.headlineContent,  // 头条精选内容
-        userCheckinData: headlineGetters.userCheckinData  // 用户签到信息
+        userCheckinData: headlineGetters.userCheckinData,  // 用户签到信息
+        getAmount: headlineGetters.getAmount  // 用户签到信息
       }
     },
 
@@ -236,19 +238,25 @@
         if (this.isLogin) {  // 已登陆
           // 获取签到信息
           const me = this
-          this.getCheckinData().then(() => {
-            me.checkinCount = me.userCheckinData.count
-            me.isCheckin = me.userCheckinData.hasChecked
-            if (this.checkinState && !me.isCheckin) {
-              this.loginCheckin()
-              this.checkinState = false
-            }
-            if (!me.checkinCount && me.checkinCount !== 0) { // 判断开始是否签过到
-              me.checkinCount = 0
-              me.isCheckin = false
-            }
-            me.CheckinProgress(me.checkinCount)
-          })
+          if (this.checkinState) { // 未登录的时候点击过签到按钮
+            this.getCheckinData().then(() => {
+              me.isCheckin = me.userCheckinData.hasChecked
+              if (!me.isCheckin) { // 没登录的时候，点击签到，进行签到
+                me.loginCheckin()
+                me.checkinState = false
+              }
+            })
+          } else { // 未登录的时候用户没有点击过按钮
+            this.getCheckinData().then(() => {
+              me.checkinCount = me.userCheckinData.count
+              me.isCheckin = me.userCheckinData.hasChecked
+              if (!me.checkinCount && me.checkinCount !== 0) { // 判断开始是否签过到
+                me.checkinCount = 0
+                me.isCheckin = false
+              }
+              me.CheckinProgress(me.checkinCount)
+            })
+          }
         } else {  // 未登录
           this.checkinCount = 0
           this.isCheckin = false
@@ -338,6 +346,12 @@
             hideOnMaskTap: true
           })
           // 给后台传数据：该用户生命值加1000
+          let hp = 1000
+          this.updataAmount(hp).then(() => {
+            if (this.getAmount) {
+              console.log('增加成功')
+            }
+          })
         }
         this.checked()
       }
