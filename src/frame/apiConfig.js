@@ -238,7 +238,7 @@ const apiUrl = {
   /**
    * 造房子
    */
-  'building_goods_status': '/student/house/goods-status/:subjectId'            // 获取/更新物品状态
+  'building_goods_status': `/student/house/goods-status/:subjectId`           // 获取/更新物品状态
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]
