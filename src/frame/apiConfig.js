@@ -150,6 +150,7 @@ const apiUrl = {
   'homework_get_choice_knowledge_point': '/course/knowledge-point', // 获取选择题 对应知识点
   'homework_get_choice_question': '/student/choice-question/:lessonId', // 获取选择题
   'homework_get_essay_question': '/student/essay-question/:lessonId', // 获取问答题
+  'homework_get_essayscore': '/course/essayscore/:subjectId', // 获取问答题的分数
 
   /**
    * 策略产品
@@ -223,7 +224,8 @@ const apiUrl = {
   'village_update_answer_record': '/eden/answer-record/:chapterNo/:questionNo', //提交更新答题进度
   'village_get_proposal_list': '/eden/proposal-list/:pageIndex/:pageSize',  //获得新手村吐槽列表
   'village_submit_proposal_list': '/eden/proposal-submit',  //提交新手村吐槽
-    /**
+  'village_commit_HP': '/eden/HP/:amount',  //提交新手村生命值
+  /**
      * 版本信息
      */
   'app_update_content': '/system/app/version',            // 获得更新后版本号和更新的功能
@@ -232,7 +234,12 @@ const apiUrl = {
    */
   'homepage_headline': '/homepage/headline',            // 头条精选 内容
   'homepage_headline_checkin_data': '/homepage/headline/checkin/checkdata',     // 头条精选 签到信息
-  'homepage_headline_checkin_checked': '/homepage/headline/checkin/checked'   // 头条精选 签到功能数据更新
+  'homepage_headline_checkin_checked': '/homepage/headline/checkin/checked',   // 头条精选 签到功能数据更新
+  'homepage_headline_checkin_amount': '/eden/HP/:amount',  // 签到更新生命值
+  /**
+   * 造房子
+   */
+  'building_goods_status': `/student/house/goods-status/:subjectId`           // 获取/更新物品状态
 }
 
 export const getUrl = (urlPath, server = SEVER_URL, urlMap = apiUrl) => server + urlMap[urlPath]

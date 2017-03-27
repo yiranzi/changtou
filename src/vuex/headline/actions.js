@@ -1,7 +1,7 @@
 /**
  * Created by zyr on 2016/10/8.
  */
-import {getWithinAuth, getWithoutAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithinAuth, getWithoutAuth, postWithinAuth, putWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
 /**
@@ -60,6 +60,29 @@ export const checked = () => {
         url: getUrl('homepage_headline_checkin_checked')
       }).then(
         function (data) {
+          resolve(data)
+        },
+        function (err) {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+
+/**
+ * 更新生命值
+ * @param dispatch
+ * @param HP
+ */
+export const updataAmount = ({ dispatch }, HP) => {
+  return new Promise(
+    (resolve, reject) => {
+      putWithinAuth({
+        url: getUrl('homepage_headline_checkin_amount').replace(':amount', HP)
+      }).then(
+        function (data) {
+          dispatch('GET_AMOUNT', data)
           resolve(data)
         },
         function (err) {

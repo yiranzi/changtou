@@ -79,11 +79,11 @@
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctButton from '../../components/IctButton.vue'
   import Scroller from 'vux/scroller'
-  import {myCoursesActions, ebookActions, giftActions} from '../../vuex/actions'
-  import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters} from '../../vuex/getters'
-  import {setLocalCache} from '../../util/cache'
+  import {myCoursesActions, ebookActions, giftActions, buildingActions} from '../../vuex/actions'
+  import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters, buildingGetters} from '../../vuex/getters'
+  import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
-  import buildingEntry from '../../components/building/Entry.vue'
+  import buildingEntry from '../../components/building/EntryIcon.vue'
 export default {
   vuex: {
     getters: {
@@ -96,7 +96,9 @@ export default {
       expenseRecords: courseRecordsGetters.expenseRecords, //付费课程记录
       freeRecords: courseRecordsGetters.freeRecords, //免费课程记录
       newDrawDiploma: graduationDiplomaGetters.newDrawDiploma, // 有新的毕业证书
-      book1Progress: ebookGetters.bookProgress //电子书1的阅读进度
+      book1Progress: ebookGetters.bookProgress, //电子书1的阅读进度
+      buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
+      buildingUpdata: buildingGetters.buildingUpdata
     },
     actions: {
       loadDefaultCourses: myCoursesActions.loadDefaultCourses, // 下载 默认 我的课程 信息
@@ -104,7 +106,9 @@ export default {
       loadAccumulateTime: myCoursesActions.loadAccumulateTime, //下载 累积学习时间
       getBookProgress: ebookActions.getBookProgress,   // 得到上次阅读进度
       receiveGiftPackage: giftActions.receiveGiftPackage,  // 获取新手礼包 （暂时用来判断是否领取过礼包，若领取过则显示电子书）
-      isQualifyGiftPackage: giftActions.isQualifyGiftPackage
+      isQualifyGiftPackage: giftActions.isQualifyGiftPackage,
+      getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
+      updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus
     }
   },
   data () {
@@ -198,6 +202,18 @@ export default {
     }
   },
   methods: {
+    /**
+     * 进入造房子
+     **/
+    goToBuilding () {
+      if (getLocalCache('first-building')) { // 不是第一次进入造房子
+        this.$route.router.go('/building/BuildingShow')
+      } else { // 第一次进入造房子
+        setLocalCache('first-building', {firstBuilding: true})
+        this.$route.router.go('/building/BuildingIntroduction')
+      }
+    },
+
     /**
      *  去阅读电子书 若有阅读进度 则去上次阅读进度处
      */
@@ -329,9 +345,6 @@ export default {
      */
     goToMyDiploma () {
       this.$route.router.go('/graduation/list')
-    },
-    goToBuilding () {
-      //todo 课程界面进入造房的入口跳转
     }
   },
   components: {

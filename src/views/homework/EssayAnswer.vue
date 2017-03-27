@@ -7,13 +7,16 @@
       <ict-titlebar :right-options="rightOptions" v-el:titlebar>
         <a slot="right">提交</a>
       </ict-titlebar>
-      <div class="essay-content" v-el:question :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
-      <p class="fold-panel" v-el:fold><span v-touch:tap="onFoldTap" class="fold-icon">{{foldText}}</span></p>
-      <textarea v-model="answer" placeholder="请写下你的作业内容" :style="textareaStyle" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
-        <div v-el:draftbar class="draft-box">
-          <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
-          <span class="keyboard-icon" v-touch:tap="resumeKeyboard" v-show="isKeyBoardShow"></span>
+      <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
+        <div>
+          <div class="essay-content" :class="{'fold-essay':isFold}">{{{essayContent}}}</div>
+          <textarea v-model="answer" placeholder="请写下你的作业内容" id="essay-textarea" @blur="onTextBlur()" @focus="onTextFocus()" v-el:textarea></textarea>
+          <div class="draft-box">
+            <span v-touch:tap="submitDraft" :class="{'draft-disabled': !canDraft}">存草稿</span>
+            <span class="keyboard-icon" v-touch:tap="resumeKeyboard" v-show="isKeyBoardShow"></span>
+          </div>
         </div>
+      </scroller>
     </div>
 </template>
 <script>
@@ -24,7 +27,7 @@
   import {essayActions, homeworkListActions, courseRecordActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-
+  import {setLocalCache, clearLocalCache} from '../../util/cache'
   // 页面原有高度, 用来处理键盘弹出事件
   const _originHtmlHeight = window.document.body.offsetHeight
   let isKeyboardPop = false
@@ -45,6 +48,8 @@ export default {
   },
   data () {
     return {
+      draftTimer: 0,  //存草稿定时器
+      scrollerHeight: '450px',
       isKeyBoardShow: false,
       subjectId: 0,
       lessonId: 0,
@@ -54,13 +59,13 @@ export default {
         callback: '',
         disabled: true
       },
-      foldText: '收起', //折叠 文案
       isFold: false, // 是否折叠题目
       textareaStyle: '', //textarea样式
       answer: '', // 填写的答案
       isAnswerChange: false //作业或草稿是否有关系,有更新退出时保存草稿
     }
   },
+
   watch: {
     'answer' (answer) {
       if (/\S/.test(answer)) {
@@ -81,56 +86,90 @@ export default {
         this.canDraft = false
         this.rightOptions.disabled = true
       }
-      this.resizeTextarea()
     }
   },
+
   route: {
     data ({to: {params}}) {
       this.lessonId = params.lessonId
       this.subjectId = params.subjectId
       this.getQuestion(this.lessonId)
       this.answer = this.essayAnswer
-      setTimeout(
-        this.resizeTextarea,
-        300
-      )
+      this.setScrollerHeight()
+      this.addDraftListeners()
       this.startListenToHeightChange()
     },
+
     deactivate () {
-      if (this.isAnswerChange && this.essayAnswer) {
+      this.resetView()
+    }
+  },
+
+  ready () {
+    this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+  },
+
+  methods: {
+    /**
+     * 保存草稿后,清除页面数据
+     */
+    resetView () {
+      if (this.isAnswerChange && this.answer) {
         this.submitDraft()
       }
+
       this.isAnswerChange = false
       this.lessonId = 0
-      this.foldText = '收起' //折叠 文案
       this.isFold = false // 是否折叠题目
       this.textareaStyle = '' //textarea样式
       this.answer = '' // 填写的答案
       this.canDraft = false
-
+      this.removeDraftListeners()
       this.stopListenToHeightChange()
-    }
-  },
-  methods: {
-    /**
-     * 计算textarea 高度
-     */
-    resizeTextarea () {
-      const html = document.getElementsByTagName('html')[0]
-      const height = html.offsetHeight - this.$els.titlebar.offsetHeight - this.$els.question.offsetHeight - this.$els.fold.offsetHeight - this.$els.draftbar.offsetHeight
-      this.textareaStyle = `height:${height}px;`
     },
 
     /**
-     * 点击 收起题目
+     * 监听页面,每30秒保存一次草稿
      */
-    onFoldTap () {
-      this.isFold = !this.isFold
-      this.foldText = this.isFold ? '展开' : '收起'
-      setTimeout(
-        this.resizeTextarea,
-        200
-      )
+    addDraftListeners () {
+      this.draftTimer = setInterval(this.autoSaveDraft, 30000)
+    },
+
+    /**
+     * 清除页面监听
+     */
+    removeDraftListeners () {
+      clearInterval(this.draftTimer)
+    },
+
+    /**
+     * 自动保存草稿
+     */
+    autoSaveDraft () {
+      const essay = {
+        articleId: this.articleId,
+        content: this.answer,
+        lessonId: this.lessonId,
+        status: 1
+      }
+
+      setLocalCache('essay-draft', JSON.stringify(essay))
+      this.showToast('你的草稿已保存')
+    },
+
+    /**
+     * 设置滚动条高度
+     */
+    setScrollerHeight () {
+      // 设置滚动条高度为 页面高度-titlebar高度-tabbar高度
+      this.scrollerHeight = (window.document.body.offsetHeight - this.$els.titlebar.offsetHeight) + 'px'
+      setTimeout(() => {
+        this.$nextTick(() => {
+        this.$refs.scroller.reset({
+          top: 0
+        })
+      })
+      }, 1000)
     },
 
     /**
@@ -140,8 +179,10 @@ export default {
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SUBMIT_HOMEWORK, {
         lessonId: this.lessonId
       })
+
       this.isAnswerChange = false
       this.rightOptions.disabled = true
+
       const essayContent = {
         articleId: this.articleId,
         content: this.answer,
@@ -176,9 +217,12 @@ export default {
       if (!this.canDraft) {
         return
       }
+
+      this.autoSaveDraft()
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.SAVE_DRAFT, {
         lessonId: this.lessonId
       })
+
       this.isAnswerChange = false
       const essay = {
         articleId: this.articleId,
@@ -186,13 +230,22 @@ export default {
         lessonId: this.lessonId,
         status: 1
       }
+
       this.submitArticle(essay).then(
         result => {
-          this.loadAllExpenseRecords().then(
-            this.syncHomeworkList()
-          )
+          clearLocalCache('essay-draft')
+          this.updateRecords()
           this.showToast('你的草稿已保存')
         }
+      )
+    },
+
+    /**
+     * 更新 作业进度
+     */
+    updateRecords () {
+      this.loadAllExpenseRecords().then(
+        this.syncHomeworkList()
       )
     },
 
@@ -210,10 +263,6 @@ export default {
      */
     onTextFocus () {
       this.isKeyBoardShow = true
-      setTimeout(
-        this.resizeTextarea,
-        200
-      )
     },
 
     /**
@@ -221,10 +270,6 @@ export default {
      */
     onTextBlur () {
       this.isKeyBoardShow = false
-      setTimeout(
-        this.resizeTextarea,
-        500
-      )
     },
 
     /**
@@ -235,7 +280,6 @@ export default {
         // 键盘弹出并且页面高度没改变 (说明键盘已经隐藏)
         if (isKeyboardPop && _originHtmlHeight === window.document.body.offsetHeight) {
           this.resumeKeyboard()
-          this.resizeTextarea()
         }
         isKeyboardPop = _originHtmlHeight !== window.document.body.offsetHeight
       }, 500)
@@ -283,26 +327,11 @@ export default {
         list-style: none;
       }
     }
-    .fold-panel{
-      position: relative;
-      width: 100%;
-      height: 60/40rem;
-      background: #f0eff5;
-      .fold-icon{
-        position: absolute;
-        padding: 0 0.5rem;
-        line-height: 60/40rem;
-        right: 0;
-        bottom: 0;
-        display: block;
-        font-size: 0.65rem;
-        color: #00b0f0;
-        background: #f0eff5;
-      }
-    }
+
     textarea{
       display: block;
       width: 100%;
+      height: 25rem;
       margin: 0;
       border: 0;
       padding: 0.5rem;
@@ -314,8 +343,6 @@ export default {
     }
 
     .draft-box{
-      position: absolute;
-      bottom: 0;
       width: 100%;
       height: 2.2rem;
       line-height: 2.2rem;

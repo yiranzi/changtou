@@ -181,6 +181,7 @@
   import Confirm from 'vux/confirm'
   import Scroller from 'vux/scroller'
   import {newertestGetters, userGetters} from '../../vuex/getters'
+  import {newertestActions} from '../../vuex/actions'
   import {setLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
@@ -191,6 +192,9 @@
       getters: {
         testReport: newertestGetters.newertestReport,
         isLogin: userGetters.isLogin
+      },
+      actions: {
+        postReport: newertestActions.postReport
       }
     },
     data () {
@@ -228,6 +232,10 @@
     route: {
       data () {
         setLocalCache('statistics-entry-page', {entryPage: '理财揭秘'})
+        //从登陆或注册页登录或注册后返回页面,上传结果
+        if (this.isLogin) {
+          this.postReport(this.testReport.comboId, this.testReport.level)
+        }
       }
     },
       ready () {

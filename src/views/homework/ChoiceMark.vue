@@ -34,19 +34,24 @@
   import Cell from 'vux/cell'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import IctStar from '../../components/IctStar.vue'
-  import {choiceGetters, userGetters} from '../../vuex/getters'
-  import {graduationDiplomaActions} from '../../vuex/actions'
+  import {choiceGetters, userGetters, buildingGetters} from '../../vuex/getters'
+  import {graduationDiplomaActions, buildingActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
+  import {setLocalCache} from '../../util/cache'
   export default {
   vuex: {
     getters: {
       isLogin: userGetters.isLogin,
       report: choiceGetters.report,
-      knowledgeMap: choiceGetters.knowledgeMap
+      knowledgeMap: choiceGetters.knowledgeMap,
+      buildingGoodsStatus: buildingGetters.buildingGoodsStatus,
+      buildingUpdata: buildingGetters.buildingUpdata
     },
     actions: {
-      getDiplomaList: graduationDiplomaActions.getDiplomaList
+      getDiplomaList: graduationDiplomaActions.getDiplomaList,
+      getBuildingGoodsStatus: buildingActions.getBuildingGoodsStatus,
+      updataBuildingGoodsStatus: buildingActions.updataBuildingGoodsStatus
     }
   },
   data () {
@@ -103,9 +108,54 @@
           callbackFn: this.reTest.bind(this) //组件上的
         })
       }
+      if (this.score >= 3) {
+        this.showTaskPassed()
+      }
     }
   },
   methods: {
+    /**
+     * 通过后显示作业通过浮层并更新后台解锁物品
+     */
+    showTaskPassed () {
+      // 进行物品解锁(更新)
+      this.getBuildingGoodsStatus(this.subjectId).then(() => {
+        setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
+        let goods = this.buildingGoodsStatus
+        for (let i = 0; i < 6; i++) {
+          let goodsObj = {}
+          goodsObj.maxGoodsNum = 0
+          goodsObj.useGoodsNum = 0
+          if (!goods[i]) {
+            goods[i] = goodsObj
+          }
+        }
+        if (this.essayResult.score === 3 || this.essayResult.score === 4) {
+          goods[this.essayResult.sequence - 17].maxGoodsNum = 1
+        } else {
+          goods[this.essayResult.sequence - 17].maxGoodsNum = 2
+        }
+        this.updataBuildingGoodsStatus(this.subjectId, goods)
+      })
+      // 显示分数浮层
+      let taskPassedData = {} // 传给浮层的数据
+      taskPassedData.testType = '选择题'  // 选择题类型
+      taskPassedData.grade = this.score  // 选择题的分数
+      this.showMask({
+       component: 'homework/GradeToBuild.vue',
+       componentData: taskPassedData,
+       callbackName: 'goToBuildingAdd',
+       callbackFn: this.goToBuildingAdd.bind(this)
+      })
+     },
+
+    /**
+     * 去造房子展示页
+     */
+    goToBuildingAdd () {
+      this.$route.router.go('/building/BuildingAdd')
+    },
+
     /**
      * 完成
      */
@@ -260,6 +310,11 @@
     }
     .yellow-text{
       color: #fbc02d;
+    }
+    .building-test{
+      position: fixed;
+      top: 0;
+      right: 0;
     }
   }
 </style>

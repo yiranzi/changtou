@@ -67,9 +67,10 @@
     .class-type-buttons{
       height: 2.6rem;
       padding:0 1.5rem;
-      background-color: #fff;
+      background-color: #fafafa;
       .fix-vuex-height
       {
+        background-color: #fafafa;
         height: 2.6rem;
         .fix-vuex-line-height{
           line-height: 1.1rem;

@@ -4,23 +4,19 @@
     <img v-show="showNewerGiftIcon" class="newer-gift" src="../../assets/styles/image/navigator/newerGift.png" v-touch:tap="getNewerGift"/>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height.sync="scrollerHeight">
       <div>
-        <swiper :aspect-ratio="120/375" :list="banners"
-                stop-propagation dots-position="center"
-                :auto="true" :interval="3000"
-                :show-desc-mask="false" dots-class="dots-class">
-        </swiper>
+        <div class="empty"></div>
         <!--理财新手村-入口-->
         <div class="fresh-village" v-touch:tap="goToFreshVillageTap"></div>
 
         <!--banner-->
         <div class="head-navigator">
-          <p class="head-title">
-            <span>为你优选</span>
-          </p>
+          <!--<p class="head-title">-->
+            <!--<span>为你优选</span>-->
+          <!--</p>-->
           <div class="under-banner">
             <div v-touch:tap="goToNewertestStart" class="under-banner-item">
               <i class="under-banner-icon newer-test "></i>
-              <span class="under-banner-title">理财揭秘</span>
+              <span class="under-banner-title">测测财商</span>
             </div>
             <div v-touch:tap="goToNewerGuide" class="under-banner-item">
               <i class="under-banner-icon newer-guide"></i>
@@ -106,6 +102,13 @@
           <img src="../../../static/image/navigator/home-strategy.jpg" v-touch:tap="goToStrategy">
           <p>－让金钱为你而工作－</p>
         </div>
+        <div class="fixswiper">
+          <swiper :aspect-ratio="120/375" :list="banners"
+                  stop-propagation dots-position="center"
+                  :auto="true" :interval="3000"
+                  :show-desc-mask="false" dots-class="dots-class">
+          </swiper>
+        </div>
       </div>
     </scroller>
   </div>
@@ -135,7 +138,8 @@
         isLogin: userGetters.isLogin,
         hasNewInterview: navigatorGetters.hasNewInterview,
         headLineTitle: navigatorGetters.headLineTitle,
-        appUpdateContent: appUpdateGetters.appUpdateContent
+        appUpdateContent: appUpdateGetters.appUpdateContent,
+        columnChangeData: navigatorGetters.columnChangeData
       },
       actions: {
         loadNavigatorDataInApp: navigatorActions.loadNavigatorDataInApp,
@@ -234,16 +238,17 @@
 
       //如果没有版本号或者版本号过小.就需要弹出
       isOldVersion () {
-        let versionNo = window.localStorage.getItem('versionNo')
-        return !versionNo || convertVersionToNum(versionNo) < convertVersionToNum(appVersion)
+        if (!getLocalCache(('column-version-no'))) return true
+        else if (getLocalCache(('column-version-no')['appVersionNo'] < convertVersionToNum(appVersion))) return true
+        else return false
       },
 
       //进入主页判定版本变更的流程
       showColumnChange () {
         if (this.isLogin && this.isOldVersion()) {
-          this.getColumnChange().then((columnChangeData) => {
-            if (columnChangeData.content) {
-              window.localStorage.setItem('versionNo', appVersion)
+          this.getColumnChange().then(() => {
+            if (this.columnChangeData.content) {
+              setLocalCache('column-version-no', {appVersionNo: appVersion})
               //弹出弹框
               this.columnChange()
             }
@@ -254,7 +259,7 @@
       columnChange () {
         this.showMask({
           component: 'mycourse/ColumnChange.vue',
-          componentData: this.columnChangeData.content,
+          componentData: this.columnChangeData,
           hideOnMaskTap: true,
           callbackName: 'onColumnChange',
           callbackFn: this.onColumnChange.bind(this) //组件上的
@@ -377,6 +382,8 @@
         //判断课程类型
         if (subject.type === 'P') {
           this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
+        } else if (subject.type === 'F') {
+          this.$route.router.go(`/subject/detail/${subject.type}/${subject.subjectId}/0`)   //跳转到收费课程
         } else if (subject.type === 'S') {
           this.$route.router.go(`/spec/topic/${subject.subjectId}`)   //跳转到打包课程
         } else if (subject.type === 'C') {
@@ -416,15 +423,19 @@
           position: '新手测试'
         })
         const me = this
-        me.loadNewertestReport().then(function (newertestReport) {
-          if (newertestReport) {
-            me.$route.router.go('/newertest/ending')
-          } else {
-            me.$route.router.go('/newertest/start')
-          }
-        }).catch(function () {
-          me.showAlert('信息加载失败，请重试！')
-        })
+        if (this.isLogin) {
+          me.loadNewertestReport().then(function (newertestReport) {
+            if (newertestReport) {
+              me.$route.router.go('/newertest/ending')
+            } else {
+              me.$route.router.go('/newertest/start')
+            }
+          }).catch(function () {
+            me.showAlert('信息加载失败，请重试！')
+          })
+        } else {
+          me.$route.router.go('/newertest/start')
+        }
       },
 
       goToNewerGuide () {
@@ -594,6 +605,14 @@
 
 <style lang="less">
   .course-navigator{
+    .empty{
+      height: 6rem;
+    }
+    .fixswiper{
+      position: absolute;
+      width:100%;
+      top:0;
+    }
     background: #fff;
     .popularSpe{
       padding-bottom: .8rem;
@@ -932,8 +951,8 @@
 
     /*人气必备*/
     .head-navigator{
-      border-bottom: 0.025rem #f0eff5 solid;
-      height:5.5rem;
+      border-bottom: 1px #f0eff5 solid;
+      padding: 1rem 0;
       .head-title{
         padding: 0.75rem 1.35rem 0.75rem;
         font-size: 0.8rem;

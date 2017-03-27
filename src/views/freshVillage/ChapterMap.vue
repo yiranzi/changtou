@@ -27,8 +27,9 @@
   import ShareFloat from '../../components/share/ImageShareFloat.vue'
   import {villageActions} from '../../vuex/actions'
   import mixinImageShare from '../../mixinImageShare'
+  import mixinModal from '../../mixinModal'
   export default {
-    mixins: [mixinImageShare],
+    mixins: [mixinImageShare, mixinModal],
     store,
     vuex: {
       getters: {
@@ -43,7 +44,8 @@
         updateRecord: villageActions.updateRecord,
         resetRecord: villageActions.resetRecord,
         getVillageProgress: villageActions.getVillageProgress,
-        changeQuestionShow: villageActions.changeQuestionShow
+        changeQuestionShow: villageActions.changeQuestionShow,
+        commitVillageHP: villageActions.commitVillageHP
       }
     },
     data () {
@@ -57,7 +59,6 @@
         questionNo: 0,   //当前题目序号
         chapter: {},  //当前章节内容
         question: {},   //当前问题内容
-        lifeScore: 0, //生命值得分
         currPosition: '',   //当前用户头像显示的位置
         showShareFloat: false,    //分享浮层的显示状态
         villageUnLoginRecord: {   //记录用户未登录时候的选择
@@ -95,7 +96,7 @@
        * 判断当前题目应该定位到哪个位置
        **/
       currHeight () {
-        if (this.chapterNo <= 1) {
+        if (this.chapterNo <= 1) {    //当题目是前4题的时候屏幕滚动的距离在最下方，4到7题在中间，后面的都在最顶部
           return this.questionNo < 4 ? this.heightArr[0] : this.heightArr[1]
         } else if (this.chapterNo === 2 && this.questionNo <= 1 || this.chapter === 1 && this.questionNo >= 4) {
           return this.heightArr[1]
@@ -125,34 +126,15 @@
         if (from.path === '/village/initialPage') {   //如果是从导航页进入，不显示题目
           this.changeQuestionShow(false)
         }
-        if (from.path === '/entry') {       //从登录页面进来的判断
-          if (this.isLogin) {
-            this.getVillageProgress().then(() => {    //获得数据后
-              if (me.villageProgress.questionNo >= 6) {
-                me.isUpgradeShow = true
-              }
-              me.setScrollerHeight()
-              if (!(me.villageProgress.questionNo && me.villageProgress.chapterNo)) {
-                me.answerQuestion(me.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
-                me.villageUnLoginRecord = {
-                  questionNo: 0,
-                  option: null
-                }
-              } else {
-                this.actionWithLogin()
-              }
-            })       //如果登陆，获取用户的进度
-            return
-          } else {
-            this.actionWithoutLogin() //如果未登陆执行未登录操作
-            this.setScrollerHeight()
-            return
-          }
+        if (from.path === '/entry' || from.path.indexOf('/register') !== -1) {       //从登录页面进来的判断
+          this.fromEntry()
         }
         if (this.isLogin) {   //如果进入页面时登陆了
+          this.showLoading()
           this.getVillageProgress().then(
             () => {
-              if (me.villageProgress.questionNo > 7) {
+              me.hideLoading()
+              if (me.villageProgress.questionNo >= 7) {
                 me.isUpgradeShow = true
               }
               if (me.villageProgress.chapterNo !== 0) {    //如果用户有进度，判断是不是从今日小智页面进入
@@ -190,6 +172,42 @@
     },
     methods: {
       /**
+       * 从登陆注册页进入的操作
+       **/
+      fromEntry () {
+        const me = this
+        if (this.isLogin) {
+          this.showLoading()
+          this.getVillageProgress().then(() => {    //获得数据后
+            me.hideLoading()
+            if (me.villageProgress.questionNo >= 6) {
+              me.isUpgradeShow = true
+            }
+            me.setScrollerHeight()
+            me.checkAutoShowQuestion()
+          })       //如果登陆，获取用户的进度
+          return
+        } else {
+          this.actionWithoutLogin() //如果未登陆执行未登录操作
+          this.setScrollerHeight()
+          return
+        }
+      },
+      /**
+       * 判断要不要自动显示题目
+       **/
+      checkAutoShowQuestion () {
+        if (!(this.villageProgress.questionNo >= 0 && this.villageProgress.chapterNo)) {
+          this.answerQuestion(this.villageUnLoginRecord.option)   //判断是之前是未登录并且登陆后说无进度的用户在选择完答案登陆后自动显示答案反馈
+          this.villageUnLoginRecord = {
+            questionNo: 0,
+            option: null
+          }
+        } else {
+          this.actionWithLogin()
+        }
+      },
+      /**
        * 设置物理返回键为退出新手村
        **/
       setBackBtnToMain () {
@@ -220,7 +238,7 @@
        * 当地图上问题的坐标点被点击
        **/
       onLevelTap (chapterNo, question) {    //当地图上问题的坐标点被点击
-        if (chapterNo < this.chapterNo || chapterNo === this.chapterNo && question.questionNo < ((this.questionNo - 1) === 0 ? 1 : (this.questionNo - 1))) {  //判断是否为已答过的题目，如果答过，显示每日事件，否则无反应
+        if (chapterNo < this.chapterNo || chapterNo === this.chapterNo && question.questionNo <= ((this.questionNo - 1) === 0 ? 1 : (this.questionNo - 1))) {  //判断是否为已答过的题目，如果答过，显示每日事件，否则无反应
           this.showTheExpands(question.materialType, question, chapterNo)
           return
         }
@@ -230,8 +248,9 @@
             this.changeQuestionShow(true)
             return
           }
+          //第三题第十一题显示求吐槽
           if ((this.questionNo === 3 && this.chapterNo === 1 && !this.isShowEncourage) || (this.questionNo === 5 && this.chapterNo === 2 && !this.isShowEncourage)) {
-            this.showEncourage()    //第五题第十一题出现吐槽浮层
+            this.showEncourage()
             return
           }
           this.showQuestion()
@@ -326,13 +345,14 @@
           'lifeScore': this.question.answer === answer ? 10 : 2,
           'type': this.question.materialType
         }
-        this.lifeScore += this.question.answer === answer ? 10 : 2    //计算生命值
         if (!this.isLogin) {          //如果是刚开始未登陆，记录选择答案并跳转到登陆页
           this.recordUnLoginOption(1, answer)
           this.$route.router.go('/entry')
         } else {
-          this.commitRecord().then(   //提交答题进度并显示今日资料
+          me.showLoading()
+          Promise.all([me.commitRecord(), me.commitVillageHP(me.question.answer === answer ? 10 : 2)]).then(   //提交答题进度并显示今日资料
             () => {
+              me.hideLoading()
               setTimeout(() => {
                 me.showMask({
                   component: 'freshVillage/Answer.vue',
@@ -367,11 +387,30 @@
               }, 150)
                 break
           case 3:
-              setTimeout(() => {
-                me.showEmergency(question)
-              }, 150)
+              if (chapterNo < this.chapterNo || chapterNo === this.chapterNo && question.questionNo <= ((this.questionNo - 1) === 0 ? 1 : (this.questionNo - 1))) {  //判断是否为已答过的题目，如果答过，显示每日事件，否则无反应
+                setTimeout(() => {
+                  me.showEmergency(question)
+                }, 150)
+                return
+              }
+              this.commitEmergencyHP()
                 break
         }
+      },
+      /**
+       * 提交突发事件的生命值
+       **/
+      commitEmergencyHP () {
+        const me = this
+        this.showLoading()
+        this.commitVillageHP(parseInt(this.chapter.questionArr[this.questionNo - 2].emergency.lifeScore)).then(
+          () => {
+            me.hideLoading()
+            setTimeout(() => {
+              me.showEmergency()
+            }, 150)
+          }
+        )
       },
       /**
        * 判断是否升级
@@ -379,20 +418,44 @@
       checkIsUpgrade () {
         const me = this
         if (this.questionNo === 7 && !this.isUpgradeShow) {
-          setTimeout(() => {
-            me.showUpgrade(me.chapterNo)
-            me.isUpgradeShow = true
-            if (me.chapterNo < 2) {
-              me.chapterNo += 1   //切换到第二章第一体
-              me.questionNo = 0
-              me.lifeScore = 0
-              me.isShowEncourage = false
-              me.isUpgradeShow = false
-              this.commitRecord()
+          me.showLoading()
+          me.commitVillageHP(15).then(
+            () => {
+              me.hideLoading()
+              setTimeout(() => {
+                me.showUpgrade(me.chapterNo)
+                me.isUpgradeShow = true
+                me.updateUpgrade()
+              }, 150)
             }
-          }, 150)
+          )
         }
         return
+      },
+      /**
+       * 升级后的操作
+       **/
+      updateUpgrade () {
+        const me = this
+        if (me.chapterNo < 2) {
+          me.showLoading()
+          me.chapterNo += 1   //切换到第二章第一体
+          me.questionNo = 0
+          me.isShowEncourage = false
+          me.isUpgradeShow = false
+          me.commitRecord().then(
+            () => {
+              me.hideLoading()
+            }
+          )
+        } else {
+          me.showLoading()
+          me.commitRecord().then(
+            () => {
+              me.hideLoading()
+            }
+          )
+        }
       },
       /*
       * 解绑物理back键
@@ -480,7 +543,6 @@
       * */
       showEmergency (ques) {
         const question = ques || this.chapter.questionArr[this.questionNo - 2]
-        this.lifeScore += parseInt(question.emergency.lifeScore)
         this.showMask({
           component: 'freshVillage/Emergency.vue',
           hideOnMaskTap: false,
@@ -495,8 +557,7 @@
       showUpgrade (chapterNo) {
         let upgradePageData = {
           avatar: this.avatar,
-          chapterNo: chapterNo,
-          lifeScore: this.lifeScore
+          chapterNo: chapterNo
         }
         this.showMask({
           component: 'freshVillage/Upgrade.vue',
