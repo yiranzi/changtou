@@ -83,7 +83,7 @@
   import {myCoursesGetters, userGetters, courseRecordsGetters, graduationDiplomaGetters, ebookGetters, buildingGetters} from '../../vuex/getters'
   import {setLocalCache, getLocalCache} from '../../util/cache'
   import {eventMap} from '../../frame/eventConfig'
-  import buildingEntry from '../../components/building/entry.vue'
+  import buildingEntry from '../../components/building/Entry.vue'
 export default {
   vuex: {
     getters: {
