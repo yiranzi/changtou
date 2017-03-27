@@ -410,13 +410,11 @@
        * 关闭页面
        **/
       onCancel () {
-        if (getLocalCache('building-path')) {
-          if (getLocalCache('building-path').myCourse === true) {
-            this.$route.router.go('/mycourse')
-          }
-          clearLocalCache('building-path')
+        if (getLocalCache('building-introduction')) {
+          clearLocalCache('building-introduction')
+          window.history.go(-2)
         } else {
-          this.$route.router.go('/subject/detail/P/4/0')
+          window.history.back()
         }
       },
 
