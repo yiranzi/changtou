@@ -10,3 +10,8 @@ export const headlineContent = (state) => {
 export const userCheckinData = (state) => {
   return state.headline.userCheckinData
 }
+
+// 用户签到获得生命值
+export const getAmount = (state) => {
+  return state.headline.getAmount
+}

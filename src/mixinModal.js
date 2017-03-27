@@ -200,6 +200,7 @@ const mixin = {
         },
         methods: {
           onFloatMaskTap: function (e) {
+            this.$broadcast('on-mask-tap')
             if (e.preventDefault) {
               e.preventDefault()
             }

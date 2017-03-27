@@ -350,6 +350,26 @@ export function configRouter (router) {
      */
     '/headline': {
       component: require('../views/headline/Headline.vue')
+    },
+
+    /**
+     * 造房子
+     */
+    // 造房子展示页
+    '/building/BuildingShow': {
+      component: require('../views/building/BuildingShow.vue')
+    },
+    // 造房子添加物品页
+    '/building/BuildingAdd': {
+      component: require('../views/building/BuildingAdd.vue')
+    },
+    //造房攻略
+    '/building/BuildingRule': {
+      component: require('../views/building/BuildingRule.vue')
+    },
+    //造房简介
+    '/building/BuildingIntroduction': {
+      component: require('../views/building/BuildingIntroduction.vue')
     }
   })
 
