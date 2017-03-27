@@ -8,10 +8,20 @@ const state = {
     chapterNo: 0,
     questionNo: 0
   },
-  shouldQuestionShow: false
+  shouldQuestionShow: false,
+  HP: 0
 }
 
 const mutations = {
+  /**
+   * 更新生命值
+   * @param state
+   * @param HP
+   * @constructor
+   */
+  GET_VILLAGE_HP (state, HP) {
+    state.HP = HP
+  },
   /**
    *
    *

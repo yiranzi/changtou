@@ -2,8 +2,48 @@
  * Created by jun on 2017/3/1
  * 新手村
  */
-import {getWithoutAuth, getWithinAuth, postWithinAuth} from '../../frame/ajax'
+import {getWithoutAuth, getWithinAuth, postWithinAuth, putWithinAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
+/**
+ * 提交生命值
+ * @param dispatch
+ * @param HP
+ */
+export const commitVillageHP = ({dispatch}, HP) => {
+  return new Promise(
+    (resolve, reject) => {
+      putWithinAuth({
+        url: getUrl('village_commit_HP').replace(':amount', HP)
+      }).then(
+        status => {
+          resolve(status)
+        }, err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
+/**
+ * 获取生命值
+ * @param dispatch
+ */
+export const updateVillageHP = ({dispatch}) => {
+  return new Promise(
+    (resolve, reject) => {
+      getWithinAuth({
+        url: getUrl('village_get_HP')
+      }).then(
+        HP => {
+          dispatch('GET_VILLAGE_HP', HP)
+          resolve(HP)
+        }, err => {
+          reject(err)
+        }
+      )
+    }
+  )
+}
 /**
  * 获取吐槽内容列表
  * @param dispatch
