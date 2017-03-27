@@ -33,101 +33,101 @@
 <style lang="less">
 
   .choose-goods {
-  p{
-    margin: 0;
-  }
-  position: relative;
-  .goods-choose-swiper {
-    height: 820/40rem !important;
-    width: 600/40rem;
-  .vux-swiper {
-    height: 750/40rem !important;
-    border-radius: 0.5rem;
-    width: 100%;
-    background: #fff;
-  }
-  .dots-class {
-    left: 5.5rem !important;
-  }
-  .vux-icon-dot {
-    background-color: #fff !important;
-    opacity: 0.5;
-    width: .5rem !important;
-    height: .5rem !important;
-    border-radius: .25rem !important;
-    margin-right: .6rem;
-  }
-  .vux-icon-dot.active {
-    background-color: orange !important;
-    opacity: 1;
-  }
-  .item-white {
-    text-align: center;
-  .title {
-    font-size: 30/40rem;
-    color: #666;
-    font-weight: bold;
-    margin-top: 70/40rem;
-    width: 100%;
-    text-align: center;
-  }
-  .centerpic{
-    position: absolute;
-    top: 340/40rem;
-    transform: translateY(-50%);
-    height: 400/40rem;
-    width: 100%;
-  .pic{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: 400/40rem;
-    max-width: 100%;
-  }
-  .choose-or-lock{
-    position: absolute;
-    height: 90/40rem;
-    width: 90/40rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  }
-  .bottom-div{
-    position: absolute;
-    top: 440/40rem;
-    text-align: center;
-    width: 100%;
-    height: 64/40rem;
-    line-height: 64/40rem;
-  .lock-txt {
-  p{
-    margin-bottom: .5rem;
-  }
-  line-height: .7rem;
-  border: 2px solid #FFFFFF;
-  color: #888;
-  font-size: 26/40rem;
-  }
-  .button {
-    display: inline-block;
-    border-radius: 32/40rem;
-    width: 260/40rem;
-    font-size: 30/40rem;
-    font-weight: bold;
-  }
-  .use {
-    border: 2px solid #ff9800;
-    color: #ff9800;
-  }
-  .have-used {
-    border: 2px solid #eee;
-    color: #ddd;
-  }
-  }
-  }
-  }
+    p{
+      margin: 0;
+    }
+    position: relative;
+    .goods-choose-swiper {
+      height: 820/40rem !important;
+      width: 600/40rem;
+      .vux-swiper {
+        height: 750/40rem !important;
+        border-radius: 0.5rem;
+        width: 100%;
+        background: #fff;
+      }
+      .dots-class {
+        left: 5.5rem !important;
+      }
+      .vux-icon-dot {
+        background-color: #fff !important;
+        opacity: 0.5;
+        width: .5rem !important;
+        height: .5rem !important;
+        border-radius: .25rem !important;
+        margin-right: .6rem;
+      }
+      .vux-icon-dot.active {
+        background-color: orange !important;
+        opacity: 1;
+      }
+      .item-white {
+        text-align: center;
+        .title {
+          font-size: 30/40rem;
+          color: #666;
+          font-weight: bold;
+          margin-top: 70/40rem;
+          width: 100%;
+          text-align: center;
+        }
+        .centerpic{
+          position: absolute;
+          top: 340/40rem;
+          transform: translateY(-50%);
+          height: 400/40rem;
+          width: 100%;
+          .pic{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-height: 400/40rem;
+            max-width: 100%;
+          }
+          .choose-or-lock{
+            position: absolute;
+            height: 90/40rem;
+            width: 90/40rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+        .bottom-div{
+          position: absolute;
+          top: 440/40rem;
+          text-align: center;
+          width: 100%;
+          height: 64/40rem;
+          line-height: 64/40rem;
+          .lock-txt {
+            p{
+              margin-bottom: .5rem;
+            }
+            line-height: .7rem;
+            border: 2px solid #FFFFFF;
+            color: #888;
+            font-size: 26/40rem;
+          }
+          .button {
+            display: inline-block;
+            border-radius: 32/40rem;
+            width: 260/40rem;
+            font-size: 30/40rem;
+            font-weight: bold;
+          }
+          .use {
+            border: 2px solid #ff9800;
+            color: #ff9800;
+          }
+          .have-used {
+            border: 2px solid #eee;
+            color: #ddd;
+          }
+        }
+      }
+    }
   }
 </style>
 <script>
