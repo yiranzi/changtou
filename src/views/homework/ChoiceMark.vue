@@ -38,7 +38,7 @@
   import {graduationDiplomaActions, buildingActions} from '../../vuex/actions'
   import {eventMap} from '../../frame/eventConfig'
   import {statisticsMap} from '../../statistics/statisticsMap'
-  import {setLocalCache} from '../../util/cache'
+  import {setLocalCache, getLocalCache, clearLocalCache} from '../../util/cache'
   export default {
   vuex: {
     getters: {
@@ -108,8 +108,10 @@
           callbackFn: this.reTest.bind(this) //组件上的
         })
       }
-      if (this.score >= 3) {
-        this.showTaskPassed()
+      if (this.score >= 3 && this.subjectId === '4') {
+        if (!getLocalCache('homework-pass')) {
+          this.showTaskPassed()
+        }
       }
     }
   },
@@ -120,7 +122,7 @@
     showTaskPassed () {
       // 进行物品解锁(更新)
       this.getBuildingGoodsStatus(this.subjectId).then(() => {
-        setLocalCache('updata-goods', {index: this.essayResult.sequence - 17})
+        setLocalCache('updata-goods', {index: this.lessonId - 17})
         let goods = this.buildingGoodsStatus
         for (let i = 0; i < 6; i++) {
           let goodsObj = {}
@@ -130,10 +132,10 @@
             goods[i] = goodsObj
           }
         }
-        if (this.essayResult.score === 3 || this.essayResult.score === 4) {
-          goods[this.essayResult.sequence - 17].maxGoodsNum = 1
+        if (this.score === 3 || this.score === 4) {
+          goods[this.lessonId - 17].maxGoodsNum = 1
         } else {
-          goods[this.essayResult.sequence - 17].maxGoodsNum = 2
+          goods[this.lessonId - 17].maxGoodsNum = 2
         }
         this.updataBuildingGoodsStatus(this.subjectId, goods)
       })
@@ -144,16 +146,17 @@
       this.showMask({
        component: 'building/GradeToBuild.vue',
        componentData: taskPassedData,
-       callbackName: 'goToBuildingAdd',
-       callbackFn: this.goToBuildingAdd.bind(this)
+       callbackName: 'goToAddBuilding',
+       callbackFn: this.goToAddBuilding.bind(this)
       })
+      setLocalCache('homework-pass', {homeworkPass: true})
      },
 
     /**
-     * 去造房子展示页
+     * 去造房子展示页(选择物品)
      */
-    goToBuildingAdd () {
-      this.$route.router.go('/building/BuildingAdd')
+    goToAddBuilding () {
+      this.$route.router.replace('/building/add')
     },
 
     /**
@@ -180,6 +183,7 @@
      * 重测
      */
     reTest () {
+      clearLocalCache('homework-pass')
       this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.CHOICE_QUESTION_RETEST, {
         lessonid: this.lessonId
       })

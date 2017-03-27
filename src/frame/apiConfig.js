@@ -235,7 +235,6 @@ const apiUrl = {
   'homepage_headline': '/homepage/headline',            // 头条精选 内容
   'homepage_headline_checkin_data': '/homepage/headline/checkin/checkdata',     // 头条精选 签到信息
   'homepage_headline_checkin_checked': '/homepage/headline/checkin/checked',   // 头条精选 签到功能数据更新
-  'homepage_headline_checkin_amount': '/eden/HP/:amount',  // 签到更新生命值
   /**
    * 造房子
    */

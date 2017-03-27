@@ -787,8 +787,8 @@
               this.showMask({
                component: 'building/GradeToBuild.vue',
                componentData: taskPassedData,
-               callbackName: 'goToBuildingAdd',
-               callbackFn: this.goToBuildingAdd.bind(this)
+               callbackName: 'goToAddBuilding',
+               callbackFn: this.goToAddBuilding.bind(this)
               })
             }
           })
@@ -798,8 +798,8 @@
       /**
        * 去造房子选择物品页(点击问答题通过浮层的入口)
        */
-      goToBuildingAdd () {
-        this.$route.router.go('/building/BuildingAdd')
+      goToAddBuilding () {
+        this.$route.router.go('/building/add')
       },
 
       /**
@@ -807,10 +807,10 @@
        **/
       goToBuilding () {
         if (getLocalCache('first-building')) { // 不是第一次进入造房子
-          this.$route.router.go('/building/BuildingShow')
+          this.$route.router.go('/building/show')
         } else { // 第一次进入造房子
           setLocalCache('first-building', {firstBuilding: true})
-          this.$route.router.go('/building/BuildingIntroduction')
+          this.$route.router.go('/building/introduction')
         }
       },
 

@@ -356,19 +356,19 @@ export function configRouter (router) {
      * 造房子
      */
     // 造房子展示页
-    '/building/BuildingShow': {
+    '/building/show': {
       component: require('../views/building/BuildingShow.vue')
     },
     // 造房子添加物品页
-    '/building/BuildingAdd': {
-      component: require('../views/building/BuildingAdd.vue')
+    '/building/add': {
+      component: require('../views/building/AddBuilding.vue')
     },
     //造房攻略
-    '/building/BuildingRule': {
+    '/building/rule': {
       component: require('../views/building/BuildingRule.vue')
     },
     //造房简介
-    '/building/BuildingIntroduction': {
+    '/building/introduction': {
       component: require('../views/building/BuildingIntroduction.vue')
     }
   })
