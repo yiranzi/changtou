@@ -33,6 +33,7 @@ import * as villageGetters from './freshVillage/getters'
 import * as appUpdateGetters from './appUpdate/getters'
 import * as headlineGetters from './headline/getters'
 import * as buildingGetters from './building/getters'
+import * as topicArticalGetters from './topicArtical/getters'
 export {
   userGetters,
   navigatorGetters, //课程导航
@@ -65,5 +66,6 @@ export {
   villageGetters,  //理财新手村
   appUpdateGetters,  //应用更新
   headlineGetters,  //头条精选
-  buildingGetters  //造房子
+  buildingGetters,  //造房子
+  topicArticalGetters  //专题文章
 }
