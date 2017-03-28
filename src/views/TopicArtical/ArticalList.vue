@@ -69,14 +69,15 @@
       }
     },
       ready () {
-        this.loadTopicArticle()
+
       },
       methods: {
-        goToArticleContent (interviewId) {
+        goToArticleContent (articleId) {
 //          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
 //            '访谈Id': interviewId
 //          })
           const path = `/topic-article/${articleId}`
+//          todo:这边的跳转看一下
           this.$route.router.go(path)
         },
         /**
@@ -94,11 +95,18 @@
           }, 100)
         }
       },
-      route: {
-        data () {
-          this.setScrollerHeight()
-        }
-      },
+    route: {
+      data ({to: {params: {interviewId}}}) {
+        this.loadTopicArticle(interviewId)
+//        this.loadArticleContent(interviewId).then(() => {
+//          for (let i = 0; i < this.articleContent.length; i++) {
+//            this.articleContent[i].content = this.articleContent[i].content.split('#')
+//          }
+//        })
+//          todo:看下这个ajax怎么传值获取.
+        this.setScrollerHeight()
+      }
+    },
       components: {
         IctTitlebar,
         Scroller

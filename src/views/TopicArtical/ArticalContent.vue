@@ -11,14 +11,9 @@
             <span></span>
           </div>
         </div>
-        <div class="content" v-for="article in topicArticle.articleList">
-          <img v-touch:tap="goToArticleContent(article.articleId)" :src=article.articleImage>
-          <!--todo 查下这个图片如何保存.-->
-          <!--todo 跳转如何实现的-->
-          <div class="article-info" v-touch:tap="goToArticleContent(article.articleId)">
-            <p class="info-title">{{article.title}}</p>
-            <p class="info-introduce">{{article.introduce}}</p>
-          </div>
+        <div class="content" v-for="paragraph in articleContent.paragraph">
+          <h2>paragraph.paragraphTitle</h2>
+          <p v-for="subParagraph in paragraph.content">{{subParagraph}}</p>
         </div>
       </div>
     </scroller>
@@ -40,7 +35,12 @@
       }
     }
     .content{
+      h2{
 
+      }
+      p{
+
+      }
     }
   }
 </style>
@@ -85,7 +85,11 @@
       },
       route: {
         data ({to: {params: {interviewId}}}) {
-          this.loadArticleContent(interviewId)
+          this.loadArticleContent(interviewId).then(() => {
+              for (let i = 0; i < this.articleContent.length; i++) {
+                this.articleContent[i].content = this.articleContent[i].content.split('#')
+              }
+          })
 //          todo:看下这个ajax怎么传值获取.
           this.setScrollerHeight()
         }
