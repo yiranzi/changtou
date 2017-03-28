@@ -243,7 +243,7 @@
   import {Jpush} from '../../plugin/jpush'
   import CourseRemind from '../../components/course/CourseRemind.vue'
   import PageShareFloat from '../../components/share/PageShareFloat.vue'
-  import buildingEntry from '../../components/building/Entry.vue'
+  import buildingEntry from '../../components/building/EntryIcon.vue'
   export default {
     mixins: [mixinPageShare],
     vuex: {
@@ -785,7 +785,7 @@
               taskPassedData.testType = '问答题'  // 问答题类型
               taskPassedData.grade = this.essayResult.score  // 问答题的分数
               this.showMask({
-               component: 'building/GradeToBuild.vue',
+               component: 'homework/GradeToBuild.vue',
                componentData: taskPassedData,
                callbackName: 'goToAddBuilding',
                callbackFn: this.goToAddBuilding.bind(this)

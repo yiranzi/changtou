@@ -144,7 +144,7 @@
       taskPassedData.testType = '选择题'  // 选择题类型
       taskPassedData.grade = this.score  // 选择题的分数
       this.showMask({
-       component: 'building/GradeToBuild.vue',
+       component: 'homework/AnswerPassed.vue',
        componentData: taskPassedData,
        callbackName: 'goToAddBuilding',
        callbackFn: this.goToAddBuilding.bind(this)

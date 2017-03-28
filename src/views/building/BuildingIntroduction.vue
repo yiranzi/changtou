@@ -28,7 +28,6 @@
         left: 1rem;
         top: 1.8rem;
         font-size: 1rem;
-        border: 1px solid;
         width: 0.8rem;
         height: 0.8rem;
         color: #aaa;
