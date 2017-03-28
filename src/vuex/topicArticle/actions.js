@@ -1,10 +1,10 @@
 /**
- * Created by Administrator on 2017/3/28.
+ * Created by sunyiran on 2017/3/28.
  */
 import {getWithoutAuth} from '../../frame/ajax'
 import {getUrl} from '../../frame/apiConfig'
 
-export const loadTopicArtical = ({ dispatch }) => {
+export const loadTopicArticle = ({ dispatch }) => {
   return new Promise(
     (resolve, reject) => {
       //获取专题文章
@@ -16,7 +16,7 @@ export const loadTopicArtical = ({ dispatch }) => {
       ).then(
         topic => {
           console.log('get ajax')
-          dispatch('UPDATE_Topic_Artical', topic)
+          dispatch('UPDATE_TOPIC_ARTICAL', topic)
           resolve(topic)
         }
       ).catch(

@@ -1,21 +1,22 @@
 <template>
-  <div class="artical-list">
+  <div class="article-list">
     <!--标题-->
     <ict-titlebar v-el:titlebar>专题文章</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
+        <!--todo 看一下列表下的某个子标题url-->
         <div class= "list-top">
-          <img v-bind:src="topicArtical.pic"></img>
+          <img v-bind:src="topicArticle.image"></img>
           <!--todo 查下这个图片如何保存.-->
-          <p style="margin-top: 0.3rem;">{{topicArtical.title}}</p>
+          <p style="margin-top: 0.3rem;">{{topicArticle.topicTitle}}</p>
         </div>
-        <div class="list" v-for="artical in topicArtical.articalList">
-          <img v-touch:tap="goToArticalContent(artical.articalId)" v-bind:src=artical.pic>
+        <div class="list" v-for="article in topicArticle.articleList">
+          <img v-touch:tap="goToArticleContent(article.articleId)" :src=article.articleImage>
           <!--todo 查下这个图片如何保存.-->
           <!--todo 跳转如何实现的-->
-          <div class="artical-info" v-touch:tap="goToArticalContent(artical.articalId)">
-            <p class="info-title">{{artical.title}}</p>
-            <p class="info-description">{{artical.description}}</p>
+          <div class="article-info" v-touch:tap="goToArticleContent(article.articleId)">
+            <p class="info-title">{{article.title}}</p>
+            <p class="info-introduce">{{article.introduce}}</p>
           </div>
         </div>
       </div>
@@ -23,11 +24,11 @@
   </div>
 </template>
 <style lang="less">
-  .artical-list{
+  .article-list{
     .list-top{
       img{
 
-      },
+      }
       p{
 
       }
@@ -35,12 +36,12 @@
     .list{
       img{
 
-      },
-      .artical-info{
+      }
+      .article-info{
         .info-title{
 
-        },
-        .info-description{
+        }
+        .info-introduce{
 
         }
       }
@@ -48,30 +49,34 @@
   }
 </style>
 <script>
-  import {topicArticalGetters} from '../../vuex/getters'
-  import {topicArticalActions} from '../../vuex/actions'
+  import {topicArticleGetters} from '../../vuex/getters'
+  import {topicArticleActions} from '../../vuex/actions'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   export default {
       data () {
-      return {
-        scrollerHeight: '0px'
-      }
-    },
+        return {
+          scrollerHeight: '0px'
+        }
+      },
+
       vuex: {
-      getter: {
-        topicArtical: topicArticalGetters
+      getters: {
+        topicArticle: topicArticleGetters.topi
       },
       actions: {
-        loadTopicArtical: topicArticalActions.loadTopicArtical
+        loadTopicArticle: topicArticleActions.loadTopicArticle
       }
     },
       ready () {
-        this.loadTopicArtical()
+        this.loadTopicArticle()
       },
       methods: {
-        goToArticalContent (articalId) {
-          const path = `/topic-artical/${articalId}`
+        goToArticleContent (interviewId) {
+//          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
+//            '访谈Id': interviewId
+//          })
+          const path = `/topic-article/${articleId}`
           this.$route.router.go(path)
         },
         /**
@@ -89,7 +94,7 @@
           }, 100)
         }
       },
-      runte: {
+      route: {
         data () {
           this.setScrollerHeight()
         }

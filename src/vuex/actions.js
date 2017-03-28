@@ -33,7 +33,7 @@ import * as villageActions from './freshVillage/actions'
 import * as appUpdateActions from './appUpdate/actions'
 import * as headlineActions from './headline/actions'
 import * as buildingActions from './building/actions'
-import * as topicArticalActions from './topicArtical/actions'
+import * as topicArticleActions from './topicArticle/actions'
 export {
   userActions,
   navigatorActions,
@@ -67,5 +67,5 @@ export {
   appUpdateActions,  //应用更新
   headlineActions,  //头条精选
   buildingActions,  //造房子
-  topicArticalActions
+  topicArticleActions
 }
