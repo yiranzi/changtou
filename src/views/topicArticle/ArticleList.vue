@@ -2,6 +2,7 @@
   <div class="article-list">
     <!--标题-->
     <ict-titlebar v-el:titlebar>专题文章</ict-titlebar>
+    <div v-touch:tap="goToArticleContent(1)">123</div>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div>
         <!--todo 看一下列表下的某个子标题url-->
@@ -76,7 +77,7 @@
 //          this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.INTERVIEW, {
 //            '访谈Id': interviewId
 //          })
-          const path = `/topic-article/${articleId}`
+          const path = `/topic-article/article/${articleId}`
 //          todo:这边的跳转看一下
           this.$route.router.go(path)
         },

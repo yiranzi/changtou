@@ -84,8 +84,9 @@
         Scroller
       },
       route: {
-        data ({to: {params: {interviewId}}}) {
-          this.loadArticleContent(interviewId).then(() => {
+        data ({to: {params: {articleId}}}) {
+            console.log('content is ' + articleId)
+          this.loadArticleContent(articleId).then(() => {
               for (let i = 0; i < this.articleContent.length; i++) {
                 this.articleContent[i].content = this.articleContent[i].content.split('#')
               }
