@@ -21,8 +21,11 @@ export function configRouter (router) {
     /**
      * 课程模块
      */
+    // '/main': { //主页面课程导航页
+    //   component: require('../views/course/Navigator.vue')
+    // },
     '/main': { //主页面课程导航页
-      component: require('../views/course/Navigator.vue')
+      component: require('../views/course/Test.vue')
     },
     '/totalList': { //查看所有课程列表页
       component: require('../views/course/Courselist.vue')
@@ -370,7 +373,17 @@ export function configRouter (router) {
     //造房简介
     '/building/introduction': {
       component: require('../views/building/BuildingIntroduction.vue')
+    },
+    /**
+     * 文章列表
+     */
+    '/topic-article/list/:topicId': {
+      component: require('../views/topicArticle/ArticleList.vue')
+    },
+    '/topic-article/article/:articleId': {
+      component: require('../views/topicArticle/ArticleContent.vue')
     }
+
   })
 
   // redirect

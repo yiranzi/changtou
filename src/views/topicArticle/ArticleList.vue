@@ -96,8 +96,9 @@
         }
       },
     route: {
-      data ({to: {params: {interviewId}}}) {
-        this.loadTopicArticle(interviewId)
+      data ({to: {params: {topicId}}}) {
+          console.log(topicId)
+//        this.loadTopicArticle(interviewId)
 //        this.loadArticleContent(interviewId).then(() => {
 //          for (let i = 0; i < this.articleContent.length; i++) {
 //            this.articleContent[i].content = this.articleContent[i].content.split('#')
