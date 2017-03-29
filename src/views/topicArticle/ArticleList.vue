@@ -42,7 +42,7 @@
       .line{
         height: 5rem;
         font-size: 0;
-        border-bottom: solid 1px black;
+        border-bottom: solid 1px #f0eff5;
         img{
           width: 188/40rem;
           height: 136/40rem;
