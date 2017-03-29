@@ -467,7 +467,7 @@
         this.$dispatch(eventMap.STATISTIC_EVENT, statisticsMap.HOME_PIC_TAP, {
           position: '课程分类'
         })
-        this.$route.router.go('/course/classification')
+        this.$route.router.go('/test')
       },
 
       /**

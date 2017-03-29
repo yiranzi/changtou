@@ -21,10 +21,13 @@ export function configRouter (router) {
     /**
      * 课程模块
      */
-    // '/main': { //主页面课程导航页
-    //   component: require('../views/course/Navigator.vue')
-    // },
     '/main': { //主页面课程导航页
+      component: require('../views/course/Navigator.vue')
+    },
+    // '/main': { //主页面课程导航页
+    //   component: require('../views/course/Test.vue')
+    // },
+    '/test': { //主页面课程导航页
       component: require('../views/course/Test.vue')
     },
     '/totalList': { //查看所有课程列表页
@@ -378,10 +381,26 @@ export function configRouter (router) {
      * 文章列表
      */
     '/topic-article/list/:topicId': {
+      // asdasd/
+      // asdasd
+      // asdasd
+      // asdasd
       component: require('../views/topicArticle/ArticleList.vue')
+      // asdasd/
+      // asdasd
+      // asdasd
+      // asdasd
     },
     '/topic-article/article/:articleId': {
+      // asdasd/
+      // asdasd
+      // asdasd
+      // asdasd
       component: require('../views/topicArticle/ArticleContent.vue')
+      // asdasd/
+      // asdasd
+      // asdasd
+      // asdasd
     }
 
   })
