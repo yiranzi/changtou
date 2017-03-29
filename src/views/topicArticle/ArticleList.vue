@@ -7,17 +7,20 @@
       <div>
         <!--todo 看一下列表下的某个子标题url-->
         <div class= "list-top">
-          <img v-bind:src="topicArticle.image"></img>
+          <!--<img v-bind:src="topicArticle.image"></img>-->
           <!--todo 查下这个图片如何保存.-->
           <p style="margin-top: 0.3rem;">{{topicArticle.topicTitle}}</p>
         </div>
-        <div class="list" v-for="article in topicArticle.articleList">
-          <img v-touch:tap="goToArticleContent(article.articleId)" :src=article.articleImage>
-          <!--todo 查下这个图片如何保存.-->
-          <!--todo 跳转如何实现的-->
-          <div class="article-info" v-touch:tap="goToArticleContent(article.articleId)">
-            <p class="info-title">{{article.title}}</p>
-            <p class="info-introduce">{{article.introduce}}</p>
+        <div class="list">
+         <div class="line" v-for="article in topicArticle.articleList">
+            <img v-touch:tap="goToArticleContent(article.articleId)" :src=article.articleImage>
+            <!--todo 查下这个图片如何保存.-->
+            <!--todo 跳转如何实现的-->
+            <!--<div class="article-info" v-touch:tap="goToArticleContent(article.articleId)">-->
+              <!--<p class="info-title">{{article.title}}</p>-->
+              <!--<p class="info-introduce">{{article.introduce}}</p>-->
+            <!--</div>-->
+           <span  class="article-info">123123</span>
           </div>
         </div>
       </div>
@@ -26,44 +29,78 @@
 </template>
 <style lang="less">
   .article-list{
+    background-color: #ffffff;
     .list-top{
+      height: 8rem;
       img{
-
+        height: 8rem;
+        width: 100%;
       }
       p{
 
       }
     }
     .list{
-      img{
+      .line{
+        height: 5rem;
 
-      }
-      .article-info{
-        .info-title{
-
+        font-size: 0;
+        border-bottom: solid 1px black;
+        img{
+          width: 188/40rem;
+          height: 136/40rem;
+          margin-left: 30/40rem;
+          display: inline-block;
         }
-        .info-introduce{
-
+          .article-info{
+            display: inline-block;
+            line-height: 5rem;
+            height: 100%;
+            .info-title{
+              margin: 50/40rem 0 0.5rem .5rem;
+              font-size: 32/40rem;
+              color:#666;
+            }
+            .info-introduce{
+              font: 28/40rem #999;
+            }
+          }
         }
       }
     }
-  }
 </style>
 <script>
-  import {topicArticleGetters} from '../../vuex/getters'
+//  import {topicArticleGetters} from '../../vuex/getters'
   import {topicArticleActions} from '../../vuex/actions'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
   export default {
       data () {
         return {
-          scrollerHeight: '0px'
+          scrollerHeight: '0px',
+          topicArticle: {
+            image: '../../../static/image/building/building-intro1.png',
+            topicTitle: '你知道怎么让财富翻倍吗?',
+            articleList: [
+              {
+                articleId: 1,
+                articleImage: 'bottom-img" src="../../../static/image/building/building-intro2.png',
+                introduce: '一',
+                title: '这是是是1'
+              },
+              {
+                articleId: 2,
+                articleImage: 'bottom-img" src="../../../static/image/building/building-intro2.png',
+                introduce: '二',
+                title: '这是是是2'
+              }
+            ]
+          }
         }
       },
-
       vuex: {
       getters: {
-        topicArticle: topicArticleGetters.topi
+//        topicArticle: topicArticleGetters.topi
       },
       actions: {
         loadTopicArticle: topicArticleActions.loadTopicArticle
@@ -91,6 +128,7 @@
             me.$nextTick(() => {
               me.$refs.scroller.reset({
                 top: 0
+
               })
             })
           }, 100)
