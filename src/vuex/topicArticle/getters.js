@@ -4,8 +4,17 @@
  */
 
 /**
+ * 获取文章列表
+ */
+export const topicArticle = (state) => {
+  console.log('get')
+  return state.topicArticle
+}
+
+/**
  * 获取文章
  */
-export const courseList = (state) => {
-  return state.article
+export const articleContent = (state) => {
+  console.log('get articleContent 2')
+  return state.articleContent
 }

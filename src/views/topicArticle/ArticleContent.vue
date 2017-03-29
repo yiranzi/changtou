@@ -4,7 +4,6 @@
     <ict-titlebar v-el:titlebar>专题文章</ict-titlebar>
     <scroller :lock-x="true" scrollbar-y v-ref:scroller :height="scrollerHeight">
       <div class="content-dev">
-        <!--asdas-->
         <div class= "top">
           <h1>{{articleContent.title}}</h1>
           <div class="writter">
@@ -54,6 +53,7 @@
       }
       .page{
         h2{
+          font-size: 32/40rem;
           text-align: center;
           margin: 2.5rem 0 50/40rem 0;
           color: #00b0f0;
@@ -62,24 +62,28 @@
           line-height: 48/40rem;
           color: #888;
           font-size: 28/40rem;
+          margin-bottom: 60/40rem;
         }
       }
       .end{
         font-size: 26/40rem;
         color: #aaa;
-        padding: 100/40rem 0 .5rem;
+        margin-top: 100/40rem;
+        padding-bottom: .5rem;
         text-align: center;
       }
     }
-
   }
 </style>
 <script>
-// import {topicArticleGetters} from '../../vuex/getters'
+  import {topicArticleGetters} from '../../vuex/getters'
   import {topicArticleActions} from '../../vuex/actions'
   import IctTitlebar from '../../components/IctTitleBar.vue'
   import Scroller from 'vux/scroller'
     export default {
+        ready () {
+          this.mySplitTest()
+        },
         data () {
             return {
               scrollerHeight: '0px',
@@ -114,17 +118,15 @@
                     '先，他们帮所有实验对象设定存钱目标，每次领到收入后，就将规划好的金额放到信封' + '袋存起来。信封里的钱虽然可'
                   }
                 ]
-              },
-              testarry: [1, 2, 3, 4],
-              mybool: true
+              }
             }
         },
       vuex: {
         getters: {
-//          articleContent: topicArticleGetters
+          articleContentTest: topicArticleGetters.articleContent
         },
         actions: {
-          loadArticleContent: topicArticleActions.loadTopicArticle
+          loadArticleContent: topicArticleActions.loadArticleContent
         }
       },
       methods: {
@@ -132,28 +134,28 @@
          * 设置滚动高度
          */
         setScrollerHeight () {
-//            asdsd
           const me = this
-//          addsd
           setTimeout(function () {
-//              asdsd
             me.scrollerHeight = (window.document.body.offsetHeight - me.$els.titlebar.clientHeight) + 'px'
-//           asdsad
             me.$nextTick(() => {
-              //           asdsad
               me.$refs.scroller.reset({
-//                asdasdsadsd
                 top: 0
               })
             })
-          }, 100)
+          }, 300)
         },
-        mySplit () {
-            console.log('split' + this.articleContent.paragraph.length)
-          for (let i = 0; i < this.articleContent.paragraph.length; i++) {
-            this.articleContent.paragraph[i].content = this.articleContent.paragraph[i].content.split('#')
+        /**
+         * 分割字符串
+         */
+        mySplitTest () {
+            console.log('split1')
+          let paragraphs = this.articleContent.paragraph
+          for (let i = 0; i < paragraphs.length; i++) {
+            paragraphs[i].content = paragraphs[i].content.split('#')
           }
-          this.mybool = false
+        },
+        splitParagraph () {
+          console.log('split by ajax')
         }
       },
       components: {
@@ -162,15 +164,8 @@
       },
       route: {
         data ({to: {params: {articleId}}}) {
-            console.log('content is ' + articleId + this.mybool)
-          if (this.mybool) this.mySplit()
-//          this.loadArticleContent(articleId).then(() => {
-//              for (let i = 0; i < this.articleContent.paragraph.length; i++) {
-//                this.articleContent.paragraph[i].content = this.articleContent.paragraph[i].content.split('#')
-//              }
-//          })
-//          todo:看下这个ajax怎么传值获取.
-          this.setScrollerHeight()
+          console.log('content is ' + articleId)
+          this.loadArticleContent(articleId).then(this.splitParagraph()).then(this.setScrollerHeight())
         }
       }
     }
